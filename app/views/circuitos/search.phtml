@@ -1,0 +1,111 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+?>
+
+<?php use Phalcon\Tag; ?>
+
+<div class="row">
+    <nav>
+        <ul class="pager">
+            <li class="previous"><?php echo $this->tag->linkTo(["circuitos/index", "Go Back"]); ?></li>
+            <li class="next"><?php echo $this->tag->linkTo(["circuitos/new", "Create "]); ?></li>
+        </ul>
+    </nav>
+</div>
+
+<div class="page-header">
+    <h1>Search result</h1>
+</div>
+
+<?php echo $this->getContent(); ?>
+
+<div class="row">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+            <th>Id Of Cliente</th>
+            <th>Id Of Cliente Of Unidade</th>
+            <th>Id Of Equipamento</th>
+            <th>Id Of Contrato</th>
+            <th>Id Of Status</th>
+            <th>Id Of Cluster</th>
+            <th>Id Of Tipounidade</th>
+            <th>Id Of Funcao</th>
+            <th>Id Of Enlace</th>
+            <th>Id Of Usuario Of Criacao</th>
+            <th>Id Of Usuario Of Atualizacao</th>
+            <th>Designacao</th>
+            <th>Uf</th>
+            <th>Cidade</th>
+            <th>Vlan</th>
+            <th>Ccode</th>
+            <th>Ip Of Redelocal</th>
+            <th>Ip Of Gerencia</th>
+            <th>Tag</th>
+            <th>Banda</th>
+            <th>Observacao</th>
+            <th>Data Of Ativacao</th>
+            <th>Data Of Atualizacao</th>
+            <th>Ativo</th>
+
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($page->items as $circuito): ?>
+            <tr>
+                <td><?php echo $circuito->id ?></td>
+            <td><?php echo $circuito->id_cliente ?></td>
+            <td><?php echo $circuito->id_cliente_unidade ?></td>
+            <td><?php echo $circuito->id_equipamento ?></td>
+            <td><?php echo $circuito->id_contrato ?></td>
+            <td><?php echo $circuito->id_status ?></td>
+            <td><?php echo $circuito->id_cluster ?></td>
+            <td><?php echo $circuito->id_tipounidade ?></td>
+            <td><?php echo $circuito->id_funcao ?></td>
+            <td><?php echo $circuito->id_enlace ?></td>
+            <td><?php echo $circuito->id_usuario_criacao ?></td>
+            <td><?php echo $circuito->id_usuario_atualizacao ?></td>
+            <td><?php echo $circuito->designacao ?></td>
+            <td><?php echo $circuito->uf ?></td>
+            <td><?php echo $circuito->cidade ?></td>
+            <td><?php echo $circuito->vlan ?></td>
+            <td><?php echo $circuito->ccode ?></td>
+            <td><?php echo $circuito->ip_redelocal ?></td>
+            <td><?php echo $circuito->ip_gerencia ?></td>
+            <td><?php echo $circuito->tag ?></td>
+            <td><?php echo $circuito->banda ?></td>
+            <td><?php echo $circuito->observacao ?></td>
+            <td><?php echo $circuito->data_ativacao ?></td>
+            <td><?php echo $circuito->data_atualizacao ?></td>
+            <td><?php echo $circuito->ativo ?></td>
+
+                <td><?php echo $this->tag->linkTo(["circuitos/edit/" . $circuito->id, "Edit"]); ?></td>
+                <td><?php echo $this->tag->linkTo(["circuitos/delete/" . $circuito->id, "Delete"]); ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+    <div class="col-sm-1">
+        <p class="pagination" style="line-height: 1.42857;padding: 6px 12px;">
+            <?php echo $page->current, "/", $page->total_pages ?>
+        </p>
+    </div>
+    <div class="col-sm-11">
+        <nav>
+            <ul class="pagination">
+                <li><?php echo $this->tag->linkTo("circuitos/search", "First") ?></li>
+                <li><?php echo $this->tag->linkTo("circuitos/search?page=" . $page->before, "Previous") ?></li>
+                <li><?php echo $this->tag->linkTo("circuitos/search?page=" . $page->next, "Next") ?></li>
+                <li><?php echo $this->tag->linkTo("circuitos/search?page=" . $page->last, "Last") ?></li>
+            </ul>
+        </nav>
+    </div>
+</div>

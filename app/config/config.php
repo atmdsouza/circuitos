@@ -11,8 +11,8 @@ return new \Phalcon\Config([
         'adapter'     => 'Mysql',
         'host'        => 'localhost',
         'username'    => 'root',
-        'password'    => '',
-        'dbname'      => 'test',
+        'password'    => '#d@tabase$',
+        'dbname'      => 'bd_circuitosnavega',
         'charset'     => 'utf8',
     ],
     'application' => [

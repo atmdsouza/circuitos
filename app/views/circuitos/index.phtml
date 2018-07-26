@@ -1,0 +1,210 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+?>
+
+<div class="page-header">
+    <h1>
+        Search circuitos
+    </h1>
+    <p>
+        <?php echo $this->tag->linkTo(["circuitos/new", "Create circuitos"]) ?>
+    </p>
+</div>
+
+<?php echo $this->getContent() ?>
+
+<?php
+    echo $this->tag->form(
+        [
+            "circuitos/search",
+            "autocomplete" => "off",
+            "class" => "form-horizontal"
+        ]
+    );
+?>
+
+<div class="form-group">
+    <label for="fieldId" class="col-sm-2 control-label">Id</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["id", "type" => "number", "class" => "form-control", "id" => "fieldId"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldIdCliente" class="col-sm-2 control-label">Id Of Cliente</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["id_cliente", "type" => "number", "class" => "form-control", "id" => "fieldIdCliente"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldIdClienteUnidade" class="col-sm-2 control-label">Id Of Cliente Of Unidade</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["id_cliente_unidade", "type" => "number", "class" => "form-control", "id" => "fieldIdClienteUnidade"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldIdEquipamento" class="col-sm-2 control-label">Id Of Equipamento</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["id_equipamento", "type" => "number", "class" => "form-control", "id" => "fieldIdEquipamento"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldIdContrato" class="col-sm-2 control-label">Id Of Contrato</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["id_contrato", "type" => "number", "class" => "form-control", "id" => "fieldIdContrato"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldIdStatus" class="col-sm-2 control-label">Id Of Status</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["id_status", "type" => "number", "class" => "form-control", "id" => "fieldIdStatus"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldIdCluster" class="col-sm-2 control-label">Id Of Cluster</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["id_cluster", "type" => "number", "class" => "form-control", "id" => "fieldIdCluster"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldIdTipounidade" class="col-sm-2 control-label">Id Of Tipounidade</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["id_tipounidade", "type" => "number", "class" => "form-control", "id" => "fieldIdTipounidade"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldIdFuncao" class="col-sm-2 control-label">Id Of Funcao</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["id_funcao", "type" => "number", "class" => "form-control", "id" => "fieldIdFuncao"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldIdEnlace" class="col-sm-2 control-label">Id Of Enlace</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["id_enlace", "type" => "number", "class" => "form-control", "id" => "fieldIdEnlace"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldIdUsuarioCriacao" class="col-sm-2 control-label">Id Of Usuario Of Criacao</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["id_usuario_criacao", "type" => "number", "class" => "form-control", "id" => "fieldIdUsuarioCriacao"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldIdUsuarioAtualizacao" class="col-sm-2 control-label">Id Of Usuario Of Atualizacao</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["id_usuario_atualizacao", "type" => "number", "class" => "form-control", "id" => "fieldIdUsuarioAtualizacao"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldDesignacao" class="col-sm-2 control-label">Designacao</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["designacao", "size" => 30, "class" => "form-control", "id" => "fieldDesignacao"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldUf" class="col-sm-2 control-label">Uf</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["uf", "size" => 30, "class" => "form-control", "id" => "fieldUf"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldCidade" class="col-sm-2 control-label">Cidade</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["cidade", "size" => 30, "class" => "form-control", "id" => "fieldCidade"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldVlan" class="col-sm-2 control-label">Vlan</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["vlan", "size" => 30, "class" => "form-control", "id" => "fieldVlan"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldCcode" class="col-sm-2 control-label">Ccode</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["ccode", "size" => 30, "class" => "form-control", "id" => "fieldCcode"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldIpRedelocal" class="col-sm-2 control-label">Ip Of Redelocal</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["ip_redelocal", "size" => 30, "class" => "form-control", "id" => "fieldIpRedelocal"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldIpGerencia" class="col-sm-2 control-label">Ip Of Gerencia</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["ip_gerencia", "size" => 30, "class" => "form-control", "id" => "fieldIpGerencia"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldTag" class="col-sm-2 control-label">Tag</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["tag", "size" => 30, "class" => "form-control", "id" => "fieldTag"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldBanda" class="col-sm-2 control-label">Banda</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["banda", "size" => 30, "class" => "form-control", "id" => "fieldBanda"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldObservacao" class="col-sm-2 control-label">Observacao</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textArea(["observacao", "cols" => 30, "rows" => 4, "class" => "form-control", "id" => "fieldObservacao"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldDataAtivacao" class="col-sm-2 control-label">Data Of Ativacao</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["data_ativacao", "size" => 30, "class" => "form-control", "id" => "fieldDataAtivacao"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldDataAtualizacao" class="col-sm-2 control-label">Data Of Atualizacao</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["data_atualizacao", "size" => 30, "class" => "form-control", "id" => "fieldDataAtualizacao"]) ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="fieldAtivo" class="col-sm-2 control-label">Ativo</label>
+    <div class="col-sm-10">
+        <?php echo $this->tag->textField(["ativo", "type" => "number", "class" => "form-control", "id" => "fieldAtivo"]) ?>
+    </div>
+</div>
+
+
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        <?php echo $this->tag->submitButton(["Search", "class" => "btn btn-default"]) ?>
+    </div>
+</div>
+
+<?php echo $this->tag->endForm(); ?>
