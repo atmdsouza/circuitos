@@ -1,8 +1,10 @@
 <?php
- 
+
 use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
-
+use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
+use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
+use Usuario as Usuario;
 
 class UsuarioController extends ControllerBase
 {
@@ -12,6 +14,30 @@ class UsuarioController extends ControllerBase
     public function indexAction()
     {
         $this->persistent->parameters = null;
+        $dados = filter_input_array(INPUT_POST);
+        $numberPage = 1;
+        if ($this->request->isPost()) {
+            $query = Criteria::fromInput($this->di, Usuario, $dados);
+            $this->persistent->parameters = $query->getParams();
+        } else {
+            $numberPage = $this->request->getQuery("page", "int");
+        }
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = [];
+        }
+        $parameters["order"] = "id";
+        $usuario = Usuario::find($parameters);
+        $pessoas = Pessoa::find();
+        $roles = PhalconRoles::find();
+        $paginator = new Paginator([
+            'data' => $usuario,
+            'limit'=> 10,
+            'page' => $numberPage
+        ]);
+        $this->view->page = $paginator->getPaginate();
+        $this->view->pessoas = $pessoas;
+        $this->view->roles = $roles;
     }
 
     /**
@@ -19,39 +45,6 @@ class UsuarioController extends ControllerBase
      */
     public function searchAction()
     {
-        $numberPage = 1;
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, 'Usuario', $_POST);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-        }
-        $parameters["order"] = "id";
-
-        $usuario = Usuario::find($parameters);
-        if (count($usuario) == 0) {
-            $this->flash->notice("The search did not find any usuario");
-
-            $this->dispatcher->forward([
-                "controller" => "usuario",
-                "action" => "index"
-            ]);
-
-            return;
-        }
-
-        $paginator = new Paginator([
-            'data' => $usuario,
-            'limit'=> 10,
-            'page' => $numberPage
-        ]);
-
-        $this->view->page = $paginator->getPaginate();
     }
 
     /**
@@ -73,7 +66,7 @@ class UsuarioController extends ControllerBase
 
             $usuario = Usuario::findFirstByid($id);
             if (!$usuario) {
-                $this->flash->error("usuario was not found");
+                $this->flash->error("Usuário não localizado!");
 
                 $this->dispatcher->forward([
                     'controller' => "usuario",
@@ -112,7 +105,7 @@ class UsuarioController extends ControllerBase
         $usuario->idPessoa = $this->request->getPost("id_pessoa");
         $usuario->rolesName = $this->request->getPost("roles_name");
         $usuario->login = $this->request->getPost("login");
-        $usuario->senha = $this->request->getPost("senha");
+        $usuario->senha = $this->security->hash($this->request->getPost("senha"));
         
 
         if (!$usuario->save()) {
@@ -128,7 +121,7 @@ class UsuarioController extends ControllerBase
             return;
         }
 
-        $this->flash->success("usuario was created successfully");
+        $this->flash->success("Usuário criado com sucesso!");
 
         $this->dispatcher->forward([
             'controller' => "usuario",
@@ -156,7 +149,7 @@ class UsuarioController extends ControllerBase
         $usuario = Usuario::findFirstByid($id);
 
         if (!$usuario) {
-            $this->flash->error("usuario does not exist " . $id);
+            $this->flash->error("O usuário não existe " . $id);
 
             $this->dispatcher->forward([
                 'controller' => "usuario",
@@ -169,7 +162,7 @@ class UsuarioController extends ControllerBase
         $usuario->idPessoa = $this->request->getPost("id_pessoa");
         $usuario->rolesName = $this->request->getPost("roles_name");
         $usuario->login = $this->request->getPost("login");
-        $usuario->senha = $this->request->getPost("senha");
+        $usuario->senha = $this->security->hash($this->request->getPost("senha"));
         
 
         if (!$usuario->save()) {
@@ -187,7 +180,7 @@ class UsuarioController extends ControllerBase
             return;
         }
 
-        $this->flash->success("usuario was updated successfully");
+        $this->flash->success("Usuário editado com sucesso!");
 
         $this->dispatcher->forward([
             'controller' => "usuario",
@@ -204,7 +197,7 @@ class UsuarioController extends ControllerBase
     {
         $usuario = Usuario::findFirstByid($id);
         if (!$usuario) {
-            $this->flash->error("usuario was not found");
+            $this->flash->error("Usuário não localizado!");
 
             $this->dispatcher->forward([
                 'controller' => "usuario",
@@ -228,7 +221,7 @@ class UsuarioController extends ControllerBase
             return;
         }
 
-        $this->flash->success("usuario was deleted successfully");
+        $this->flash->success("Usuário deletado com sucesso!");
 
         $this->dispatcher->forward([
             'controller' => "usuario",

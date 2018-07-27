@@ -9,15 +9,15 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
         <!-- App favicon -->
-        <link rel="shortcut icon" href="public/images/favicon.png">
+        <link rel="shortcut icon" href="<?= DIR_STATICS ?>public/images/favicon.png">
 
         <!-- App css -->
-        <link href="public/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-        <link href="public/css/icons.css" rel="stylesheet" type="text/css" />
-        <link href="public/css/metismenu.min.css" rel="stylesheet" type="text/css" />
-        <link href="public/css/style.css" rel="stylesheet" type="text/css" />
+        <link href="<?= DIR_STATICS ?>public/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="<?= DIR_STATICS ?>public/css/icons.css" rel="stylesheet" type="text/css" />
+        <link href="<?= DIR_STATICS ?>public/css/metismenu.min.css" rel="stylesheet" type="text/css" />
+        <link href="<?= DIR_STATICS ?>public/css/style.css" rel="stylesheet" type="text/css" />
 
-        <script src="public/js/modernizr.min.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/modernizr.min.js"></script>
 
     </head>
 
@@ -34,10 +34,10 @@
                 <div class="topbar-left">
                     <a href="index.html" class="logo">
                         <span>
-                            <img src="public/images/logo.png" alt="" height="50">
+                            <img src="<?= DIR_STATICS ?>public/images/logo.png" alt="" height="50">
                         </span>
                         <i>
-                            <img src="public/images/logo_sm.png" alt="" height="28">
+                            <img src="<?= DIR_STATICS ?>public/images/logo_sm.png" alt="" height="28">
                         </i>
                     </a>
                 </div>
@@ -49,7 +49,7 @@
                         <li class="dropdown notification-list">
                             <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" data-toggle="dropdown" href="#" role="button"
                                aria-haspopup="false" aria-expanded="false">
-                                <img src="public/images/users/avatar-1.jpg" alt="user" class="rounded-circle"> <span class="ml-1">Nome Usuário <i class="mdi mdi-chevron-down"></i> </span>
+                                <img src="<?= DIR_STATICS ?>public/images/users/avatar-1.jpg" alt="user" class="rounded-circle"> <span class="ml-1">Nome Usuário <i class="mdi mdi-chevron-down"></i> </span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
                                 <!-- item-->
@@ -94,7 +94,7 @@
                         <!-- Left Menu Start -->
                         <ul class="metismenu" id="side-menu">
 
-                            <li><?php echo $this->tag->linkTo(["index", "<i class='fi-air-play'></i> Dashboard"]) ?></li>
+                            <li><?php echo $this->tag->linkTo(["index", "<i class='fi-air-play'></i> <span> Dashboard </span>"]) ?></li>
 
                             <li>
                                 <a href="javascript: void(0);"><i class="fi-layers"></i> <span> Cadastros </span> <span class="menu-arrow"></span></a>
@@ -107,12 +107,12 @@
                                 </ul>
                             </li>
 
-                            <li><?php echo $this->tag->linkTo(["circuitos", "<i class='fi-link'></i> Circuitos Navega Pará"]) ?></li>
+                            <li><?php echo $this->tag->linkTo(["circuitos", "<i class='fi-link'></i> <span> Circuitos Navega Pará </span>"]) ?></li>
 
-                            <li><?php echo $this->tag->linkTo(["movimentos", "<i class='fi-repeat'></i> Movimentos"]) ?></li>
+                            <li><?php echo $this->tag->linkTo(["movimentos", "<i class='fi-repeat'></i> <span> Movimentos </span>"]) ?></li>
 
                             <li>
-                                <a href="javascript: void(0);"><i class="fi-lock"></i><span> Segurança </span> <span class="menu-arrow"></span></a>
+                                <a href="javascript: void(0);"><i class="fi-lock"></i> <span> Segurança </span> <span class="menu-arrow"></span></a>
                                 <ul class="nav-second-level" aria-expanded="false">
                                     <li><?php echo $this->tag->linkTo(["usuario", "Usuários"]) ?></li>
                                     <li><?php echo $this->tag->linkTo(["", "Perfis"]) ?></li>
@@ -121,7 +121,7 @@
                             </li>
 
                             <li>
-                                <a href="javascript: void(0);"><i class="fi-cog"></i><span> Configuração </span> <span class="menu-arrow"></span></a>
+                                <a href="javascript: void(0);"><i class="fi-cog"></i> <span> Configuração </span> <span class="menu-arrow"></span></a>
                                 <ul class="nav-second-level" aria-expanded="false">
                                     <li><?php echo $this->tag->linkTo(["lov", "Lista de Valores"]) ?></li>
                                 </ul>
@@ -162,24 +162,18 @@
         </div>
         <!-- END wrapper -->
         <!-- jQuery  -->
-        <script src="public/js/jquery.min.js"></script>
-        <script src="public/js/popper.min.js"></script>
-        <script src="public/js/bootstrap.min.js"></script>
-        <script src="public/js/metisMenu.min.js"></script>
-        <script src="public/js/waves.js"></script>
-        <script src="public/js/jquery.slimscroll.js"></script>
-        <script src="public/plugins/waypoints/lib/jquery.waypoints.min.js"></script>
-        <script src="public/plugins/counterup/jquery.counterup.min.js"></script>
-
-        <!-- Chart JS -->
-        <script src="public/plugins/chart.js/chart.bundle.js"></script>
-
-        <!-- init dashboard -->
-        <script src="public/pages/jquery.dashboard.init.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/jquery.min.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/popper.min.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/bootstrap.min.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/metisMenu.min.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/waves.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/jquery.slimscroll.js"></script>
+        <script src="<?= DIR_STATICS ?>public/plugins/waypoints/lib/jquery.waypoints.min.js"></script>
+        <script src="<?= DIR_STATICS ?>public/plugins/counterup/jquery.counterup.min.js"></script>
 
         <!-- App js -->
-        <script src="public/js/jquery.core.js"></script>
-        <script src="public/js/jquery.app.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/jquery.core.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/jquery.app.js"></script>
 
     </body>
 </html>

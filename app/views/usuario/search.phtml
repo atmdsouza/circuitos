@@ -26,10 +26,10 @@
         <thead>
             <tr>
                 <th>Id</th>
-            <th>Id Of Pessoa</th>
-            <th>Roles Of Name</th>
-            <th>Login</th>
-            <th>Senha</th>
+                <th>Id Of Pessoa</th>
+                <th>Roles Of Name</th>
+                <th>Login</th>
+                <th>Senha</th>
 
                 <th></th>
                 <th></th>
@@ -39,10 +39,10 @@
         <?php foreach ($page->items as $usuario): ?>
             <tr>
                 <td><?php echo $usuario->id ?></td>
-            <td><?php echo $usuario->id_pessoa ?></td>
-            <td><?php echo $usuario->roles_name ?></td>
-            <td><?php echo $usuario->login ?></td>
-            <td><?php echo $usuario->senha ?></td>
+                <td><?php echo $usuario->id_pessoa ?></td>
+                <td><?php echo $usuario->roles_name ?></td>
+                <td><?php echo $usuario->login ?></td>
+                <td><?php echo $usuario->senha ?></td>
 
                 <td><?php echo $this->tag->linkTo(["usuario/edit/" . $usuario->id, "Edit"]); ?></td>
                 <td><?php echo $this->tag->linkTo(["usuario/delete/" . $usuario->id, "Delete"]); ?></td>

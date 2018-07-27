@@ -3,68 +3,92 @@
  * @var \Phalcon\Mvc\View\Engine\Php $this
  */
 ?>
+<div class="col-12">
+    <?php
+    echo $this->tag->form(
+            [
+                "usuario",
+                "autocomplete" => "off"
+            ]
+    );
+    ?>
+    <div class="row">
+        <div class="col-2">
+            <label for="fieldId" class="control-label">Código</label>
+            <?php echo $this->tag->textField(["id", "type" => "number", "class" => "form-control", "id" => "fieldId"]) ?>
+        </div>
+        <div class="col-2">
+            <label for="fieldIdPessoa" class="control-label">Pessoa</label>
+            <?php echo $this->tag->select(["id_pessoa", $pessoas, "class" => "form-control", "id" => "fieldIdPessoa", 
+            "using" => ["id","nome",],
+            "useEmpty" => true,
+            "emptyText" => "Selecione uma pessoa",
+            "emptyValue" => ""])
+            ?>
+        </div>
+        <div class="col-2">
+            <label for="fieldRolesName" class="control-label">Perfil</label>
+            <?php echo $this->tag->select(["roles_name", $roles, "class" => "form-control", "id" => "fieldRolesName", 
+            "using" => ["name","name",],
+            "useEmpty" => true,
+            "emptyText" => "Selecione um perfil",
+            "emptyValue" => ""])
+            ?>
+        </div>
+        <div class="col-2">
+            <label for="fieldLogin" class="control-label">Login</label>
+            <?php echo $this->tag->textField(["login", "size" => 30, "class" => "form-control", "id" => "fieldLogin"]) ?>
+        </div>
+        <div class="col-1" style="text-align: center;">
+            <?php echo $this->tag->submitButton(["Pesquisar", "class" => "btn btn-primary btn-rounded w-md", "style" => "margin-top: 29px;"]) ?>
+        </div>
+        <div class="col-1" style="text-align: center;">
+            <?php echo $this->tag->linkTo(["usuario/new", "Novo Usuário", "class" => "btn btn-primary btn-rounded w-md", "style" => "margin-top: 29px;"]) ?>
+        </div>
+    </div>
+    <?php echo $this->tag->endForm(); ?>
+</div>
 
-<div class="page-header">
-    <h1>
-        Search usuario
-    </h1>
-    <p>
-        <?php echo $this->tag->linkTo(["usuario/new", "Create usuario"]) ?>
+<?php echo $this->getContent(); ?>
+
+<div class="col-12">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Pessoa</th>
+                <th>Perfil</th>
+                <th>Login</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($page->items as $usuario): ?>
+                <tr>
+                    <td><?php echo $usuario->id ?></td>
+                    <td><?php echo $usuario->id_pessoa ?></td>
+                    <td><?php echo $usuario->roles_name ?></td>
+                    <td><?php echo $usuario->login ?></td>
+                    <td><?php echo $this->tag->linkTo(["usuario/edit/" . $usuario->id, "Edit"]); ?></td>
+                    <td><?php echo $this->tag->linkTo(["usuario/delete/" . $usuario->id, "Delete"]); ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+<div class="col-1">
+    <p class="pagination">
+        Página(s) <?php echo $page->current, "/", $page->total_pages ?>
     </p>
 </div>
-
-<?php echo $this->getContent() ?>
-
-<?php
-    echo $this->tag->form(
-        [
-            "usuario/search",
-            "autocomplete" => "off",
-            "class" => "form-horizontal"
-        ]
-    );
-?>
-
-<div class="form-group">
-    <label for="fieldId" class="col-sm-2 control-label">Id</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["id", "type" => "number", "class" => "form-control", "id" => "fieldId"]) ?>
-    </div>
+<div class="col-11">
+    <nav>
+        <ul class="pagination">
+            <li><?php echo $this->tag->linkTo("usuario", "Primeira") ?></li>
+            <li><?php echo $this->tag->linkTo("usuario?page=" . $page->before, "Anterior") ?></li>
+            <li><?php echo $this->tag->linkTo("usuario?page=" . $page->next, "Próxima") ?></li>
+            <li><?php echo $this->tag->linkTo("usuario?page=" . $page->last, "Última") ?></li>
+        </ul>
+    </nav>
 </div>
-
-<div class="form-group">
-    <label for="fieldIdPessoa" class="col-sm-2 control-label">Id Of Pessoa</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["id_pessoa", "type" => "number", "class" => "form-control", "id" => "fieldIdPessoa"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldRolesName" class="col-sm-2 control-label">Roles Of Name</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["roles_name", "size" => 30, "class" => "form-control", "id" => "fieldRolesName"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldLogin" class="col-sm-2 control-label">Login</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["login", "size" => 30, "class" => "form-control", "id" => "fieldLogin"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldSenha" class="col-sm-2 control-label">Senha</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["senha", "size" => 30, "class" => "form-control", "id" => "fieldSenha"]) ?>
-    </div>
-</div>
-
-
-<div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-        <?php echo $this->tag->submitButton(["Search", "class" => "btn btn-default"]) ?>
-    </div>
-</div>
-
-<?php echo $this->tag->endForm(); ?>
