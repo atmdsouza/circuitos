@@ -11,12 +11,12 @@ require_once APP_PATH . '/library/util/Util.php';
                 <tr>
                     <th>Código</th>
                     <th>Nome</th>
+                    <th>E-mail</th>
                     <th>Perfil</th>
                     <th>Login</th>
                     <th>Data Cadastro</th>
                     <th>Data Alteração</th>
                     <th>Data Último Acesso</th>
-                    <th>Primeiro Acesso?</th>
                     <th>Ativo</th>
                 </tr>
             </thead>
@@ -46,12 +46,12 @@ require_once APP_PATH . '/library/util/Util.php';
                     <tr>
                         <td><?php echo $usuario->id ?></td>
                         <td><?php echo $usuario->Pessoa->nome ?></td>
+                        <td><?php echo $usuario->Pessoa->PessoaEmail[0]->email ?></td>
                         <td><?php echo $usuario->roles_name ?></td>
                         <td><?php echo $usuario->login ?></td>
                         <td><?php echo $util->converterDataHoraParaBr($usuario->Pessoa->create_at) ?></td>
                         <td><?php echo $util->converterDataHoraParaBr($usuario->Pessoa->update_at) ?></td>
                         <td><?php echo $util->converterDataHoraParaBr($usuario->data_ultimoacesso) ?></td>
-                        <td><?php echo $primeiroacesso ?></td>
                         <td><?php echo $ativo ?></td>
                     </tr>
             <?php endforeach; ?>
@@ -73,7 +73,7 @@ require_once APP_PATH . '/library/util/Util.php';
                         <form id="formUser">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <?php echo $this->tag->textField(["nome_pessoa", "size" => 30, "class" => "form-control", "id" => "nome_pessoa", "placeholder" => "Nome"]) ?>
+                                    <?php echo $this->tag->textField(["nome_pessoa", "size" => 30, "class" => "form-control", "id" => "nome_pessoa", "placeholder" => "Nome", "parsley-trigger" => "change", "required" => "true"]) ?>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <?php echo $this->tag->textField(["login", "size" => 30, "class" => "form-control", "id" => "login", "placeholder" => "Login"]) ?>
@@ -83,7 +83,11 @@ require_once APP_PATH . '/library/util/Util.php';
                                 <div class="form-group col-md-6">
                                     <?php echo $this->tag->passwordField(["senha", "size" => 30, "class" => "form-control", "id" => "senha", "placeholder" => "Senha"]) ?>
                                 </div>
-
+                                <div class="form-group col-md-6">
+                                    <?php echo $this->tag->emailField(["email", "size" => 120, "class" => "form-control", "id" => "email", "placeholder" => "E-mail"]) ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <?php echo $this->tag->select(["roles_name", $roles, "class" => "form-control", "id" => "roles_name",
                                         "using" => ["name", "name",],
@@ -99,7 +103,7 @@ require_once APP_PATH . '/library/util/Util.php';
             </div>
             <div class="modal-footer">
                 <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
-                <button type="button" class="btn btn-secondary btn-rounded waves-effect" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" data-dismiss="modal">Fechar</button>
                 <button id="salvaUser" type="button" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
             </div><!-- /.modal-footer -->
         </div><!-- /.modal-content -->

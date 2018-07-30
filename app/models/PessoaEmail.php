@@ -195,7 +195,7 @@ class PessoaEmail extends \Phalcon\Mvc\Model
             new EmailValidator(
                 [
                     'model'   => $this,
-                    'message' => 'Please enter a correct email address',
+                    'message' => 'Por favor, informe um endereço de e-mail correto',
                 ]
             )
         );
@@ -210,8 +210,8 @@ class PessoaEmail extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("pessoa_email");
-        $this->belongsTo('id_tipoemail', 'connecta\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_pessoa', 'connecta\Pessoa', 'id', ['alias' => 'Pessoa']);
+        $this->belongsTo('id_tipoemail', Lov, 'id', ['alias' => 'Lov']);
+        $this->belongsTo('id_pessoa', Pessoa, 'id', ['alias' => 'Pessoa']);
     }
 
     /**

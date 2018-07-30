@@ -4,6 +4,7 @@ use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
+use Phalcon\Http\Response as Response;
 use Usuario as Usuario;
 
 require_once APP_PATH . '/library/util/Util.php';
@@ -34,12 +35,64 @@ class UsuarioController extends ControllerBase
         $roles = PhalconRoles::find();
         $paginator = new Paginator([
             'data' => $usuarios,
-            'limit'=> 10,
+            'limit'=> 500,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();
         $this->view->pessoas = $pessoas;
         $this->view->roles = $roles;
+    }
+
+    public function formUsuarioAction()
+    {
+
+    }
+
+    public function validarLoginAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $dados = filter_input_array(INPUT_POST);
+        $login = Usuario::findFirst("login='{$dados["login"]}'");
+        if ($login) {
+            //Instanciar a resposta HTTP
+            $response = new Response();
+            $response->setContent(json_encode(array(
+                "operacao" => True
+            )));
+            return $response;
+        } else {
+            //Instanciar a resposta HTTP
+            $response = new Response();
+            $response->setContent(json_encode(array(
+                "operacao" => False
+            )));
+            return $response;
+        }
+    }
+
+    public function validarEmailAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $dados = filter_input_array(INPUT_POST);
+        $email = PessoaEmail::findFirst("email='{$dados["email"]}'");
+        if ($email) {
+            //Instanciar a resposta HTTP
+            $response = new Response();
+            $response->setContent(json_encode(array(
+                "operacao" => True
+            )));
+            return $response;
+        } else {
+            //Instanciar a resposta HTTP
+            $response = new Response();
+            $response->setContent(json_encode(array(
+                "operacao" => False
+            )));
+            return $response;
+        }
+
     }
 
     public function criarUsuarioAction()
@@ -58,6 +111,16 @@ class UsuarioController extends ControllerBase
             if ($pessoa->save() == false) {
                 $transaction->rollback("Não foi possível salvar a pessoa!");
             }
+            $pessoaemail = new PessoaEmail();
+            $pessoaemail->setTransaction($transaction);
+            $pessoaemail->id_pessoa = $pessoa->id;
+            $pessoaemail->id_tipoemail = 43;
+            $pessoaemail->principal = 1;
+            $pessoaemail->email = $dados["email"];
+            $pessoaemail->ativo = 1;
+            if ($pessoaemail->save() == false) {
+                $transaction->rollback("Não foi possível salvar o email!");
+            }
             $usuario = new Usuario();
             $usuario->setTransaction($transaction);
             $usuario->id_pessoa = $pessoa->id;
@@ -69,9 +132,20 @@ class UsuarioController extends ControllerBase
             }
             //Commita a transação
             $transaction->commit();
-            echo "success";
+            //Instanciar a resposta HTTP
+            $response = new Response();
+            $response->setContent(json_encode(array(
+                "operacao" => True
+            )));
+            return $response;
         } catch (TxFailed $e) {
-            echo "Ocorreu um erro: ", $e->getMessage();
+            //Instanciar a resposta HTTP
+            $response = new Response();
+            $response->setContent(json_encode(array(
+                "operacao" => False,
+                "mensagem" => "Ocorreu um erro: ", $e->getMessage()
+            )));
+            return $response;
         }
     }
 
@@ -81,8 +155,9 @@ class UsuarioController extends ControllerBase
         $this->view->disable();
         try {
             $dados = filter_input_array(INPUT_POST);
-            $usuario = Usuario::findFirstByid($dados["id_usuario"]);
-            $pessoa = Pessoa::findFirst($usuario->id_pessoa);
+            $usuario = Usuario::findFirst("id={$dados["id_usuario"]}");
+            $pessoa = Pessoa::findFirst("id={$usuario->id_pessoa}");
+            $pessoaemail = PessoaEmail::findFirst("id_pessoa={$usuario->id_pessoa}");
             //Create a transaction manager
             $manager = new TxManager();
             //Request a transaction
@@ -92,6 +167,11 @@ class UsuarioController extends ControllerBase
             $pessoa->update_at = date("Y-m-d H:i:s");
             if ($pessoa->save() == false) {
                 $transaction->rollback("Não foi possível salvar a pessoa!");
+            }
+            $pessoaemail->setTransaction($transaction);
+            $pessoaemail->email = $dados["email"];
+            if ($pessoaemail->save() == false) {
+                $transaction->rollback("Não foi possível salvar o email!");
             }
             $usuario->setTransaction($transaction);
             $usuario->roles_name = $dados["roles_name"];
@@ -113,8 +193,8 @@ class UsuarioController extends ControllerBase
         $this->view->disable();
         try {
             $dados = filter_input_array(INPUT_POST);
-            $usuario = Usuario::findFirstByid($dados["id_usuario"]);
-            $pessoa = Pessoa::findFirst($usuario->id_pessoa);
+            $usuario = Usuario::findFirst("id={$dados["id_usuario"]}");
+            $pessoa = Pessoa::findFirst("id={$usuario->id_pessoa}");
             //Create a transaction manager
             $manager = new TxManager();
             //Request a transaction
@@ -139,8 +219,8 @@ class UsuarioController extends ControllerBase
         $this->view->disable();
         try {
             $dados = filter_input_array(INPUT_POST);
-            $usuario = Usuario::findFirstByid($dados["id_usuario"]);
-            $pessoa = Pessoa::findFirst($usuario->id_pessoa);
+            $usuario = Usuario::findFirst("id={$dados["id_usuario"]}");
+            $pessoa = Pessoa::findFirst("id={$usuario->id_pessoa}");
             //Create a transaction manager
             $manager = new TxManager();
             //Request a transaction
@@ -170,14 +250,18 @@ class UsuarioController extends ControllerBase
         $this->view->disable();
         try {
             $dados = filter_input_array(INPUT_POST);
-            $usuario = Usuario::findFirstByid($dados["id_usuario"]);
-            $pessoa = Pessoa::findFirst($usuario->id_pessoa);
+            $usuario = Usuario::findFirst("id={$dados["id_usuario"]}");
+            $pessoa = Pessoa::findFirst("id={$usuario->id_pessoa}");
+            $pessoaemail = PessoaEmail::findFirst("id_pessoa={$usuario->id_pessoa}");
             //Create a transaction manager
             $manager = new TxManager();
             //Request a transaction
             $transaction = $manager->get();
             if ($usuario->delete() == false) {
                 $transaction->rollback("Não foi possível deletar a pessoa!");
+            }
+            if ($pessoaemail->delete() == false) {
+                $transaction->rollback("Não foi possível deletar o email!");
             }
             if ($pessoa->delete() == false) {
                 $transaction->rollback("Não foi possível deletar a pessoa!");

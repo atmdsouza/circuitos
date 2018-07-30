@@ -115,6 +115,67 @@ var table = $('#tb_usuario').DataTable({
 
 table.buttons().container().appendTo('#tb_usuario_wrapper .col-md-6:eq(0)');
 
+//Validação de formulário
+$(document).ready(function() {
+    $('form').parsley();
+});
+
+$("#login").on("change", function(){
+    var login = $("#login").val();
+    $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: 'usuario/validarLogin',
+        data: {login: login},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function () {
+        },
+        success: function (data) {
+            if (data.operacao){
+                swal({
+                    title: 'Login de Usuários',
+                    text: 'O login digitado já existe, por favor, escolha um novo!',
+                    type: 'warning'
+                  });
+                $("#salvaUser").attr("disabled", "true");
+            } else {
+                $("#salvaUser").removeAttr("disabled", "true");
+            }
+        }
+    });    
+});
+
+$("#email").on("change", function(){
+    var email = $("#email").val();
+    $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: 'usuario/validarEmail',
+        data: {email: email},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function () {
+        },
+        success: function (data) {
+            if (data.operacao){
+                swal({
+                    title: 'E-mail de Usuários',
+                    text: 'O e-mail digitado já existe, por favor, escolha um novo!',
+                    type: 'warning'
+                  });
+                $("#salvaUser").attr("disabled", "true");
+            } else {
+                $("#salvaUser").removeAttr("disabled", "true");
+            }
+        }
+    });    
+});
+
 $(".bt_novo").on("click", function(){
     $("#modalusuario").modal();
     $("#salvaUser").removeClass("editar_usuario").addClass("criar_usuario");
@@ -134,13 +195,67 @@ $(document).on("click", ".criar_usuario", function(){
         error: function () {
         },
         success: function (data) {
+            if (data.operacao){
+                swal({
+                    title: 'Cadastro de Usuários',
+                    text: 'Cadastro de Usuários concluído!',
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                  }).then((result) => {
+                    window.location.reload(true);
+                  });
+            } else {
+                swal({
+                    title: 'Cadastro de Usuários',
+                    text: 'Erro ao tentar realizar o cadastro!/n' + data.mensagem,
+                    type: 'error'
+                });
+            }
         }
     });
 });
 
 $(".bt_edit").on("click", function(){
-    alert("Editar");
+    var dados = $("#formUser").serialize();
+    $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: 'usuario/formUsuario',
+        data: dados,
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function () {
+        },
+        success: function (data) {
+            $("#modalusuario").modal();
+        }
+    });
+    $("#salvaUser").removeClass("criar_usuario").addClass("editar_usuario");
 });
+
+$(document).on("click", ".editar_usuario", function(){
+    var dados = $("#formUser").serialize();
+    $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: 'usuario/editarUsuario',
+        data: dados,
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function () {
+        },
+        success: function (data) {
+        }
+    });
+});
+
 $(".bt_del").on("click", function(){
     alert("Deletar");
 });

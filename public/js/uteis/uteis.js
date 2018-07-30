@@ -1,3 +1,8 @@
+//Limpar modal bootstrap
+$('.modal').on('hidden.bs.modal', function(){
+    $(this).find('form')[0].reset();
+});
+
 //Processo para fazer funcionar o CSRF_Token
 function getCookie(c_name) {
     if (document.cookie.length > 0) {
