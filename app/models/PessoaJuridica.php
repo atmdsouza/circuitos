@@ -247,7 +247,7 @@ class PessoaJuridica extends \Phalcon\Mvc\Model
         $this->setSource("pessoa_juridica");
         $this->belongsTo('id_tipoesfera', 'connecta\Lov', 'id', ['alias' => 'Lov']);
         $this->belongsTo('id_setor', 'connecta\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id', 'connecta\Pessoa', 'id', ['alias' => 'Pessoa']);
+        $this->hasOne('id', 'connecta\Pessoa', 'id', ['alias' => 'Pessoa']);
     }
 
     /**

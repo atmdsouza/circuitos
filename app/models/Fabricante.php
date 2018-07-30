@@ -70,7 +70,7 @@ class Fabricante extends \Phalcon\Mvc\Model
         $this->setSource("fabricante");
         $this->hasMany('id', 'connecta\Equipamento', 'id_fabricante', ['alias' => 'Equipamento']);
         $this->hasMany('id', 'connecta\Modelo', 'id_fabricante', ['alias' => 'Modelo']);
-        $this->belongsTo('id_pessoa', 'connecta\Pessoa', 'id', ['alias' => 'Pessoa']);
+        $this->hasOne('id_pessoa', 'connecta\Pessoa', 'id', ['alias' => 'Pessoa']);
     }
 
     /**

@@ -1,94 +1,107 @@
 <?php
-/**
- * @var \Phalcon\Mvc\View\Engine\Php $this
- */
+
+require_once APP_PATH . '/library/util/Util.php';
+
 ?>
-<div class="col-12">
-    <?php
-    echo $this->tag->form(
-            [
-                "usuario",
-                "autocomplete" => "off"
-            ]
-    );
-    ?>
-    <div class="row">
-        <div class="col-2">
-            <label for="fieldId" class="control-label">Código</label>
-            <?php echo $this->tag->textField(["id", "type" => "number", "class" => "form-control", "id" => "fieldId"]) ?>
-        </div>
-        <div class="col-2">
-            <label for="fieldIdPessoa" class="control-label">Pessoa</label>
-            <?php echo $this->tag->select(["id_pessoa", $pessoas, "class" => "form-control", "id" => "fieldIdPessoa", 
-            "using" => ["id","nome",],
-            "useEmpty" => true,
-            "emptyText" => "Selecione uma pessoa",
-            "emptyValue" => ""])
-            ?>
-        </div>
-        <div class="col-2">
-            <label for="fieldRolesName" class="control-label">Perfil</label>
-            <?php echo $this->tag->select(["roles_name", $roles, "class" => "form-control", "id" => "fieldRolesName", 
-            "using" => ["name","name",],
-            "useEmpty" => true,
-            "emptyText" => "Selecione um perfil",
-            "emptyValue" => ""])
-            ?>
-        </div>
-        <div class="col-2">
-            <label for="fieldLogin" class="control-label">Login</label>
-            <?php echo $this->tag->textField(["login", "size" => 30, "class" => "form-control", "id" => "fieldLogin"]) ?>
-        </div>
-        <div class="col-1" style="text-align: center;">
-            <?php echo $this->tag->submitButton(["Pesquisar", "class" => "btn btn-primary btn-rounded w-md", "style" => "margin-top: 29px;"]) ?>
-        </div>
-        <div class="col-1" style="text-align: center;">
-            <?php echo $this->tag->linkTo(["usuario/new", "Novo Usuário", "class" => "btn btn-primary btn-rounded w-md", "style" => "margin-top: 29px;"]) ?>
-        </div>
-    </div>
-    <?php echo $this->tag->endForm(); ?>
-</div>
-
-<?php echo $this->getContent(); ?>
 
 <div class="col-12">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Código</th>
-                <th>Pessoa</th>
-                <th>Perfil</th>
-                <th>Login</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($page->items as $usuario): ?>
+    <div class="card-box">
+        <table id="tb_usuario" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <thead>
                 <tr>
-                    <td><?php echo $usuario->id ?></td>
-                    <td><?php echo $usuario->id_pessoa ?></td>
-                    <td><?php echo $usuario->roles_name ?></td>
-                    <td><?php echo $usuario->login ?></td>
-                    <td><?php echo $this->tag->linkTo(["usuario/edit/" . $usuario->id, "Edit"]); ?></td>
-                    <td><?php echo $this->tag->linkTo(["usuario/delete/" . $usuario->id, "Delete"]); ?></td>
+                    <th>Código</th>
+                    <th>Nome</th>
+                    <th>Perfil</th>
+                    <th>Login</th>
+                    <th>Data Cadastro</th>
+                    <th>Data Alteração</th>
+                    <th>Data Último Acesso</th>
+                    <th>Primeiro Acesso?</th>
+                    <th>Ativo</th>
                 </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($page->items as $usuario): ?>
+            <?php
+
+            $util = new Util;
+                
+                switch($usuario->primeiroacesso){
+                    case '0'://Não Acessou (False)
+                    $primeiroacesso = "Não";
+                    break;
+                    case '1'://Acessou (True)
+                    $primeiroacesso = "Sim";
+                    break;
+                }
+                switch($usuario->Pessoa->ativo){
+                    case '0'://Inativo (False)
+                    $ativo = "Inativo";
+                    break;
+                    case '1'://Ativo (True)
+                    $ativo = "Ativo";
+                    break;
+                }
+            ?>
+                    <tr>
+                        <td><?php echo $usuario->id ?></td>
+                        <td><?php echo $usuario->Pessoa->nome ?></td>
+                        <td><?php echo $usuario->roles_name ?></td>
+                        <td><?php echo $usuario->login ?></td>
+                        <td><?php echo $util->converterDataHoraParaBr($usuario->Pessoa->create_at) ?></td>
+                        <td><?php echo $util->converterDataHoraParaBr($usuario->Pessoa->update_at) ?></td>
+                        <td><?php echo $util->converterDataHoraParaBr($usuario->data_ultimoacesso) ?></td>
+                        <td><?php echo $primeiroacesso ?></td>
+                        <td><?php echo $ativo ?></td>
+                    </tr>
             <?php endforeach; ?>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 </div>
-<div class="col-1">
-    <p class="pagination">
-        Página(s) <?php echo $page->current, "/", $page->total_pages ?>
-    </p>
-</div>
-<div class="col-11">
-    <nav>
-        <ul class="pagination">
-            <li><?php echo $this->tag->linkTo("usuario", "Primeira") ?></li>
-            <li><?php echo $this->tag->linkTo("usuario?page=" . $page->before, "Anterior") ?></li>
-            <li><?php echo $this->tag->linkTo("usuario?page=" . $page->next, "Próxima") ?></li>
-            <li><?php echo $this->tag->linkTo("usuario?page=" . $page->last, "Última") ?></li>
-        </ul>
-    </nav>
-</div>
+<!--  Modal Usuário -->
+<div id="modalusuario" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalusuario" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h5 class="modal-title" id="modalusuario">Dados do Usuário</h5>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="col-12">
+                        <form id="formUser">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <?php echo $this->tag->textField(["nome_pessoa", "size" => 30, "class" => "form-control", "id" => "nome_pessoa", "placeholder" => "Nome"]) ?>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <?php echo $this->tag->textField(["login", "size" => 30, "class" => "form-control", "id" => "login", "placeholder" => "Login"]) ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <?php echo $this->tag->passwordField(["senha", "size" => 30, "class" => "form-control", "id" => "senha", "placeholder" => "Senha"]) ?>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <?php echo $this->tag->select(["roles_name", $roles, "class" => "form-control", "id" => "roles_name",
+                                        "using" => ["name", "name",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione um perfil",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
+                <button type="button" class="btn btn-secondary btn-rounded waves-effect" data-dismiss="modal">Fechar</button>
+                <button id="salvaUser" type="button" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
+            </div><!-- /.modal-footer -->
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

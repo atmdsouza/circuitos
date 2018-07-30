@@ -99,7 +99,7 @@ class ClienteUnidade extends \Phalcon\Mvc\Model
         $this->setSource("cliente_unidade");
         $this->hasMany('id', 'connecta\Circuitos', 'id_cliente_unidade', ['alias' => 'Circuitos']);
         $this->belongsTo('id_cliente', 'connecta\Cliente', 'id', ['alias' => 'Cliente']);
-        $this->belongsTo('id_pessoa', 'connecta\Pessoa', 'id', ['alias' => 'Pessoa']);
+        $this->hasOne('id_pessoa', 'connecta\Pessoa', 'id', ['alias' => 'Pessoa']);
     }
 
     /**

@@ -159,7 +159,7 @@ class PessoaFisica extends \Phalcon\Mvc\Model
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("pessoa_fisica");
         $this->belongsTo('id_sexo', 'connecta\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id', 'connecta\Pessoa', 'id', ['alias' => 'Pessoa']);
+        $this->hasOne('id', 'connecta\Pessoa', 'id', ['alias' => 'Pessoa']);
     }
 
     /**

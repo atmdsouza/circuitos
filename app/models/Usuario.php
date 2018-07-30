@@ -2,6 +2,7 @@
 
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
+use Pessoa;
 
 class Usuario extends \Phalcon\Mvc\Model
 {
@@ -35,6 +36,18 @@ class Usuario extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $senha;
+
+    /**
+     *
+     * @var string
+     */
+    protected $data_ultimoacesso;
+
+    /**
+     *
+     * @var string
+     */
+    protected $primeiroacesso;
 
     /**
      * Method to set the value of field id
@@ -102,6 +115,32 @@ class Usuario extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field data_ultimoacesso
+     *
+     * @param string $data_ultimoacesso
+     * @return $this
+     */
+    public function setDataUltimoacesso($data_ultimoacesso)
+    {
+        $this->data_ultimoacesso = $data_ultimoacesso;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field primeiroacesso
+     *
+     * @param string $primeiroacesso
+     * @return $this
+     */
+    public function setPrimeiroacesso($primeiroacesso)
+    {
+        $this->primeiroacesso = $primeiroacesso;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field id
      *
      * @return integer
@@ -152,6 +191,26 @@ class Usuario extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field data_ultimoacesso
+     *
+     * @return string
+     */
+    public function getDataUltimomacesso()
+    {
+        return $this->data_ultimoacesso;
+    }
+
+    /**
+     * Returns the value of field primeiroacesso
+     *
+     * @return string
+     */
+    public function getPrimeiroacesso()
+    {
+        return $this->primeiroacesso;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -161,7 +220,7 @@ class Usuario extends \Phalcon\Mvc\Model
         $this->hasMany('id', 'connecta\Circuitos', 'id_usuario_criacao', ['alias' => 'Circuitos']);
         $this->hasMany('id', 'connecta\Circuitos', 'id_usuario_atualizacao', ['alias' => 'Circuitos']);
         $this->hasMany('id', 'connecta\Movimentos', 'id_usuario', ['alias' => 'Movimentos']);
-        $this->belongsTo('id_pessoa', 'connecta\Pessoa', 'id', ['alias' => 'Pessoa']);
+        $this->hasOne('id_pessoa', Pessoa, 'id', ['alias' => 'Pessoa']);
         $this->belongsTo('roles_name', 'connecta\PhalconRoles', 'name', ['alias' => 'PhalconRoles']);
     }
 
@@ -210,7 +269,9 @@ class Usuario extends \Phalcon\Mvc\Model
             'id_pessoa' => 'id_pessoa',
             'roles_name' => 'roles_name',
             'login' => 'login',
-            'senha' => 'senha'
+            'senha' => 'senha',
+            'data_ultimoacesso' => 'data_ultimoacesso',
+            'primeiroacesso' => 'primeiroacesso'
         ];
     }
 

@@ -6,6 +6,8 @@ use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Usuario as Usuario;
 
+require_once APP_PATH . '/library/util/Util.php';
+
 class UsuarioController extends ControllerBase
 {
     /**
@@ -27,11 +29,11 @@ class UsuarioController extends ControllerBase
             $parameters = [];
         }
         $parameters["order"] = "id";
-        $usuario = Usuario::find($parameters);
+        $usuarios = Usuario::find($parameters);
         $pessoas = Pessoa::find();
         $roles = PhalconRoles::find();
         $paginator = new Paginator([
-            'data' => $usuario,
+            'data' => $usuarios,
             'limit'=> 10,
             'page' => $numberPage
         ]);
@@ -40,152 +42,121 @@ class UsuarioController extends ControllerBase
         $this->view->roles = $roles;
     }
 
-    /**
-     * Searches for usuario
-     */
-    public function searchAction()
+    public function criarUsuarioAction()
     {
-    }
-
-    /**
-     * Displays the creation form
-     */
-    public function newAction()
-    {
-
-    }
-
-    /**
-     * Edits a usuario
-     *
-     * @param string $id
-     */
-    public function editAction($id)
-    {
-        if (!$this->request->isPost()) {
-
-            $usuario = Usuario::findFirstByid($id);
-            if (!$usuario) {
-                $this->flash->error("Usuário não localizado!");
-
-                $this->dispatcher->forward([
-                    'controller' => "usuario",
-                    'action' => 'index'
-                ]);
-
-                return;
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        try {
+            $dados = filter_input_array(INPUT_POST);
+            //Create a transaction manager
+            $manager = new TxManager();
+            //Request a transaction
+            $transaction = $manager->get();
+            $pessoa = new Pessoa();
+            $pessoa->setTransaction($transaction);
+            $pessoa->nome = $dados["nome_pessoa"];
+            if ($pessoa->save() == false) {
+                $transaction->rollback("Não foi possível salvar a pessoa!");
             }
-
-            $this->view->id = $usuario->id;
-
-            $this->tag->setDefault("id", $usuario->id);
-            $this->tag->setDefault("id_pessoa", $usuario->id_pessoa);
-            $this->tag->setDefault("roles_name", $usuario->roles_name);
-            $this->tag->setDefault("login", $usuario->login);
-            $this->tag->setDefault("senha", $usuario->senha);
-            
+            $usuario = new Usuario();
+            $usuario->setTransaction($transaction);
+            $usuario->id_pessoa = $pessoa->id;
+            $usuario->roles_name = $dados["roles_name"];
+            $usuario->login = $dados["login"];
+            $usuario->senha = $this->security->hash($dados["senha"]);
+            if ($usuario->save() == false) {
+                $transaction->rollback("Não foi possível salvar o usuário!");
+            }
+            //Commita a transação
+            $transaction->commit();
+            echo "success";
+        } catch (TxFailed $e) {
+            echo "Ocorreu um erro: ", $e->getMessage();
         }
     }
 
-    /**
-     * Creates a new usuario
-     */
-    public function createAction()
+    public function editarUsuarioAction()
     {
-        if (!$this->request->isPost()) {
-            $this->dispatcher->forward([
-                'controller' => "usuario",
-                'action' => 'index'
-            ]);
-
-            return;
-        }
-
-        $usuario = new Usuario();
-        $usuario->idPessoa = $this->request->getPost("id_pessoa");
-        $usuario->rolesName = $this->request->getPost("roles_name");
-        $usuario->login = $this->request->getPost("login");
-        $usuario->senha = $this->security->hash($this->request->getPost("senha"));
-        
-
-        if (!$usuario->save()) {
-            foreach ($usuario->getMessages() as $message) {
-                $this->flash->error($message);
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        try {
+            $dados = filter_input_array(INPUT_POST);
+            $usuario = Usuario::findFirstByid($dados["id_usuario"]);
+            $pessoa = Pessoa::findFirst($usuario->id_pessoa);
+            //Create a transaction manager
+            $manager = new TxManager();
+            //Request a transaction
+            $transaction = $manager->get();
+            $pessoa->setTransaction($transaction);
+            $pessoa->nome = $dados["nome_pessoa"];
+            $pessoa->update_at = date("Y-m-d H:i:s");
+            if ($pessoa->save() == false) {
+                $transaction->rollback("Não foi possível salvar a pessoa!");
             }
-
-            $this->dispatcher->forward([
-                'controller' => "usuario",
-                'action' => 'new'
-            ]);
-
-            return;
+            $usuario->setTransaction($transaction);
+            $usuario->roles_name = $dados["roles_name"];
+            $usuario->login = $dados["login"];
+            if ($usuario->save() == false) {
+                $transaction->rollback("Não foi possível salvar o usuário!");
+            }
+            //Commita a transação
+            $transaction->commit();
+            echo "success";
+        } catch (TxFailed $e) {
+            echo "Ocorreu um erro: ", $e->getMessage();
         }
-
-        $this->flash->success("Usuário criado com sucesso!");
-
-        $this->dispatcher->forward([
-            'controller' => "usuario",
-            'action' => 'index'
-        ]);
     }
 
-    /**
-     * Saves a usuario edited
-     *
-     */
-    public function saveAction()
+    public function ativarUsuarioAction()
     {
-
-        if (!$this->request->isPost()) {
-            $this->dispatcher->forward([
-                'controller' => "usuario",
-                'action' => 'index'
-            ]);
-
-            return;
-        }
-
-        $id = $this->request->getPost("id");
-        $usuario = Usuario::findFirstByid($id);
-
-        if (!$usuario) {
-            $this->flash->error("O usuário não existe " . $id);
-
-            $this->dispatcher->forward([
-                'controller' => "usuario",
-                'action' => 'index'
-            ]);
-
-            return;
-        }
-
-        $usuario->idPessoa = $this->request->getPost("id_pessoa");
-        $usuario->rolesName = $this->request->getPost("roles_name");
-        $usuario->login = $this->request->getPost("login");
-        $usuario->senha = $this->security->hash($this->request->getPost("senha"));
-        
-
-        if (!$usuario->save()) {
-
-            foreach ($usuario->getMessages() as $message) {
-                $this->flash->error($message);
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        try {
+            $dados = filter_input_array(INPUT_POST);
+            $usuario = Usuario::findFirstByid($dados["id_usuario"]);
+            $pessoa = Pessoa::findFirst($usuario->id_pessoa);
+            //Create a transaction manager
+            $manager = new TxManager();
+            //Request a transaction
+            $transaction = $manager->get();
+            $pessoa->setTransaction($transaction);
+            $pessoa->ativo = 1;
+            $pessoa->update_at = date("Y-m-d H:i:s");
+            if ($pessoa->save() == false) {
+                $transaction->rollback("Não foi possível salvar a pessoa!");
             }
-
-            $this->dispatcher->forward([
-                'controller' => "usuario",
-                'action' => 'edit',
-                'params' => [$usuario->id]
-            ]);
-
-            return;
+            //Commita a transação
+            $transaction->commit();
+            echo "success";
+        } catch (TxFailed $e) {
+            echo "Ocorreu um erro: ", $e->getMessage();
         }
+    }
 
-        $this->flash->success("Usuário editado com sucesso!");
-
-        $this->dispatcher->forward([
-            'controller' => "usuario",
-            'action' => 'index'
-        ]);
+    public function inativarUsuarioAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        try {
+            $dados = filter_input_array(INPUT_POST);
+            $usuario = Usuario::findFirstByid($dados["id_usuario"]);
+            $pessoa = Pessoa::findFirst($usuario->id_pessoa);
+            //Create a transaction manager
+            $manager = new TxManager();
+            //Request a transaction
+            $transaction = $manager->get();
+            $pessoa->setTransaction($transaction);
+            $pessoa->ativo = 0;
+            $pessoa->update_at = date("Y-m-d H:i:s");
+            if ($pessoa->save() == false) {
+                $transaction->rollback("Não foi possível salvar a pessoa!");
+            }
+            //Commita a transação
+            $transaction->commit();
+            echo "success";
+        } catch (TxFailed $e) {
+            echo "Ocorreu um erro: ", $e->getMessage();
+        }
     }
 
     /**
@@ -193,40 +164,29 @@ class UsuarioController extends ControllerBase
      *
      * @param string $id
      */
-    public function deleteAction($id)
+    public function deletarUsuarioAction()
     {
-        $usuario = Usuario::findFirstByid($id);
-        if (!$usuario) {
-            $this->flash->error("Usuário não localizado!");
-
-            $this->dispatcher->forward([
-                'controller' => "usuario",
-                'action' => 'index'
-            ]);
-
-            return;
-        }
-
-        if (!$usuario->delete()) {
-
-            foreach ($usuario->getMessages() as $message) {
-                $this->flash->error($message);
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        try {
+            $dados = filter_input_array(INPUT_POST);
+            $usuario = Usuario::findFirstByid($dados["id_usuario"]);
+            $pessoa = Pessoa::findFirst($usuario->id_pessoa);
+            //Create a transaction manager
+            $manager = new TxManager();
+            //Request a transaction
+            $transaction = $manager->get();
+            if ($usuario->delete() == false) {
+                $transaction->rollback("Não foi possível deletar a pessoa!");
             }
-
-            $this->dispatcher->forward([
-                'controller' => "usuario",
-                'action' => 'search'
-            ]);
-
-            return;
+            if ($pessoa->delete() == false) {
+                $transaction->rollback("Não foi possível deletar a pessoa!");
+            }
+            //Commita a transação
+            $transaction->commit();
+            echo "success";
+        } catch (TxFailed $e) {
+            echo "Ocorreu um erro: ", $e->getMessage();
         }
-
-        $this->flash->success("Usuário deletado com sucesso!");
-
-        $this->dispatcher->forward([
-            'controller' => "usuario",
-            'action' => "index"
-        ]);
     }
-
 }

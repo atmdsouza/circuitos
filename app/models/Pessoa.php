@@ -1,5 +1,7 @@
 <?php
 
+use Usuario;
+
 class Pessoa extends \Phalcon\Mvc\Model
 {
 
@@ -155,16 +157,16 @@ class Pessoa extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("pessoa");
-        $this->hasMany('id', 'connecta\Cliente', 'id_pessoa', ['alias' => 'Cliente']);
-        $this->hasMany('id', 'connecta\ClienteUnidade', 'id_pessoa', ['alias' => 'ClienteUnidade']);
-        $this->hasMany('id', 'connecta\Fabricante', 'id_pessoa', ['alias' => 'Fabricante']);
+        $this->hasOne('id', 'connecta\Cliente', 'id_pessoa', ['alias' => 'Cliente']);
+        $this->hasOne('id', 'connecta\ClienteUnidade', 'id_pessoa', ['alias' => 'ClienteUnidade']);
+        $this->hasOne('id', 'connecta\Fabricante', 'id_pessoa', ['alias' => 'Fabricante']);
         $this->hasMany('id', 'connecta\PessoaContato', 'id_pessoa', ['alias' => 'PessoaContato']);
         $this->hasMany('id', 'connecta\PessoaEmail', 'id_pessoa', ['alias' => 'PessoaEmail']);
         $this->hasMany('id', 'connecta\PessoaEndereco', 'id_pessoa', ['alias' => 'PessoaEndereco']);
-        $this->hasMany('id', 'connecta\PessoaFisica', 'id', ['alias' => 'PessoaFisica']);
-        $this->hasMany('id', 'connecta\PessoaJuridica', 'id', ['alias' => 'PessoaJuridica']);
+        $this->hasOne('id', 'connecta\PessoaFisica', 'id', ['alias' => 'PessoaFisica']);
+        $this->hasOne('id', 'connecta\PessoaJuridica', 'id', ['alias' => 'PessoaJuridica']);
         $this->hasMany('id', 'connecta\PessoaTelefone', 'id_pessoa', ['alias' => 'PessoaTelefone']);
-        $this->hasMany('id', 'connecta\Usuario', 'id_pessoa', ['alias' => 'Usuario']);
+        $this->hasOne('id', Usuario, 'id_pessoa', ['alias' => 'Usuario']);
     }
 
     /**
