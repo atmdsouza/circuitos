@@ -96,7 +96,7 @@ class CoreController extends ControllerBase
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
-        $dados = filter_input_array(INPUT_POST);
+        $dados = filter_input_array(INPUT_GET);
         $email = PessoaEmail::findFirst("email='{$dados["email"]}'");
         if ($email) {
             //Instanciar a resposta HTTP
@@ -155,7 +155,6 @@ class CoreController extends ControllerBase
             $mail->ClearAttachments();
             return True;
         } catch (Exception $e) {
-            echo 'Message could not be sent. Mailer Error: ' . $mail->ErrorInfo;
             var_dump('Message could not be sent. Mailer Error: ' . $mail->ErrorInfo);
             exit;
         }

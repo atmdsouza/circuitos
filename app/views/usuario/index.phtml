@@ -1,6 +1,6 @@
 <?php
 
-require_once APP_PATH . '/library/util/Util.php';
+require_once APP_PATH . '/library/Util/Util.php';
 
 ?>
 
@@ -68,6 +68,7 @@ require_once APP_PATH . '/library/util/Util.php';
                 <h5 class="modal-title" id="modalusuario">Dados do Usuário</h5>
             </div>
             <form id="formUser">
+                <input type="hidden" id="token" name="<?php echo $token['tokenKey'] ?>" value="<?php echo $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
                 <div class="modal-body">
                     <div class="form-row">
                         <div class="col-12">
@@ -90,14 +91,6 @@ require_once APP_PATH . '/library/util/Util.php';
                                         "emptyText" => "Selecione um perfil",
                                         "emptyValue" => ""])
                                     ?>
-                                </div>
-                            </div>
-                            <div class="form-row" id="senhas">
-                                <div class="form-group col-md-6">
-                                    <?php echo $this->tag->passwordField(["senha", "size" => 30, "class" => "form-control", "id" => "senha", "placeholder" => "Senha"]) ?>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <?php echo $this->tag->passwordField(["senha_conf", "size" => 30, "class" => "form-control", "id" => "senha_conf", "placeholder" => "Confirme a senha"]) ?>
                                 </div>
                             </div>
                             <div class="form-row" id="reset_senha" style="display: none">

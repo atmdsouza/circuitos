@@ -118,7 +118,7 @@ table.buttons().container().appendTo('#tb_usuario_wrapper .col-md-6:eq(0)');
 $("#login").on("change", function(){
     var login = $("#login").val();
     $.ajax({
-        type: 'POST',
+        type: 'GET',
         dataType: 'JSON',
         url: 'usuario/validarLogin',
         data: {login: login},
@@ -146,7 +146,7 @@ $("#login").on("change", function(){
 $("#email").on("change", function(){
     var email = $("#email").val();
     $.ajax({
-        type: 'POST',
+        type: 'GET',
         dataType: 'JSON',
         url: 'core/validarEmail',
         data: {email: email},
@@ -195,14 +195,6 @@ $(document).on("click", ".criar_usuario", function(){
             },
             roles_name:{
                 required: true
-            },
-            senha:{
-                required: true,
-                minlength: 6
-            },
-            senha_conf:{
-                required: true,
-                minlength: 6
             }
         },
         messages:{
@@ -217,61 +209,47 @@ $(document).on("click", ".criar_usuario", function(){
             },
             roles_name:{
                 required: "É necessário informar um perfil"
-            },
-            senha:{
-                required: "É necessário informar uma senha",
-                minlength:"A senha deve possuir pelo menos 6 caracteres"
-            },
-            senha_conf:{
-                required: "É necessário informar novamente a senha",
-                minlength:"A senha deve possuir pelo menos 6 caracteres"
             }
         },
         submitHandler: function(form) {
             var dados = $("#formUser").serialize();
-            var senha1 = $("#senha").val();
-            var senha2 = $("#senha_conf").val();
-            if(senha1 == senha2){
-                $.ajax({
-                    type: 'POST',
-                    dataType: 'JSON',
-                    url: 'usuario/criarUsuario',
-                    data: dados,
-                    beforeSend: function () {
-                    },
-                    complete: function () {
-                    },
-                    error: function () {
-                    },
-                    success: function (data) {
-                        if (data.operacao){
-                            swal({
-                                title: 'Cadastro de Usuários',
-                                text: 'Cadastro de Usuários concluído!',
-                                type: 'success',
-                                showCancelButton: false,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ok'
-                              }).then((result) => {
-                                window.location.reload(true);
-                              });
-                        } else {
-                            swal({
-                                title: 'Cadastro de Usuários',
-                                text: data.mensagem,
-                                type: 'error'
-                            });
-                        }
+            $.ajax({
+                type: 'POST',
+                dataType: 'JSON',
+                url: 'usuario/criarUsuario',
+                data: {
+                    tokenKey: $('#token').attr('name'),
+                    tokenValue: $('#token').attr('value'),
+                    dados: dados
+                },
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function () {
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        swal({
+                            title: 'Cadastro de Usuários',
+                            text: 'Cadastro de Usuários concluído!',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                          }).then((result) => {
+                            window.location.reload(true);
+                          });
+                    } else {
+                        swal({
+                            title: 'Cadastro de Usuários',
+                            text: data.mensagem,
+                            type: 'error'
+                        });
                     }
-                });
-            }else{
-                swal({
-                    title: 'Cadastro de Usuários',
-                    text: "As senhas digitadas não conferem! Por favor, tente novamente após corrigí-las!",
-                    type: 'error'
-                });
-            }
+                }
+            });
         }
     });
 });
@@ -305,7 +283,7 @@ $(".bt_edit").on("click", function(){
      } else {
         var id_usuario = ids[0];
         $.ajax({
-            type: 'POST',
+            type: 'GET',
             dataType: 'JSON',
             url: 'usuario/formUsuario',
             data: {id_usuario: id_usuario},
@@ -344,10 +322,6 @@ $(document).on("click", ".editar_usuario", function(){
             login:{
                 required: true
             },
-            senha:{
-                required: true,
-                minlength: 6
-            },
             roles_name:{
                 required: true
             }
@@ -372,7 +346,11 @@ $(document).on("click", ".editar_usuario", function(){
                 type: 'POST',
                 dataType: 'JSON',
                 url: 'usuario/editarUsuario',
-                data: dados,
+                data: {
+                    tokenKey: $('#token').attr('name'),
+                    tokenValue: $('#token').attr('value'),
+                    dados: dados
+                },
                 beforeSend: function () {
                 },
                 complete: function () {
@@ -420,7 +398,11 @@ $("#senha_reset").on("click", function(){
               type: 'POST',
               dataType: 'JSON',
               url: 'usuario/resetarSenha',
-              data: {id: id},
+              data: {
+                tokenKey: $('#token').attr('name'),
+                tokenValue: $('#token').attr('value'),
+                id: id
+            },
               beforeSend: function () {
               },
               complete: function () {
