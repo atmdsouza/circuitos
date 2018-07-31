@@ -217,11 +217,11 @@ class Usuario extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("usuario");
-        $this->hasMany('id', 'connecta\Circuitos', 'id_usuario_criacao', ['alias' => 'Circuitos']);
-        $this->hasMany('id', 'connecta\Circuitos', 'id_usuario_atualizacao', ['alias' => 'Circuitos']);
-        $this->hasMany('id', 'connecta\Movimentos', 'id_usuario', ['alias' => 'Movimentos']);
+        $this->hasMany('id', Circuitos, 'id_usuario_criacao', ['alias' => 'Circuitos1']);
+        $this->hasMany('id', Circuitos, 'id_usuario_atualizacao', ['alias' => 'Circuitos2']);
+        $this->hasMany('id', Movimentos, 'id_usuario', ['alias' => 'Movimentos']);
         $this->hasOne('id_pessoa', Pessoa, 'id', ['alias' => 'Pessoa']);
-        $this->belongsTo('roles_name', 'connecta\PhalconRoles', 'name', ['alias' => 'PhalconRoles']);
+        $this->belongsTo('roles_name', PhalconRoles, 'name', ['alias' => 'PhalconRoles']);
     }
 
     /**

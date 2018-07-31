@@ -58,15 +58,6 @@ var table = $('#tb_usuario').DataTable({
             }
 
         },
-        {//Botão Deletar Registro
-            className: 'bt_del',
-            text: 'Deletar',
-            name: 'del', // do not change name
-            titleAttr: 'Deletar registro',
-            action: function (e, dt, node, config) {
-            }
-
-        },
         {//Botão Ativar Registro
             className: 'bt_ativo',
             text: 'Ativar',
@@ -85,16 +76,25 @@ var table = $('#tb_usuario').DataTable({
             }
 
         },
-        {//Botão Selecionar
-            extend: 'selectAll',
-            text: 'Selecionar',
-            titleAttr: 'Selecionar Todos os Registros'
+        {//Botão Deletar Registro
+            className: 'bt_del',
+            text: 'Deletar',
+            name: 'del', // do not change name
+            titleAttr: 'Deletar registro',
+            action: function (e, dt, node, config) {
+            }
+
         },
-        {//Botão Limpar Seleção
-            extend: 'selectNone',
-            text: 'Limpar',
-            titleAttr: 'Limpar Seleção dos Registros'
-        },
+        // {//Botão Selecionar
+        //     extend: 'selectAll',
+        //     text: 'Selecionar',
+        //     titleAttr: 'Selecionar Todos os Registros'
+        // },
+        // {//Botão Limpar Seleção
+        //     extend: 'selectNone',
+        //     text: 'Limpar',
+        //     titleAttr: 'Limpar Seleção dos Registros'
+        // },
         // {//Botão imprimir
         //     extend: 'print',
         //     text: 'Imprimir',
@@ -114,11 +114,6 @@ var table = $('#tb_usuario').DataTable({
 });
 
 table.buttons().container().appendTo('#tb_usuario_wrapper .col-md-6:eq(0)');
-
-//Validação de formulário
-$(document).ready(function() {
-    $('form').parsley();
-});
 
 $("#login").on("change", function(){
     var login = $("#login").val();
@@ -153,7 +148,7 @@ $("#email").on("change", function(){
     $.ajax({
         type: 'POST',
         dataType: 'JSON',
-        url: 'usuario/validarEmail',
+        url: 'core/validarEmail',
         data: {email: email},
         beforeSend: function () {
         },
@@ -182,35 +177,98 @@ $(".bt_novo").on("click", function(){
 });
 
 $(document).on("click", ".criar_usuario", function(){
-    var dados = $("#formUser").serialize();
-    $.ajax({
-        type: 'POST',
-        dataType: 'JSON',
-        url: 'usuario/criarUsuario',
-        data: dados,
-        beforeSend: function () {
+    //Validação de formulário
+    $("#formUser").validate({
+        rules : {
+            nome_pessoa:{
+                required: true
+            },
+            email:{
+                required: true
+            },
+            login:{
+                required: true
+            },
+            senha:{
+                required: true,
+                minlength: 6
+            },
+            roles_name:{
+                required: true
+            },
+            senha:{
+                required: true,
+                minlength: 6
+            },
+            senha_conf:{
+                required: true,
+                minlength: 6
+            }
         },
-        complete: function () {
+        messages:{
+            nome_pessoa:{
+                required:"É necessário informar seu nome"
+            },
+            email:{
+                required:"É necessário informar um email"
+            },
+            login:{
+                required:"É necessário informar seu login"
+            },
+            roles_name:{
+                required: "É necessário informar um perfil"
+            },
+            senha:{
+                required: "É necessário informar uma senha",
+                minlength:"A senha deve possuir pelo menos 6 caracteres"
+            },
+            senha_conf:{
+                required: "É necessário informar novamente a senha",
+                minlength:"A senha deve possuir pelo menos 6 caracteres"
+            }
         },
-        error: function () {
-        },
-        success: function (data) {
-            if (data.operacao){
+        submitHandler: function(form) {
+            var dados = $("#formUser").serialize();
+            var senha1 = $("#senha").val();
+            var senha2 = $("#senha_conf").val();
+            if(senha1 == senha2){
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: 'usuario/criarUsuario',
+                    data: dados,
+                    beforeSend: function () {
+                    },
+                    complete: function () {
+                    },
+                    error: function () {
+                    },
+                    success: function (data) {
+                        if (data.operacao){
+                            swal({
+                                title: 'Cadastro de Usuários',
+                                text: 'Cadastro de Usuários concluído!',
+                                type: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                              }).then((result) => {
+                                window.location.reload(true);
+                              });
+                        } else {
+                            swal({
+                                title: 'Cadastro de Usuários',
+                                text: data.mensagem,
+                                type: 'error'
+                            });
+                        }
+                    }
+                });
+            }else{
                 swal({
                     title: 'Cadastro de Usuários',
-                    text: 'Cadastro de Usuários concluído!',
-                    type: 'success',
-                    showCancelButton: false,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ok'
-                  }).then((result) => {
-                    window.location.reload(true);
-                  });
-            } else {
-                swal({
-                    title: 'Cadastro de Usuários',
-                    text: 'Erro ao tentar realizar o cadastro!/n' + data.mensagem,
+                    text: "As senhas digitadas não conferem! Por favor, tente novamente após corrigí-las!",
                     type: 'error'
                 });
             }
@@ -218,50 +276,475 @@ $(document).on("click", ".criar_usuario", function(){
     });
 });
 
+//Coletando os ids das linhas selecionadas na tabela
+var ids = [];   
+$("#tb_usuario").on("click", "tr", function () {
+    var valr = $(this)[0].cells[0].innerText;
+    if (!ids.includes(valr)) {
+        ids.push(valr);
+    } else {
+        var index = ids.indexOf(valr);
+        ids.splice(index, 1);
+    }
+});
+
 $(".bt_edit").on("click", function(){
-    var dados = $("#formUser").serialize();
-    $.ajax({
-        type: 'POST',
-        dataType: 'JSON',
-        url: 'usuario/formUsuario',
-        data: dados,
-        beforeSend: function () {
-        },
-        complete: function () {
-        },
-        error: function () {
-        },
-        success: function (data) {
-            $("#modalusuario").modal();
-        }
-    });
-    $("#salvaUser").removeClass("criar_usuario").addClass("editar_usuario");
+    nm_rows = ids.length;
+    if(nm_rows > 1){
+        swal({
+            title: 'Edição de Usuários',
+            text: 'Você somente pode editar um único usuário! Selecione apenas um e tente novamente!',
+            type: 'warning'
+          });
+    } else if (nm_rows == 0) {
+        swal({
+            title: 'Edição de Usuários',
+            text: 'Você precisa selecionar um usuário para a edição!',
+            type: 'warning'
+          });
+     } else {
+        var id_usuario = ids[0];
+        $.ajax({
+            type: 'POST',
+            dataType: 'JSON',
+            url: 'usuario/formUsuario',
+            data: {id_usuario: id_usuario},
+            beforeSend: function () {
+            },
+            complete: function () {
+            },
+            error: function () {
+            },
+            success: function (data) {
+                $("#id").val(data.dados.id);
+                $("#nome_pessoa").val(data.dados.nome);
+                $("#email").val(data.dados.email);
+                $("#login").val(data.dados.login);
+                $("#roles_name").val(data.dados.perfil).selected = "true";
+                $("#senhas").hide();
+                $("#reset_senha").show();
+                $("#modalusuario").modal();
+            }
+        });
+        $("#salvaUser").removeClass("criar_usuario").addClass("editar_usuario");
+    }
+
 });
 
 $(document).on("click", ".editar_usuario", function(){
-    var dados = $("#formUser").serialize();
-    $.ajax({
-        type: 'POST',
-        dataType: 'JSON',
-        url: 'usuario/editarUsuario',
-        data: dados,
-        beforeSend: function () {
+    //Validação de formulário
+    $("#formUser").validate({
+        rules : {
+            nome_pessoa:{
+                required: true
+            },
+            email:{
+                required: true
+            },
+            login:{
+                required: true
+            },
+            senha:{
+                required: true,
+                minlength: 6
+            },
+            roles_name:{
+                required: true
+            }
         },
-        complete: function () {
+        messages:{
+            nome_pessoa:{
+                required:"É necessário informar seu nome"
+            },
+            email:{
+                required:"É necessário informar um email"
+            },
+            login:{
+                required:"É necessário informar seu login"
+            },
+            roles_name:{
+                required: "É necessário informar um perfil"
+            }
         },
-        error: function () {
-        },
-        success: function (data) {
+        submitHandler: function(form) {
+            var dados = $("#formUser").serialize();
+            $.ajax({
+                type: 'POST',
+                dataType: 'JSON',
+                url: 'usuario/editarUsuario',
+                data: dados,
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function () {
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        swal({
+                            title: 'Cadastro de Usuários',
+                            text: 'Edição de Usuários concluída!',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                          }).then((result) => {
+                            window.location.reload(true);
+                          });
+                    } else {
+                        swal({
+                            title: 'Cadastro de Usuários',
+                            text: data.mensagem,
+                            type: 'error'
+                        });
+                    }
+                }
+            });
         }
+    });
+});
+
+$("#senha_reset").on("click", function(){
+    swal({
+        title: 'Tem certeza que deseja resetar a senha deste usuário?',
+        text: "O sistema irá gerar uma senha aleatória e enviá-la para o usuário através de seu endereço de e-mail!",
+        type: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sim, resete!'
+      }).then((result) => {
+          var id = $("#id").val();
+          $.ajax({
+              type: 'POST',
+              dataType: 'JSON',
+              url: 'usuario/resetarSenha',
+              data: {id: id},
+              beforeSend: function () {
+              },
+              complete: function () {
+              },
+              error: function () {
+              },
+              success: function (data) {
+                  if (data.operacao){
+                      swal({
+                          title: 'Resetada!',
+                          text: 'A senha deste usuário foi resetada com sucesso.',
+                          type: 'success',
+                          showCancelButton: false,
+                          confirmButtonColor: '#3085d6',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Ok'
+                        }).then((result) => {
+                          window.location.reload(true);
+                        });
+                  } else {
+                      swal({
+                          title: 'Reset de Senha',
+                          text: data.mensagem,
+                          type: 'error'
+                      });
+                  }
+              }
+          });
     });
 });
 
 $(".bt_del").on("click", function(){
-    alert("Deletar");
+    var nm_rows = ids.length;
+    if(nm_rows > 1){
+        swal({
+            title: 'Tem certeza que deseja deletar múltipos usuários?',
+            text: "O sistema irá deletar um total de " + nm_rows + " usuários com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
+            type: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, apagar!'
+          }).then((result) => {
+              $.ajax({
+                  type: 'POST',
+                  dataType: 'JSON',
+                  url: 'usuario/deletarUsuario',
+                  data: {ids: ids},
+                  beforeSend: function () {
+                  },
+                  complete: function () {
+                  },
+                  error: function () {
+                  },
+                  success: function (data) {
+                      if (data.operacao){
+                          swal({
+                              title: 'Deletados!',
+                              text: 'Os usuário selecionados foram deletados com sucesso.',
+                              type: 'success',
+                              showCancelButton: false,
+                              confirmButtonColor: '#3085d6',
+                              cancelButtonColor: '#d33',
+                              confirmButtonText: 'Ok'
+                            }).then((result) => {
+                              window.location.reload(true);
+                            });
+                      } else {
+                          swal({
+                              title: 'Deletar',
+                              text: data.mensagem,
+                              type: 'error'
+                          });
+                      }
+                  }
+              });
+        });
+    } else if (nm_rows == 0) {
+        swal({
+            title: 'Deletar Usuários',
+            text: 'Você precisa selecionar um usuário ou mais usuários para serem deletados!',
+            type: 'warning'
+          });
+     } else {
+        swal({
+            title: 'Tem certeza que deseja deletar este usuário?',
+            text: "O sistema irá deletar o usuário selecionado com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
+            type: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, apagar!'
+          }).then((result) => {
+              $.ajax({
+                  type: 'POST',
+                  dataType: 'JSON',
+                  url: 'usuario/deletarUsuario',
+                  data: {ids: ids},
+                  beforeSend: function () {
+                  },
+                  complete: function () {
+                  },
+                  error: function () {
+                  },
+                  success: function (data) {
+                      if (data.operacao){
+                          swal({
+                              title: 'Deletado!',
+                              text: 'O usuário selecionado foi deletado com sucesso.',
+                              type: 'success',
+                              showCancelButton: false,
+                              confirmButtonColor: '#3085d6',
+                              cancelButtonColor: '#d33',
+                              confirmButtonText: 'Ok'
+                            }).then((result) => {
+                              window.location.reload(true);
+                            });
+                      } else {
+                          swal({
+                              title: 'Deletar',
+                              text: data.mensagem,
+                              type: 'error'
+                          });
+                      }
+                  }
+              });
+        });
+    }
 });
+
 $(".bt_ativo").on("click", function(){
-    alert("Ativar");
+    var nm_rows = ids.length;
+    if(nm_rows > 1){
+        swal({
+            title: 'Tem certeza que deseja ativar múltipos usuários?',
+            text: "O sistema irá ativar um total de " + nm_rows + " usuários com essa ação.",
+            type: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, ativar!'
+          }).then((result) => {
+              $.ajax({
+                  type: 'POST',
+                  dataType: 'JSON',
+                  url: 'usuario/ativarUsuario',
+                  data: {ids: ids},
+                  beforeSend: function () {
+                  },
+                  complete: function () {
+                  },
+                  error: function () {
+                  },
+                  success: function (data) {
+                      if (data.operacao){
+                          swal({
+                              title: 'Ativados!',
+                              text: 'Os usuário selecionados foram ativados com sucesso.',
+                              type: 'success',
+                              showCancelButton: false,
+                              confirmButtonColor: '#3085d6',
+                              cancelButtonColor: '#d33',
+                              confirmButtonText: 'Ok'
+                            }).then((result) => {
+                              window.location.reload(true);
+                            });
+                      } else {
+                          swal({
+                              title: 'Ativar',
+                              text: data.mensagem,
+                              type: 'error'
+                          });
+                      }
+                  }
+              });
+        });
+    } else if (nm_rows == 0) {
+        swal({
+            title: 'Ativar Usuários',
+            text: 'Você precisa selecionar um usuário ou mais usuários para serem ativados!',
+            type: 'warning'
+          });
+     } else {
+        swal({
+            title: 'Tem certeza que deseja ativar este usuário?',
+            text: "O sistema irá ativar o usuário selecionado com essa ação.",
+            type: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, ativar!'
+          }).then((result) => {
+              $.ajax({
+                  type: 'POST',
+                  dataType: 'JSON',
+                  url: 'usuario/ativarUsuario',
+                  data: {ids: ids},
+                  beforeSend: function () {
+                  },
+                  complete: function () {
+                  },
+                  error: function () {
+                  },
+                  success: function (data) {
+                      if (data.operacao){
+                          swal({
+                              title: 'Ativado!',
+                              text: 'O usuário selecionado foi ativado com sucesso.',
+                              type: 'success',
+                              showCancelButton: false,
+                              confirmButtonColor: '#3085d6',
+                              cancelButtonColor: '#d33',
+                              confirmButtonText: 'Ok'
+                            }).then((result) => {
+                              window.location.reload(true);
+                            });
+                      } else {
+                          swal({
+                              title: 'Ativar',
+                              text: data.mensagem,
+                              type: 'error'
+                          });
+                      }
+                  }
+              });
+        });
+    }
 });
+
 $(".bt_inativo").on("click", function(){
-    alert("Inativar");
+    var nm_rows = ids.length;
+    if(nm_rows > 1){
+        swal({
+            title: 'Tem certeza que deseja inativar múltipos usuários?',
+            text: "O sistema irá inativar um total de " + nm_rows + " usuários com essa ação.",
+            type: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, inativar!'
+          }).then((result) => {
+              $.ajax({
+                  type: 'POST',
+                  dataType: 'JSON',
+                  url: 'usuario/inativarUsuario',
+                  data: {ids: ids},
+                  beforeSend: function () {
+                  },
+                  complete: function () {
+                  },
+                  error: function () {
+                  },
+                  success: function (data) {
+                      if (data.operacao){
+                          swal({
+                              title: 'Inativados!',
+                              text: 'Os usuário selecionados foram inativados com sucesso.',
+                              type: 'success',
+                              showCancelButton: false,
+                              confirmButtonColor: '#3085d6',
+                              cancelButtonColor: '#d33',
+                              confirmButtonText: 'Ok'
+                            }).then((result) => {
+                              window.location.reload(true);
+                            });
+                      } else {
+                          swal({
+                              title: 'Inativar',
+                              text: data.mensagem,
+                              type: 'error'
+                          });
+                      }
+                  }
+              });
+        });
+    } else if (nm_rows == 0) {
+        swal({
+            title: 'Inativar Usuários',
+            text: 'Você precisa selecionar um usuário ou mais usuários para serem inativados!',
+            type: 'warning'
+          });
+     } else {
+        swal({
+            title: 'Tem certeza que deseja inativar este usuário?',
+            text: "O sistema irá inativar o usuário selecionado com essa ação.",
+            type: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, inativar!'
+          }).then((result) => {
+              $.ajax({
+                  type: 'POST',
+                  dataType: 'JSON',
+                  url: 'usuario/inativarUsuario',
+                  data: {ids: ids},
+                  beforeSend: function () {
+                  },
+                  complete: function () {
+                  },
+                  error: function () {
+                  },
+                  success: function (data) {
+                      if (data.operacao){
+                          swal({
+                              title: 'Inativado!',
+                              text: 'O usuário selecionado foi inativado com sucesso.',
+                              type: 'success',
+                              showCancelButton: false,
+                              confirmButtonColor: '#3085d6',
+                              cancelButtonColor: '#d33',
+                              confirmButtonText: 'Ok'
+                            }).then((result) => {
+                              window.location.reload(true);
+                            });
+                      } else {
+                          swal({
+                              title: 'Inativar',
+                              text: data.mensagem,
+                              type: 'error'
+                          });
+                      }
+                  }
+              });
+        });
+    }
 });

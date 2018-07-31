@@ -19,6 +19,7 @@
         <link href="<?= DIR_STATICS ?>public/css/icons.css" rel="stylesheet" type="text/css" />
         <link href="<?= DIR_STATICS ?>public/css/metismenu.min.css" rel="stylesheet" type="text/css" />
         <link href="<?= DIR_STATICS ?>public/css/style.css" rel="stylesheet" type="text/css" />
+        <link href="<?= DIR_STATICS ?>public/css/custom.css" rel="stylesheet" type="text/css" />
 
         <script src="<?= DIR_STATICS ?>public/js/modernizr.min.js"></script>
 
@@ -31,6 +32,9 @@
         <link href="<?= DIR_STATICS ?>public/plugins/datatables/select/css/select.dataTables.min.css" rel="stylesheet" type="text/css" />
         <!-- Sweet Alert css -->
         <link href="<?= DIR_STATICS ?>public/plugins/sweet-alert/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+
+        <link rel="stylesheet" href="<?= DIR_STATICS ?>public/plugins/switchery/switchery.min.css" />
+
 
 
     </head>
@@ -137,6 +141,7 @@
                             <li>
                                 <a href="javascript: void(0);"><i class="fi-cog"></i> <span> Configuração </span> <span class="menu-arrow"></span></a>
                                 <ul class="nav-second-level" aria-expanded="false">
+                                    <li><?php echo $this->tag->linkTo(["empresa", "Configuração da Empresa"]) ?></li>
                                     <li><?php echo $this->tag->linkTo(["lov", "Lista de Valores"]) ?></li>
                                 </ul>
                             </li>
@@ -178,6 +183,7 @@
 
         <!-- jQuery  -->
         <script src="<?= DIR_STATICS ?>public/js/jquery.min.js"></script>
+        <script src="<?= DIR_STATICS ?>public/plugins/jquery-validate/jquery.validate.min.js"></script>
         <script src="<?= DIR_STATICS ?>public/js/popper.min.js"></script>
         <script src="<?= DIR_STATICS ?>public/js/bootstrap.min.js"></script>
         <script src="<?= DIR_STATICS ?>public/js/metisMenu.min.js"></script>
@@ -219,8 +225,7 @@
         <!-- Sweet Alert Js  -->
         <script src="<?= DIR_STATICS ?>public/plugins/sweet-alert/sweetalert2.min.js"></script>
 
-        <!-- Parsley js -->
-        <script type="text/javascript" src="<?= DIR_STATICS ?>public/plugins/parsleyjs/parsley.min.js"></script>
+        <script src="<?= DIR_STATICS ?>public/plugins/switchery/switchery.min.js"></script>
 
         <!-- App js -->
         <script src="<?= DIR_STATICS ?>public/js/jquery.core.js"></script>
