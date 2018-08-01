@@ -1,6 +1,7 @@
 <?php
 
 use Phalcon\Mvc\View;
+use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\View\Engine\Php as PhpEngine;
 use Phalcon\Mvc\Url as UrlResolver;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
@@ -102,11 +103,30 @@ $di->set('flash', function () {
 });
 
 /**
+ * Dispatcher use a default namespace
+ */
+$di->set('dispatcher', function () {
+    $dispatcher = new Dispatcher();
+    return $dispatcher;
+});
+
+/**
  * Start the session the first time some component request the session service
  */
-$di->setShared('session', function () {
+$di->set('session', function () {
     $session = new SessionAdapter();
     $session->start();
-
     return $session;
+});
+/**
+ * Custom authentication component
+ */
+$di->set('auth', function () {
+    return new Auth();
+});
+/**
+ * Access Control List
+ */
+$di->set('acl', function () {
+    return new Acl();
 });

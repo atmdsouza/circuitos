@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Connecta - Sistema de Gestão de Circuitos do Navega Pará</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+        <meta content="Coderthemes" name="author" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="<?= DIR_STATICS ?>public/images/favicon.png">
+
+        <!-- App css -->
+        <link href="<?= DIR_STATICS ?>public/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <link href="<?= DIR_STATICS ?>public/css/icons.css" rel="stylesheet" type="text/css" />
+        <link href="<?= DIR_STATICS ?>public/css/metismenu.min.css" rel="stylesheet" type="text/css" />
+        <link href="<?= DIR_STATICS ?>public/css/style.css" rel="stylesheet" type="text/css" />
+
+        <script src="<?= DIR_STATICS ?>public/js/modernizr.min.js"></script>
+
+    </head>
+
+
+    <body class="bg-accpunt-pages">
+
+        <!-- HOME -->
+        <section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <div class="wrapper-page">
+
+                            <div class="account-pages">
+                                <div class="account-box">
+                                    <div class="account-logo-box">
+                                        <h2 class="text-uppercase text-center">
+                                            <a href="index.html" class="text-success">
+                                                <span><img src="<?= DIR_STATICS ?>public/images/logo_dark.png" alt="" height="120"></span>
+                                            </a>
+                                        </h2>
+                                        <h6 class="text-uppercase text-center font-bold mt-4">Bem vindo ao Sistema Connecta</h6>
+                                    </div>
+                                    <div class="account-content">
+                                    <?php
+                                        echo $this->tag->form(
+                                            [
+                                                "session/login",
+                                                "autocomplete" => "off",
+                                                "class" => "form-horizontal"
+                                            ]
+                                        );
+                                    ?>
+
+                                            <div class="form-group m-b-20 row">
+                                                <div class="col-12">
+                                                    <label for="login">Nome de Usuário (login)</label>
+                                                    <?php echo $this->tag->textField(["login", "size" => 30, "class" => "form-control", "id" => "login", "placeholder" => "Seu nome de usuário (login)"]) ?>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row m-b-20">
+                                                <div class="col-12">
+                                                    <a href="page-recoverpw.html" class="text-muted pull-right"><small>Esqueceu sua senha?</small></a>
+                                                    <label for="password">Senha</label>
+                                                    <?php echo $this->tag->passwordField(["password", "size" => 30, "class" => "form-control", "id" => "password", "placeholder" => "Sua senha"]) ?>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row text-center m-t-10">
+                                                <div class="col-12">
+                                                    <?php echo $this->tag->submitButton(["Entrar", "class" => "btn btn-block btn-gradient"]) ?>
+                                                </div>
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end card-box-->
+
+
+                        </div>
+                        <!-- end wrapper -->
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END HOME -->
+
+
+        <!-- jQuery  -->
+        <script src="<?= DIR_STATICS ?>public/js/jquery.min.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/popper.min.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/bootstrap.min.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/metisMenu.min.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/waves.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/jquery.slimscroll.js"></script>
+
+        <!-- App js -->
+        <script src="<?= DIR_STATICS ?>public/js/jquery.core.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/jquery.app.js"></script>
+
+    </body>
+</html>

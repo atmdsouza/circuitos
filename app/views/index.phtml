@@ -80,9 +80,7 @@
                                     <i class="fi-head"></i> <span>Meus dados</span>
                                 </a>
                                 <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                    <i class="fi-power"></i> <span>Sair</span>
-                                </a>
+                                <?php echo $this->tag->linkTo(["session/logout", "<i class='fi-power'></i> <span> Sair </span>", "class" => "dropdown-item notify-item"]) ?>
 
                             </div>
                         </li>

@@ -10,6 +10,7 @@ use CoreController as Core;
 use App\Library\TokenManager;
 
 require_once APP_PATH . '/library/Util/Util.php';
+require_once APP_PATH . '/library/Auth/Auth.php';
 require_once APP_PATH . '/library/Util/TemplatesEmails.php';
 require_once APP_PATH . '/library/CSRFToken/CSRFToken.php';
 
@@ -19,6 +20,12 @@ class UsuarioController extends ControllerBase
 
     public function initialize()
     {
+        // Get the current identity
+        $identity = $this->auth->getIdentity();
+        // If there is no identity available the user is redirected to session/login
+        if (!is_array($identity)) {
+            return $this->response->redirect('session/login');
+        }
         $this->tokenManager = new TokenManager;
         if (!$this->tokenManager->doesUserHaveToken('User')) {
             $this->tokenManager->generateToken('User');
