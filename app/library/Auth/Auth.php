@@ -18,12 +18,13 @@ class Auth extends Component {
 
         if ($user == false) {
 //            $this->registerUserThrottling(0);
-            throw new Exception('Dados de login e senha errados! Tente novamente.');
+            return false;
         }
         // Check the password
         if (!$this->security->checkHash($credentials['password'], $user->senha)) {
 //            $this->registerUserThrottling($user->id);
-            throw new Exception('Dados de login e senha errados! Tente novamente.');
+            // throw new Exception('Dados de login e senha errados! Tente novamente.');
+            return false;
         }
 
         // Check if the user was flagged
@@ -37,8 +38,10 @@ class Auth extends Component {
 
         $this->session->set('auth-identity', array(
             'id' => $user->id,
-            'login' => $user->login
+            'login' => $user->login,
+            'nome' => $user->Pessoa->nome
         ));
+        return true;
     }
 
     public function check_public($credentials) {
@@ -69,7 +72,8 @@ class Auth extends Component {
 
         $this->session->set('auth-identity', array(
             'id' => $user->id,
-            'email' => $email->descricao
+            'login' => $user->login,
+            'nome' => $user->Pessoa->nome
         ));
     }
 

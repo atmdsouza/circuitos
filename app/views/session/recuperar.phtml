@@ -36,27 +36,39 @@
                                 <div class="account-box">
                                     <div class="account-logo-box">
                                         <h2 class="text-uppercase text-center">
-                                            <a href="index.html" class="text-success">
+                                            <a href="http://www.prodepa.pa.gov.br" class="text-success">
                                                 <span><img src="<?= DIR_STATICS ?>public/images/logo_dark.png" alt="" height="120"></span>
                                             </a>
                                         </h2>
                                     </div>
                                     <div class="account-content">
+
                                         <div class="text-center m-b-20">
-                                            <p class="text-muted m-b-0">Enter your email address and we'll send you an email with instructions to reset your password.  </p>
+                                            <p class="text-muted m-b-0">Entre com seu e-mail para que possamos resetar sua senha.</p>
                                         </div>
-                                        <form class="form-horizontal" action="#">
+                                        <?php echo $this->getContent(); ?>
+                                        <?php
+                                            echo $this->tag->form(
+                                                [
+                                                    "session/esqueceu",
+                                                    "autocomplete" => "off",
+                                                    "class" => "form-horizontal"
+                                                ]
+                                            );
+                                        ?>
+                                        
+                                            <input type="hidden" name="<?php echo $this->security->getTokenKey() ?>" value="<?php echo $this->security->getToken() ?>"/>
 
                                             <div class="form-group row m-b-20">
                                                 <div class="col-12">
-                                                    <label for="emailaddress">Email address</label>
-                                                    <input class="form-control" type="email" id="emailaddress" required="" placeholder="john@deo.com">
+                                                    <label for="email">Endereço de e-mail</label>
+                                                    <?php echo $this->tag->textField(["email", "size" => 30, "class" => "form-control", "id" => "email", "placeholder" => "Seu e-mail"]) ?>
                                                 </div>
                                             </div>
 
                                             <div class="form-group row text-center m-t-10">
                                                 <div class="col-12">
-                                                    <button class="btn btn-block btn-gradient waves-effect waves-light" type="submit">Reset Password</button>
+                                                    <?php echo $this->tag->submitButton(["Resetar Password", "class" => "btn btn-block btn-gradient"]) ?>
                                                 </div>
                                             </div>
 
@@ -64,7 +76,7 @@
 
                                         <div class="row m-t-50">
                                             <div class="col-sm-12 text-center">
-                                                <p class="text-muted">Back to <a href="page-login.html" class="text-dark m-l-5"><b>Sign In</b></a></p>
+                                                <p class="text-muted">Voltar para a página de <?php echo $this->tag->linkTo(["session/login", "login", "class" => "text-dark m-l-5"]) ?></p>
                                             </div>
                                         </div>
 

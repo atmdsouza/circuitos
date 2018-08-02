@@ -36,38 +36,39 @@
                                 <div class="account-box">
                                     <div class="account-logo-box">
                                         <h2 class="text-uppercase text-center">
-                                            <a href="index.html" class="text-success">
+                                            <a href="http://www.prodepa.pa.gov.br" class="text-success">
                                                 <span><img src="<?= DIR_STATICS ?>public/images/logo_dark.png" alt="" height="120"></span>
                                             </a>
                                         </h2>
                                         <h6 class="text-uppercase text-center font-bold mt-4">Bem vindo ao Sistema Connecta</h6>
                                     </div>
                                     <div class="account-content">
-                                    <?php
-                                        echo $this->tag->form(
-                                            [
-                                                "session/login",
-                                                "autocomplete" => "off",
-                                                "class" => "form-horizontal"
-                                            ]
-                                        );
-                                    ?>
 
+                                    <?php echo $this->getContent(); ?>
+                                    
+                                        <?php
+                                            echo $this->tag->form(
+                                                [
+                                                    "session/login",
+                                                    "autocomplete" => "off",
+                                                    "class" => "form-horizontal"
+                                                ]
+                                            );
+                                        ?>
+                                            <input type="hidden" name="<?php echo $this->security->getTokenKey() ?>" value="<?php echo $this->security->getToken() ?>"/>
                                             <div class="form-group m-b-20 row">
                                                 <div class="col-12">
                                                     <label for="login">Nome de Usuário (login)</label>
                                                     <?php echo $this->tag->textField(["login", "size" => 30, "class" => "form-control", "id" => "login", "placeholder" => "Seu nome de usuário (login)"]) ?>
                                                 </div>
                                             </div>
-
                                             <div class="form-group row m-b-20">
                                                 <div class="col-12">
-                                                    <a href="page-recoverpw.html" class="text-muted pull-right"><small>Esqueceu sua senha?</small></a>
+                                                    <?php echo $this->tag->linkTo(["session/recuperar", "<small>Esqueceu sua senha?</small>", "class" => "text-muted pull-right"]) ?>
                                                     <label for="password">Senha</label>
                                                     <?php echo $this->tag->passwordField(["password", "size" => 30, "class" => "form-control", "id" => "password", "placeholder" => "Sua senha"]) ?>
                                                 </div>
                                             </div>
-
                                             <div class="form-group row text-center m-t-10">
                                                 <div class="col-12">
                                                     <?php echo $this->tag->submitButton(["Entrar", "class" => "btn btn-block btn-gradient"]) ?>

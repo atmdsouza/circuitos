@@ -1,5 +1,6 @@
 <?php
 
+use Phalcon\Mvc\View;
 use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
@@ -20,12 +21,13 @@ class UsuarioController extends ControllerBase
 
     public function initialize()
     {
-        // Get the current identity
+        //Voltando o usuário não autenticado para a página de login
         $identity = $this->auth->getIdentity();
-        // If there is no identity available the user is redirected to session/login
         if (!is_array($identity)) {
             return $this->response->redirect('session/login');
         }
+        $this->view->user = $identity["nome"];
+        //CSRFToken
         $this->tokenManager = new TokenManager;
         if (!$this->tokenManager->doesUserHaveToken('User')) {
             $this->tokenManager->generateToken('User');
@@ -53,7 +55,6 @@ class UsuarioController extends ControllerBase
         }
         $parameters["order"] = "id";
         $usuarios = Usuario::find($parameters);
-        $pessoas = Pessoa::find();
         $roles = PhalconRoles::find();
         $paginator = new Paginator([
             'data' => $usuarios,
@@ -61,7 +62,6 @@ class UsuarioController extends ControllerBase
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();
-        $this->view->pessoas = $pessoas;
         $this->view->roles = $roles;
     }
 
@@ -207,14 +207,18 @@ class UsuarioController extends ControllerBase
                 if ($pessoa->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pessoa!");
                 }
-                $pessoaemail->setTransaction($transaction);
-                $pessoaemail->email = $params["email"];
-                if ($pessoaemail->save() == false) {
-                    $transaction->rollback("Não foi possível salvar o email!");
+                if($params["email"] != $pessoaemail->email){
+                    $pessoaemail->setTransaction($transaction);
+                    $pessoaemail->email = $params["email"];
+                    if ($pessoaemail->save() == false) {
+                        $transaction->rollback("Não foi possível salvar o email!");
+                    }
                 }
                 $usuario->setTransaction($transaction);
                 $usuario->roles_name = $params["roles_name"];
-                $usuario->login = $params["login"];
+                if($usuario->login != $params["login"]){
+                    $usuario->login = $params["login"];
+                }
                 if ($usuario->save() == false) {
                     $transaction->rollback("Não foi possível salvar o usuário!");
                 }
@@ -297,6 +301,7 @@ class UsuarioController extends ControllerBase
                 }
                 $usuario->setTransaction($transaction);
                 $usuario->senha = $this->security->hash($senha);
+                $usuario->primeiroacesso = 0;
                 if ($usuario->save() == false) {
                     $transaction->rollback("Não foi possível salvar o usuário!");
                 }
@@ -400,5 +405,114 @@ class UsuarioController extends ControllerBase
             )));
             return $response;
         }
+    }
+
+    public function alterarSenhaAction($id_usuario = null, $senha = null)
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        //Instanciando classes
+        $response = new Response();
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $usuario = Usuario::findFirst("id={$id_usuario}");
+        $pessoa = Pessoa::findFirst("id={$usuario->id_pessoa}");
+        try {
+            $pessoa->setTransaction($transaction);
+            $pessoa->update_at = date("Y-m-d H:i:s");
+            if ($pessoa->save() == false) {
+                $transaction->rollback("Não foi possível salvar a pessoa!");
+            }
+            $usuario->setTransaction($transaction);
+            $usuario->senha = $this->security->hash($senha);
+            if ($usuario->save() == false) {
+                $transaction->rollback("Não foi possível salvar o usuário!");
+            }
+            //Commita a transação
+            $transaction->commit();
+        } catch (TxFailed $e) {
+            throw new Exception('Erro ao tentar alterar a senha!');
+        }
+
+    }
+
+    public function primeiroAction()
+    {
+        $this->view->setRenderLevel(View::LEVEL_ACTION_VIEW);
+        //Pegar o login na session auth;
+        $identity = $this->auth->getIdentity();
+        $user = Usuario::findFirst("id={$identity["id"]}");
+        $this->view->nome = $user->Pessoa->nome;
+        if ($this->request->isPost()) {
+            if ($this->security->checkToken()) {
+                $password = $this->request->getPost('password');
+                $password2 = $this->request->getPost('password2');
+                if($password === $password2) {
+                    $this->alterarSenhaAction($identity["id"], $password);
+                    $user->primeiroacesso = 1;
+                    $user->save();
+                    return $this->response->redirect("index/index");
+                } else {
+                    throw new Exception('As senhas não conferem! Por favor, tente novamente!');
+                }
+            }
+        }
+    }
+
+    public function redirecionaUsuarioAction($login)
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $usuario = Usuario::findFirst("login='{$login}'");
+        $redirect = null;
+        if ($usuario->Pessoa->ativo == 0) {
+            $redirect = "session/inativo";
+        } else {
+            switch ($usuario->primeiroacesso) {
+                case '1':
+                $redirect = "index/index";
+                break;
+                case '0':
+                $redirect = "usuario/primeiro";
+                break;
+            }
+        }
+        return $redirect;
+    }
+
+    public function recuperarSenhaAction($id_usuario)
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        //Instanciando classes
+        $core = new Core;
+        $template = new TemplatesEmails;
+        $response = new Response();
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $usuario = Usuario::findFirst("id={$id_usuario}");
+        $pessoa = Pessoa::findFirst("id={$usuario->id_pessoa}");
+        $pessoaemail = PessoaEmail::findFirst("id_pessoa={$usuario->id_pessoa}");
+        $senha = $this->gerarSenhaAction(6,true,true,false);
+        try {
+            $pessoa->setTransaction($transaction);
+            $pessoa->update_at = date("Y-m-d H:i:s");
+            if ($pessoa->save() == false) {
+                $transaction->rollback("Não foi possível salvar a pessoa!");
+            }
+            $usuario->setTransaction($transaction);
+            $usuario->senha = $this->security->hash($senha);
+            $usuario->primeiroacesso = 0;
+            if ($usuario->save() == false) {
+                $transaction->rollback("Não foi possível salvar o usuário!");
+            }
+            //Commita a transação
+            $transaction->commit();
+            $html = $template->recuperaSenha($senha);
+            $core->enviarEmailAction(1,$pessoaemail->email,$pessoa->nome,null,"E-mail de Segurança",$html);
+        } catch (TxFailed $e) {
+            throw new Exception('Erro ao processar o reset da senha!');
+        }
+
     }
 }

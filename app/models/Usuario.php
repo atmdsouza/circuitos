@@ -195,7 +195,7 @@ class Usuario extends \Phalcon\Mvc\Model
      *
      * @return string
      */
-    public function getDataUltimomacesso()
+    public function getDataUltimoacesso()
     {
         return $this->data_ultimoacesso;
     }

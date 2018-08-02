@@ -67,7 +67,7 @@
                         <li class="dropdown notification-list">
                             <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" data-toggle="dropdown" href="#" role="button"
                                aria-haspopup="false" aria-expanded="false">
-                                <img src="<?= DIR_STATICS ?>public/images/users/avatar-1.jpg" alt="user" class="rounded-circle"> <span class="ml-1">Nome Usuário <i class="mdi mdi-chevron-down"></i> </span>
+                                <img src="<?= DIR_STATICS ?>public/images/users/avatar-1.jpg" alt="user" class="rounded-circle"> <span class="ml-1"><?php echo $user ?><i class="mdi mdi-chevron-down"></i> </span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
                                 <!-- item-->
@@ -76,9 +76,9 @@
                                 </div>
 
                                 <!-- item-->
-                                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                                <!--<a href="javascript:void(0);" class="dropdown-item notify-item">
                                     <i class="fi-head"></i> <span>Meus dados</span>
-                                </a>
+                                </a>-->
                                 <!-- item-->
                                 <?php echo $this->tag->linkTo(["session/logout", "<i class='fi-power'></i> <span> Sair </span>", "class" => "dropdown-item notify-item"]) ?>
 
@@ -131,8 +131,9 @@
                                 <a href="javascript: void(0);"><i class="fi-lock"></i> <span> Segurança </span> <span class="menu-arrow"></span></a>
                                 <ul class="nav-second-level" aria-expanded="false">
                                     <li><?php echo $this->tag->linkTo(["usuario", "Usuários"]) ?></li>
+                                    <!--
                                     <li><?php echo $this->tag->linkTo(["", "Perfis"]) ?></li>
-                                    <li><?php echo $this->tag->linkTo(["", "Permissões"]) ?></li>
+                                    <li><?php echo $this->tag->linkTo(["", "Permissões"]) ?></li> -->
                                 </ul>
                             </li>
 
