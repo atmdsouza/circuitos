@@ -1,8 +1,13 @@
 <?php
 
+namespace Auth;
+
 use Phalcon\Mvc\User\Component;
 
-class Auth extends Component {
+use Circuitos\Models\Usuario;
+
+class Autentica extends Component 
+{
 
     /**
      * Checks the user credentials
@@ -12,30 +17,19 @@ class Auth extends Component {
      * @throws Exception
      */
     public function check($credentials) {
-
         // Check if the user exist
-        $user = \Usuario::findFirst("login='{$credentials['login']}'");
-
+        $user = Usuario::findFirst("login='{$credentials['login']}'");
         if ($user == false) {
-//            $this->registerUserThrottling(0);
             return false;
         }
         // Check the password
         if (!$this->security->checkHash($credentials['password'], $user->senha)) {
-//            $this->registerUserThrottling($user->id);
-            // throw new Exception('Dados de login e senha errados! Tente novamente.');
             return false;
         }
-
-        // Check if the user was flagged
-//        $this->checkUserFlags($user);
-        // Register the successful login
-//        $this->saveSuccessLogin($user);
         // Check if the remember me was selected
         if (isset($credentials['remember'])) {
             $this->createRememberEnvironment($user);
         }
-
         $this->session->set('auth-identity', array(
             'id' => $user->id,
             'login' => $user->login,

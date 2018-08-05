@@ -1,5 +1,7 @@
 <?php
 
+namespace Circuitos\Models;
+
 class PhalconAccessList extends \Phalcon\Mvc\Model
 {
 
@@ -97,9 +99,9 @@ class PhalconAccessList extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("phalcon_access_list");
-        $this->hasMany('access_name', 'connecta\PhalconResourcesAccesses', 'access_name', ['alias' => 'PhalconResourcesAccesses']);
-        $this->belongsTo('resources_name', 'connecta\PhalconResources', 'name', ['alias' => 'PhalconResources']);
-        $this->belongsTo('roles_name', 'connecta\PhalconRoles', 'name', ['alias' => 'PhalconRoles']);
+        $this->hasMany('access_name', 'Circuitos\Models\PhalconResourcesAccesses', 'access_name', ['alias' => 'PhalconResourcesAccesses']);
+        $this->belongsTo('resources_name', 'Circuitos\Models\PhalconResources', 'name', ['alias' => 'PhalconResources']);
+        $this->belongsTo('roles_name', 'Circuitos\Models\PhalconRoles', 'name', ['alias' => 'PhalconRoles']);
     }
 
     /**

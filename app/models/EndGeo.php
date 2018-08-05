@@ -1,5 +1,7 @@
 <?php
 
+namespace Circuitos\Models;
+
 class EndGeo extends \Phalcon\Mvc\Model
 {
 

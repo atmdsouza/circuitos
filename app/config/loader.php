@@ -9,15 +9,32 @@ $loader->registerDirs(
     [
        $config->application->controllersDir,
        $config->application->modelsDir,
-       $config->application->libraryDir
+       $config->application->libraryDir,
     ]);
 
 
 $loader->registerNamespaces(
     [
-        'App\Models'      => $config->application->modelsDir,
-        'App\Controllers' => $config->application->controllersDir,
-        'App\Library'     => $config->application->libraryDir
+        'Circuitos\Models'      => $config->application->modelsDir,
+        'Circuitos\Controllers' => $config->application->controllersDir,
+        'Circuitos\Library'     => $config->application->libraryDir,
+        'Auth'                  => $config->application->libraryDir . 'Auth/Autentica.php',
+        'Acl'                   => $config->application->libraryDir . 'Acl/Acl.php',
+        'Util'                  => $config->application->libraryDir . 'Util/Util.php',
+        'TemplatesEmails'       => $config->application->libraryDir . 'Util/TemplatesEmails.php',
+        'TokenManager'          => $config->application->libraryDir . 'Util/TokenManager.php'
     ]);
+
+// $loader->registerClasses(
+//     [
+//         'Auth'                  => $config->application->libraryDir . 'Auth/Auth.php',
+//         'Acl'                   => $config->application->libraryDir . 'Acl/Acl.php',
+//         'Util'                  => $config->application->libraryDir . 'Util/Util.php',
+//         'TemplatesEmails'       => $config->application->libraryDir . 'Util/TemplatesEmails.php',
+//         'TokenManager'          => $config->application->libraryDir . 'Util/TokenManager.php'
+//     ]
+// );
     
 $loader->register();
+// var_dump(is_file($loader));
+// exit;

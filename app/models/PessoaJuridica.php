@@ -1,5 +1,7 @@
 <?php
 
+namespace Circuitos\Models;
+
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
 
@@ -245,9 +247,9 @@ class PessoaJuridica extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("pessoa_juridica");
-        $this->belongsTo('id_tipoesfera', 'connecta\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_setor', 'connecta\Lov', 'id', ['alias' => 'Lov']);
-        $this->hasOne('id', 'connecta\Pessoa', 'id', ['alias' => 'Pessoa']);
+        $this->belongsTo('id_tipoesfera', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
+        $this->belongsTo('id_setor', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
+        $this->hasOne('id', 'Circuitos\Models\Pessoa', 'id', ['alias' => 'Pessoa']);
     }
 
     /**

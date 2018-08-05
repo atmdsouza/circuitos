@@ -1,5 +1,7 @@
 <?php
 
+namespace Circuitos\Models;
+
 class Movimentos extends \Phalcon\Mvc\Model
 {
 
@@ -271,10 +273,10 @@ class Movimentos extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("movimentos");
-        $this->belongsTo('id_circuitos', 'connecta\Circuitos', 'id', ['alias' => 'Circuitos']);
-        $this->belongsTo('id_tipomovimento', 'connecta\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_statusmovimento', 'connecta\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_usuario', 'connecta\Usuario', 'id', ['alias' => 'Usuario']);
+        $this->belongsTo('id_circuitos', 'Circuitos\Models\Circuitos', 'id', ['alias' => 'Circuitos']);
+        $this->belongsTo('id_tipomovimento', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
+        $this->belongsTo('id_statusmovimento', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
+        $this->belongsTo('id_usuario', 'Circuitos\Models\Usuario', 'id', ['alias' => 'Usuario']);
     }
 
     /**

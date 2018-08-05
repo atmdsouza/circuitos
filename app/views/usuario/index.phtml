@@ -1,6 +1,6 @@
 <?php
 
-require_once APP_PATH . '/library/Util/Util.php';
+use Util\Util;
 
 ?>
 
@@ -24,7 +24,7 @@ require_once APP_PATH . '/library/Util/Util.php';
             <?php foreach ($page->items as $usuario): ?>
             <?php
             
-            $util = new Util;
+            $util = new Util();
                 
                 switch($usuario->primeiroacesso){
                     case '0'://Não Acessou (False)

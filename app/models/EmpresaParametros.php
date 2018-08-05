@@ -1,5 +1,7 @@
 <?php
 
+namespace Circuitos\Models;
+
 class EmpresaParametros extends \Phalcon\Mvc\Model
 {
 
@@ -242,7 +244,7 @@ class EmpresaParametros extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("empresa_parametros");
-        $this->hasOne('id_empresa', Empresa, 'id', ['alias' => 'Empresa']);
+        $this->hasOne('id_empresa', 'Circuitos\Models\Empresa', 'id', ['alias' => 'Empresa']);
     }
 
     /**

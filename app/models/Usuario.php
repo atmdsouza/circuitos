@@ -1,8 +1,9 @@
 <?php
 
+namespace Circuitos\Models;
+
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
-use Pessoa;
 
 class Usuario extends \Phalcon\Mvc\Model
 {
@@ -217,11 +218,11 @@ class Usuario extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("usuario");
-        $this->hasMany('id', Circuitos, 'id_usuario_criacao', ['alias' => 'Circuitos1']);
-        $this->hasMany('id', Circuitos, 'id_usuario_atualizacao', ['alias' => 'Circuitos2']);
-        $this->hasMany('id', Movimentos, 'id_usuario', ['alias' => 'Movimentos']);
-        $this->hasOne('id_pessoa', Pessoa, 'id', ['alias' => 'Pessoa']);
-        $this->belongsTo('roles_name', PhalconRoles, 'name', ['alias' => 'PhalconRoles']);
+        $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_usuario_criacao', ['alias' => 'Circuitos1']);
+        $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_usuario_atualizacao', ['alias' => 'Circuitos2']);
+        $this->hasMany('id', 'Circuitos\Models\Movimentos', 'id_usuario', ['alias' => 'Movimentos']);
+        $this->hasOne('id_pessoa', 'Circuitos\Models\Pessoa', 'id', ['alias' => 'Pessoa']);
+        $this->belongsTo('roles_name', 'Circuitos\Models\PhalconRoles', 'name', ['alias' => 'PhalconRoles']);
     }
 
     /**

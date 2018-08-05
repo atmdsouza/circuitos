@@ -1,6 +1,6 @@
 <?php
 
-use Usuario;
+namespace Circuitos\Models;
 
 class Pessoa extends \Phalcon\Mvc\Model
 {
@@ -34,6 +34,12 @@ class Pessoa extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $update_at;
+
+    /**
+     *
+     * @var string
+     */
+    protected $imagem;
 
     /**
      * Method to set the value of field id
@@ -83,6 +89,19 @@ class Pessoa extends \Phalcon\Mvc\Model
     public function setCreateAt($create_at)
     {
         $this->create_at = $create_at;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field immagem
+     *
+     * @param string $imagem
+     * @return $this
+     */
+    public function setImagem($imagem)
+    {
+        $this->imagem = $imagem;
 
         return $this;
     }
@@ -151,22 +170,33 @@ class Pessoa extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field imagem
+     *
+     * @return string
+     */
+    public function getImagem()
+    {
+        return $this->imagem;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
     {
+        // $usuario = new Usuario();
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("pessoa");
-        $this->hasOne('id', Cliente, 'id_pessoa', ['alias' => 'Cliente']);
-        $this->hasOne('id', ClienteUnidade, 'id_pessoa', ['alias' => 'ClienteUnidade']);
-        $this->hasOne('id', Fabricante, 'id_pessoa', ['alias' => 'Fabricante']);
-        $this->hasMany('id', PessoaContato, 'id_pessoa', ['alias' => 'PessoaContato']);
-        $this->hasMany('id', PessoaEmail, 'id_pessoa', ['alias' => 'PessoaEmail']);
-        $this->hasMany('id', PessoaEndereco, 'id_pessoa', ['alias' => 'PessoaEndereco']);
-        $this->hasOne('id', PessoaFisica, 'id', ['alias' => 'PessoaFisica']);
-        $this->hasOne('id', PessoaJuridica, 'id', ['alias' => 'PessoaJuridica']);
-        $this->hasMany('id',PessoaTelefone, 'id_pessoa', ['alias' => 'PessoaTelefone']);
-        $this->hasOne('id', Usuario, 'id_pessoa', ['alias' => 'Usuario']);
+        $this->hasOne('id', 'Circuitos\Models\Cliente', 'id_pessoa', ['alias' => 'Cliente']);
+        $this->hasOne('id', 'Circuitos\Models\ClienteUnidade', 'id_pessoa', ['alias' => 'ClienteUnidade']);
+        $this->hasOne('id', 'Circuitos\Models\Fabricante', 'id_pessoa', ['alias' => 'Fabricante']);
+        $this->hasMany('id', 'Circuitos\Models\PessoaContato', 'id_pessoa', ['alias' => 'PessoaContato']);
+        $this->hasMany('id', 'Circuitos\Models\PessoaEmail', 'id_pessoa', ['alias' => 'PessoaEmail']);
+        $this->hasMany('id', 'Circuitos\Models\PessoaEndereco', 'id_pessoa', ['alias' => 'PessoaEndereco']);
+        $this->hasOne('id', 'Circuitos\Models\PessoaFisica', 'id', ['alias' => 'PessoaFisica']);
+        $this->hasOne('id', 'Circuitos\Models\PessoaJuridica', 'id', ['alias' => 'PessoaJuridica']);
+        $this->hasMany('id','Circuitos\Models\PessoaTelefone', 'id_pessoa', ['alias' => 'PessoaTelefone']);
+        $this->hasOne('id', 'Circuitos\Models\Usuario', 'id_pessoa', ['alias' => 'Usuario']);
     }
 
     /**
@@ -214,7 +244,8 @@ class Pessoa extends \Phalcon\Mvc\Model
             'nome' => 'nome',
             'ativo' => 'ativo',
             'create_at' => 'create_at',
-            'update_at' => 'update_at'
+            'update_at' => 'update_at',
+            'imagem' => 'imagem'
         ];
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+namespace Circuitos\Models;
+
 class EndCidade extends \Phalcon\Mvc\Model
 {
 
@@ -213,11 +215,11 @@ class EndCidade extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("end_cidade");
-        $this->hasMany('id_cidade', 'connecta\EndBairro', 'id_cidade', ['alias' => 'EndBairro']);
-        $this->hasMany('id_cidade', 'connecta\EndEndereco', 'id_cidade', ['alias' => 'EndEndereco']);
-        $this->hasMany('id_cidade', 'connecta\EndFaixaBairros', 'id_cidade', ['alias' => 'EndFaixaBairros']);
-        $this->hasMany('id_cidade', 'connecta\EndFaixaCidades', 'id_cidade', ['alias' => 'EndFaixaCidades']);
-        $this->belongsTo('uf', 'connecta\EndEstado', 'uf', ['alias' => 'EndEstado']);
+        $this->hasMany('id_cidade', 'Circuitos\Models\EndBairro', 'id_cidade', ['alias' => 'EndBairro']);
+        $this->hasMany('id_cidade', 'Circuitos\Models\EndEndereco', 'id_cidade', ['alias' => 'EndEndereco']);
+        $this->hasMany('id_cidade', 'Circuitos\Models\EndFaixaBairros', 'id_cidade', ['alias' => 'EndFaixaBairros']);
+        $this->hasMany('id_cidade', 'Circuitos\Models\EndFaixaCidades', 'id_cidade', ['alias' => 'EndFaixaCidades']);
+        $this->belongsTo('uf', 'Circuitos\Models\EndEstado', 'uf', ['alias' => 'EndEstado']);
     }
 
     /**

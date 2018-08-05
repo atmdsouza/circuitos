@@ -10,6 +10,9 @@ use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Direct as Flash;
 use Phalcon\Security;
 
+use Auth\Auth;
+use Acl\Acl;
+
 /**
  * Shared configuration service
  */
@@ -108,6 +111,7 @@ $di->set('flash', function () {
  */
 $di->set('dispatcher', function () {
     $dispatcher = new Dispatcher();
+    $dispatcher->setDefaultNamespace('Circuitos\Controllers');
     return $dispatcher;
 });
 
@@ -136,12 +140,12 @@ $di->set(
 /**
  * Custom authentication component
  */
-$di->set('auth', function () {
+$di->set('Auth', function () {
     return new Auth();
 });
 /**
  * Access Control List
  */
-$di->set('acl', function () {
+$di->set('Acl', function () {
     return new Acl();
 });

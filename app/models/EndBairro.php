@@ -1,5 +1,7 @@
 <?php
 
+namespace Circuitos\Models;
+
 class EndBairro extends \Phalcon\Mvc\Model
 {
 
@@ -126,8 +128,8 @@ class EndBairro extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("end_bairro");
-        $this->hasMany('id_bairro', 'connecta\EndFaixaBairros', 'id_bairro', ['alias' => 'EndFaixaBairros']);
-        $this->belongsTo('id_cidade', 'connecta\EndCidade', 'id_cidade', ['alias' => 'EndCidade']);
+        $this->hasMany('id_bairro', 'Circuitos\Models\EndFaixaBairros', 'id_bairro', ['alias' => 'EndFaixaBairros']);
+        $this->belongsTo('id_cidade', 'Circuitos\Models\EndCidade', 'id_cidade', ['alias' => 'EndCidade']);
     }
 
     /**

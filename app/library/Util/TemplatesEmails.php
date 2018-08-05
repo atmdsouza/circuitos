@@ -1,5 +1,7 @@
 <?php
 
+namespace Util;
+
 class TemplatesEmails {
 
     public function recuperaSenha($dados){

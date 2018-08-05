@@ -1,16 +1,23 @@
 <?php
 
+namespace Circuitos\Controllers;
 
 use Phalcon\Http\Response as Response;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
+
+use Circuitos\Controllers\ControllerBase;
+use Circuitos\Models\Pessoa;
+use Circuitos\Models\PessoaEmail;
+use Circuitos\Models\Empresa;
+
 use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-require APP_PATH . '/library/PHPMailer/autoload.php';
-require APP_PATH . '/library/PHPMailer/phpmailer/phpmailer/src/Exception.php';
-require APP_PATH . '/library/PHPMailer/phpmailer/phpmailer/src/PHPMailer.php';
-require APP_PATH . '/library/PHPMailer/phpmailer/phpmailer/src/SMTP.php';
+require APP_PATH . '/library/PHPMailer/src/Exception.php';
+require APP_PATH . '/library/PHPMailer/src/PHPMailer.php';
+require APP_PATH . '/library/PHPMailer/src/SMTP.php';
 
 class CoreController extends ControllerBase
 {

@@ -1,5 +1,7 @@
 <?php
 
+namespace Circuitos\Models;
+
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Email as EmailValidator;
 use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
@@ -210,8 +212,8 @@ class PessoaEmail extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("pessoa_email");
-        $this->belongsTo('id_tipoemail', Lov, 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_pessoa', Pessoa, 'id', ['alias' => 'Pessoa']);
+        $this->belongsTo('id_tipoemail', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
+        $this->belongsTo('id_pessoa', 'Circuitos\Models\Pessoa', 'id', ['alias' => 'Pessoa']);
     }
 
     /**

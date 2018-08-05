@@ -1,5 +1,7 @@
 <?php
 
+namespace Acl;
+
 use Phalcon\Mvc\User\Component;
 use Phalcon\Acl\Adapter\Memory as AclMemory;
 use Phalcon\Acl\Role as AclRole;

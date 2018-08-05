@@ -1,5 +1,7 @@
 <?php
 
+namespace Circuitos\Models;
+
 class EndEndereco extends \Phalcon\Mvc\Model
 {
 
@@ -242,7 +244,7 @@ class EndEndereco extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("end_endereco");
-        $this->belongsTo('id_cidade', 'connecta\EndCidade', 'id_cidade', ['alias' => 'EndCidade']);
+        $this->belongsTo('id_cidade', 'Circuitos\Models\EndCidade', 'id_cidade', ['alias' => 'EndCidade']);
     }
 
     /**

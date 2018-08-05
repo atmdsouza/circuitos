@@ -1,5 +1,7 @@
 <?php
 
+namespace Circuitos\Models;
+
 class PhalconRoles extends \Phalcon\Mvc\Model
 {
 
@@ -68,9 +70,9 @@ class PhalconRoles extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("phalcon_roles");
-        $this->hasMany('name', 'connecta\PhalconAccessList', 'roles_name', ['alias' => 'PhalconAccessList']);
-        $this->hasMany('name', 'connecta\PhalconRolesInherits', 'roles_name', ['alias' => 'PhalconRolesInherits']);
-        $this->hasMany('name', 'connecta\Usuario', 'roles_name', ['alias' => 'Usuario']);
+        $this->hasMany('name', 'Circuitos\Models\PhalconAccessList', 'roles_name', ['alias' => 'PhalconAccessList']);
+        $this->hasMany('name', 'Circuitos\Models\PhalconRolesInherits', 'roles_name', ['alias' => 'PhalconRolesInherits']);
+        $this->hasMany('name', 'Circuitos\Models\Usuario', 'roles_name', ['alias' => 'Usuario']);
     }
 
     /**

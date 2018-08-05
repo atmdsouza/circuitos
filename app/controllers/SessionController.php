@@ -1,14 +1,17 @@
 <?php
 
+namespace Circuitos\Controllers;
+
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\Controller;
-use App\Library\TokenManager;
-use UsuarioController as Usuario;
-use Usuario as ModelUser;
 
-require_once APP_PATH . '/library/Acl/Acl.php';
-require_once APP_PATH . '/library/Auth/Auth.php';
-require_once APP_PATH . '/library/CSRFToken/CSRFToken.php';
+use Auth\Autentica;
+use Util\TokenManager;
+
+use Circuitos\Controllers\ControllerBase;
+use Circuitos\Controllers\UsuarioController as Usuario;
+use Circuitos\Models\Usuario as ModelUser;
+use Circuitos\Models\PessoaEmail;
 
 class SessionController extends ControllerBase {
 
@@ -16,7 +19,7 @@ class SessionController extends ControllerBase {
 
     public function initialize()
     {
-        $this->tokenManager = new TokenManager;
+        $this->tokenManager = new TokenManager();
         if (!$this->tokenManager->doesUserHaveToken('User')) {
             $this->tokenManager->generateToken('User');
         }
@@ -36,7 +39,8 @@ class SessionController extends ControllerBase {
         try {
             if ($this->request->isPost()) {
                 if ($this->security->checkToken()) {
-                    $check = $this->auth->check(array(
+                    $auth = new Autentica();
+                    $check = $auth->check(array(
                         'login' => $this->request->getPost('login'),
                         'password' => $this->request->getPost('password'),
                         'remember' => $this->request->getPost('remember')
@@ -51,13 +55,13 @@ class SessionController extends ControllerBase {
                         $usuario = ModelUser::findFirst("login='{$this->request->getPost('login')}'");
                         $usuario->data_ultimoacesso = date("Y-m-d H:i:s");
                         $usuario->save();
-                        $user = new Usuario;
+                        $user = new Usuario();
                         $redirect = $user->redirecionaUsuarioAction($this->request->getPost('login'));
                         return $this->response->redirect($redirect);
                     }
                 }
             }
-        } catch (AuthException $e) {
+        } catch (Exception $e) {
             $this->flash->error($e->getMessage());
         }
     }
@@ -68,7 +72,8 @@ class SessionController extends ControllerBase {
     public function logoutAction()
     {
         $this->session->destroy();
-        $this->auth->remove();
+        $auth = new Autentica();
+        $auth->remove();
         return $this->response->redirect('session/sair');
     }
 
@@ -83,7 +88,7 @@ class SessionController extends ControllerBase {
         $this->view->disable();
         $pessoaemail = PessoaEmail::findFirst("email='{$this->request->getPost('email')}'");
         $user = ModelUser::findFirst("id_pessoa={$pessoaemail->id_pessoa}");
-        $usuario = new Usuario;
+        $usuario = new Usuario();
         $usuario->recuperarSenhaAction($user->id);
     }
 

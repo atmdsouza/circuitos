@@ -1,5 +1,7 @@
 <?php
 
+namespace Circuitos\Models;
+
 class PessoaEndereco extends \Phalcon\Mvc\Model
 {
 
@@ -387,8 +389,8 @@ class PessoaEndereco extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("pessoa_endereco");
-        $this->belongsTo('id_tipoendereco', 'connecta\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_pessoa', 'connecta\Pessoa', 'id', ['alias' => 'Pessoa']);
+        $this->belongsTo('id_tipoendereco', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
+        $this->belongsTo('id_pessoa', 'Circuitos\Models\Pessoa', 'id', ['alias' => 'Pessoa']);
     }
 
     /**

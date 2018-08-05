@@ -1,5 +1,7 @@
 <?php
 
+namespace Circuitos\Models;
+
 class Circuitos extends \Phalcon\Mvc\Model
 {
 
@@ -735,19 +737,19 @@ class Circuitos extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("circuitos");
-        $this->hasMany('id', 'connecta\Movimentos', 'id_circuitos', ['alias' => 'Movimentos']);
-        $this->hasMany('id', 'connecta\Osocomon', 'id_circuitos', ['alias' => 'Osocomon']);
-        $this->belongsTo('id_cliente', 'connecta\Cliente', 'id', ['alias' => 'Cliente']);
-        $this->belongsTo('id_cliente_unidade', 'connecta\ClienteUnidade', 'id', ['alias' => 'ClienteUnidade']);
-        $this->belongsTo('id_equipamento', 'connecta\Equipamento', 'id', ['alias' => 'Equipamento']);
-        $this->belongsTo('id_contrato', 'connecta\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_status', 'connecta\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_cluster', 'connecta\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_tipounidade', 'connecta\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_funcao', 'connecta\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_enlace', 'connecta\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_usuario_criacao', 'connecta\Usuario', 'id', ['alias' => 'Usuario']);
-        $this->belongsTo('id_usuario_atualizacao', 'connecta\Usuario', 'id', ['alias' => 'Usuario']);
+        $this->hasMany('id', 'Circuitos\Models\Movimentos', 'id_circuitos', ['alias' => 'Movimentos']);
+        $this->hasMany('id', 'Circuitos\Models\Osocomon', 'id_circuitos', ['alias' => 'Osocomon']);
+        $this->belongsTo('id_cliente', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Cliente']);
+        $this->belongsTo('id_cliente_unidade', 'Circuitos\Models\ClienteUnidade', 'id', ['alias' => 'ClienteUnidade']);
+        $this->belongsTo('id_equipamento', 'Circuitos\Models\Equipamento', 'id', ['alias' => 'Equipamento']);
+        $this->belongsTo('id_contrato', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
+        $this->belongsTo('id_status', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
+        $this->belongsTo('id_cluster', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
+        $this->belongsTo('id_tipounidade', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
+        $this->belongsTo('id_funcao', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
+        $this->belongsTo('id_enlace', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
+        $this->belongsTo('id_usuario_criacao', 'Circuitos\Models\Usuario', 'id', ['alias' => 'Usuario']);
+        $this->belongsTo('id_usuario_atualizacao', 'Circuitos\Models\Usuario', 'id', ['alias' => 'Usuario']);
     }
 
     /**

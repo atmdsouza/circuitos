@@ -1,13 +1,10 @@
 <?php
 
-namespace App\Library;
+namespace Util;
 
-/**
- * Class TokenManager
- *
- * @package Your\Namespace\Library
- */
-class TokenManager extends \Phalcon\Mvc\User\Component
+use Phalcon\Mvc\User\Component;
+
+class TokenManager extends Component
 {
     /**
      * Generates token per session

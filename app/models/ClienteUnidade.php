@@ -1,5 +1,7 @@
 <?php
 
+namespace Circuitos\Models;
+
 class ClienteUnidade extends \Phalcon\Mvc\Model
 {
 
@@ -97,9 +99,9 @@ class ClienteUnidade extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("cliente_unidade");
-        $this->hasMany('id', 'connecta\Circuitos', 'id_cliente_unidade', ['alias' => 'Circuitos']);
-        $this->belongsTo('id_cliente', 'connecta\Cliente', 'id', ['alias' => 'Cliente']);
-        $this->hasOne('id_pessoa', 'connecta\Pessoa', 'id', ['alias' => 'Pessoa']);
+        $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_cliente_unidade', ['alias' => 'Circuitos']);
+        $this->belongsTo('id_cliente', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Cliente']);
+        $this->hasOne('id_pessoa', 'Circuitos\Models\Pessoa', 'id', ['alias' => 'Pessoa']);
     }
 
     /**

@@ -6,9 +6,8 @@ error_reporting(E_ALL);
 
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
-
 define('HOST', 'http://' . $_SERVER['SERVER_NAME']);
-define('DIR_STATICS', HOST . '/connecta/');
+define('DIR_STATICS', HOST . '/circuitos/');
 
 try {
 

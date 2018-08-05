@@ -1,19 +1,25 @@
 <?php
 
+namespace Circuitos\Controllers;
+
+
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Phalcon\Http\Response as Response;
-use Usuario as Usuario;
-use CoreController as Core;
-use App\Library\TokenManager;
 
-require_once APP_PATH . '/library/Util/Util.php';
-require_once APP_PATH . '/library/Auth/Auth.php';
-require_once APP_PATH . '/library/Util/TemplatesEmails.php';
-require_once APP_PATH . '/library/CSRFToken/CSRFToken.php';
+use Circuitos\Controllers\CoreController as Core;
+use Circuitos\Models\Usuario as Usuario;
+use Circuitos\Models\PhalconRoles;
+use Circuitos\Models\Pessoa;
+use Circuitos\Models\PessoaEmail;
+
+use Auth\Autentica;
+use Util\Util;
+use Util\TemplatesEmails;
+use Util\TokenManager;
 
 class UsuarioController extends ControllerBase
 {
@@ -22,13 +28,14 @@ class UsuarioController extends ControllerBase
     public function initialize()
     {
         //Voltando o usuário não autenticado para a página de login
-        $identity = $this->auth->getIdentity();
+        $auth = new Autentica();
+        $identity = $auth->getIdentity();
         if (!is_array($identity)) {
             return $this->response->redirect('session/login');
         }
         $this->view->user = $identity["nome"];
         //CSRFToken
-        $this->tokenManager = new TokenManager;
+        $this->tokenManager = new TokenManager();
         if (!$this->tokenManager->doesUserHaveToken('User')) {
             $this->tokenManager->generateToken('User');
         }
@@ -93,18 +100,15 @@ class UsuarioController extends ControllerBase
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
+        $response = new Response();
         $dados = filter_input_array(INPUT_GET);
         $login = Usuario::findFirst("login='{$dados["login"]}'");
         if ($login) {
-            //Instanciar a resposta HTTP
-            $response = new Response();
             $response->setContent(json_encode(array(
                 "operacao" => True
             )));
             return $response;
         } else {
-            //Instanciar a resposta HTTP
-            $response = new Response();
             $response->setContent(json_encode(array(
                 "operacao" => False
             )));
@@ -117,8 +121,8 @@ class UsuarioController extends ControllerBase
         //Desabilita o layout para o ajax
         $this->view->disable();
         //Instanciando classes
-        $core = new Core;
-        $template = new TemplatesEmails;
+        $core = new Core();
+        $template = new TemplatesEmails();
         $response = new Response();
         $manager = new TxManager();
         $transaction = $manager->get();
@@ -281,8 +285,8 @@ class UsuarioController extends ControllerBase
         //Desabilita o layout para o ajax
         $this->view->disable();
         //Instanciando classes
-        $core = new Core;
-        $template = new TemplatesEmails;
+        $core = new Core();
+        $template = new TemplatesEmails();
         $response = new Response();
         $manager = new TxManager();
         $transaction = $manager->get();
@@ -333,7 +337,7 @@ class UsuarioController extends ControllerBase
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
-        $core = new Core;
+        $core = new Core();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
         $del = null;
@@ -359,7 +363,7 @@ class UsuarioController extends ControllerBase
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
-        $core = new Core;
+        $core = new Core();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
         $del = null;
@@ -385,7 +389,7 @@ class UsuarioController extends ControllerBase
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
-        $core = new Core;
+        $core = new Core();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
         $del = null;
@@ -485,8 +489,8 @@ class UsuarioController extends ControllerBase
         //Desabilita o layout para o ajax
         $this->view->disable();
         //Instanciando classes
-        $core = new Core;
-        $template = new TemplatesEmails;
+        $core = new Core();
+        $template = new TemplatesEmails();
         $response = new Response();
         $manager = new TxManager();
         $transaction = $manager->get();

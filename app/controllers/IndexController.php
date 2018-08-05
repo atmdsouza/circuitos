@@ -1,6 +1,9 @@
 <?php
 
-require_once APP_PATH . '/library/Auth/Auth.php';
+namespace Circuitos\Controllers;
+
+use Circuitos\Controllers\ControllerBase;
+use Auth\Autentica;
 
 class IndexController extends ControllerBase
 {
@@ -8,7 +11,8 @@ class IndexController extends ControllerBase
     public function initialize()
     {
         //Voltando o usuário não autenticado para a página de login
-        $identity = $this->auth->getIdentity();
+        $auth = new Autentica();
+        $identity = $auth->getIdentity();
         if (!is_array($identity)) {
             return $this->response->redirect('session/login');
         }

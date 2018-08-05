@@ -1,5 +1,7 @@
 <?php
 
+namespace Circuitos\Models;
+
 class Osocomon extends \Phalcon\Mvc\Model
 {
 
@@ -97,7 +99,7 @@ class Osocomon extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("osocomon");
-        $this->belongsTo('id_circuitos', 'connecta\Circuitos', 'id', ['alias' => 'Circuitos']);
+        $this->belongsTo('id_circuitos', 'Circuitos\Models\Circuitos', 'id', ['alias' => 'Circuitos']);
     }
 
     /**

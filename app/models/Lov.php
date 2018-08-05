@@ -1,5 +1,7 @@
 <?php
 
+namespace Circuitos\Models;
+
 class Lov extends \Phalcon\Mvc\Model
 {
 
@@ -184,22 +186,22 @@ class Lov extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("lov");
-        $this->hasMany('id', 'connecta\Circuitos', 'id_contrato', ['alias' => 'Circuitos']);
-        $this->hasMany('id', 'connecta\Circuitos', 'id_status', ['alias' => 'Circuitos']);
-        $this->hasMany('id', 'connecta\Circuitos', 'id_cluster', ['alias' => 'Circuitos']);
-        $this->hasMany('id', 'connecta\Circuitos', 'id_tipounidade', ['alias' => 'Circuitos']);
-        $this->hasMany('id', 'connecta\Circuitos', 'id_funcao', ['alias' => 'Circuitos']);
-        $this->hasMany('id', 'connecta\Circuitos', 'id_enlace', ['alias' => 'Circuitos']);
-        $this->hasMany('id', 'connecta\Cliente', 'id_tipocliente', ['alias' => 'Cliente']);
-        $this->hasMany('id', 'connecta\Movimentos', 'id_tipomovimento', ['alias' => 'Movimentos']);
-        $this->hasMany('id', 'connecta\Movimentos', 'id_statusmovimento', ['alias' => 'Movimentos']);
-        $this->hasMany('id', 'connecta\PessoaContato', 'id_tipocontato', ['alias' => 'PessoaContato']);
-        $this->hasMany('id', 'connecta\PessoaEmail', 'id_tipoemail', ['alias' => 'PessoaEmail']);
-        $this->hasMany('id', 'connecta\PessoaEndereco', 'id_tipoendereco', ['alias' => 'PessoaEndereco']);
-        $this->hasMany('id', 'connecta\PessoaFisica', 'id_sexo', ['alias' => 'PessoaFisica']);
-        $this->hasMany('id', 'connecta\PessoaJuridica', 'id_tipoesfera', ['alias' => 'PessoaJuridica']);
-        $this->hasMany('id', 'connecta\PessoaJuridica', 'id_setor', ['alias' => 'PessoaJuridica']);
-        $this->hasMany('id', 'connecta\PessoaTelefone', 'id_tipotelefone', ['alias' => 'PessoaTelefone']);
+        $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_contrato', ['alias' => 'Circuitos']);
+        $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_status', ['alias' => 'Circuitos']);
+        $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_cluster', ['alias' => 'Circuitos']);
+        $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_tipounidade', ['alias' => 'Circuitos']);
+        $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_funcao', ['alias' => 'Circuitos']);
+        $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_enlace', ['alias' => 'Circuitos']);
+        $this->hasMany('id', 'Circuitos\Models\Cliente', 'id_tipocliente', ['alias' => 'Cliente']);
+        $this->hasMany('id', 'Circuitos\Models\Movimentos', 'id_tipomovimento', ['alias' => 'Movimentos']);
+        $this->hasMany('id', 'Circuitos\Models\Movimentos', 'id_statusmovimento', ['alias' => 'Movimentos']);
+        $this->hasMany('id', 'Circuitos\Models\PessoaContato', 'id_tipocontato', ['alias' => 'PessoaContato']);
+        $this->hasMany('id', 'Circuitos\Models\PessoaEmail', 'id_tipoemail', ['alias' => 'PessoaEmail']);
+        $this->hasMany('id', 'Circuitos\Models\PessoaEndereco', 'id_tipoendereco', ['alias' => 'PessoaEndereco']);
+        $this->hasMany('id', 'Circuitos\Models\PessoaFisica', 'id_sexo', ['alias' => 'PessoaFisica']);
+        $this->hasMany('id', 'Circuitos\Models\PessoaJuridica', 'id_tipoesfera', ['alias' => 'PessoaJuridica']);
+        $this->hasMany('id', 'Circuitos\Models\PessoaJuridica', 'id_setor', ['alias' => 'PessoaJuridica']);
+        $this->hasMany('id', 'Circuitos\Models\PessoaTelefone', 'id_tipotelefone', ['alias' => 'PessoaTelefone']);
     }
 
     /**

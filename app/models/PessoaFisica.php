@@ -1,5 +1,7 @@
 <?php
 
+namespace Circuitos\Models;
+
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
 
@@ -158,8 +160,8 @@ class PessoaFisica extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("pessoa_fisica");
-        $this->belongsTo('id_sexo', 'connecta\Lov', 'id', ['alias' => 'Lov']);
-        $this->hasOne('id', 'connecta\Pessoa', 'id', ['alias' => 'Pessoa']);
+        $this->belongsTo('id_sexo', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
+        $this->hasOne('id', 'Circuitos\Models\Pessoa', 'id', ['alias' => 'Pessoa']);
     }
 
     /**

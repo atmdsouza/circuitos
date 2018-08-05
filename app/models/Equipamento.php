@@ -1,5 +1,7 @@
 <?php
 
+namespace Circuitos\Models;
+
 class Equipamento extends \Phalcon\Mvc\Model
 {
 
@@ -184,9 +186,9 @@ class Equipamento extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("equipamento");
-        $this->hasMany('id', 'connecta\Circuitos', 'id_equipamento', ['alias' => 'Circuitos']);
-        $this->belongsTo('id_fabricante', 'connecta\Fabricante', 'id', ['alias' => 'Fabricante']);
-        $this->belongsTo('id_modelo', 'connecta\Modelo', 'id', ['alias' => 'Modelo']);
+        $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_equipamento', ['alias' => 'Circuitos']);
+        $this->belongsTo('id_fabricante', 'Circuitos\Models\Fabricante', 'id', ['alias' => 'Fabricante']);
+        $this->belongsTo('id_modelo', 'Circuitos\Models\Modelo', 'id', ['alias' => 'Modelo']);
     }
 
     /**

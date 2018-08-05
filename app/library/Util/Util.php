@@ -1,5 +1,7 @@
 <?php
 
+namespace Util;
+
 date_default_timezone_set('America/Belem');
 
 class Util {
