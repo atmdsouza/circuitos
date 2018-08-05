@@ -46,11 +46,13 @@
                                         <div class="text-center m-b-20">
                                             <p class="text-muted m-b-0">Entre com seu e-mail para que possamos resetar sua senha.</p>
                                         </div>
+
                                         <?php echo $this->getContent(); ?>
+
                                         <?php
                                             echo $this->tag->form(
                                                 [
-                                                    "session/esqueceu",
+                                                    "session/recuperar",
                                                     "autocomplete" => "off",
                                                     "class" => "form-horizontal"
                                                 ]

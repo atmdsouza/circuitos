@@ -2,14 +2,13 @@
 
 namespace Circuitos\Controllers;
 
-
 use Phalcon\Mvc\View;
-use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Phalcon\Http\Response as Response;
 
+use Circuitos\Controllers\ControllerBase;
 use Circuitos\Controllers\CoreController as Core;
 use Circuitos\Models\Usuario as Usuario;
 use Circuitos\Models\PhalconRoles;
@@ -48,14 +47,7 @@ class UsuarioController extends ControllerBase
     public function indexAction()
     {
         $this->persistent->parameters = null;
-        $dados = filter_input_array(INPUT_GET);
         $numberPage = 1;
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, Usuario, $dados);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
         $parameters = $this->persistent->parameters;
         if (!is_array($parameters)) {
             $parameters = [];
@@ -444,20 +436,45 @@ class UsuarioController extends ControllerBase
     {
         $this->view->setRenderLevel(View::LEVEL_ACTION_VIEW);
         //Pegar o login na session auth;
-        $identity = $this->auth->getIdentity();
+        $auth = new Autentica();
+        $identity = $auth->getIdentity();
         $user = Usuario::findFirst("id={$identity["id"]}");
         $this->view->nome = $user->Pessoa->nome;
         if ($this->request->isPost()) {
             if ($this->security->checkToken()) {
                 $password = $this->request->getPost('password');
                 $password2 = $this->request->getPost('password2');
-                if($password === $password2) {
-                    $this->alterarSenhaAction($identity["id"], $password);
-                    $user->primeiroacesso = 1;
-                    $user->save();
-                    return $this->response->redirect("index/index");
+                if (!$this->request->getPost('password') && !$this->request->getPost('password2')){
+                    $this->flash->error("Os campos senha e confirmação de senha não podem ser vazios!");
+                    $this->dispatcher->forward([
+                        "controller" => "usuario",
+                        "action" => "primeiro"
+                    ]);
+                } else if (!$this->request->getPost('password')) {
+                    $this->flash->error("O campo senha não pode ser vazio!");
+                    $this->dispatcher->forward([
+                        "controller" => "usuario",
+                        "action" => "primeiro"
+                    ]);
+                } else if (!$this->request->getPost('password2')) {
+                    $this->flash->error("O campo confirmação de senha não pode ser vazio!");
+                    $this->dispatcher->forward([
+                        "controller" => "usuario",
+                        "action" => "primeiro"
+                    ]);
                 } else {
-                    throw new Exception('As senhas não conferem! Por favor, tente novamente!');
+                    if($this->request->getPost('password') === $this->request->getPost('password2')) {
+                        $this->alterarSenhaAction($identity["id"], $password);
+                        $user->primeiroacesso = 1;
+                        $user->save();
+                        return $this->response->redirect("index/index");
+                    } else {
+                        $this->flash->error("As senhas não conferem! Por favor, tente novamente!");
+                        $this->dispatcher->forward([
+                            "controller" => "usuario",
+                            "action" => "primeiro"
+                        ]);
+                    }
                 }
             }
         }
@@ -513,9 +530,14 @@ class UsuarioController extends ControllerBase
             //Commita a transação
             $transaction->commit();
             $html = $template->recuperaSenha($senha);
-            $core->enviarEmailAction(1,$pessoaemail->email,$pessoa->nome,null,"E-mail de Segurança",$html);
+            $email = $core->enviarEmailAction(1,$pessoaemail->email,$pessoa->nome,null,"E-mail de Segurança",$html);
+            if ($email) {
+                return True;
+            } else {
+                return False;
+            }
         } catch (TxFailed $e) {
-            throw new Exception('Erro ao processar o reset da senha!');
+            return False;
         }
 
     }

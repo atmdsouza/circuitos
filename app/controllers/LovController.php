@@ -1,242 +1,207 @@
 <?php
- 
-use Phalcon\Mvc\Model\Criteria;
-use Phalcon\Paginator\Adapter\Model as Paginator;
 
+namespace Circuitos\Controllers;
+
+use Phalcon\Paginator\Adapter\Model as Paginator;
+use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
+use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
+use Phalcon\Http\Response as Response;
+
+use Circuitos\Models\Lov;
+
+use Auth\Autentica;
+use Util\Util;
+use Util\TemplatesEmails;
+use Util\TokenManager;
 
 class LovController extends ControllerBase
 {
+    public $tokenManager;
+
+    public function initialize()
+    {
+        //Voltando o usuário não autenticado para a página de login
+        $auth = new Autentica();
+        $identity = $auth->getIdentity();
+        if (!is_array($identity)) {
+            return $this->response->redirect('session/login');
+        }
+        $this->view->user = $identity["nome"];
+        //CSRFToken
+        $this->tokenManager = new TokenManager();
+        if (!$this->tokenManager->doesUserHaveToken('User')) {
+            $this->tokenManager->generateToken('User');
+        }
+        $this->view->token = $this->tokenManager->getToken('User');
+    }
+
     /**
      * Index action
      */
     public function indexAction()
     {
-        $this->persistent->parameters = null;
-    }
-
-    /**
-     * Searches for lov
-     */
-    public function searchAction()
-    {
         $numberPage = 1;
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, 'Lov', $_POST);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
-
         $parameters = $this->persistent->parameters;
         if (!is_array($parameters)) {
             $parameters = [];
         }
         $parameters["order"] = "id";
-
         $lov = Lov::find($parameters);
-        if (count($lov) == 0) {
-            $this->flash->notice("The search did not find any lov");
-
-            $this->dispatcher->forward([
-                "controller" => "lov",
-                "action" => "index"
-            ]);
-
-            return;
-        }
-
+        $tipos_lov = [
+            "1" => "Tipo Unidade",
+            // "2" => "Usa Contrato",
+            "3" => "Função",
+            // "4" => "Esfera",
+            "5" => "Setor",
+            "6" => "Status",
+            "7" => "Enlace",
+            "8" => "Tipo Email",
+            // "9" => "Tipo Cliente (PF/PJ)",
+            // "10" => "Tipo Status Movimento"
+        ];
         $paginator = new Paginator([
             'data' => $lov,
-            'limit'=> 10,
+            'limit'=> 500,
             'page' => $numberPage
         ]);
-
         $this->view->page = $paginator->getPaginate();
+        $this->view->tipos_lov = $tipos_lov;
     }
 
-    /**
-     * Displays the creation form
-     */
-    public function newAction()
+    public function formLovAction()
     {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        $lov = Lov::findFirst("id={$dados["id_lov"]}");
+        $dados = array(
+            "id" => $lov->id,
+            "tipo" => $lov->tipo,
+            "descricao" => $lov->descricao,
+            "codigoespecifico" => $lov->codigoespecifico,
+            "valor" => $lov->valor,
+            "duracao" => $lov->duracao
+        );
+        $response->setContent(json_encode(array(
+            "dados" => $dados
+        )));
+        return $response;
 
     }
 
-    /**
-     * Edits a lov
-     *
-     * @param string $id
-     */
-    public function editAction($id)
+    public function criarLovAction()
     {
-        if (!$this->request->isPost()) {
-
-            $lov = Lov::findFirstByid($id);
-            if (!$lov) {
-                $this->flash->error("lov was not found");
-
-                $this->dispatcher->forward([
-                    'controller' => "lov",
-                    'action' => 'index'
-                ]);
-
-                return;
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        //Instanciando classes
+        $response = new Response();
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $dados = filter_input_array(INPUT_POST);
+        $params = array();
+        parse_str($dados["dados"], $params);
+        //CSRF Token Check
+        if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
+            try {
+                $lov = new Lov();
+                $lov->setTransaction($transaction);
+                $lov->tipo = $params["tipo"];
+                $lov->descricao = $params["descricao"];
+                $lov->codigoespecifico = $params["codigoespecifico"];
+                $lov->valor = $params["valor"];
+                $lov->duracao = $params["duracao"];
+                if ($lov->save() == false) {
+                    $transaction->rollback("Não foi possível salvar o registro!");
+                }
+                //Commita a transação
+                $transaction->commit();
+                $response->setContent(json_encode(array(
+                    "operacao" => True
+                )));
+                return $response;
+            } catch (TxFailed $e) {
+                $response->setContent(json_encode(array(
+                    "operacao" => False,
+                    "mensagem" => "Erro ao tentar realizar o cadastro!"
+                )));
+                return $response;
             }
-
-            $this->view->id = $lov->id;
-
-            $this->tag->setDefault("id", $lov->id);
-            $this->tag->setDefault("tipo", $lov->tipo);
-            $this->tag->setDefault("descricao", $lov->descricao);
-            $this->tag->setDefault("codigoespecifico", $lov->codigoespecifico);
-            $this->tag->setDefault("valor", $lov->valor);
-            $this->tag->setDefault("duracao", $lov->duracao);
-            
+        } else {//Formulário Inválido
+            $response->setContent(json_encode(array(
+                "operacao" => False,
+                "mensagem" => "Check de formulário inválido!"
+            )));
+            return $response;
         }
     }
 
-    /**
-     * Creates a new lov
-     */
-    public function createAction()
+    public function editarLovAction()
     {
-        if (!$this->request->isPost()) {
-            $this->dispatcher->forward([
-                'controller' => "lov",
-                'action' => 'index'
-            ]);
-
-            return;
-        }
-
-        $lov = new Lov();
-        $lov->tipo = $this->request->getPost("tipo");
-        $lov->descricao = $this->request->getPost("descricao");
-        $lov->codigoespecifico = $this->request->getPost("codigoespecifico");
-        $lov->valor = $this->request->getPost("valor");
-        $lov->duracao = $this->request->getPost("duracao");
-        
-
-        if (!$lov->save()) {
-            foreach ($lov->getMessages() as $message) {
-                $this->flash->error($message);
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        //Instanciando classes
+        $response = new Response();
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $dados = filter_input_array(INPUT_POST);
+        $params = array();
+        parse_str($dados["dados"], $params);
+        $lov = Lov::findFirst("id={$params["id"]}");
+        //CSRF Token Check
+        if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
+            try {
+                $lov->setTransaction($transaction);
+                $lov->tipo = $params["tipo"];
+                $lov->descricao = $params["descricao"];
+                $lov->codigoespecifico = $params["codigoespecifico"];
+                $lov->valor = $params["valor"];
+                $lov->duracao = $params["duracao"];
+                if ($lov->save() == false) {
+                    $transaction->rollback("Não foi possível salvar o registro!");
+                }
+                //Commita a transação
+                $transaction->commit();
+                $response->setContent(json_encode(array(
+                    "operacao" => True
+                )));
+                return $response;
+            } catch (TxFailed $e) {
+                $response->setContent(json_encode(array(
+                    "operacao" => False,
+                    "mensagem" => "Erro ao tentar realizar a edição!"
+                )));
+                return $response;
             }
-
-            $this->dispatcher->forward([
-                'controller' => "lov",
-                'action' => 'new'
-            ]);
-
-            return;
+        } else {//Formulário Inválido
+            $response->setContent(json_encode(array(
+                "operacao" => False,
+                "mensagem" => "Check de formulário inválido!"
+            )));
+            return $response;
         }
-
-        $this->flash->success("lov was created successfully");
-
-        $this->dispatcher->forward([
-            'controller' => "lov",
-            'action' => 'index'
-        ]);
     }
 
-    /**
-     * Saves a lov edited
-     *
-     */
-    public function saveAction()
+    public function deletarLovAction()
     {
-
-        if (!$this->request->isPost()) {
-            $this->dispatcher->forward([
-                'controller' => "lov",
-                'action' => 'index'
-            ]);
-
-            return;
-        }
-
-        $id = $this->request->getPost("id");
-        $lov = Lov::findFirstByid($id);
-
-        if (!$lov) {
-            $this->flash->error("lov does not exist " . $id);
-
-            $this->dispatcher->forward([
-                'controller' => "lov",
-                'action' => 'index'
-            ]);
-
-            return;
-        }
-
-        $lov->tipo = $this->request->getPost("tipo");
-        $lov->descricao = $this->request->getPost("descricao");
-        $lov->codigoespecifico = $this->request->getPost("codigoespecifico");
-        $lov->valor = $this->request->getPost("valor");
-        $lov->duracao = $this->request->getPost("duracao");
-        
-
-        if (!$lov->save()) {
-
-            foreach ($lov->getMessages() as $message) {
-                $this->flash->error($message);
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_POST);
+        foreach($dados["ids"] as $dado){
+            $lov = Lov::findFirstByid($dado);
+            $result = $lov->delete();
+            if (!$result) {
+                $response->setContent(json_encode(array(
+                    "operacao" => False,
+                    "mensagem" => "Erro ao tentar realizar a operação!"
+                )));
+                return $response;
             }
-
-            $this->dispatcher->forward([
-                'controller' => "lov",
-                'action' => 'edit',
-                'params' => [$lov->id]
-            ]);
-
-            return;
         }
-
-        $this->flash->success("lov was updated successfully");
-
-        $this->dispatcher->forward([
-            'controller' => "lov",
-            'action' => 'index'
-        ]);
+        $response->setContent(json_encode(array(
+            "operacao" => True
+        )));
+        return $response;
     }
-
-    /**
-     * Deletes a lov
-     *
-     * @param string $id
-     */
-    public function deleteAction($id)
-    {
-        $lov = Lov::findFirstByid($id);
-        if (!$lov) {
-            $this->flash->error("lov was not found");
-
-            $this->dispatcher->forward([
-                'controller' => "lov",
-                'action' => 'index'
-            ]);
-
-            return;
-        }
-
-        if (!$lov->delete()) {
-
-            foreach ($lov->getMessages() as $message) {
-                $this->flash->error($message);
-            }
-
-            $this->dispatcher->forward([
-                'controller' => "lov",
-                'action' => 'search'
-            ]);
-
-            return;
-        }
-
-        $this->flash->success("lov was deleted successfully");
-
-        $this->dispatcher->forward([
-            'controller' => "lov",
-            'action' => "index"
-        ]);
-    }
-
 }

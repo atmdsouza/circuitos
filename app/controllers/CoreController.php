@@ -9,6 +9,8 @@ use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Circuitos\Controllers\ControllerBase;
 use Circuitos\Models\Pessoa;
 use Circuitos\Models\PessoaEmail;
+use Circuitos\Models\PessoaJuridica;
+use Circuitos\Models\PessoaFisica;
 use Circuitos\Models\Empresa;
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -120,7 +122,46 @@ class CoreController extends ControllerBase
             )));
             return $response;
         }
+    }
 
+    public function validarCNPJAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        $cnpj = PessoaJuridica::findFirst("cnpj='{$dados["cnpj"]}'");
+        if ($cnpj) {
+            $response->setContent(json_encode(array(
+                "operacao" => True
+            )));
+            return $response;
+        } else {
+            $response->setContent(json_encode(array(
+                "operacao" => False
+            )));
+            return $response;
+        }
+    }
+
+    public function validarCPFAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        $cpf = PessoaFisica::findFirst("cpf='{$dados["cpf"]}'");
+        if ($cpf) {
+            $response->setContent(json_encode(array(
+                "operacao" => True
+            )));
+            return $response;
+        } else {
+            $response->setContent(json_encode(array(
+                "operacao" => False
+            )));
+            return $response;
+        }
     }
 
     public function enviarEmailAction($id_empresa=null, $address=null, $address_name=null, $attach=null, $subject=null, $content=null)
@@ -163,6 +204,7 @@ class CoreController extends ControllerBase
             return True;
         } catch (Exception $e) {
             var_dump('Message could not be sent. Mailer Error: ' . $mail->ErrorInfo);
+            return False;
             exit;
         }
     }

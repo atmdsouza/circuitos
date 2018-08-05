@@ -40,24 +40,44 @@ class SessionController extends ControllerBase {
             if ($this->request->isPost()) {
                 if ($this->security->checkToken()) {
                     $auth = new Autentica();
-                    $check = $auth->check(array(
-                        'login' => $this->request->getPost('login'),
-                        'password' => $this->request->getPost('password'),
-                        'remember' => $this->request->getPost('remember')
-                    ));
-                    if(!$check) {
-                        $this->flash->error("Combinação de usuário e senha inválida!");
+                    if (!$this->request->getPost('login') && !$this->request->getPost('password')){
+                        $this->flash->error("Os campos login e senha não podem ser vazios!");
+                        $this->dispatcher->forward([
+                            "controller" => "session",
+                            "action" => "login"
+                        ]);
+                    } else if (!$this->request->getPost('password')) {
+                        $this->flash->error("O campo senha não pode ser vazio!");
+                        $this->dispatcher->forward([
+                            "controller" => "session",
+                            "action" => "login"
+                        ]);
+                    } else if (!$this->request->getPost('login')) {
+                        $this->flash->error("O campo login não pode ser vazio!");
                         $this->dispatcher->forward([
                             "controller" => "session",
                             "action" => "login"
                         ]);
                     } else {
-                        $usuario = ModelUser::findFirst("login='{$this->request->getPost('login')}'");
-                        $usuario->data_ultimoacesso = date("Y-m-d H:i:s");
-                        $usuario->save();
-                        $user = new Usuario();
-                        $redirect = $user->redirecionaUsuarioAction($this->request->getPost('login'));
-                        return $this->response->redirect($redirect);
+                        $check = $auth->check(array(
+                            'login' => $this->request->getPost('login'),
+                            'password' => $this->request->getPost('password'),
+                            'remember' => $this->request->getPost('remember')
+                        ));
+                        if(!$check) {
+                            $this->flash->error("Combinação de usuário e senha inválida!");
+                            $this->dispatcher->forward([
+                                "controller" => "session",
+                                "action" => "login"
+                            ]);
+                        } else {
+                            $usuario = ModelUser::findFirst("login='{$this->request->getPost('login')}'");
+                            $usuario->data_ultimoacesso = date("Y-m-d H:i:s");
+                            $usuario->save();
+                            $user = new Usuario();
+                            $redirect = $user->redirecionaUsuarioAction($this->request->getPost('login'));
+                            return $this->response->redirect($redirect);
+                        }
                     }
                 }
             }
@@ -82,25 +102,39 @@ class SessionController extends ControllerBase {
         $this->view->setRenderLevel(View::LEVEL_ACTION_VIEW);
     }
 
-    public function esqueceuAction()
-    {
-        //Desabilita o layout para o ajax
-        $this->view->disable();
-        $pessoaemail = PessoaEmail::findFirst("email='{$this->request->getPost('email')}'");
-        $user = ModelUser::findFirst("id_pessoa={$pessoaemail->id_pessoa}");
-        $usuario = new Usuario();
-        $usuario->recuperarSenhaAction($user->id);
-    }
-
     public function recuperarAction()
     {
         $this->view->setRenderLevel(View::LEVEL_ACTION_VIEW);
         if ($this->request->isPost()) {
-            $this->flash->notice("Senha resetada e enviada para seu e-mail. Por favor, verifique a nova senha para fazer o login!");
-            $this->dispatcher->forward([
-                "controller" => "session",
-                "action" => "recuperar"
-            ]);
+            if ($this->security->checkToken()) {
+                if (!$this->request->getPost('email')){
+                    $this->flash->error("O campo endereço de e-mail não pode ser vazio!");
+                    $this->dispatcher->forward([
+                        "controller" => "session",
+                        "action" => "recuperar"
+                    ]);
+                } else {
+                    $pessoaemail = PessoaEmail::findFirst("email='{$this->request->getPost('email')}'");
+                    if (!$pessoaemail){
+                        $this->flash->error("O endereço de e-mail não existe para nenhum de nossos usuários!");
+                        $this->dispatcher->forward([
+                            "controller" => "session",
+                            "action" => "recuperar"
+                        ]);
+                    } else {
+                        $user = ModelUser::findFirst("id_pessoa={$pessoaemail->id_pessoa}");
+                        $usuario = new Usuario();
+                        $check = $usuario->recuperarSenhaAction($user->id);
+                        if ($check){
+                            $this->flash->success("Senha recuperada com sucesso! Volte e tente novamente fazer login!");
+                            $this->response->redirect('session/login');
+                        } else {
+                            $this->flash->error("Erro ao tentar recuperar a senha! Tente novamente após alguns minutos!");
+                            $this->response->redirect('session/recuperar');
+                        }
+                    }
+                }
+            }
         }
     }
 

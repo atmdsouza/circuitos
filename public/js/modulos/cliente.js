@@ -1,4 +1,4 @@
-var table = $('#tb_usuario').DataTable({
+var table = $('#tb_cliente').DataTable({
     language: {
         sEmptyTable: "Nenhum registro encontrado",
         sInfo: "Mostrando de _START_ até _END_ de _TOTAL_ registros",
@@ -117,7 +117,7 @@ var table = $('#tb_usuario').DataTable({
     ]
 });
 
-table.buttons().container().appendTo('#tb_usuario_wrapper .col-md-6:eq(0)');
+table.buttons().container().appendTo('#tb_cliente_wrapper .col-md-6:eq(0)');
 
 table.on( 'select deselect', function () {
     var selectedRows = table.rows( { selected: true } ).count();
@@ -133,7 +133,7 @@ $("#login").on("change", function(){
     $.ajax({
         type: 'GET',
         dataType: 'JSON',
-        url: 'usuario/validarLogin',
+        url: 'cliente/validarLogin',
         data: {login: login},
         beforeSend: function () {
         },
@@ -144,13 +144,13 @@ $("#login").on("change", function(){
         success: function (data) {
             if (data.operacao){
                 swal({
-                    title: 'Login de Usuários',
+                    title: 'Login de Cliente',
                     text: 'O login digitado já existe, por favor, escolha um novo!',
                     type: 'warning'
                   });
-                $("#salvaUser").attr("disabled", "true");
+                $("#salvaCliente").attr("disabled", "true");
             } else {
-                $("#salvaUser").removeAttr("disabled", "true");
+                $("#salvaCliente").removeAttr("disabled", "true");
             }
         }
     });    
@@ -172,26 +172,26 @@ $("#email").on("change", function(){
         success: function (data) {
             if (data.operacao){
                 swal({
-                    title: 'E-mail de Usuários',
+                    title: 'E-mail de Cliente',
                     text: 'O e-mail digitado já existe, por favor, escolha um novo!',
                     type: 'warning'
                   });
-                $("#salvaUser").attr("disabled", "true");
+                $("#salvaCliente").attr("disabled", "true");
             } else {
-                $("#salvaUser").removeAttr("disabled", "true");
+                $("#salvaCliente").removeAttr("disabled", "true");
             }
         }
     });    
 });
 
 $(".bt_novo").on("click", function(){
-    $("#modalusuario").modal();
-    $("#salvaUser").removeClass("editar_usuario").addClass("criar_usuario");
+    $("#modalcliente").modal();
+    $("#salvaCliente").removeClass("editar_cliente").addClass("criar_cliente");
 });
 
-$(document).on("click", ".criar_usuario", function(){
+$(document).on("click", ".criar_cliente", function(){
     //Validação de formulário
-    $("#formUser").validate({
+    $("#formCliente").validate({
         rules : {
             nome_pessoa:{
                 required: true
@@ -225,11 +225,11 @@ $(document).on("click", ".criar_usuario", function(){
             }
         },
         submitHandler: function(form) {
-            var dados = $("#formUser").serialize();
+            var dados = $("#formCliente").serialize();
             $.ajax({
                 type: 'POST',
                 dataType: 'JSON',
-                url: 'usuario/criarUsuario',
+                url: 'cliente/criarCliente',
                 data: {
                     tokenKey: $('#token').attr('name'),
                     tokenValue: $('#token').attr('value'),
@@ -244,8 +244,8 @@ $(document).on("click", ".criar_usuario", function(){
                 success: function (data) {
                     if (data.operacao){
                         swal({
-                            title: 'Cadastro de Usuários',
-                            text: 'Cadastro de Usuários concluído!',
+                            title: 'Cadastro de Cliente',
+                            text: 'Cadastro de Cliente concluído!',
                             type: 'success',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
@@ -256,7 +256,7 @@ $(document).on("click", ".criar_usuario", function(){
                           });
                     } else {
                         swal({
-                            title: 'Cadastro de Usuários',
+                            title: 'Cadastro de Cliente',
                             text: data.mensagem,
                             type: 'error'
                         });
@@ -269,7 +269,7 @@ $(document).on("click", ".criar_usuario", function(){
 
 //Coletando os ids das linhas selecionadas na tabela
 var ids = [];   
-$("#tb_usuario").on("click", "tr", function () {
+$("#tb_cliente").on("click", "tr", function () {
     var valr = $(this)[0].cells[0].innerText;
     if (!ids.includes(valr)) {
         ids.push(valr);
@@ -283,23 +283,23 @@ $(".bt_edit").on("click", function(){
     nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Edição de Usuários',
-            text: 'Você somente pode editar um único usuário! Selecione apenas um e tente novamente!',
+            title: 'Edição de Cliente',
+            text: 'Você somente pode editar um único cliente! Selecione apenas um e tente novamente!',
             type: 'warning'
           });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Edição de Usuários',
-            text: 'Você precisa selecionar um usuário para a edição!',
+            title: 'Edição de Cliente',
+            text: 'Você precisa selecionar um cliente para a edição!',
             type: 'warning'
           });
      } else {
-        var id_usuario = ids[0];
+        var id_cliente = ids[0];
         $.ajax({
             type: 'GET',
             dataType: 'JSON',
-            url: 'usuario/formUsuario',
-            data: {id_usuario: id_usuario},
+            url: 'cliente/formCliente',
+            data: {id_cliente: id_cliente},
             beforeSend: function () {
             },
             complete: function () {
@@ -314,17 +314,17 @@ $(".bt_edit").on("click", function(){
                 $("#roles_name").val(data.dados.perfil).selected = "true";
                 $("#senhas").hide();
                 $("#reset_senha").show();
-                $("#modalusuario").modal();
+                $("#modalcliente").modal();
             }
         });
-        $("#salvaUser").removeClass("criar_usuario").addClass("editar_usuario");
+        $("#salvaCliente").removeClass("criar_cliente").addClass("editar_cliente");
     }
 
 });
 
-$(document).on("click", ".editar_usuario", function(){
+$(document).on("click", ".editar_cliente", function(){
     //Validação de formulário
-    $("#formUser").validate({
+    $("#formCliente").validate({
         rules : {
             nome_pessoa:{
                 required: true
@@ -354,11 +354,11 @@ $(document).on("click", ".editar_usuario", function(){
             }
         },
         submitHandler: function(form) {
-            var dados = $("#formUser").serialize();
+            var dados = $("#formCliente").serialize();
             $.ajax({
                 type: 'POST',
                 dataType: 'JSON',
-                url: 'usuario/editarUsuario',
+                url: 'cliente/editarCliente',
                 data: {
                     tokenKey: $('#token').attr('name'),
                     tokenValue: $('#token').attr('value'),
@@ -373,8 +373,8 @@ $(document).on("click", ".editar_usuario", function(){
                 success: function (data) {
                     if (data.operacao){
                         swal({
-                            title: 'Cadastro de Usuários',
-                            text: 'Edição de Usuários concluída!',
+                            title: 'Cadastro de Cliente',
+                            text: 'Edição de Cliente concluída!',
                             type: 'success',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
@@ -385,7 +385,7 @@ $(document).on("click", ".editar_usuario", function(){
                           });
                     } else {
                         swal({
-                            title: 'Cadastro de Usuários',
+                            title: 'Cadastro de Cliente',
                             text: data.mensagem,
                             type: 'error'
                         });
@@ -398,8 +398,8 @@ $(document).on("click", ".editar_usuario", function(){
 
 $("#senha_reset").on("click", function(){
     swal({
-        title: 'Tem certeza que deseja resetar a senha deste usuário?',
-        text: "O sistema irá gerar uma senha aleatória e enviá-la para o usuário através de seu endereço de e-mail!",
+        title: 'Tem certeza que deseja resetar a senha deste cliente?',
+        text: "O sistema irá gerar uma senha aleatória e enviá-la para o cliente através de seu endereço de e-mail!",
         type: 'info',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -410,7 +410,7 @@ $("#senha_reset").on("click", function(){
           $.ajax({
               type: 'POST',
               dataType: 'JSON',
-              url: 'usuario/resetarSenha',
+              url: 'cliente/resetarSenha',
               data: {
                 tokenKey: $('#token').attr('name'),
                 tokenValue: $('#token').attr('value'),
@@ -426,7 +426,7 @@ $("#senha_reset").on("click", function(){
                   if (data.operacao){
                       swal({
                           title: 'Resetada!',
-                          text: 'A senha deste usuário foi resetada com sucesso.',
+                          text: 'A senha deste cliente foi resetada com sucesso.',
                           type: 'success',
                           showCancelButton: false,
                           confirmButtonColor: '#3085d6',
@@ -451,8 +451,8 @@ $(".bt_del").on("click", function(){
     var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Tem certeza que deseja deletar múltipos usuários?',
-            text: "O sistema irá deletar um total de " + nm_rows + " usuários com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
+            title: 'Tem certeza que deseja deletar múltipos clientes?',
+            text: "O sistema irá deletar um total de " + nm_rows + " clientes com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -462,7 +462,7 @@ $(".bt_del").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'usuario/deletarUsuario',
+                  url: 'cliente/deletarCliente',
                   data: {ids: ids},
                   beforeSend: function () {
                   },
@@ -474,7 +474,7 @@ $(".bt_del").on("click", function(){
                       if (data.operacao){
                           swal({
                               title: 'Deletados!',
-                              text: 'Os usuário selecionados foram deletados com sucesso.',
+                              text: 'Os cliente selecionados foram deletados com sucesso.',
                               type: 'success',
                               showCancelButton: false,
                               confirmButtonColor: '#3085d6',
@@ -495,14 +495,14 @@ $(".bt_del").on("click", function(){
         });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Deletar Usuários',
-            text: 'Você precisa selecionar um usuário ou mais usuários para serem deletados!',
+            title: 'Deletar Cliente',
+            text: 'Você precisa selecionar um cliente ou mais clientes para serem deletados!',
             type: 'warning'
           });
      } else {
         swal({
-            title: 'Tem certeza que deseja deletar este usuário?',
-            text: "O sistema irá deletar o usuário selecionado com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
+            title: 'Tem certeza que deseja deletar este cliente?',
+            text: "O sistema irá deletar o cliente selecionado com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -512,7 +512,7 @@ $(".bt_del").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'usuario/deletarUsuario',
+                  url: 'cliente/deletarCliente',
                   data: {ids: ids},
                   beforeSend: function () {
                   },
@@ -524,7 +524,7 @@ $(".bt_del").on("click", function(){
                       if (data.operacao){
                           swal({
                               title: 'Deletado!',
-                              text: 'O usuário selecionado foi deletado com sucesso.',
+                              text: 'O cliente selecionado foi deletado com sucesso.',
                               type: 'success',
                               showCancelButton: false,
                               confirmButtonColor: '#3085d6',
@@ -550,8 +550,8 @@ $(".bt_ativo").on("click", function(){
     var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Tem certeza que deseja ativar múltipos usuários?',
-            text: "O sistema irá ativar um total de " + nm_rows + " usuários com essa ação.",
+            title: 'Tem certeza que deseja ativar múltipos clientes?',
+            text: "O sistema irá ativar um total de " + nm_rows + " clientes com essa ação.",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -561,7 +561,7 @@ $(".bt_ativo").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'usuario/ativarUsuario',
+                  url: 'cliente/ativarCliente',
                   data: {ids: ids},
                   beforeSend: function () {
                   },
@@ -573,7 +573,7 @@ $(".bt_ativo").on("click", function(){
                       if (data.operacao){
                           swal({
                               title: 'Ativados!',
-                              text: 'Os usuário selecionados foram ativados com sucesso.',
+                              text: 'Os cliente selecionados foram ativados com sucesso.',
                               type: 'success',
                               showCancelButton: false,
                               confirmButtonColor: '#3085d6',
@@ -594,14 +594,14 @@ $(".bt_ativo").on("click", function(){
         });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Ativar Usuários',
-            text: 'Você precisa selecionar um usuário ou mais usuários para serem ativados!',
+            title: 'Ativar Cliente',
+            text: 'Você precisa selecionar um cliente ou mais clientes para serem ativados!',
             type: 'warning'
           });
      } else {
         swal({
-            title: 'Tem certeza que deseja ativar este usuário?',
-            text: "O sistema irá ativar o usuário selecionado com essa ação.",
+            title: 'Tem certeza que deseja ativar este cliente?',
+            text: "O sistema irá ativar o cliente selecionado com essa ação.",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -611,7 +611,7 @@ $(".bt_ativo").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'usuario/ativarUsuario',
+                  url: 'cliente/ativarCliente',
                   data: {ids: ids},
                   beforeSend: function () {
                   },
@@ -623,7 +623,7 @@ $(".bt_ativo").on("click", function(){
                       if (data.operacao){
                           swal({
                               title: 'Ativado!',
-                              text: 'O usuário selecionado foi ativado com sucesso.',
+                              text: 'O cliente selecionado foi ativado com sucesso.',
                               type: 'success',
                               showCancelButton: false,
                               confirmButtonColor: '#3085d6',
@@ -649,8 +649,8 @@ $(".bt_inativo").on("click", function(){
     var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Tem certeza que deseja inativar múltipos usuários?',
-            text: "O sistema irá inativar um total de " + nm_rows + " usuários com essa ação.",
+            title: 'Tem certeza que deseja inativar múltipos clientes?',
+            text: "O sistema irá inativar um total de " + nm_rows + " clientes com essa ação.",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -660,7 +660,7 @@ $(".bt_inativo").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'usuario/inativarUsuario',
+                  url: 'cliente/inativarCliente',
                   data: {ids: ids},
                   beforeSend: function () {
                   },
@@ -672,7 +672,7 @@ $(".bt_inativo").on("click", function(){
                       if (data.operacao){
                           swal({
                               title: 'Inativados!',
-                              text: 'Os usuário selecionados foram inativados com sucesso.',
+                              text: 'Os cliente selecionados foram inativados com sucesso.',
                               type: 'success',
                               showCancelButton: false,
                               confirmButtonColor: '#3085d6',
@@ -693,14 +693,14 @@ $(".bt_inativo").on("click", function(){
         });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Inativar Usuários',
-            text: 'Você precisa selecionar um usuário ou mais usuários para serem inativados!',
+            title: 'Inativar Cliente',
+            text: 'Você precisa selecionar um cliente ou mais clientes para serem inativados!',
             type: 'warning'
           });
      } else {
         swal({
-            title: 'Tem certeza que deseja inativar este usuário?',
-            text: "O sistema irá inativar o usuário selecionado com essa ação.",
+            title: 'Tem certeza que deseja inativar este cliente?',
+            text: "O sistema irá inativar o cliente selecionado com essa ação.",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -710,7 +710,7 @@ $(".bt_inativo").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'usuario/inativarUsuario',
+                  url: 'cliente/inativarCliente',
                   data: {ids: ids},
                   beforeSend: function () {
                   },
@@ -722,7 +722,7 @@ $(".bt_inativo").on("click", function(){
                       if (data.operacao){
                           swal({
                               title: 'Inativado!',
-                              text: 'O usuário selecionado foi inativado com sucesso.',
+                              text: 'O cliente selecionado foi inativado com sucesso.',
                               type: 'success',
                               showCancelButton: false,
                               confirmButtonColor: '#3085d6',

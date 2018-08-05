@@ -212,9 +212,28 @@
         <script src="<?= DIR_STATICS ?>public/plugins/custombox/js/legacy.min.js"></script>
 
         <!-- Módulos -->
-        <script src="<?= DIR_STATICS ?>public/js/modulos/usuario.js"></script>
+        <?php $module = $this->router->getControllerName(); ?>
+        <?php switch($module){
+            case "index":?>
+            <?php break;
+            case "cliente":?>
+                <script src="<?= DIR_STATICS ?>public/js/modulos/cliente.js"></script>
+            <?php break;
+            case "cliente_unidade":?>
+                <script src="<?= DIR_STATICS ?>public/js/modulos/cliente_unidade.js"></script>
+            <?php break;
+            case "usuario":?>
+                <script src="<?= DIR_STATICS ?>public/js/modulos/usuario.js"></script>
+            <?php break;
+            case "lov":?>
+                <script src="<?= DIR_STATICS ?>public/js/modulos/lov.js"></script>
+            <?php break;
+            case "empresa":?>
+                <script src="<?= DIR_STATICS ?>public/js/modulos/empresa.js"></script>
+            <?php break;
+        } ?>
 
-        <!-- Módulos -->
+        <!-- Plugins -->
         <script src="<?= DIR_STATICS ?>public/js/uteis/accounting.js"></script>
         <script src="<?= DIR_STATICS ?>public/js/uteis/jquery.mask.js"></script>
         <script src="<?= DIR_STATICS ?>public/js/uteis/maskMoney.js"></script>
