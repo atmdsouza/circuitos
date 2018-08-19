@@ -12,7 +12,6 @@ use Circuitos\Controllers\CoreController as Core;
 use Circuitos\Models\Pessoa;
 use Circuitos\Models\PessoaEmail;
 use Circuitos\Models\PessoaEndereco;
-use Circuitos\Models\PessoaContato;
 use Circuitos\Models\PessoaTelefone;
 use Circuitos\Models\PessoaFisica;
 use Circuitos\Models\PessoaJuridica;
