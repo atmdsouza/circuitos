@@ -754,77 +754,164 @@ $(".bt_edit").on("click", function(){
 });
 
 $(document).on("click", ".editar_cliente", function(){
-    //Validação de formulário
-    $("#formCliente").validate({
-        rules : {
-            nome_pessoa:{
-                required: true
-            },
-            email:{
-                required: true
-            },
-            login:{
-                required: true
-            },
-            roles_name:{
-                required: true
-            }
-        },
-        messages:{
-            nome_pessoa:{
-                required:"É necessário informar seu nome"
-            },
-            email:{
-                required:"É necessário informar um email"
-            },
-            login:{
-                required:"É necessário informar seu login"
-            },
-            roles_name:{
-                required: "É necessário informar um perfil"
-            }
-        },
-        submitHandler: function(form) {
-            var dados = $("#formCliente").serialize();
-            $.ajax({
-                type: 'POST',
-                dataType: 'JSON',
-                url: 'cliente/editarCliente',
-                data: {
-                    tokenKey: $('#token').attr('name'),
-                    tokenValue: $('#token').attr('value'),
-                    dados: dados
-                },
-                beforeSend: function () {
-                },
-                complete: function () {
-                },
-                error: function () {
-                },
-                success: function (data) {
-                    if (data.operacao){
-                        swal({
-                            title: 'Cadastro de Cliente',
-                            text: 'Edição de Cliente concluída!',
-                            type: 'success',
-                            showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Ok'
-                          }).then((result) => {
-                            window.location.reload(true);
-                          });
-                    } else {
-                        swal({
-                            title: 'Cadastro de Cliente',
-                            text: data.mensagem,
-                            type: 'error'
-                        });
+    var tipocliente = $("#tipocliente").val();
+    if (tipocliente){
+        switch (tipocliente)
+        {
+            case "45"://Pessoa Física
+            //Validação de formulário
+            $("#formCliente").validate({
+                rules : {
+                    nome_pessoa2:{
+                        required: true
+                    },
+                    sexo:{
+                        required: true
+                    },
+                    cpf:{
+                        required: true
                     }
+                },
+                messages:{
+                    nome_pessoa2:{
+                        required:"É necessário informar o nome do cliente"
+                    },
+                    sexo:{
+                        required:"É necessário informar o sexo do cliente"
+                    },
+                    cpf:{
+                        required:"É necessário informar o CPF do cliente"
+                    }
+                },
+                submitHandler: function(form) {
+                    var dados = $("#formCliente").serialize();
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'JSON',
+                        url: 'cliente/editarCliente',
+                        data: {
+                            tokenKey: $('#token').attr('name'),
+                            tokenValue: $('#token').attr('value'),
+                            dados: dados
+                        },
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        error: function () {
+                        },
+                        success: function (data) {
+                            if (data.operacao){
+                                swal({
+                                    title: 'Cadastro de Cliente',
+                                    text: 'Edição do Cliente concluída!',
+                                    type: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Ok'
+                                  }).then((result) => {
+                                    window.location.reload(true);
+                                  });
+                            } else {
+                                swal({
+                                    title: 'Cadastro de Cliente',
+                                    text: data.mensagem,
+                                    type: 'error'
+                                });
+                            }
+                        }
+                    });
                 }
             });
+            break;
+            case "44"://Pessoa Jurídica
+            //Validação de formulário
+            $("#formCliente").validate({
+                rules : {
+                    nome_pessoa:{
+                        required: true
+                    },
+                    rzsocial:{
+                        required: true
+                    },
+                    cnpj:{
+                        required: true
+                    },
+                    esfera:{
+                        required: true
+                    },
+                    setor:{
+                        required: true
+                    }
+                },
+                messages:{
+                    nome_pessoa:{
+                        required:"É necessário informar o nome fantasia do cliente"
+                    },
+                    rzsocial:{
+                        required:"É necessário informar a razão social do cliente"
+                    },
+                    cnpj:{
+                        required:"É necessário informar o CNPJ do cliente"
+                    },
+                    esfera:{
+                        required: "É necessário informar uma esfera"
+                    },
+                    setor:{
+                        required: "É necessário informar um setor"
+                    }
+                },
+                submitHandler: function(form) {
+                    var dados = $("#formCliente").serialize();
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'JSON',
+                        url: 'cliente/editarCliente',
+                        data: {
+                            tokenKey: $('#token').attr('name'),
+                            tokenValue: $('#token').attr('value'),
+                            dados: dados
+                        },
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        error: function () {
+                        },
+                        success: function (data) {
+                            if (data.operacao){
+                                swal({
+                                    title: 'Cadastro de Cliente',
+                                    text: 'Edição do Cliente concluída!',
+                                    type: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Ok'
+                                  }).then((result) => {
+                                    window.location.reload(true);
+                                  });
+                            } else {
+                                swal({
+                                    title: 'Cadastro de Cliente',
+                                    text: data.mensagem,
+                                    type: 'error'
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            break;
         }
-    });
+    } else {
+        swal({
+            title: 'Cadastro de Cliente',
+            text: "Você precisa selecionar um tipo de cliente!",
+            type: 'error'
+        });
+    }
 });
 
 $("#tb_endereco").on("click", ".del_end", function(){
