@@ -59,14 +59,14 @@
                                             <div class="form-group m-b-20 row">
                                                 <div class="col-12">
                                                     <label for="login">Nome de Usuário (login)</label>
-                                                    <?php echo $this->tag->textField(["login", "size" => 30, "class" => "form-control", "id" => "login", "placeholder" => "Seu nome de usuário (login)"]) ?>
+                                                    <?php echo $this->tag->textField(["login", "size" => 80, "class" => "form-control", "id" => "login", "placeholder" => "Seu nome de usuário (login)"]) ?>
                                                 </div>
                                             </div>
                                             <div class="form-group row m-b-20">
                                                 <div class="col-12">
                                                     <?php echo $this->tag->linkTo(["session/recuperar", "<small>Esqueceu sua senha?</small>", "class" => "text-muted pull-right"]) ?>
                                                     <label for="password">Senha</label>
-                                                    <?php echo $this->tag->passwordField(["password", "size" => 30, "class" => "form-control", "id" => "password", "placeholder" => "Sua senha"]) ?>
+                                                    <?php echo $this->tag->passwordField(["password", "size" => 80, "class" => "form-control", "id" => "password", "placeholder" => "Sua senha"]) ?>
                                                 </div>
                                             </div>
                                             <div class="form-group row text-center m-t-10">

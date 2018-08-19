@@ -2,6 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
+
 class PessoaEndereco extends \Phalcon\Mvc\Model
 {
 
@@ -423,6 +426,23 @@ class PessoaEndereco extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta com o join na tabela lov 
+     *
+     * @param int $id_pessoa
+     * @return PessoaEndereco|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function buscaCompletaLov($id_pessoa)
+    {
+        $query = new Builder();
+        $query->from(array("PessoaEndereco" => "Circuitos\Models\PessoaEndereco"));
+        $query->columns("PessoaEndereco.*, Lov.descricao");
+        $query->join("Circuitos\Models\Lov", "Lov.id = PessoaEndereco.id_tipoendereco", "Lov");
+        $query->where("PessoaEndereco.id_pessoa = :id:", array("id" => $id_pessoa));
+        $resultado = $query->getQuery()->execute()->setHydrateMode(Resultset::HYDRATE_ARRAYS);
+        return $resultado;
     }
 
     /**

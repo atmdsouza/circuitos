@@ -7,15 +7,22 @@ use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 
 use Circuitos\Controllers\ControllerBase;
+
 use Circuitos\Models\Pessoa;
-use Circuitos\Models\PessoaEmail;
 use Circuitos\Models\PessoaJuridica;
 use Circuitos\Models\PessoaFisica;
+use Circuitos\Models\PessoaEndereco;
+use Circuitos\Models\PessoaEmail;
+use Circuitos\Models\PessoaTelefone;
+use Circuitos\Models\PessoaContato;
 use Circuitos\Models\Empresa;
+use Circuitos\Models\EndEndereco;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+
+use Util\Util;
 
 require APP_PATH . '/library/PHPMailer/src/Exception.php';
 require APP_PATH . '/library/PHPMailer/src/PHPMailer.php';
@@ -33,11 +40,9 @@ class CoreController extends ControllerBase
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
+        $manager = new TxManager();
         try {
             $pessoa = Pessoa::findFirst("id={$id_pessoa}");
-            //Create a transaction manager
-            $manager = new TxManager();
-            //Request a transaction
             $transaction = $manager->get();
             $pessoa->setTransaction($transaction);
             $pessoa->ativo = 1;
@@ -45,24 +50,20 @@ class CoreController extends ControllerBase
             if ($pessoa->save() == false) {
                 $transaction->rollback("Não foi possível salvar a pessoa!");
             }
-            //Commita a transação
             $transaction->commit();
             return True;
         } catch (TxFailed $e) {
             return False;
         }
-
     }
 
     public function inativarPessoaAction($id_pessoa)
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
+        $manager = new TxManager();
         try {
             $pessoa = Pessoa::findFirst("id={$id_pessoa}");
-            //Create a transaction manager
-            $manager = new TxManager();
-            //Request a transaction
             $transaction = $manager->get();
             $pessoa->setTransaction($transaction);
             $pessoa->ativo = 0;
@@ -70,55 +71,164 @@ class CoreController extends ControllerBase
             if ($pessoa->save() == false) {
                 $transaction->rollback("Não foi possível salvar a pessoa!");
             }
-            //Commita a transação
             $transaction->commit();
             return True;
         } catch (TxFailed $e) {
             return False;
         }
-
     }
 
     public function deletarPessoaAction($id_pessoa)
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
+        $manager = new TxManager();
         try {
             $pessoa = Pessoa::findFirst("id={$id_pessoa}");
-            //Create a transaction manager
-            $manager = new TxManager();
-            //Request a transaction
             $transaction = $manager->get();
             if ($pessoa->delete() == false) {
                 $transaction->rollback("Não foi possível deletar a pessoa!");
             }
-            //Commita a transação
             $transaction->commit();
             return True;
         } catch (TxFailed $e) {
             return False;
         }
+    }
 
+    public function deletarPessoaEnderecoAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $manager = new TxManager();
+        $dados = filter_input_array(INPUT_POST);
+        try {
+            $p = PessoaEndereco::findFirst("id={$dados["id"]}");
+            $transaction = $manager->get();
+            if ($p->delete() == false) {
+                $transaction->rollback("Não foi possível deletar a registro!");
+            }
+            $transaction->commit();
+            $response->setContent(json_encode(array(
+                "operacao" => True
+            )));
+            return $response;
+        } catch (TxFailed $e) {
+            $response->setContent(json_encode(array(
+                "operacao" => False,
+                "message" => "Ocorreu um erro ao tentar apagar o registro, por favor, tente novamente!"
+            )));
+            return $response;
+        }
+    }
+
+    public function deletarPessoaEmailAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $manager = new TxManager();
+        $dados = filter_input_array(INPUT_POST);
+        try {
+            $p = PessoaEmail::findFirst("id={$dados["id"]}");
+            $transaction = $manager->get();
+            if ($p->delete() == false) {
+                $transaction->rollback("Não foi possível deletar a registro!");
+            }
+            $transaction->commit();
+            $response->setContent(json_encode(array(
+                "operacao" => True
+            )));
+            return $response;
+        } catch (TxFailed $e) {
+            $response->setContent(json_encode(array(
+                "operacao" => False,
+                "message" => "Ocorreu um erro ao tentar apagar o registro, por favor, tente novamente!"
+            )));
+            return $response;
+        }
+    }
+
+    public function deletarPessoaContatoAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $manager = new TxManager();
+        $dados = filter_input_array(INPUT_POST);
+        try {
+            $p = PessoaContato::findFirst("id={$dados["id"]}");
+            $transaction = $manager->get();
+            if ($p->delete() == false) {
+                $transaction->rollback("Não foi possível deletar a registro!");
+            }
+            $transaction->commit();
+            $response->setContent(json_encode(array(
+                "operacao" => True
+            )));
+            return $response;
+        } catch (TxFailed $e) {
+            $response->setContent(json_encode(array(
+                "operacao" => False,
+                "message" => "Ocorreu um erro ao tentar apagar o registro, por favor, tente novamente!"
+            )));
+            return $response;
+        }
+    }
+
+    public function deletarPessoaTelefoneAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $manager = new TxManager();
+        $dados = filter_input_array(INPUT_POST);
+        try {
+            $p = PessoaTelefone::findFirst("id={$dados["id"]}");
+            $transaction = $manager->get();
+            if ($p->delete() == false) {
+                $transaction->rollback("Não foi possível deletar a registro!");
+            }
+            $transaction->commit();
+            $response->setContent(json_encode(array(
+                "operacao" => True
+            )));
+            return $response;
+        } catch (TxFailed $e) {
+            $response->setContent(json_encode(array(
+                "operacao" => False,
+                "message" => "Ocorreu um erro ao tentar apagar o registro, por favor, tente novamente!"
+            )));
+            return $response;
+        }
     }
 
     public function validarEmailAction()
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
+        $util = new Util();
+        $response = new Response();
         $dados = filter_input_array(INPUT_GET);
         $email = PessoaEmail::findFirst("email='{$dados["email"]}'");
-        if ($email) {
-            //Instanciar a resposta HTTP
-            $response = new Response();
-            $response->setContent(json_encode(array(
-                "operacao" => True
-            )));
-            return $response;
+        if($util->validate_email($dados["email"])) {
+            if ($email) {
+                $response->setContent(json_encode(array(
+                    "operacao" => True,
+                    "message" => "O e-mail digitado já existe, por favor, escolha um novo!"
+                )));
+                return $response;
+            } else {
+                $response->setContent(json_encode(array(
+                    "operacao" => False
+                )));
+                return $response;
+            }
         } else {
-            //Instanciar a resposta HTTP
-            $response = new Response();
             $response->setContent(json_encode(array(
-                "operacao" => False
+                "operacao" => True,
+                "message" => "O e-mail digitado não é válido, por favor, tente novamente!"
             )));
             return $response;
         }
@@ -153,6 +263,35 @@ class CoreController extends ControllerBase
         $cpf = PessoaFisica::findFirst("cpf='{$dados["cpf"]}'");
         if ($cpf) {
             $response->setContent(json_encode(array(
+                "operacao" => True
+            )));
+            return $response;
+        } else {
+            $response->setContent(json_encode(array(
+                "operacao" => False
+            )));
+            return $response;
+        }
+    }
+
+    public function completaEnderecoAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        $endereço = EndEndereco::findFirst("cep='{$dados["cep"]}'");
+        $end = array(
+            "cep" => $endereço->cep,
+            "logradouro" => $endereço->tipo_logradouro . " " . $endereço->logradouro,
+            "bairro" => $endereço->EndBairro->bairro,
+            "cidade" => $endereço->EndCidade->cidade,
+            "uf" => $endereço->EndCidade->EndEstado->estado,
+            "sigla_uf" => $endereço->EndCidade->EndEstado->uf
+        );
+        if ($endereço) {
+            $response->setContent(json_encode(array(
+                "endereco" => $end,
                 "operacao" => True
             )));
             return $response;

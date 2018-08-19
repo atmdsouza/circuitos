@@ -167,7 +167,16 @@ function TestaCPF(strCPF) {
     var Resto;
     Soma = 0;
     //strCPF  = RetiraCaracteresInvalidos(strCPF,11);
-    if (strCPF == "00000000000")
+    if (strCPF == "00000000000" ||
+        strCPF == "11111111111" ||
+        strCPF == "22222222222" ||
+        strCPF == "33333333333" ||
+        strCPF == "44444444444" ||
+        strCPF == "55555555555" ||
+        strCPF == "66666666666" ||
+        strCPF == "77777777777" ||
+        strCPF == "88888888888" ||
+        strCPF == "99999999999")
         return false;
     for (i = 1; i <= 9; i++)
         Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
@@ -394,7 +403,7 @@ function TelefoneDDD(telefone) { //(91) 3244-9464
  * @param {str} cep = data a converter para modelo formatado
  * @return {str} = retorna um string com o cep
  */
-function cep(cep) { //66.113-280
+function formata_cep(cep) { //66.113-280
     var cep_limpo = cep
     cep_limpo = cep_limpo.replace('-', '');
     cep_limpo = cep_limpo.replace('.', '');

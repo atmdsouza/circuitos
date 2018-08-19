@@ -85,7 +85,6 @@ class UsuarioController extends ControllerBase
             "dados" => $dados
         )));
         return $response;
-
     }
 
     public function validarLoginAction()

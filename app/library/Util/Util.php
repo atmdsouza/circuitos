@@ -68,11 +68,14 @@ class Util {
     }
 
     function converterDataParaBr($data_americana) {
-
-        $data_americana = strtotime($data_americana);
-        $data_br = date('d/m/Y', $data_americana);
-
-        return $data_br;
+        if (!empty($data_americana)) {
+            $data_americana = strtotime($data_americana);
+            $data_br = date('d/m/Y', $data_americana);
+    
+            return $data_br;
+        } else {
+            return null;
+        }
     }
 
     function converterDataHoraUSA($data_brasil) {

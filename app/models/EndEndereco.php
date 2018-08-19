@@ -245,6 +245,7 @@ class EndEndereco extends \Phalcon\Mvc\Model
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("end_endereco");
         $this->belongsTo('id_cidade', 'Circuitos\Models\EndCidade', 'id_cidade', ['alias' => 'EndCidade']);
+        $this->belongsTo('id_bairro', 'Circuitos\Models\EndBairro', 'id_bairro', ['alias' => 'EndBairro']);
     }
 
     /**

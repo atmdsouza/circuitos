@@ -57,6 +57,12 @@ class PessoaJuridica extends \Phalcon\Mvc\Model
     protected $datafund;
 
     /**
+     *
+     * @var string
+     */
+    protected $sigla;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -161,6 +167,19 @@ class PessoaJuridica extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field sigla
+     *
+     * @param string $sigla
+     * @return $this
+     */
+    public function setSigla($sigla)
+    {
+        $this->sigla = $sigla;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field id
      *
      * @return integer
@@ -241,6 +260,16 @@ class PessoaJuridica extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field sigla
+     *
+     * @return string
+     */
+    public function getSigla()
+    {
+        return $this->sigla;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -248,7 +277,7 @@ class PessoaJuridica extends \Phalcon\Mvc\Model
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("pessoa_juridica");
         $this->belongsTo('id_tipoesfera', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_setor', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
+        $this->belongsTo('id_setor', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov2']);
         $this->hasOne('id', 'Circuitos\Models\Pessoa', 'id', ['alias' => 'Pessoa']);
     }
 
@@ -300,7 +329,8 @@ class PessoaJuridica extends \Phalcon\Mvc\Model
             'razaosocial' => 'razaosocial',
             'inscricaoestadual' => 'inscricaoestadual',
             'inscricaomunicipal' => 'inscricaomunicipal',
-            'datafund' => 'datafund'
+            'datafund' => 'datafund',
+            'sigla' => 'sigla'
         ];
     }
 
