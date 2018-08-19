@@ -136,6 +136,99 @@ use Util\Util;
                                     <?php echo $this->tag->textField(["estado", "size" => 120, "class" => "form-control", "id" => "estado", "placeholder" => "Estado"]) ?>
                                 </div>
                             </div>
+                            <h6>Dados de Contato</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->textField(["telefone_t", "size" => 200, "class" => "form-control celular", "id" => "telefone_t", "placeholder" => "Número Telefone"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <?php echo $this->tag->select(["princtel_t", ["0" => "Não", "1" => "Sim"], "class" => "form-control", "id" => "princtel_t", "useEmpty" => true, "emptyText" => "Principal?", "emptyValue" => ""]) ?>
+                                </div>
+                                <div class="form-group col-md-1">
+                                    <button id="insert_telefone" name="insert_telefone" type="button" class="btn btn-sucess btn-rounded waves-light waves-effect">Inserir</button>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->emailField(["email_t", "size" => 200, "class" => "form-control email_val", "id" => "email_t", "placeholder" => "Endereço de E-mail"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <?php echo $this->tag->select(["princemail_t", ["0" => "Não", "1" => "Sim"], "class" => "form-control", "id" => "princemail_t", "useEmpty" => true, "emptyText" => "Principal?", "emptyValue" => ""]) ?>
+                                </div>
+                                <div class="form-group col-md-1">
+                                    <button id="insert_email" name="insert_email" type="button" class="btn btn-sucess btn-rounded waves-light waves-effect">Inserir</button>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <table id="tb_telefone" class="table table-hover" style="display: none;">
+                                        <thead>
+                                            <tr>
+                                                <th>Principal?</th>
+                                                <th>Telefone</th>
+                                                <th>Excluir?</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <table id="tb_email" class="table table-hover" style="display: none;">
+                                        <thead>
+                                            <tr>
+                                                <th>Principal?</th>
+                                                <th>E-mail</th>
+                                                <th>Excluir?</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <h6>Pessoas de Contato na Unidade</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-1">
+                                    <?php echo $this->tag->select(["principal_contato_t", ["0" => "Não", "1" => "Sim"], "class" => "form-control", "id" => "principal_contato_t", "useEmpty" => true, "emptyText" => "Principal?", "emptyValue" => ""]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <?php echo $this->tag->select(["id_tipocontato_t", $tipocontato, "class" => "form-control", "id" => "id_tipocontato_t",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione um tipo",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->textField(["nome_contato_t", "size" => 200, "class" => "form-control", "id" => "nome_contato_t", "placeholder" => "Nome do Contato"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <?php echo $this->tag->textField(["telefone_contato_t", "size" => 200, "class" => "form-control celular", "id" => "telefone_contato_t", "placeholder" => "Número Telefone"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->emailField(["email_contato_t", "size" => 200, "class" => "form-control email_val", "id" => "email_contato_t", "placeholder" => "Endereço de E-mail"]) ?>
+                                </div>
+                                <div class="form-group col-md-1">
+                                    <button id="add_contato" name="add_contato" type="button" class="btn btn-sucess btn-rounded waves-light waves-effect">Inserir</button>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <table id="tb_contato" class="table table-hover" style="display: none;">
+                                        <thead>
+                                            <tr>
+                                                <th>Principal?</th>
+                                                <th>Tipo</th>
+                                                <th>Nome</th>
+                                                <th>Telefone</th>
+                                                <th>E-mail</th>
+                                                <th>Excluir?</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

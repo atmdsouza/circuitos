@@ -5,6 +5,8 @@ namespace Circuitos\Models;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Email as EmailValidator;
 use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
 
 class PessoaContato extends \Phalcon\Mvc\Model
 {
@@ -304,6 +306,23 @@ class PessoaContato extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta com o join na tabela lov 
+     *
+     * @param int $id_pessoa
+     * @return PessoaContato|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function buscaCompletaLov($id_pessoa)
+    {
+        $query = new Builder();
+        $query->from(array("PessoaContato" => "Circuitos\Models\PessoaContato"));
+        $query->columns("PessoaContato.*, Lov.descricao");
+        $query->join("Circuitos\Models\Lov", "Lov.id = PessoaContato.id_tipocontato", "Lov");
+        $query->where("PessoaContato.id_pessoa = :id:", array("id" => $id_pessoa));
+        $resultado = $query->getQuery()->execute()->setHydrateMode(Resultset::HYDRATE_ARRAYS);
+        return $resultado;
     }
 
     /**

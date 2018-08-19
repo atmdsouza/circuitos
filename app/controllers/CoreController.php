@@ -211,26 +211,28 @@ class CoreController extends ControllerBase
         $util = new Util();
         $response = new Response();
         $dados = filter_input_array(INPUT_GET);
-        $email = PessoaEmail::findFirst("email='{$dados["email"]}'");
-        if($util->validate_email($dados["email"])) {
-            if ($email) {
-                $response->setContent(json_encode(array(
-                    "operacao" => True,
-                    "message" => "O e-mail digitado já existe, por favor, escolha um novo!"
-                )));
-                return $response;
+        if ($dados["email"]) {
+            $email = PessoaEmail::findFirst("email='{$dados["email"]}'");
+            if($util->validate_email($dados["email"])) {
+                if ($email) {
+                    $response->setContent(json_encode(array(
+                        "operacao" => True,
+                        "message" => "O e-mail digitado já existe, por favor, escolha um novo!"
+                    )));
+                    return $response;
+                } else {
+                    $response->setContent(json_encode(array(
+                        "operacao" => False
+                    )));
+                    return $response;
+                }
             } else {
                 $response->setContent(json_encode(array(
-                    "operacao" => False
+                    "operacao" => True,
+                    "message" => "O e-mail digitado não é válido, por favor, tente novamente!"
                 )));
                 return $response;
             }
-        } else {
-            $response->setContent(json_encode(array(
-                "operacao" => True,
-                "message" => "O e-mail digitado não é válido, por favor, tente novamente!"
-            )));
-            return $response;
         }
     }
 

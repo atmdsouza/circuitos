@@ -128,34 +128,27 @@ table.on( 'select deselect', function () {
     table.button( 4 ).enable( selectedRows > 0 );
 });
 
-function limpaEndereco()
+function limpaContato()
 {
-    $("#bairro").val(null);
-    $("#cidade").val(null);
-    $("#endereco").val(null);
-    $("#sigla_uf").val(null);
-    $("#estado").val(null);
-    $("#numero").val(null);
-    $("#complemento").val(null);
-    $("#sigla_uf").val(null);
-    $("#tipoendereco").val(null).selected = "true";
-    $("#principal").val(null).selected = "true";
-    $("#cep").val(null);
-    $("#cep").focus();
+    $("#principal_contato_t").val(null).selected = "true";
+    $("#id_tipocontato_t").val(null).selected = "true";
+    $("#nome_contato_t").val(null);
+    $("#telefone_contato_t").val(null);
+    $("#email_contato_t").val(null);
+    $("#nome_contato_t").focus();
 }
 
 function limparModal()
 {
     $(".tr_remove").remove();
-    $("#tb_endereco").hide();
+    $("#tb_contato").hide();
     $("#tb_telefone").hide();
     $("#tb_email").hide();
-    valCEP = [];
+    valCON = [];
     valTEL = [];
     valEML = [];
-    $(".form_fis").hide();
-    $(".form_jur").hide();
     $("#id").val(null);
+    $("#cliente").removeAttr("disabled", "true");
 }
 
 $("#cep").on("change", function(){
@@ -209,52 +202,42 @@ $("#cep").on("change", function(){
     };
 })(jQuery);
 
-var valCEP = [];
-$("#insert_endereco").on("click", function(){
-    var sigla_uf = $("#sigla_uf_t").val();
-    var tipoendereco = $("#tipoendereco_t").val();
-    var tipoendereco_desc = document.getElementById("tipoendereco_t").options[document.getElementById("tipoendereco_t").selectedIndex].text;
-    var cep = $("#cep_t").val();
-    var endereco = $("#endereco_t").val();
-    var numero = $("#numero_t").val();
-    var bairro = $("#bairro_t").val();
-    var cidade = $("#cidade_t").val();
-    var estado = $("#estado_t").val();
-    var complemento = $("#complemento_t").val();
-    var principal = $("#principal_t").val();
+var valCON = [];
+$("#add_contato").on("click", function(){
+    var id_tipocontato = $("#id_tipocontato_t").val();
+    var id_tipocontato_desc = document.getElementById("id_tipocontato_t").options[document.getElementById("id_tipocontato_t").selectedIndex].text;
+    var nome_contato = $("#nome_contato_t").val();
+    var telefone_contato = $("#telefone_contato_t").val();
+    var email_contato = $("#email_contato_t").val();
+    var principal = $("#principal_contato_t").val();
     var eprincipal = principal == "1" ? "Sim" : "Não";
 
-    if ($.inArray(cep, valCEP) == -1) {
-        valCEP.push(cep);
-        if (tipoendereco != 0 && cep && endereco && numero && cidade && principal !== "") {
+    if ($.inArray(nome_contato, valCON) == -1) {
+        valCON.push(nome_contato);
+        if (id_tipocontato && nome_contato && principal !== "") {
             var linhas = null;
             linhas += "<tr class='tr_remove'>";
-            linhas += "<td style='display: none;'>" + sigla_uf + "<input name='sigla_uf[]' type='hidden' value='" + sigla_uf + "' /></td>";
-            linhas += "<td>"+ eprincipal +"<input name='principal_end[]' type='hidden' value='"+ principal +"' /></td>";
-            linhas += "<td>"+ tipoendereco_desc +"<input name='tipoendereco[]' type='hidden' value='"+ tipoendereco +"' /></td>";
-            linhas += "<td>"+ cep +"<input name='cep[]' type='hidden' value='"+ cep +"' /></td>";
-            linhas += "<td>"+ endereco +"<input name='endereco[]' type='hidden' value='"+ endereco +"' /></td>";
-            linhas += "<td style='display: none;'>"+ numero +"<input name='numero[]' type='hidden' value='"+ numero +"' /></td>";
-            linhas += "<td style='display: none;'>"+ bairro +"<input name='bairro[]' type='hidden' value='"+ bairro +"' /></td>";
-            linhas += "<td>"+ cidade +"<input name='cidade[]' type='hidden' value='"+ cidade +"' /></td>";
-            linhas += "<td>"+ estado +"<input name='estado[]' type='hidden' value='"+ estado +"' /></td>";
-            linhas += "<td style='display: none;'>"+ complemento +"<input name='complemento[]' type='hidden' value='"+ complemento +"' /></td>";
+            linhas += "<td>"+ eprincipal +"<input name='principal_contato[]' type='hidden' value='"+ principal +"' /></td>";
+            linhas += "<td>"+ id_tipocontato_desc +"<input name='tipo_contato[]' type='hidden' value='"+ id_tipocontato +"' /></td>";
+            linhas += "<td>"+ nome_contato +"<input name='nome_contato[]' type='hidden' value='"+ nome_contato +"' /></td>";
+            linhas += "<td>"+ telefone_contato +"<input name='telefone_contato[]' type='hidden' value='"+ telefone_contato +"' /></td>";
+            linhas += "<td>"+ email_contato +"<input name='email_contato[]' type='hidden' value='"+ email_contato +"' /></td>";
             linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
             linhas += "</tr>";
-            $("#tb_endereco").append(linhas);
-            $('#tb_endereco').show();
-            limpaEndereco();
+            $("#tb_contato").append(linhas);
+            $('#tb_contato').show();
+            limpaContato();
         } else {
             swal({
-                title: 'Endereço do Cliente',
-                text: 'Você precisa preencher corretamente os campos do endereço!',
+                title: 'Contato da Unidade',
+                text: 'Você precisa preencher corretamente os campos do contato!',
                 type: 'warning'
               });
         }
     } else {
         swal({
-            title: 'Endereço do Cliente',
-            text: 'Esse endereço já existe na tabela abaixo!',
+            title: 'Contato da Unidade',
+            text: 'Esse contato já existe na tabela abaixo!',
             type: 'warning'
         });
     }
@@ -262,25 +245,21 @@ $("#insert_endereco").on("click", function(){
 
 var valTEL = [];
 $("#insert_telefone").on("click", function(){
-    var tipotelefone = $("#tipotelefone_t").val();
-    var tipotelefone_desc = document.getElementById("tipotelefone_t").options[document.getElementById("tipotelefone_t").selectedIndex].text;
     var telefone = $("#telefone_t").val();
     var principal = $("#princtel_t").val();
     var eprincipal = principal == "1" ? "Sim" : "Não";
 
     if ($.inArray(telefone, valTEL) == -1) {
         valTEL.push(telefone);
-        if (tipotelefone != 0 && telefone && principal !== "") {
+        if (telefone && principal !== "") {
             var linhas = null;
             linhas += "<tr class='tr_remove'>";
             linhas += "<td>"+ eprincipal +"<input name='principal_tel[]' type='hidden' value='"+ principal +"' /></td>";
-            linhas += "<td>"+ tipotelefone_desc +"<input name='tipotelefone[]' type='hidden' value='"+ tipotelefone +"' /></td>";
             linhas += "<td>"+ telefone +"<input name='telefone[]' type='hidden' value='"+ telefone +"' /></td>";
             linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
             linhas += "</tr>";
             $("#tb_telefone").append(linhas);
             $('#tb_telefone').show();
-            $("#tipotelefone_t").val(null).selected = "true";
             $("#telefone_t").val(null);
             $("#princtel_t").val(null).selected = "true";
         } else {
@@ -301,25 +280,21 @@ $("#insert_telefone").on("click", function(){
 
 var valEML = [];
 $("#insert_email").on("click", function(){
-    var tipoemail = $("#tipoemail_t").val();
-    var tipoemail_desc = document.getElementById("tipoemail_t").options[document.getElementById("tipoemail_t").selectedIndex].text;
     var email = $("#email_t").val();
     var principal = $("#princemail_t").val();
     var eprincipal = principal == "1" ? "Sim" : "Não";
 
     if ($.inArray(email, valEML) == -1) {
         valEML.push(email);
-        if (tipoemail != 0 && email && principal !== "") {
+        if (email && principal !== "") {
             var linhas = null;
             linhas += "<tr class='tr_remove'>";
             linhas += "<td>"+ eprincipal +"<input name='principal_email[]' type='hidden' value='"+ principal +"' /></td>";
-            linhas += "<td>"+ tipoemail_desc +"<input name='tipoemailpf[]' type='hidden' value='"+ tipoemail +"' /></td>";
             linhas += "<td>"+ email +"<input name='email_pf[]' type='hidden' value='"+ email +"' /></td>";
             linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
             linhas += "</tr>";
             $("#tb_email").append(linhas);
             $('#tb_email').show();
-            $("#tipoemail_t").val(null).selected = "true";
             $("#email_t").val(null);
             $("#princemail_t").val(null).selected = "true";
         } else {
@@ -338,8 +313,8 @@ $("#insert_email").on("click", function(){
     }
 });
 
-$("#email_t").on("change", function(){
-    var email = $("#email_t").val();
+$(".email_val").on("change", function(){
+    var email = $(this).val();
     $.ajax({
         type: 'GET',
         dataType: 'JSON',
@@ -358,49 +333,10 @@ $("#email_t").on("change", function(){
                     text: data.message,
                     type: 'warning'
                   });
-                $("#email_t").val(null);
+                $(".email_val").val(null);
             } 
         }
     });    
-});
-
-$("#cpf").on("change", function(){
-    var cpf = $("#cpf").val();
-    if (cpf) {
-        var cpf_form = formataCPFCNPJ(cpf);
-        var resultado = TestaCPF(cpf_form);
-        if (resultado === false) {
-            swal({
-                title: 'Cadastro de Clientes',
-                text: 'O CPF digitado está incorreto, por favor, verifique o número digitado!',
-                type: 'warning'
-              });
-        }
-        $.ajax({
-            type: 'GET',
-            dataType: 'JSON',
-            url: 'core/validarCPF',
-            data: {cpf: cpf_form},
-            beforeSend: function () {
-            },
-            complete: function () {
-            },
-            error: function () {
-            },
-            success: function (data) {
-                if (data.operacao){
-                    swal({
-                        title: 'Cadastro de Clientes',
-                        text: 'O CPF digitado já existe, por favor, verifique o cadastro!',
-                        type: 'warning'
-                      });
-                    $("#salvaClienteUnidade").attr("disabled", "true");
-                } else {
-                    $("#salvaClienteUnidade").removeAttr("disabled", "true");
-                }
-            }
-        });   
-    } 
 });
 
 $("#cnpj").on("change", function(){
@@ -448,164 +384,101 @@ $(".bt_novo").on("click", function(){
 });
 
 $(document).on("click", ".criar_clienteunidades", function(){
-    var tipoclienteunidades = $("#tipoclienteunidades").val();
-    if (tipoclienteunidades){
-        switch (tipoclienteunidades)
-        {
-            case "45"://Pessoa Física
-            //Validação de formulário
-            $("#formCliente").validate({
-                rules : {
-                    nome_pessoa2:{
-                        required: true
-                    },
-                    sexo:{
-                        required: true
-                    },
-                    cpf:{
-                        required: true
-                    }
+    //Validação de formulário
+    $("#formClienteUnidade").validate({
+        rules : {
+            nome_pessoa:{
+                required: true
+            },
+            cliente:{
+                required: true
+            },
+            cep:{
+                required: true
+            },
+            endereco:{
+                required: true
+            },
+            numero:{
+                required: true
+            },
+            bairro:{
+                required: true
+            },
+            cidade:{
+                required: true
+            },
+            estado:{
+                required: true
+            }
+        },
+        messages:{
+            nome_pessoa:{
+                required:"É necessário informar o nome fantasia da unidade"
+            },
+            cliente:{
+                required:"É necessário selecionar um cliente para a unidade"
+            },
+            cep:{
+                required:"É necessário informar o CEP do endereço"
+            },
+            endereco:{
+                required: "É necessário informar uma endereço"
+            },
+            numero:{
+                required: "É necessário informar um número"
+            },
+            bairro:{
+                required: "É necessário informar um bairro"
+            },
+            cidade:{
+                required: "É necessário informar uma cidade"
+            },
+            estado:{
+                required: "É necessário informar um estado"
+            }
+        },
+        submitHandler: function(form) {
+            var dados = $("#formClienteUnidade").serialize();
+            $.ajax({
+                type: 'POST',
+                dataType: 'JSON',
+                url: 'cliente_unidade/criarClienteUnidade',
+                data: {
+                    tokenKey: $('#token').attr('name'),
+                    tokenValue: $('#token').attr('value'),
+                    dados: dados
                 },
-                messages:{
-                    nome_pessoa2:{
-                        required:"É necessário informar o nome do clienteunidades"
-                    },
-                    sexo:{
-                        required:"É necessário informar o sexo do clienteunidades"
-                    },
-                    cpf:{
-                        required:"É necessário informar o CPF do clienteunidades"
-                    }
+                beforeSend: function () {
                 },
-                submitHandler: function(form) {
-                    var dados = $("#formCliente").serialize();
-                    $.ajax({
-                        type: 'POST',
-                        dataType: 'JSON',
-                        url: 'clienteunidades/criarCliente',
-                        data: {
-                            tokenKey: $('#token').attr('name'),
-                            tokenValue: $('#token').attr('value'),
-                            dados: dados
-                        },
-                        beforeSend: function () {
-                        },
-                        complete: function () {
-                        },
-                        error: function () {
-                        },
-                        success: function (data) {
-                            if (data.operacao){
-                                swal({
-                                    title: 'Cadastro de Cliente',
-                                    text: 'Cadastro de Cliente concluído!',
-                                    type: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonColor: '#3085d6',
-                                    cancelButtonColor: '#d33',
-                                    confirmButtonText: 'Ok'
-                                  }).then((result) => {
-                                    window.location.reload(true);
-                                  });
-                            } else {
-                                swal({
-                                    title: 'Cadastro de Cliente',
-                                    text: data.mensagem,
-                                    type: 'error'
-                                });
-                            }
-                        }
-                    });
+                complete: function () {
+                },
+                error: function () {
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        swal({
+                            title: 'Cadastro de Unidade',
+                            text: 'Cadastro da Unidade concluído!',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                          }).then((result) => {
+                            window.location.reload(true);
+                          });
+                    } else {
+                        swal({
+                            title: 'Cadastro de Unidade',
+                            text: data.mensagem,
+                            type: 'error'
+                        });
+                    }
                 }
             });
-            break;
-            case "44"://Pessoa Jurídica
-            //Validação de formulário
-            $("#formCliente").validate({
-                rules : {
-                    nome_pessoa:{
-                        required: true
-                    },
-                    rzsocial:{
-                        required: true
-                    },
-                    cnpj:{
-                        required: true
-                    },
-                    esfera:{
-                        required: true
-                    },
-                    setor:{
-                        required: true
-                    }
-                },
-                messages:{
-                    nome_pessoa:{
-                        required:"É necessário informar o nome fantasia do clienteunidades"
-                    },
-                    rzsocial:{
-                        required:"É necessário informar a razão social do clienteunidades"
-                    },
-                    cnpj:{
-                        required:"É necessário informar o CNPJ do clienteunidades"
-                    },
-                    esfera:{
-                        required: "É necessário informar uma esfera"
-                    },
-                    setor:{
-                        required: "É necessário informar um setor"
-                    }
-                },
-                submitHandler: function(form) {
-                    var dados = $("#formCliente").serialize();
-                    $.ajax({
-                        type: 'POST',
-                        dataType: 'JSON',
-                        url: 'clienteunidades/criarCliente',
-                        data: {
-                            tokenKey: $('#token').attr('name'),
-                            tokenValue: $('#token').attr('value'),
-                            dados: dados
-                        },
-                        beforeSend: function () {
-                        },
-                        complete: function () {
-                        },
-                        error: function () {
-                        },
-                        success: function (data) {
-                            if (data.operacao){
-                                swal({
-                                    title: 'Cadastro de Cliente',
-                                    text: 'Cadastro de Cliente concluído!',
-                                    type: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonColor: '#3085d6',
-                                    cancelButtonColor: '#d33',
-                                    confirmButtonText: 'Ok'
-                                  }).then((result) => {
-                                    window.location.reload(true);
-                                  });
-                            } else {
-                                swal({
-                                    title: 'Cadastro de Cliente',
-                                    text: data.mensagem,
-                                    type: 'error'
-                                });
-                            }
-                        }
-                    });
-                }
-            });
-            break;
         }
-    } else {
-        swal({
-            title: 'Cadastro de Cliente',
-            text: "Você precisa selecionar um tipo de clienteunidades!",
-            type: 'error'
-        });
-    }
+    });
 });
 
 //Coletando os ids das linhas selecionadas na tabela
@@ -635,12 +508,12 @@ $(".bt_edit").on("click", function(){
             type: 'warning'
           });
      } else {
-        var id_clienteunidades = ids[0];
+        var id_clienteunidade = ids[0];
         $.ajax({
             type: 'GET',
             dataType: 'JSON',
-            url: 'clienteunidades/formCliente',
-            data: {id_clienteunidades: id_clienteunidades},
+            url: 'cliente_unidade/formClienteUnidade',
+            data: {id_clienteunidade: id_clienteunidade},
             beforeSend: function () {
             },
             complete: function () {
@@ -648,84 +521,66 @@ $(".bt_edit").on("click", function(){
             error: function () {
             },
             success: function (data) {
-                switch (data.dados.tipo)
-                {
-                    case "45"://Pessoa Física
-                        $("#id").val(data.dados.id);
-                        $("#tipoclienteunidades").val(data.dados.tipo).selected = "true";
-                        $("#nome_pessoa2").val(data.dados.nome);
-                        $("#cpf").val(data.dados.cpf);
-                        $("#rg").val(data.dados.rg);
-                        $("#datanasc").val(data.dados.datanasc);
-                        $("#sexo").val(data.dados.id_sexo).selected = "true";
-                        if (data.dados.pessoaendereco) {
-                            $.each(data.dados.pessoaendereco, function (key, value) {
-                                var principal_desc = (value.PessoaEndereco.principal == "1") ? "Sim" : "Não";
-                                var linhas;
-                                linhas += "<tr class='tr_remove' id='tred" + value.PessoaEndereco.id + "'>";
-                                linhas += "<td style='display: none;'>" + value.PessoaEndereco.sigla_estado + "<input name='res_sigla_uf[]' type='hidden' value='" + value.PessoaEndereco.sigla_estado + "' /></td>";
-                                linhas += "<td>"+ principal_desc +"<input name='res_principal_end[]' type='hidden' value='"+ value.PessoaEndereco.principal +"' /></td>";
-                                linhas += "<td>"+ value.descricao +"<input name='res_tipoendereco[]' type='hidden' value='"+ value.PessoaEndereco.id_tipoendereco +"' /></td>";
-                                linhas += "<td>"+ value.PessoaEndereco.cep +"<input name='res_cep[]' type='hidden' value='"+ value.PessoaEndereco.cep +"' /></td>";
-                                linhas += "<td>"+ value.PessoaEndereco.endereco +"<input name='res_endereco[]' type='hidden' value='"+ value.endereco +"' /></td>";
-                                linhas += "<td style='display: none;'>"+ value.PessoaEndereco.numero +"<input name='res_numero[]' type='hidden' value='"+ value.PessoaEndereco.numero +"' /></td>";
-                                linhas += "<td style='display: none;'>"+ value.PessoaEndereco.bairro +"<input name='res_bairro[]' type='hidden' value='"+ value.PessoaEndereco.bairro +"' /></td>";
-                                linhas += "<td>"+ value.PessoaEndereco.cidade +"<input name='res_cidade[]' type='hidden' value='"+ value.PessoaEndereco.cidade +"' /></td>";
-                                linhas += "<td>"+ value.PessoaEndereco.estado +"<input name='res_estado[]' type='hidden' value='"+ value.PessoaEndereco.estado +"' /></td>";
-                                linhas += "<td style='display: none;'>"+ value.PessoaEndereco.complemento +"<input name='res_complemento[]' type='hidden' value='"+ value.PessoaEndereco.complemento +"' /></td>";
-                                linhas += "<td><a href='#' id='" + value.PessoaEndereco.id + "' class='del_end'><i class='fi-circle-cross'></i></a></td>";
-                                linhas += "</tr class='remove'>";
-                                $("#tb_endereco").append(linhas);
-                                $("#tb_endereco").show();
-                            });
-                        }
-                        if (data.dados.pessoatelefone) {
-                            $.each(data.dados.pessoatelefone, function (key, value) {
-                                var principal_desc = (value.PessoaTelefone.principal == "1") ? "Sim" : "Não";
-                                var linhas;
-                                linhas += "<tr class='tr_remove' id='trte" + value.PessoaTelefone.id + "'>";
-                                linhas += "<td>"+ principal_desc +"<input name='res_principal_tel[]' type='hidden' value='"+ value.PessoaTelefone.principal +"' /></td>";
-                                linhas += "<td>"+ value.descricao +"<input name='res_tipotelefone[]' type='hidden' value='"+ value.PessoaTelefone.id_tipotelefone +"' /></td>";
-                                linhas += "<td>"+ "(" + value.PessoaTelefone.ddd +") " + value.PessoaTelefone.telefone +"<input name='res_telefone[]' type='hidden' value='"+ value.PessoaTelefone.ddd + value.PessoaTelefone.telefone +"' /></td>";
-                                linhas += "<td><a href='#' id='" + value.PessoaTelefone.id + "' class='del_tel'><i class='fi-circle-cross'></i></a></td>";
-                                linhas += "</tr>";
-                                $("#tb_telefone").append(linhas);
-                                $("#tb_telefone").show();
-                            });
-                        }
-                        if (data.dados.pessoaemail) {
-                            $.each(data.dados.pessoaemail, function (key, value) {
-                                var principal_desc = (value.PessoaEmail.principal == "1") ? "Sim" : "Não";
-                                var linhas;
-                                linhas += "<tr class='tr_remove' id='trem" + value.PessoaEmail.id + "'>";
-                                linhas += "<td>"+ principal_desc +"<input name='res_principal_email[]' type='hidden' value='"+ value.PessoaEmail.principal +"' /></td>";
-                                linhas += "<td>"+ value.descricao +"<input name='res_tipoemailpf[]' type='hidden' value='"+ value.PessoaEmail.id_tipoemail +"' /></td>";
-                                linhas += "<td>"+ value.PessoaEmail.email +"<input name='res_email_pf[]' type='hidden' value='"+ value.PessoaEmail.email +"' /></td>";
-                                linhas += "<td><a href='#' id='" + value.PessoaEmail.id + "' class='del_eml'><i class='fi-circle-cross'></i></a></td>";
-                                linhas += "</tr>";
-                                $("#tb_email").append(linhas);
-                                $("#tb_email").show();
-                            });
-                        }
-                        $(".form_jur").hide();
-                        $(".form_fis").show();
-                    break;
-                    case "44"://Pessoa Jurídica
-                        $("#id").val(data.dados.id);
-                        $("#tipoclienteunidades").val(data.dados.tipo).selected = "true";
-                        $("#nome_pessoa").val(data.dados.nome);
-                        $("#rzsocial").val(data.dados.razaosocial);
-                        $("#sigla").val(data.dados.sigla);
-                        $("#cnpj").val(data.dados.cnpj);
-                        $("#inscricaoestadual").val(data.dados.inscricaoestadual);
-                        $("#inscricaomunicipal").val(data.dados.inscricaomunicipal);
-                        $("#esfera").val(data.dados.id_tipoesfera).selected = "true";
-                        $("#setor").val(data.dados.id_setor).selected = "true";
-                        $("#datafund").val(data.dados.datafund);
-                        $(".form_fis").hide();
-                        $(".form_jur").show();
-                    break;
+                $("#id").val(data.dados.id);
+                $("#cliente").val(data.dados.id_cliente).selected = "true";
+                $("#nome_pessoa").val(data.dados.nome);
+                $("#sigla").val(data.dados.sigla);
+                $("#rzsocial").val(data.dados.razaosocial);
+                $("#cnpj").val(data.dados.cnpj);
+                $("#inscricaoestadual").val(data.dados.inscricaoestadual);
+                $("#inscricaomunicipal").val(data.dados.inscricaomunicipal);
+                $("#datafund").val(data.dados.datafund);
+                $("#sigla_uf").val(data.dados.pessoaendereco.sigla_uf);
+                $("#cep").val(data.dados.pessoaendereco.cep);
+                $("#endereco").val(data.dados.pessoaendereco.endereco);
+                $("#numero").val(data.dados.pessoaendereco.numero);
+                $("#bairro").val(data.dados.pessoaendereco.bairro);
+                $("#cidade").val(data.dados.pessoaendereco.cidade);
+                $("#estado").val(data.dados.pessoaendereco.estado);
+                $("#complemento").val(data.dados.pessoaendereco.complemento);
+                if (data.dados.pessoacontato) {
+                    $.each(data.dados.pessoacontato, function (key, value) {
+                        var principal_desc = (value.PessoaContato.principal == "1") ? "Sim" : "Não";
+                        var linhas;
+                        linhas += "<tr class='tr_remove' id='trct" + value.PessoaContato.id + "'>";
+                        linhas += "<td>"+ principal_desc +"<input name='res_principal_contato[]' type='hidden' value='"+ value.PessoaContato.principal +"' /></td>";
+                        linhas += "<td>"+ value.descricao +"<input name='res_tipo_contato[]' type='hidden' value='"+ value.PessoaContato.id_tipocontato +"' /></td>";
+                        linhas += "<td>"+ value.PessoaContato.nome +"<input name='res_nome_contato[]' type='hidden' value='"+ value.PessoaContato.nome +"' /></td>";
+                        linhas += "<td>"+ value.PessoaContato.telefone +"<input name='res_telefone_contato[]' type='hidden' value='"+ value.PessoaContato.telefone +"' /></td>";
+                        linhas += "<td>"+ value.PessoaContato.email +"<input name='res_email_contato[]' type='hidden' value='"+ value.PessoaContato.email +"' /></td>";
+                        linhas += "<td><a href='#' id='" + value.PessoaContato.id + "' class='del_cto'><i class='fi-circle-cross'></i></a></td>";
+                        linhas += "</tr class='remove'>";
+                        $("#tb_contato").append(linhas);
+                        $("#tb_contato").show();
+                    });
                 }
+                if (data.dados.pessoatelefone) {
+                    $.each(data.dados.pessoatelefone, function (key, value) {
+                        var principal_desc = (value.PessoaTelefone.principal == "1") ? "Sim" : "Não";
+                        var linhas;
+                        linhas += "<tr class='tr_remove' id='trte" + value.PessoaTelefone.id + "'>";
+                        linhas += "<td>"+ principal_desc +"<input name='res_principal_tel[]' type='hidden' value='"+ value.PessoaTelefone.principal +"' /></td>";
+                        linhas += "<td>"+ "(" + value.PessoaTelefone.ddd +") " + value.PessoaTelefone.telefone +"<input name='res_telefone[]' type='hidden' value='"+ value.PessoaTelefone.ddd + value.PessoaTelefone.telefone +"' /></td>";
+                        linhas += "<td><a href='#' id='" + value.PessoaTelefone.id + "' class='del_tel'><i class='fi-circle-cross'></i></a></td>";
+                        linhas += "</tr>";
+                        $("#tb_telefone").append(linhas);
+                        $("#tb_telefone").show();
+                    });
+                }
+                if (data.dados.pessoaemail) {
+                    $.each(data.dados.pessoaemail, function (key, value) {
+                        var principal_desc = (value.PessoaEmail.principal == "1") ? "Sim" : "Não";
+                        var linhas;
+                        linhas += "<tr class='tr_remove' id='trem" + value.PessoaEmail.id + "'>";
+                        linhas += "<td>"+ principal_desc +"<input name='res_principal_email[]' type='hidden' value='"+ value.PessoaEmail.principal +"' /></td>";
+                        linhas += "<td>"+ value.PessoaEmail.email +"<input name='res_email_pf[]' type='hidden' value='"+ value.PessoaEmail.email +"' /></td>";
+                        linhas += "<td><a href='#' id='" + value.PessoaEmail.id + "' class='del_eml'><i class='fi-circle-cross'></i></a></td>";
+                        linhas += "</tr>";
+                        $("#tb_email").append(linhas);
+                        $("#tb_email").show();
+                    });
+                }
+                $("#cliente").attr("disabled", "true");
                 $("#modalclienteunidades").modal();
             }
         });
@@ -734,210 +589,100 @@ $(".bt_edit").on("click", function(){
 });
 
 $(document).on("click", ".editar_clienteunidades", function(){
-    var tipoclienteunidades = $("#tipoclienteunidades").val();
-    if (tipoclienteunidades){
-        switch (tipoclienteunidades)
-        {
-            case "45"://Pessoa Física
-            //Validação de formulário
-            $("#formCliente").validate({
-                rules : {
-                    nome_pessoa2:{
-                        required: true
-                    },
-                    sexo:{
-                        required: true
-                    },
-                    cpf:{
-                        required: true
-                    }
+    //Validação de formulário
+    $("#formClienteUnidade").validate({
+        rules : {
+            nome_pessoa:{
+                required: true
+            },
+            cliente:{
+                required: true
+            },
+            cep:{
+                required: true
+            },
+            endereco:{
+                required: true
+            },
+            numero:{
+                required: true
+            },
+            bairro:{
+                required: true
+            },
+            cidade:{
+                required: true
+            },
+            estado:{
+                required: true
+            }
+        },
+        messages:{
+            nome_pessoa:{
+                required:"É necessário informar o nome fantasia da unidade"
+            },
+            cliente:{
+                required:"É necessário selecionar um cliente para a unidade"
+            },
+            cep:{
+                required:"É necessário informar o CEP do endereço"
+            },
+            endereco:{
+                required: "É necessário informar uma endereço"
+            },
+            numero:{
+                required: "É necessário informar um número"
+            },
+            bairro:{
+                required: "É necessário informar um bairro"
+            },
+            cidade:{
+                required: "É necessário informar uma cidade"
+            },
+            estado:{
+                required: "É necessário informar um estado"
+            }
+        },
+        submitHandler: function(form) {
+            var dados = $("#formClienteUnidade").serialize();
+            $.ajax({
+                type: 'POST',
+                dataType: 'JSON',
+                url: 'cliente_unidade/editarClienteUnidade',
+                data: {
+                    tokenKey: $('#token').attr('name'),
+                    tokenValue: $('#token').attr('value'),
+                    dados: dados
                 },
-                messages:{
-                    nome_pessoa2:{
-                        required:"É necessário informar o nome do clienteunidades"
-                    },
-                    sexo:{
-                        required:"É necessário informar o sexo do clienteunidades"
-                    },
-                    cpf:{
-                        required:"É necessário informar o CPF do clienteunidades"
-                    }
+                beforeSend: function () {
                 },
-                submitHandler: function(form) {
-                    var dados = $("#formCliente").serialize();
-                    $.ajax({
-                        type: 'POST',
-                        dataType: 'JSON',
-                        url: 'clienteunidades/editarCliente',
-                        data: {
-                            tokenKey: $('#token').attr('name'),
-                            tokenValue: $('#token').attr('value'),
-                            dados: dados
-                        },
-                        beforeSend: function () {
-                        },
-                        complete: function () {
-                        },
-                        error: function () {
-                        },
-                        success: function (data) {
-                            if (data.operacao){
-                                swal({
-                                    title: 'Cadastro de Cliente',
-                                    text: 'Edição do Cliente concluída!',
-                                    type: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonColor: '#3085d6',
-                                    cancelButtonColor: '#d33',
-                                    confirmButtonText: 'Ok'
-                                  }).then((result) => {
-                                    window.location.reload(true);
-                                  });
-                            } else {
-                                swal({
-                                    title: 'Cadastro de Cliente',
-                                    text: data.mensagem,
-                                    type: 'error'
-                                });
-                            }
-                        }
-                    });
-                }
-            });
-            break;
-            case "44"://Pessoa Jurídica
-            //Validação de formulário
-            $("#formCliente").validate({
-                rules : {
-                    nome_pessoa:{
-                        required: true
-                    },
-                    rzsocial:{
-                        required: true
-                    },
-                    cnpj:{
-                        required: true
-                    },
-                    esfera:{
-                        required: true
-                    },
-                    setor:{
-                        required: true
-                    }
+                complete: function () {
                 },
-                messages:{
-                    nome_pessoa:{
-                        required:"É necessário informar o nome fantasia do clienteunidades"
-                    },
-                    rzsocial:{
-                        required:"É necessário informar a razão social do clienteunidades"
-                    },
-                    cnpj:{
-                        required:"É necessário informar o CNPJ do clienteunidades"
-                    },
-                    esfera:{
-                        required: "É necessário informar uma esfera"
-                    },
-                    setor:{
-                        required: "É necessário informar um setor"
-                    }
+                error: function () {
                 },
-                submitHandler: function(form) {
-                    var dados = $("#formCliente").serialize();
-                    $.ajax({
-                        type: 'POST',
-                        dataType: 'JSON',
-                        url: 'clienteunidades/editarCliente',
-                        data: {
-                            tokenKey: $('#token').attr('name'),
-                            tokenValue: $('#token').attr('value'),
-                            dados: dados
-                        },
-                        beforeSend: function () {
-                        },
-                        complete: function () {
-                        },
-                        error: function () {
-                        },
-                        success: function (data) {
-                            if (data.operacao){
-                                swal({
-                                    title: 'Cadastro de Cliente',
-                                    text: 'Edição do Cliente concluída!',
-                                    type: 'success',
-                                    showCancelButton: false,
-                                    confirmButtonColor: '#3085d6',
-                                    cancelButtonColor: '#d33',
-                                    confirmButtonText: 'Ok'
-                                  }).then((result) => {
-                                    window.location.reload(true);
-                                  });
-                            } else {
-                                swal({
-                                    title: 'Cadastro de Cliente',
-                                    text: data.mensagem,
-                                    type: 'error'
-                                });
-                            }
-                        }
-                    });
-                }
-            });
-            break;
-        }
-    } else {
-        swal({
-            title: 'Cadastro de Cliente',
-            text: "Você precisa selecionar um tipo de clienteunidades!",
-            type: 'error'
-        });
-    }
-});
-
-$("#tb_endereco").on("click", ".del_end", function(){
-    var id = $(this).attr("id");
-    swal({
-        title: 'Tem certeza que deseja deletar este endereço?',
-        text: "O sistema irá deletar o endereço selecionado com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
-        type: 'info',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sim, apagar!'
-      }).then((result) => {
-          $.ajax({
-              type: 'POST',
-              dataType: 'JSON',
-              url: 'core/deletarPessoaEndereco',
-              data: {id: id},
-              beforeSend: function () {
-              },
-              complete: function () {
-              },
-              error: function () {
-              },
-              success: function (data) {
-                  if (data.operacao){
-                      swal({
-                          title: 'Deletado!',
-                          text: 'O endereço selecionado foi deletado com sucesso.',
-                          type: 'success',
-                          showCancelButton: false,
-                          confirmButtonColor: '#3085d6',
-                          cancelButtonColor: '#d33',
-                          confirmButtonText: 'Ok'
-                        }).then((result) => {
-                            $("#tred" + id).remove();
+                success: function (data) {
+                    if (data.operacao){
+                        swal({
+                            title: 'Cadastro de Unidade',
+                            text: 'Cadastro da Unidade concluído!',
+                            type: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                          }).then((result) => {
+                            window.location.reload(true);
+                          });
+                    } else {
+                        swal({
+                            title: 'Cadastro de Unidade',
+                            text: data.mensagem,
+                            type: 'error'
                         });
-                  } else {
-                      swal({
-                          title: 'Deletar',
-                          text: data.mensagem,
-                          type: 'error'
-                      });
-                  }
-              }
-          });
+                    }
+                }
+            });
+        }
     });
 });
 
@@ -1035,12 +780,59 @@ $("#tb_email").on("click", ".del_eml", function(){
     });
 });
 
+$("#tb_contato").on("click", ".del_cto", function(){
+    var id = $(this).attr("id");
+    swal({
+        title: 'Tem certeza que deseja deletar este contato?',
+        text: "O sistema irá deletar o contato selecionado com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
+        type: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sim, apagar!'
+      }).then((result) => {
+          $.ajax({
+              type: 'POST',
+              dataType: 'JSON',
+              url: 'core/deletarPessoaContato',
+              data: {id: id},
+              beforeSend: function () {
+              },
+              complete: function () {
+              },
+              error: function () {
+              },
+              success: function (data) {
+                  if (data.operacao){
+                      swal({
+                          title: 'Deletado!',
+                          text: 'O contato selecionado foi deletado com sucesso.',
+                          type: 'success',
+                          showCancelButton: false,
+                          confirmButtonColor: '#3085d6',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            $("#trct" + id).remove();
+                        });
+                  } else {
+                      swal({
+                          title: 'Deletar',
+                          text: data.mensagem,
+                          type: 'error'
+                      });
+                  }
+              }
+          });
+    });
+});
+
 $(".bt_del").on("click", function(){
     var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Tem certeza que deseja deletar múltipos clienteunidadess?',
-            text: "O sistema irá deletar um total de " + nm_rows + " clienteunidadess com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
+            title: 'Tem certeza que deseja deletar múltipas unidades?',
+            text: "O sistema irá deletar um total de " + nm_rows + " unidades com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -1050,7 +842,7 @@ $(".bt_del").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'clienteunidades/deletarCliente',
+                  url: 'cliente_unidade/deletarClienteUnidade',
                   data: {ids: ids},
                   beforeSend: function () {
                   },
@@ -1062,14 +854,14 @@ $(".bt_del").on("click", function(){
                       if (data.operacao){
                           swal({
                               title: 'Deletados!',
-                              text: 'Os clienteunidades selecionados foram deletados com sucesso.',
+                              text: 'As unidades selecionadas foram deletadas com sucesso.',
                               type: 'success',
                               showCancelButton: false,
                               confirmButtonColor: '#3085d6',
                               cancelButtonColor: '#d33',
                               confirmButtonText: 'Ok'
                             }).then((result) => {
-                                $(this).remove();
+                                window.location.reload(true);
                             });
                       } else {
                           swal({
@@ -1083,14 +875,14 @@ $(".bt_del").on("click", function(){
         });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Deletar Cliente',
-            text: 'Você precisa selecionar um clienteunidades ou mais clienteunidadess para serem deletados!',
+            title: 'Deletar Unidade',
+            text: 'Você precisa selecionar uma ou mais unidades para serem deletadas!',
             type: 'warning'
           });
      } else {
         swal({
-            title: 'Tem certeza que deseja deletar este clienteunidades?',
-            text: "O sistema irá deletar o clienteunidades selecionado com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
+            title: 'Tem certeza que deseja deletar esta unidade?',
+            text: "O sistema irá deletar a unidade selecionada com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -1100,7 +892,7 @@ $(".bt_del").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'clienteunidades/deletarCliente',
+                  url: 'cliente_unidade/deletarClienteUnidade',
                   data: {ids: ids},
                   beforeSend: function () {
                   },
@@ -1112,7 +904,7 @@ $(".bt_del").on("click", function(){
                       if (data.operacao){
                           swal({
                               title: 'Deletado!',
-                              text: 'O clienteunidades selecionado foi deletado com sucesso.',
+                              text: 'A unidade selecionada foi deletada com sucesso.',
                               type: 'success',
                               showCancelButton: false,
                               confirmButtonColor: '#3085d6',
@@ -1138,8 +930,8 @@ $(".bt_ativo").on("click", function(){
     var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Tem certeza que deseja ativar múltipos clienteunidadess?',
-            text: "O sistema irá ativar um total de " + nm_rows + " clienteunidadess com essa ação.",
+            title: 'Tem certeza que deseja ativar múltipas unidades?',
+            text: "O sistema irá ativar um total de " + nm_rows + " unidades com essa ação.",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -1149,7 +941,7 @@ $(".bt_ativo").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'clienteunidades/ativarCliente',
+                  url: 'cliente_unidade/ativarClienteUnidade',
                   data: {ids: ids},
                   beforeSend: function () {
                   },
@@ -1160,8 +952,8 @@ $(".bt_ativo").on("click", function(){
                   success: function (data) {
                       if (data.operacao){
                           swal({
-                              title: 'Ativados!',
-                              text: 'Os clienteunidades selecionados foram ativados com sucesso.',
+                              title: 'Ativadas!',
+                              text: 'As unidades selecionadas foram ativadas com sucesso.',
                               type: 'success',
                               showCancelButton: false,
                               confirmButtonColor: '#3085d6',
@@ -1182,14 +974,14 @@ $(".bt_ativo").on("click", function(){
         });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Ativar Cliente',
-            text: 'Você precisa selecionar um clienteunidades ou mais clienteunidadess para serem ativados!',
+            title: 'Ativar Unidades',
+            text: 'Você precisa selecionar uma ou mais unidades para serem ativadas!',
             type: 'warning'
           });
      } else {
         swal({
-            title: 'Tem certeza que deseja ativar este clienteunidades?',
-            text: "O sistema irá ativar o clienteunidades selecionado com essa ação.",
+            title: 'Tem certeza que deseja ativar esta unidade?',
+            text: "O sistema irá ativar a unidade selecionada com essa ação.",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -1199,7 +991,7 @@ $(".bt_ativo").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'clienteunidades/ativarCliente',
+                  url: 'cliente_unidade/ativarClienteUnidade',
                   data: {ids: ids},
                   beforeSend: function () {
                   },
@@ -1210,8 +1002,8 @@ $(".bt_ativo").on("click", function(){
                   success: function (data) {
                       if (data.operacao){
                           swal({
-                              title: 'Ativado!',
-                              text: 'O clienteunidades selecionado foi ativado com sucesso.',
+                              title: 'Ativada!',
+                              text: 'A unidade selecionada foi ativada com sucesso.',
                               type: 'success',
                               showCancelButton: false,
                               confirmButtonColor: '#3085d6',
@@ -1237,8 +1029,8 @@ $(".bt_inativo").on("click", function(){
     var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Tem certeza que deseja inativar múltipos clienteunidadess?',
-            text: "O sistema irá inativar um total de " + nm_rows + " clienteunidadess com essa ação.",
+            title: 'Tem certeza que deseja inativar múltipos unidades?',
+            text: "O sistema irá inativar um total de " + nm_rows + " unidades com essa ação.",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -1248,7 +1040,7 @@ $(".bt_inativo").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'clienteunidades/inativarCliente',
+                  url: 'cliente_unidade/inativarClienteUnidade',
                   data: {ids: ids},
                   beforeSend: function () {
                   },
@@ -1259,8 +1051,8 @@ $(".bt_inativo").on("click", function(){
                   success: function (data) {
                       if (data.operacao){
                           swal({
-                              title: 'Inativados!',
-                              text: 'Os clienteunidades selecionados foram inativados com sucesso.',
+                              title: 'Inativadas!',
+                              text: 'As unidades selecionados foram inativadas com sucesso.',
                               type: 'success',
                               showCancelButton: false,
                               confirmButtonColor: '#3085d6',
@@ -1281,14 +1073,14 @@ $(".bt_inativo").on("click", function(){
         });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Inativar Cliente',
-            text: 'Você precisa selecionar um clienteunidades ou mais clienteunidadess para serem inativados!',
+            title: 'Inativar Unidade',
+            text: 'Você precisa selecionar uma ou mais unidades para serem inativadas!',
             type: 'warning'
           });
      } else {
         swal({
-            title: 'Tem certeza que deseja inativar este clienteunidades?',
-            text: "O sistema irá inativar o clienteunidades selecionado com essa ação.",
+            title: 'Tem certeza que deseja inativar esta unidade?',
+            text: "O sistema irá inativar a unidade selecionada com essa ação.",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -1298,7 +1090,7 @@ $(".bt_inativo").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'clienteunidades/inativarCliente',
+                  url: 'cliente_unidade/inativarClienteUnidade',
                   data: {ids: ids},
                   beforeSend: function () {
                   },
@@ -1309,8 +1101,8 @@ $(".bt_inativo").on("click", function(){
                   success: function (data) {
                       if (data.operacao){
                           swal({
-                              title: 'Inativado!',
-                              text: 'O clienteunidades selecionado foi inativado com sucesso.',
+                              title: 'Inativada!',
+                              text: 'A unidade selecionada foi inativada com sucesso.',
                               type: 'success',
                               showCancelButton: false,
                               confirmButtonColor: '#3085d6',
