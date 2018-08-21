@@ -150,8 +150,7 @@ $("#id_fabricante").on("change", function(){
             if (data.operacao){
                 $(".remove").remove();
                 $.each(data.dados, function (key, value) {
-                    var linhas;
-                    linhas += "<option class='remove' value='" + value.id + "'>" + value.modelo + "</option>";
+                    var linhas = "<option class='remove' value='" + value.id + "'>" + value.modelo + "</option>";
                     $("#id_modelo").append(linhas);
                     $("#id_modelo").removeAttr("disabled");
                 });
@@ -277,9 +276,41 @@ $(".bt_edit").on("click", function(){
             error: function () {
             },
             success: function (data) {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'JSON',
+                    url: 'equipamento/carregaModelos',
+                    data: {id_fabricante: data.dados.id_fabricante},
+                    beforeSend: function () {
+                    },
+                    complete: function () {
+                    },
+                    error: function () {
+                    },
+                    success: function (data) {
+                        if (data.operacao){
+                            $(".remove").remove();
+                            $.each(data.dados, function (key, value) {
+                                var selected = (value.id_modelo == data.dados.id_modelo) ? "selected" : null;
+                                var linhas = "<option " + selected + " class='remove' value='" + value.id + "'>" + value.modelo + "</option>";
+                                $("#id_modelo").append(linhas);
+                                $("#id_modelo").removeAttr("disabled");
+                            });
+                        } else {
+                            $(".remove").remove();
+                            $("#id_modelo").val(null).selected = "true";
+                            $("#id_modelo").attr("disabled", "true");
+                            swal({
+                                title: 'Cadastro de Equipamentos',
+                                text: data.mensagem,
+                                type: 'error'
+                            });
+                        }
+                    }
+                });
                 $("#id").val(data.dados.id);
                 $("#id_fabricante").val(data.dados.id_fabricante).selected = "true";
-                $("#equipamento").val(data.dados.equipamento);
+                $("#nome").val(data.dados.nome);
                 $("#descricao").val(data.dados.descricao);
                 $("#modalequipamento").modal();
             }
