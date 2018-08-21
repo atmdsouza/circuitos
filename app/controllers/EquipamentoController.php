@@ -1,242 +1,305 @@
 <?php
- 
-use Phalcon\Mvc\Model\Criteria;
-use Phalcon\Paginator\Adapter\Model as Paginator;
 
+namespace Circuitos\Controllers;
+
+use Phalcon\Paginator\Adapter\Model as Paginator;
+use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
+use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
+use Phalcon\Http\Response as Response;
+
+use Circuitos\Models\Equipamento;
+use Circuitos\Models\Modelo;
+use Circuitos\Models\Fabricante;
+
+use Auth\Autentica;
+use Util\Util;
+use Util\TokenManager;
 
 class EquipamentoController extends ControllerBase
 {
+    public $tokenManager;
+
+    public function initialize()
+    {
+        //Voltando o usuário não autenticado para a página de login
+        $auth = new Autentica();
+        $identity = $auth->getIdentity();
+        if (!is_array($identity)) {
+            return $this->response->redirect('session/login');
+        }
+        $this->view->user = $identity["nome"];
+        //CSRFToken
+        $this->tokenManager = new TokenManager();
+        if (!$this->tokenManager->doesUserHaveToken('User')) {
+            $this->tokenManager->generateToken('User');
+        }
+        $this->view->token = $this->tokenManager->getToken('User');
+    }
+
     /**
      * Index action
      */
     public function indexAction()
     {
-        $this->persistent->parameters = null;
-    }
-
-    /**
-     * Searches for equipamento
-     */
-    public function searchAction()
-    {
         $numberPage = 1;
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, 'Equipamento', $_POST);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
-
         $parameters = $this->persistent->parameters;
         if (!is_array($parameters)) {
             $parameters = [];
         }
         $parameters["order"] = "id";
-
         $equipamento = Equipamento::find($parameters);
-        if (count($equipamento) == 0) {
-            $this->flash->notice("The search did not find any equipamento");
-
-            $this->dispatcher->forward([
-                "controller" => "equipamento",
-                "action" => "index"
-            ]);
-
-            return;
-        }
-
+        $fabricante = Fabricante::buscaCompletaFabricante();
         $paginator = new Paginator([
             'data' => $equipamento,
-            'limit'=> 10,
+            'limit'=> 500,
             'page' => $numberPage
         ]);
-
         $this->view->page = $paginator->getPaginate();
+        $this->view->fabricante = $fabricante;
     }
 
-    /**
-     * Displays the creation form
-     */
-    public function newAction()
+    public function formEquipamentoAction()
     {
-
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        $equipamento = Equipamento::findFirst("id={$dados["id_equipamento"]}");
+        $dados = array(
+            "id" => $equipamento->id,
+            "id_fabricante" => $equipamento->id_fabricante,
+            "id_modelo" => $equipamento->id_modelo,
+            "nome" => $equipamento->nome,
+            "descricao" => $equipamento->descricao,
+        );
+        $response->setContent(json_encode(array(
+            "dados" => $dados
+        )));
+        return $response;
     }
 
-    /**
-     * Edits a equipamento
-     *
-     * @param string $id
-     */
-    public function editAction($id)
+    public function criarEquipamentoAction()
     {
-        if (!$this->request->isPost()) {
-
-            $equipamento = Equipamento::findFirstByid($id);
-            if (!$equipamento) {
-                $this->flash->error("equipamento was not found");
-
-                $this->dispatcher->forward([
-                    'controller' => "equipamento",
-                    'action' => 'index'
-                ]);
-
-                return;
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        //Instanciando classes
+        $response = new Response();
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $dados = filter_input_array(INPUT_POST);
+        $params = array();
+        parse_str($dados["dados"], $params);
+        //CSRF Token Check
+        if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
+            try {
+                $equipamento = new Equipamento();
+                $equipamento->setTransaction($transaction);
+                $equipamento->id_fabricante = $params["id_fabricante"];
+                $equipamento->id_modelo = $params["id_modelo"];
+                $equipamento->nome = $params["nome"];
+                $equipamento->descricao = $params["descricao"];
+                if ($equipamento->save() == false) {
+                    $transaction->rollback("Não foi possível salvar o equipamento!");
+                }
+                //Commita a transação
+                $transaction->commit();
+                $response->setContent(json_encode(array(
+                    "operacao" => True
+                )));
+                return $response;
+            } catch (TxFailed $e) {
+                $response->setContent(json_encode(array(
+                    "operacao" => False,
+                    "mensagem" => $e->getMessage()
+                )));
+                return $response;
             }
-
-            $this->view->id = $equipamento->id;
-
-            $this->tag->setDefault("id", $equipamento->id);
-            $this->tag->setDefault("id_fabricante", $equipamento->id_fabricante);
-            $this->tag->setDefault("id_modelo", $equipamento->id_modelo);
-            $this->tag->setDefault("nome", $equipamento->nome);
-            $this->tag->setDefault("descricao", $equipamento->descricao);
-            $this->tag->setDefault("ativo", $equipamento->ativo);
-            
+        } else {//Formulário Inválido
+            $response->setContent(json_encode(array(
+                "operacao" => False,
+                "mensagem" => "Check de formulário inválido!"
+            )));
+            return $response;
         }
     }
 
-    /**
-     * Creates a new equipamento
-     */
-    public function createAction()
+    public function editarEquipamentoAction()
     {
-        if (!$this->request->isPost()) {
-            $this->dispatcher->forward([
-                'controller' => "equipamento",
-                'action' => 'index'
-            ]);
-
-            return;
-        }
-
-        $equipamento = new Equipamento();
-        $equipamento->idFabricante = $this->request->getPost("id_fabricante");
-        $equipamento->idModelo = $this->request->getPost("id_modelo");
-        $equipamento->nome = $this->request->getPost("nome");
-        $equipamento->descricao = $this->request->getPost("descricao");
-        $equipamento->ativo = $this->request->getPost("ativo");
-        
-
-        if (!$equipamento->save()) {
-            foreach ($equipamento->getMessages() as $message) {
-                $this->flash->error($message);
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        //Instanciando classes
+        $response = new Response();
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $dados = filter_input_array(INPUT_POST);
+        $params = array();
+        parse_str($dados["dados"], $params);
+        $equipamento = Equipamento::findFirst("id={$params["id"]}");
+        //CSRF Token Check
+        if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
+            try {
+                $equipamento->setTransaction($transaction);
+                $equipamento->id_fabricante = $params["id_fabricante"];
+                $equipamento->id_modelo = $params["id_modelo"];
+                $equipamento->nome = $params["nome"];
+                $equipamento->descricao = $params["descricao"];
+                if ($equipamento->save() == false) {
+                    $transaction->rollback("Não foi possível editar o equipamento!");
+                }
+                //Commita a transação
+                $transaction->commit();
+                $response->setContent(json_encode(array(
+                    "operacao" => True
+                )));
+                return $response;
+            } catch (TxFailed $e) {
+                $response->setContent(json_encode(array(
+                    "operacao" => False,
+                    "mensagem" => $e->getMessage()
+                )));
+                return $response;
             }
-
-            $this->dispatcher->forward([
-                'controller' => "equipamento",
-                'action' => 'new'
-            ]);
-
-            return;
+        } else {//Formulário Inválido
+            $response->setContent(json_encode(array(
+                "operacao" => False,
+                "mensagem" => "Check de formulário inválido!"
+            )));
+            return $response;
         }
-
-        $this->flash->success("equipamento was created successfully");
-
-        $this->dispatcher->forward([
-            'controller' => "equipamento",
-            'action' => 'index'
-        ]);
     }
 
-    /**
-     * Saves a equipamento edited
-     *
-     */
-    public function saveAction()
+    public function ativarEquipamentoAction()
     {
-
-        if (!$this->request->isPost()) {
-            $this->dispatcher->forward([
-                'controller' => "equipamento",
-                'action' => 'index'
-            ]);
-
-            return;
-        }
-
-        $id = $this->request->getPost("id");
-        $equipamento = Equipamento::findFirstByid($id);
-
-        if (!$equipamento) {
-            $this->flash->error("equipamento does not exist " . $id);
-
-            $this->dispatcher->forward([
-                'controller' => "equipamento",
-                'action' => 'index'
-            ]);
-
-            return;
-        }
-
-        $equipamento->idFabricante = $this->request->getPost("id_fabricante");
-        $equipamento->idModelo = $this->request->getPost("id_modelo");
-        $equipamento->nome = $this->request->getPost("nome");
-        $equipamento->descricao = $this->request->getPost("descricao");
-        $equipamento->ativo = $this->request->getPost("ativo");
-        
-
-        if (!$equipamento->save()) {
-
-            foreach ($equipamento->getMessages() as $message) {
-                $this->flash->error($message);
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $dados = filter_input_array(INPUT_POST);
+        //CSRF Token Check
+        if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
+            try {
+                foreach($dados["ids"] as $dado){
+                    $equipamento = Equipamento::findFirst("id={$dado}");
+                    $equipamento->setTransaction($transaction);
+                    $equipamento->ativo = 1;
+                    if ($equipamento->save() == false) {
+                        $transaction->rollback("Não foi possível editar o equipamento!");
+                    }
+                }
+                //Commita a transação
+                $transaction->commit();
+                $response->setContent(json_encode(array(
+                    "operacao" => True
+                )));
+                return $response;
+            } catch (TxFailed $e) {
+                $response->setContent(json_encode(array(
+                    "operacao" => False,
+                    "mensagem" => $e->getMessage()
+                )));
+                return $response;
             }
-
-            $this->dispatcher->forward([
-                'controller' => "equipamento",
-                'action' => 'edit',
-                'params' => [$equipamento->id]
-            ]);
-
-            return;
+        } else {//Formulário Inválido
+            $response->setContent(json_encode(array(
+                "operacao" => False,
+                "mensagem" => "Check de formulário inválido!"
+            )));
+            return $response;
         }
-
-        $this->flash->success("equipamento was updated successfully");
-
-        $this->dispatcher->forward([
-            'controller' => "equipamento",
-            'action' => 'index'
-        ]);
     }
 
-    /**
-     * Deletes a equipamento
-     *
-     * @param string $id
-     */
-    public function deleteAction($id)
+    public function inativarEquipamentoAction()
     {
-        $equipamento = Equipamento::findFirstByid($id);
-        if (!$equipamento) {
-            $this->flash->error("equipamento was not found");
-
-            $this->dispatcher->forward([
-                'controller' => "equipamento",
-                'action' => 'index'
-            ]);
-
-            return;
-        }
-
-        if (!$equipamento->delete()) {
-
-            foreach ($equipamento->getMessages() as $message) {
-                $this->flash->error($message);
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $dados = filter_input_array(INPUT_POST);
+        //CSRF Token Check
+        if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
+            try {
+                foreach($dados["ids"] as $dado){
+                    $equipamento = Equipamento::findFirst("id={$dado}");
+                    $equipamento->setTransaction($transaction);
+                    $equipamento->ativo = 0;
+                    if ($equipamento->save() == false) {
+                        $transaction->rollback("Não foi possível editar o equipamento!");
+                    }
+                }
+                //Commita a transação
+                $transaction->commit();
+                $response->setContent(json_encode(array(
+                    "operacao" => True
+                )));
+                return $response;
+            } catch (TxFailed $e) {
+                $response->setContent(json_encode(array(
+                    "operacao" => False,
+                    "mensagem" => $e->getMessage()
+                )));
+                return $response;
             }
-
-            $this->dispatcher->forward([
-                'controller' => "equipamento",
-                'action' => 'search'
-            ]);
-
-            return;
+        } else {//Formulário Inválido
+            $response->setContent(json_encode(array(
+                "operacao" => False,
+                "mensagem" => "Check de formulário inválido!"
+            )));
+            return $response;
         }
-
-        $this->flash->success("equipamento was deleted successfully");
-
-        $this->dispatcher->forward([
-            'controller' => "equipamento",
-            'action' => "index"
-        ]);
     }
 
+    public function deletarEquipamentoAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_POST);
+        foreach($dados["ids"] as $dado){
+            $equipamento = Equipamento::findFirstByid($dado);
+            $result = $equipamento->delete();
+            if (!$result) {
+                $response->setContent(json_encode(array(
+                    "operacao" => False,
+                    "mensagem" => "Erro ao tentar realizar a operação!"
+                )));
+                return $response;
+            }
+        }
+        $response->setContent(json_encode(array(
+            "operacao" => True
+        )));
+        return $response;
+    }
+
+    public function carregaModelosAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        if ($dados["id_fabricante"]) {
+            $modelos = Modelo::find("id_fabricante={$dados["id_fabricante"]}");
+            if (isset($modelos[0])) {
+                $response->setContent(json_encode(array(
+                    "operacao" => True,
+                    "dados" => $modelos
+                )));
+                return $response;
+            } else {
+                $response->setContent(json_encode(array(
+                    "operacao" => False,
+                    "mensagem" => "Não existem modelos cadastrados para esse fabricante!"
+                )));
+                return $response;
+            }
+        } else {
+            $response->setContent(json_encode(array(
+                "operacao" => False,
+                "mensagem" => "Você precisa selecionar um fabricante!"
+            )));
+            return $response;
+        }
+    }
 }

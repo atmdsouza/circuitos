@@ -188,17 +188,19 @@ class ClienteUnidadeController extends ControllerBase
                 }
                 if (!empty($params["nome_contato"])) {
                     foreach($params["nome_contato"] as $key => $nome_contato){
-                        $tel = $util->formataFone($params["telefone_contato"][$key]);
+                        $tel1 = ($params["telefone_contato"][$key]) ? $util->formataFone($params["telefone_contato"][$key]) : null;
+                        $tel = ($tel1) ? $tel1["ddd"] . $tel1["fone"] : null;
+                        $email = ($params["email_contato"][$key]) ? $params["email_contato"][$key] : null;
                         $pessoacontato = new PessoaContato();
                         $pessoacontato->setTransaction($transaction);
                         $pessoacontato->id_pessoa = $pessoa->id;
                         $pessoacontato->id_tipocontato = $params["tipo_contato"][$key];
                         $pessoacontato->nome = $nome_contato;
                         $pessoacontato->principal = $params["principal_contato"][$key];
-                        $pessoacontato->telefone = $tel["ddd"] . $tel["fone"];
-                        $pessoacontato->email = $params["email_contato"][$key];
+                        $pessoacontato->telefone = $tel;
+                        $pessoacontato->email = $email;
                         if ($pessoacontato->save() == false) {
-                            $transaction->rollback("Não foi possível salvar o pessoacontato!");
+                            $transaction->rollback("Não foi possível salvar a pessoa de contato!");
                         }
                     }
                 }
@@ -312,17 +314,19 @@ class ClienteUnidadeController extends ControllerBase
                 }
                 if (!empty($params["nome_contato"])) {
                     foreach($params["nome_contato"] as $key => $nome_contato){
-                        $tel = $util->formataFone($params["telefone_contato"][$key]);
+                        $tel1 = ($params["telefone_contato"][$key]) ? $util->formataFone($params["telefone_contato"][$key]) : null;
+                        $tel = ($tel1) ? $tel1["ddd"] . $tel1["fone"] : null;
+                        $email = ($params["email_contato"][$key]) ? $params["email_contato"][$key] : null;
                         $pessoacontato = new PessoaContato();
                         $pessoacontato->setTransaction($transaction);
                         $pessoacontato->id_pessoa = $pessoa->id;
                         $pessoacontato->id_tipocontato = $params["tipo_contato"][$key];
                         $pessoacontato->nome = $nome_contato;
                         $pessoacontato->principal = $params["principal_contato"][$key];
-                        $pessoacontato->telefone = $tel["ddd"] . $tel["fone"];
-                        $pessoacontato->email = $params["email_contato"][$key];
+                        $pessoacontato->telefone = $tel;
+                        $pessoacontato->email = $email;
                         if ($pessoacontato->save() == false) {
-                            $transaction->rollback("Não foi possível salvar o pessoacontato!");
+                            $transaction->rollback("Não foi possível salvar a pessoa de contato!");
                         }
                     }
                 }

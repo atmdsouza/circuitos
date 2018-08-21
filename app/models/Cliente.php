@@ -141,7 +141,7 @@ class Cliente extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Consulta com o join na tabela lov 
+     * Consulta com o join na tabela com o nome do cliente 
      *
      * @param int $tipopessoa
      * @return Cliente|\Phalcon\Mvc\Model\Resultset

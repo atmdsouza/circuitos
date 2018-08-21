@@ -389,53 +389,11 @@ $(document).on("click", ".criar_fabricantes", function(){
         rules : {
             nome_pessoa:{
                 required: true
-            },
-            cliente:{
-                required: true
-            },
-            cep:{
-                required: true
-            },
-            endereco:{
-                required: true
-            },
-            numero:{
-                required: true
-            },
-            bairro:{
-                required: true
-            },
-            cidade:{
-                required: true
-            },
-            estado:{
-                required: true
             }
         },
         messages:{
             nome_pessoa:{
-                required:"É necessário informar o nome fantasia da unidade"
-            },
-            cliente:{
-                required:"É necessário selecionar um cliente para a unidade"
-            },
-            cep:{
-                required:"É necessário informar o CEP do endereço"
-            },
-            endereco:{
-                required: "É necessário informar uma endereço"
-            },
-            numero:{
-                required: "É necessário informar um número"
-            },
-            bairro:{
-                required: "É necessário informar um bairro"
-            },
-            cidade:{
-                required: "É necessário informar uma cidade"
-            },
-            estado:{
-                required: "É necessário informar um estado"
+                required:"É necessário informar o nome do fabricante"
             }
         },
         submitHandler: function(form) {
@@ -508,12 +466,12 @@ $(".bt_edit").on("click", function(){
             type: 'warning'
           });
      } else {
-        var id_clienteunidade = ids[0];
+        var id_fabricante = ids[0];
         $.ajax({
             type: 'GET',
             dataType: 'JSON',
             url: 'fabricante/formFabricante',
-            data: {id_clienteunidade: id_clienteunidade},
+            data: {id_fabricante: id_fabricante},
             beforeSend: function () {
             },
             complete: function () {
@@ -522,15 +480,7 @@ $(".bt_edit").on("click", function(){
             },
             success: function (data) {
                 $("#id").val(data.dados.id);
-                $("#cliente").val(data.dados.id_cliente).selected = "true";
                 $("#nome_pessoa").val(data.dados.nome);
-                $("#sigla").val(data.dados.sigla);
-                $("#rzsocial").val(data.dados.razaosocial);
-                $("#cnpj").val(data.dados.cnpj);
-                $("#inscricaoestadual").val(data.dados.inscricaoestadual);
-                $("#inscricaomunicipal").val(data.dados.inscricaomunicipal);
-                $("#datafund").val(data.dados.datafund);
-                $("#sigla_uf").val(data.dados.pessoaendereco.sigla_uf);
                 $("#cep").val(data.dados.pessoaendereco.cep);
                 $("#endereco").val(data.dados.pessoaendereco.endereco);
                 $("#numero").val(data.dados.pessoaendereco.numero);
@@ -594,53 +544,11 @@ $(document).on("click", ".editar_fabricantes", function(){
         rules : {
             nome_pessoa:{
                 required: true
-            },
-            cliente:{
-                required: true
-            },
-            cep:{
-                required: true
-            },
-            endereco:{
-                required: true
-            },
-            numero:{
-                required: true
-            },
-            bairro:{
-                required: true
-            },
-            cidade:{
-                required: true
-            },
-            estado:{
-                required: true
             }
         },
         messages:{
             nome_pessoa:{
                 required:"É necessário informar o nome fantasia da unidade"
-            },
-            cliente:{
-                required:"É necessário selecionar um cliente para a unidade"
-            },
-            cep:{
-                required:"É necessário informar o CEP do endereço"
-            },
-            endereco:{
-                required: "É necessário informar uma endereço"
-            },
-            numero:{
-                required: "É necessário informar um número"
-            },
-            bairro:{
-                required: "É necessário informar um bairro"
-            },
-            cidade:{
-                required: "É necessário informar uma cidade"
-            },
-            estado:{
-                required: "É necessário informar um estado"
             }
         },
         submitHandler: function(form) {

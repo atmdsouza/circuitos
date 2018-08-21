@@ -10,8 +10,7 @@ use Util\Util;
             <thead>
                 <tr>
                     <th>Código</th>
-                    <th>Nome Cliente</th>
-                    <th>Nome Unidade</th>
+                    <th>Nome Fabricante</th>
                     <th>Data Cadastro</th>
                     <th>Data Alteração</th>
                     <th>Ativo</th>
@@ -38,9 +37,6 @@ use Util\Util;
                         <?php echo $fabricantes->id ?>
                     </td>
                     <td>
-                        <?php echo $fabricantes->Cliente->Pessoa->nome ?>
-                    </td>
-                    <td>
                         <?php echo $fabricantes->Pessoa->nome ?>
                     </td>
                     <td>
@@ -65,7 +61,7 @@ use Util\Util;
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h5 class="modal-title" id="modalfabricantes">Dados da Unidado do Cliente Pessoa Jurídica</h5>
+                <h5 class="modal-title" id="modalfabricantes">Dados do Fabricante</h5>
             </div>
             <form id="formFabricante">
                 <input type="hidden" id="token" name="<?php echo $token['tokenKey'] ?>" value="<?php echo $token['tokenValue'] ?>">
@@ -73,42 +69,9 @@ use Util\Util;
                 <div class="modal-body">
                     <div class="form-row">
                         <div class="col-12">
-                            <p>Uma <strong>unidade é obrigatória para o cadastro dos circuitos</strong>, pois ele indicará onde o circuito está instalado físicamente. 
-                            Um cliente pessoa jurídica pode possuir <strong>diversas unidades</strong>, cada uma com sua instalação de circuito, <strong>gerenciada de forma independente</strong>.</p>
-                            <h6>Dados Cadastrais</h6>
-                            <div class="form-row">
-                                <div class="form-group col-md-3">
-                                    <?php echo $this->tag->select(["cliente", $clientes, "class" => "form-control", "id" => "cliente",
-                                        "using" => ["id", "nome",],
-                                        "useEmpty" => true,
-                                        "emptyText" => "Selecione um Cliente",
-                                        "emptyValue" => ""])
-                                    ?>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <?php echo $this->tag->textField(["nome_pessoa", "size" => 200, "class" => "form-control", "id" => "nome_pessoa", "placeholder" => "Nome Fantasia"]) ?>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <?php echo $this->tag->textField(["sigla", "size" => 200, "class" => "form-control", "id" => "sigla", "placeholder" => "Sigla"]) ?>
-                                </div>
-                            </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <?php echo $this->tag->textField(["rzsocial", "size" => 200, "class" => "form-control", "id" => "rzsocial", "placeholder" => "Razão Social"]) ?>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <?php echo $this->tag->textField(["cnpj", "size" => 120, "class" => "form-control cnpj", "id" => "cnpj", "placeholder" => "CNPJ"]) ?>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <?php echo $this->tag->textField(["datafund", "size" => 120, "class" => "form-control data", "id" => "datafund", "placeholder" => "Data Fundação"]) ?>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-4">
-                                    <?php echo $this->tag->textField(["inscricaoestadual", "size" => 120, "class" => "form-control", "id" => "inscricaoestadual", "placeholder" => "Inscrição Estadual"]) ?>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <?php echo $this->tag->textField(["inscricaomunicipal", "size" => 120, "class" => "form-control", "id" => "inscricaomunicipal", "placeholder" => "Inscrição Municipal"]) ?>
+                                    <?php echo $this->tag->textField(["nome_pessoa", "size" => 200, "class" => "form-control", "id" => "nome_pessoa", "placeholder" => "Nome do Fabricante"]) ?>
                                 </div>
                             </div>
                             <h6>Dados do Endereço</h6>
@@ -187,7 +150,7 @@ use Util\Util;
                                     </table>
                                 </div>
                             </div>
-                            <h6>Pessoas de Contato na Unidade</h6>
+                            <h6>Pessoas de Contato no Fabricante</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-1">
                                     <?php echo $this->tag->select(["principal_contato_t", ["0" => "Não", "1" => "Sim"], "class" => "form-control", "id" => "principal_contato_t", "useEmpty" => true, "emptyText" => "Principal?", "emptyValue" => ""]) ?>

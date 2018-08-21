@@ -1,239 +1,271 @@
 <?php
- 
-use Phalcon\Mvc\Model\Criteria;
-use Phalcon\Paginator\Adapter\Model as Paginator;
 
+namespace Circuitos\Controllers;
+
+use Phalcon\Paginator\Adapter\Model as Paginator;
+use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
+use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
+use Phalcon\Http\Response as Response;
+
+use Circuitos\Models\Modelo;
+use Circuitos\Models\Fabricante;
+
+use Auth\Autentica;
+use Util\Util;
+use Util\TokenManager;
 
 class ModeloController extends ControllerBase
 {
+    public $tokenManager;
+
+    public function initialize()
+    {
+        //Voltando o usuário não autenticado para a página de login
+        $auth = new Autentica();
+        $identity = $auth->getIdentity();
+        if (!is_array($identity)) {
+            return $this->response->redirect('session/login');
+        }
+        $this->view->user = $identity["nome"];
+        //CSRFToken
+        $this->tokenManager = new TokenManager();
+        if (!$this->tokenManager->doesUserHaveToken('User')) {
+            $this->tokenManager->generateToken('User');
+        }
+        $this->view->token = $this->tokenManager->getToken('User');
+    }
+
     /**
      * Index action
      */
     public function indexAction()
     {
-        $this->persistent->parameters = null;
-    }
-
-    /**
-     * Searches for modelo
-     */
-    public function searchAction()
-    {
         $numberPage = 1;
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, 'Modelo', $_POST);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
-
         $parameters = $this->persistent->parameters;
         if (!is_array($parameters)) {
             $parameters = [];
         }
         $parameters["order"] = "id";
-
         $modelo = Modelo::find($parameters);
-        if (count($modelo) == 0) {
-            $this->flash->notice("The search did not find any modelo");
-
-            $this->dispatcher->forward([
-                "controller" => "modelo",
-                "action" => "index"
-            ]);
-
-            return;
-        }
-
+        $fabricante = Fabricante::buscaCompletaFabricante();
         $paginator = new Paginator([
             'data' => $modelo,
-            'limit'=> 10,
+            'limit'=> 500,
             'page' => $numberPage
         ]);
-
         $this->view->page = $paginator->getPaginate();
+        $this->view->fabricante = $fabricante;
     }
 
-    /**
-     * Displays the creation form
-     */
-    public function newAction()
+    public function formModeloAction()
     {
-
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        $modelo = Modelo::findFirst("id={$dados["id_modelo"]}");
+        $dados = array(
+            "id" => $modelo->id,
+            "id_fabricante" => $modelo->id_fabricante,
+            "modelo" => $modelo->modelo,
+            "descricao" => $modelo->descricao,
+        );
+        $response->setContent(json_encode(array(
+            "dados" => $dados
+        )));
+        return $response;
     }
 
-    /**
-     * Edits a modelo
-     *
-     * @param string $id
-     */
-    public function editAction($id)
+    public function criarModeloAction()
     {
-        if (!$this->request->isPost()) {
-
-            $modelo = Modelo::findFirstByid($id);
-            if (!$modelo) {
-                $this->flash->error("modelo was not found");
-
-                $this->dispatcher->forward([
-                    'controller' => "modelo",
-                    'action' => 'index'
-                ]);
-
-                return;
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        //Instanciando classes
+        $response = new Response();
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $dados = filter_input_array(INPUT_POST);
+        $params = array();
+        parse_str($dados["dados"], $params);
+        //CSRF Token Check
+        if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
+            try {
+                $modelo = new Modelo();
+                $modelo->setTransaction($transaction);
+                $modelo->id_fabricante = $params["id_fabricante"];
+                $modelo->modelo = $params["modelo"];
+                $modelo->descricao = $params["descricao"];
+                if ($modelo->save() == false) {
+                    $transaction->rollback("Não foi possível salvar o modelo!");
+                }
+                //Commita a transação
+                $transaction->commit();
+                $response->setContent(json_encode(array(
+                    "operacao" => True
+                )));
+                return $response;
+            } catch (TxFailed $e) {
+                $response->setContent(json_encode(array(
+                    "operacao" => False,
+                    "mensagem" => $e->getMessage()
+                )));
+                return $response;
             }
-
-            $this->view->id = $modelo->id;
-
-            $this->tag->setDefault("id", $modelo->id);
-            $this->tag->setDefault("id_fabricante", $modelo->id_fabricante);
-            $this->tag->setDefault("modelo", $modelo->modelo);
-            $this->tag->setDefault("descricao", $modelo->descricao);
-            $this->tag->setDefault("ativo", $modelo->ativo);
-            
+        } else {//Formulário Inválido
+            $response->setContent(json_encode(array(
+                "operacao" => False,
+                "mensagem" => "Check de formulário inválido!"
+            )));
+            return $response;
         }
     }
 
-    /**
-     * Creates a new modelo
-     */
-    public function createAction()
+    public function editarModeloAction()
     {
-        if (!$this->request->isPost()) {
-            $this->dispatcher->forward([
-                'controller' => "modelo",
-                'action' => 'index'
-            ]);
-
-            return;
-        }
-
-        $modelo = new Modelo();
-        $modelo->idFabricante = $this->request->getPost("id_fabricante");
-        $modelo->modelo = $this->request->getPost("modelo");
-        $modelo->descricao = $this->request->getPost("descricao");
-        $modelo->ativo = $this->request->getPost("ativo");
-        
-
-        if (!$modelo->save()) {
-            foreach ($modelo->getMessages() as $message) {
-                $this->flash->error($message);
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        //Instanciando classes
+        $response = new Response();
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $dados = filter_input_array(INPUT_POST);
+        $params = array();
+        parse_str($dados["dados"], $params);
+        $modelo = Modelo::findFirst("id={$params["id"]}");
+        //CSRF Token Check
+        if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
+            try {
+                $modelo->setTransaction($transaction);
+                $modelo->id_fabricante = $params["id_fabricante"];
+                $modelo->modelo = $params["modelo"];
+                $modelo->descricao = $params["descricao"];
+                if ($modelo->save() == false) {
+                    $transaction->rollback("Não foi possível editar o modelo!");
+                }
+                //Commita a transação
+                $transaction->commit();
+                $response->setContent(json_encode(array(
+                    "operacao" => True
+                )));
+                return $response;
+            } catch (TxFailed $e) {
+                $response->setContent(json_encode(array(
+                    "operacao" => False,
+                    "mensagem" => $e->getMessage()
+                )));
+                return $response;
             }
-
-            $this->dispatcher->forward([
-                'controller' => "modelo",
-                'action' => 'new'
-            ]);
-
-            return;
+        } else {//Formulário Inválido
+            $response->setContent(json_encode(array(
+                "operacao" => False,
+                "mensagem" => "Check de formulário inválido!"
+            )));
+            return $response;
         }
-
-        $this->flash->success("modelo was created successfully");
-
-        $this->dispatcher->forward([
-            'controller' => "modelo",
-            'action' => 'index'
-        ]);
     }
 
-    /**
-     * Saves a modelo edited
-     *
-     */
-    public function saveAction()
+    public function ativarModeloAction()
     {
-
-        if (!$this->request->isPost()) {
-            $this->dispatcher->forward([
-                'controller' => "modelo",
-                'action' => 'index'
-            ]);
-
-            return;
-        }
-
-        $id = $this->request->getPost("id");
-        $modelo = Modelo::findFirstByid($id);
-
-        if (!$modelo) {
-            $this->flash->error("modelo does not exist " . $id);
-
-            $this->dispatcher->forward([
-                'controller' => "modelo",
-                'action' => 'index'
-            ]);
-
-            return;
-        }
-
-        $modelo->idFabricante = $this->request->getPost("id_fabricante");
-        $modelo->modelo = $this->request->getPost("modelo");
-        $modelo->descricao = $this->request->getPost("descricao");
-        $modelo->ativo = $this->request->getPost("ativo");
-        
-
-        if (!$modelo->save()) {
-
-            foreach ($modelo->getMessages() as $message) {
-                $this->flash->error($message);
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $dados = filter_input_array(INPUT_POST);
+        //CSRF Token Check
+        if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
+            try {
+                foreach($dados["ids"] as $dado){
+                    $modelo = Modelo::findFirst("id={$dado}");
+                    $modelo->setTransaction($transaction);
+                    $modelo->ativo = 1;
+                    if ($modelo->save() == false) {
+                        $transaction->rollback("Não foi possível editar o modelo!");
+                    }
+                }
+                //Commita a transação
+                $transaction->commit();
+                $response->setContent(json_encode(array(
+                    "operacao" => True
+                )));
+                return $response;
+            } catch (TxFailed $e) {
+                $response->setContent(json_encode(array(
+                    "operacao" => False,
+                    "mensagem" => $e->getMessage()
+                )));
+                return $response;
             }
-
-            $this->dispatcher->forward([
-                'controller' => "modelo",
-                'action' => 'edit',
-                'params' => [$modelo->id]
-            ]);
-
-            return;
+        } else {//Formulário Inválido
+            $response->setContent(json_encode(array(
+                "operacao" => False,
+                "mensagem" => "Check de formulário inválido!"
+            )));
+            return $response;
         }
-
-        $this->flash->success("modelo was updated successfully");
-
-        $this->dispatcher->forward([
-            'controller' => "modelo",
-            'action' => 'index'
-        ]);
     }
 
-    /**
-     * Deletes a modelo
-     *
-     * @param string $id
-     */
-    public function deleteAction($id)
+    public function inativarModeloAction()
     {
-        $modelo = Modelo::findFirstByid($id);
-        if (!$modelo) {
-            $this->flash->error("modelo was not found");
-
-            $this->dispatcher->forward([
-                'controller' => "modelo",
-                'action' => 'index'
-            ]);
-
-            return;
-        }
-
-        if (!$modelo->delete()) {
-
-            foreach ($modelo->getMessages() as $message) {
-                $this->flash->error($message);
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $dados = filter_input_array(INPUT_POST);
+        //CSRF Token Check
+        if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
+            try {
+                foreach($dados["ids"] as $dado){
+                    $modelo = Modelo::findFirst("id={$dado}");
+                    $modelo->setTransaction($transaction);
+                    $modelo->ativo = 0;
+                    if ($modelo->save() == false) {
+                        $transaction->rollback("Não foi possível editar o modelo!");
+                    }
+                }
+                //Commita a transação
+                $transaction->commit();
+                $response->setContent(json_encode(array(
+                    "operacao" => True
+                )));
+                return $response;
+            } catch (TxFailed $e) {
+                $response->setContent(json_encode(array(
+                    "operacao" => False,
+                    "mensagem" => $e->getMessage()
+                )));
+                return $response;
             }
-
-            $this->dispatcher->forward([
-                'controller' => "modelo",
-                'action' => 'search'
-            ]);
-
-            return;
+        } else {//Formulário Inválido
+            $response->setContent(json_encode(array(
+                "operacao" => False,
+                "mensagem" => "Check de formulário inválido!"
+            )));
+            return $response;
         }
-
-        $this->flash->success("modelo was deleted successfully");
-
-        $this->dispatcher->forward([
-            'controller' => "modelo",
-            'action' => "index"
-        ]);
     }
 
+    public function deletarModeloAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_POST);
+        foreach($dados["ids"] as $dado){
+            $modelo = Modelo::findFirstByid($dado);
+            $result = $modelo->delete();
+            if (!$result) {
+                $response->setContent(json_encode(array(
+                    "operacao" => False,
+                    "mensagem" => "Erro ao tentar realizar a operação!"
+                )));
+                return $response;
+            }
+        }
+        $response->setContent(json_encode(array(
+            "operacao" => True
+        )));
+        return $response;
+    }
 }

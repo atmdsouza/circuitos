@@ -2,6 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
+
 class Fabricante extends \Phalcon\Mvc\Model
 {
 
@@ -105,6 +108,22 @@ class Fabricante extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta com o join na tabela com o nome do fabricante 
+     *
+     * @param int $tipopessoa
+     * @return Fabricante|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function buscaCompletaFabricante()
+    {
+        $query = new Builder();
+        $query->from(array("Fabricante" => "Circuitos\Models\Fabricante"));
+        $query->columns("Fabricante.id, Pessoa.nome");
+        $query->join("Circuitos\Models\Pessoa", "Pessoa.id = Fabricante.id_pessoa", "Pessoa");
+        $resultado = $query->getQuery()->execute()->setHydrateMode(Resultset::HYDRATE_ARRAYS);
+        return $resultado;
     }
 
     /**
