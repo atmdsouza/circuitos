@@ -10,6 +10,7 @@ use Phalcon\Http\Response as Response;
 use Circuitos\Models\Equipamento;
 use Circuitos\Models\Modelo;
 use Circuitos\Models\Fabricante;
+use Circuitos\Models\Lov;
 
 use Auth\Autentica;
 use Util\Util;
@@ -42,12 +43,11 @@ class EquipamentoController extends ControllerBase
     public function indexAction()
     {
         $numberPage = 1;
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-        }
-        $parameters["order"] = "id";
-        $equipamento = Equipamento::find($parameters);
+        $equipamento = Equipamento::find();
+        $tipoequipamento = Lov::find(array(
+            "tipo = 15",
+            "order" => "descricao"
+        ));
         $fabricante = Fabricante::buscaCompletaFabricante();
         $paginator = new Paginator([
             'data' => $equipamento,
@@ -56,6 +56,7 @@ class EquipamentoController extends ControllerBase
         ]);
         $this->view->page = $paginator->getPaginate();
         $this->view->fabricante = $fabricante;
+        $this->view->tipoequipamento = $tipoequipamento;
     }
 
     public function formEquipamentoAction()
@@ -70,6 +71,9 @@ class EquipamentoController extends ControllerBase
             "id_fabricante" => $equipamento->id_fabricante,
             "id_modelo" => $equipamento->id_modelo,
             "nome" => $equipamento->nome,
+            "id_tipoequipamento" => $equipamento->id_tipoequipamento,
+            "numserie" => $equipamento->numserie,
+            "numpatrimonio" => $equipamento->numpatrimonio,
             "descricao" => $equipamento->descricao,
         );
         $response->setContent(json_encode(array(
@@ -98,6 +102,9 @@ class EquipamentoController extends ControllerBase
                 $equipamento->id_modelo = $params["id_modelo"];
                 $equipamento->nome = $params["nome"];
                 $equipamento->descricao = $params["descricao"];
+                $equipamento->id_tipoequipamento = $params["id_tipoequipamento"];
+                $equipamento->numserie = $params["numserie"];
+                $equipamento->numpatrimonio = $params["numpatrimonio"];
                 if ($equipamento->save() == false) {
                     $transaction->rollback("Não foi possível salvar o equipamento!");
                 }
@@ -143,6 +150,9 @@ class EquipamentoController extends ControllerBase
                 $equipamento->id_modelo = $params["id_modelo"];
                 $equipamento->nome = $params["nome"];
                 $equipamento->descricao = $params["descricao"];
+                $equipamento->id_tipoequipamento = $params["id_tipoequipamento"];
+                $equipamento->numserie = $params["numserie"];
+                $equipamento->numpatrimonio = $params["numpatrimonio"];
                 if ($equipamento->save() == false) {
                     $transaction->rollback("Não foi possível editar o equipamento!");
                 }

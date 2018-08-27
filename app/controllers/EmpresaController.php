@@ -48,12 +48,7 @@ class EmpresaController extends ControllerBase
     public function indexAction()
     {
         $numberPage = 1;
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-        }
-        $parameters["order"] = "id";
-        $empresa = Empresa::find($parameters);
+        $empresa = Empresa::find();
         $setor = Lov::find("tipo=5");
         $esfera = Lov::find("tipo=4");
         $paginator = new Paginator([

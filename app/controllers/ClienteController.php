@@ -49,14 +49,8 @@ class ClienteController extends ControllerBase
      */
     public function indexAction()
     {
-        $this->persistent->parameters = null;
         $numberPage = 1;
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-        }
-        $parameters["order"] = "id";
-        $clientes = Cliente::find($parameters);
+        $clientes = Cliente::find();
         $tipocliente = Lov::find("tipo=9");
         $tipoendereco = Lov::find("tipo=11");
         $tipotelefone = Lov::find("tipo=12");

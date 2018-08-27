@@ -25,9 +25,27 @@ class Equipamento extends \Phalcon\Mvc\Model
 
     /**
      *
+     * @var integer
+     */
+    protected $id_tipoequipamento;
+
+    /**
+     *
      * @var string
      */
     protected $nome;
+
+    /**
+     *
+     * @var string
+     */
+    protected $numserie;
+
+    /**
+     *
+     * @var string
+     */
+    protected $numpatrimonio;
 
     /**
      *
@@ -81,6 +99,19 @@ class Equipamento extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field id_tipoequipamento
+     *
+     * @param integer $id_tipoequipamento
+     * @return $this
+     */
+    public function setIdTipoequipamento($id_tipoequipamento)
+    {
+        $this->id_tipoequipamento = $id_tipoequipamento;
+
+        return $this;
+    }
+
+    /**
      * Method to set the value of field nome
      *
      * @param string $nome
@@ -89,6 +120,32 @@ class Equipamento extends \Phalcon\Mvc\Model
     public function setNome($nome)
     {
         $this->nome = $nome;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field numserie
+     *
+     * @param string $numserie
+     * @return $this
+     */
+    public function setNumserie($numserie)
+    {
+        $this->numserie = $numserie;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field numpatrimonio
+     *
+     * @param string $numpatrimonio
+     * @return $this
+     */
+    public function setNumpatrimonio($numpatrimonio)
+    {
+        $this->numpatrimonio = $numpatrimonio;
 
         return $this;
     }
@@ -150,6 +207,16 @@ class Equipamento extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field id_tipoequipamento
+     *
+     * @return integer
+     */
+    public function getIdTipoequipamento()
+    {
+        return $this->id_tipoequipamento;
+    }
+
+    /**
      * Returns the value of field nome
      *
      * @return string
@@ -157,6 +224,26 @@ class Equipamento extends \Phalcon\Mvc\Model
     public function getNome()
     {
         return $this->nome;
+    }
+
+    /**
+     * Returns the value of field numserie
+     *
+     * @return string
+     */
+    public function getNumserie()
+    {
+        return $this->numserie;
+    }
+
+    /**
+     * Returns the value of field numpatrimonio
+     *
+     * @return string
+     */
+    public function getNumpatrimonio()
+    {
+        return $this->numpatrimonio;
     }
 
     /**
@@ -188,6 +275,7 @@ class Equipamento extends \Phalcon\Mvc\Model
         $this->setSource("equipamento");
         $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_equipamento', ['alias' => 'Circuitos']);
         $this->belongsTo('id_fabricante', 'Circuitos\Models\Fabricante', 'id', ['alias' => 'Fabricante']);
+        $this->belongsTo('id_tipoequipamento', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
         $this->belongsTo('id_modelo', 'Circuitos\Models\Modelo', 'id', ['alias' => 'Modelo']);
     }
 
@@ -235,7 +323,10 @@ class Equipamento extends \Phalcon\Mvc\Model
             'id' => 'id',
             'id_fabricante' => 'id_fabricante',
             'id_modelo' => 'id_modelo',
+            'id_tipoequipamento' => 'id_tipoequipamento',
             'nome' => 'nome',
+            'numserie' => 'numserie',
+            'numpatrimonio' => 'numpatrimonio',
             'descricao' => 'descricao',
             'ativo' => 'ativo'
         ];

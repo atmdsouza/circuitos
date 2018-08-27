@@ -178,6 +178,9 @@ $(document).on("click", ".criar_equipamento", function(){
             id_modelo:{
                 required: true
             },
+            id_tipoequipamento:{
+                required: true
+            },
             equipamento:{
                 required: true
             }
@@ -188,6 +191,9 @@ $(document).on("click", ".criar_equipamento", function(){
             },
             id_modelo:{
                 required:"É necessário informar um modelo"
+            },
+            id_tipoequipamento:{
+                required:"É necessário informar um tipo de equipamento"
             },
             equipamento:{
                 required:"É necessário informar um equipamento"
@@ -310,7 +316,10 @@ $(".bt_edit").on("click", function(){
                 });
                 $("#id").val(data.dados.id);
                 $("#id_fabricante").val(data.dados.id_fabricante).selected = "true";
+                $("#id_tipoequipamento").val(data.dados.id_tipoequipamento).selected = "true";
                 $("#nome").val(data.dados.nome);
+                $("#numserie").val(data.dados.numserie);
+                $("#numpatrimonio").val(data.dados.numpatrimonio);
                 $("#descricao").val(data.dados.descricao);
                 $("#modalequipamento").modal();
             }
@@ -330,6 +339,9 @@ $(document).on("click", ".editar_equipamento", function(){
             id_modelo:{
                 required: true
             },
+            id_tipoequipamento:{
+                required: true
+            },
             equipamento:{
                 required: true
             }
@@ -340,6 +352,9 @@ $(document).on("click", ".editar_equipamento", function(){
             },
             id_modelo:{
                 required:"É necessário informar um modelo"
+            },
+            id_tipoequipamento:{
+                required:"É necessário informar um tipo de equipamento"
             },
             equipamento:{
                 required:"É necessário informar um equipamento"

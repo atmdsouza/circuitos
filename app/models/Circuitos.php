@@ -75,6 +75,12 @@ class Circuitos extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
+    protected $id_banda;
+
+    /**
+     *
+     * @var integer
+     */
     protected $id_usuario_atualizacao;
 
     /**
@@ -124,12 +130,6 @@ class Circuitos extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $tag;
-
-    /**
-     *
-     * @var string
-     */
-    protected $banda;
 
     /**
      *
@@ -299,6 +299,19 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field id_banda
+     *
+     * @param integer $id_banda
+     * @return $this
+     */
+    public function setIdBanda($id_banda)
+    {
+        $this->id_banda = $id_banda;
+
+        return $this;
+    }
+
+    /**
      * Method to set the value of field id_usuario_atualizacao
      *
      * @param integer $id_usuario_atualizacao
@@ -411,19 +424,6 @@ class Circuitos extends \Phalcon\Mvc\Model
     public function setTag($tag)
     {
         $this->tag = $tag;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field banda
-     *
-     * @param string $banda
-     * @return $this
-     */
-    public function setBanda($banda)
-    {
-        $this->banda = $banda;
 
         return $this;
     }
@@ -591,6 +591,16 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field id_banda
+     *
+     * @return integer
+     */
+    public function getIdBanda()
+    {
+        return $this->id_banda;
+    }
+
+    /**
      * Returns the value of field id_usuario_atualizacao
      *
      * @return integer
@@ -681,16 +691,6 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field banda
-     *
-     * @return string
-     */
-    public function getBanda()
-    {
-        return $this->banda;
-    }
-
-    /**
      * Returns the value of field observacao
      *
      * @return string
@@ -738,7 +738,7 @@ class Circuitos extends \Phalcon\Mvc\Model
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("circuitos");
         $this->hasMany('id', 'Circuitos\Models\Movimentos', 'id_circuitos', ['alias' => 'Movimentos']);
-        $this->hasMany('id', 'Circuitos\Models\Osocomon', 'id_circuitos', ['alias' => 'Osocomon']);
+        $this->belongsTo('id_banda', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov7']);
         $this->belongsTo('id_cliente', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Cliente']);
         $this->belongsTo('id_cliente_unidade', 'Circuitos\Models\ClienteUnidade', 'id', ['alias' => 'ClienteUnidade']);
         $this->belongsTo('id_equipamento', 'Circuitos\Models\Equipamento', 'id', ['alias' => 'Equipamento']);
@@ -748,8 +748,8 @@ class Circuitos extends \Phalcon\Mvc\Model
         $this->belongsTo('id_tipounidade', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov4']);
         $this->belongsTo('id_funcao', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov5']);
         $this->belongsTo('id_enlace', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov6']);
-        $this->belongsTo('id_usuario_criacao', 'Circuitos\Models\Usuario', 'id', ['alias' => 'Usuario']);
-        $this->belongsTo('id_usuario_atualizacao', 'Circuitos\Models\Usuario', 'id', ['alias' => 'Usuario']);
+        $this->belongsTo('id_usuario_criacao', 'Circuitos\Models\Usuario', 'id', ['alias' => 'Usuario1']);
+        $this->belongsTo('id_usuario_atualizacao', 'Circuitos\Models\Usuario', 'id', ['alias' => 'Usuario2']);
     }
 
     /**
@@ -804,6 +804,7 @@ class Circuitos extends \Phalcon\Mvc\Model
             'id_funcao' => 'id_funcao',
             'id_enlace' => 'id_enlace',
             'id_usuario_criacao' => 'id_usuario_criacao',
+            'id_banda' => 'id_banda',
             'id_usuario_atualizacao' => 'id_usuario_atualizacao',
             'designacao' => 'designacao',
             'uf' => 'uf',
@@ -813,11 +814,10 @@ class Circuitos extends \Phalcon\Mvc\Model
             'ip_redelocal' => 'ip_redelocal',
             'ip_gerencia' => 'ip_gerencia',
             'tag' => 'tag',
-            'banda' => 'banda',
             'observacao' => 'observacao',
             'data_ativacao' => 'data_ativacao',
             'data_atualizacao' => 'data_atualizacao',
-            'ativo' => 'ativo'
+            'excluido' => 'excluido'
         ];
     }
 

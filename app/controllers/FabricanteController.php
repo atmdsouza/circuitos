@@ -48,14 +48,8 @@ class FabricanteController extends ControllerBase
      */
     public function indexAction()
     {
-        $this->persistent->parameters = null;
         $numberPage = 1;
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-        }
-        $parameters["order"] = "id";
-        $fabricantes = Fabricante::find($parameters);
+        $fabricantes = Fabricante::find();
         $tipocontato = Lov::find("tipo=13");
         $paginator = new Paginator([
             'data' => $fabricantes,

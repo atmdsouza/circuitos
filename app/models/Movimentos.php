@@ -27,12 +27,6 @@ class Movimentos extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $id_statusmovimento;
-
-    /**
-     *
-     * @var integer
-     */
     protected $id_usuario;
 
     /**
@@ -45,19 +39,25 @@ class Movimentos extends \Phalcon\Mvc\Model
      *
      * @var string
      */
-    protected $data_atualizacao;
+    protected $osocomon;
+
+    /**
+     *
+     * @var string
+     */
+    protected $valoranterior;
+
+    /**
+     *
+     * @var string
+     */
+    protected $valoratualizado;
 
     /**
      *
      * @var string
      */
     protected $observacao;
-
-    /**
-     *
-     * @var string
-     */
-    protected $anexo;
 
     /**
      * Method to set the value of field id
@@ -99,19 +99,6 @@ class Movimentos extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field id_statusmovimento
-     *
-     * @param integer $id_statusmovimento
-     * @return $this
-     */
-    public function setIdStatusmovimento($id_statusmovimento)
-    {
-        $this->id_statusmovimento = $id_statusmovimento;
-
-        return $this;
-    }
-
-    /**
      * Method to set the value of field id_usuario
      *
      * @param integer $id_usuario
@@ -138,14 +125,40 @@ class Movimentos extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field data_atualizacao
+     * Method to set the value of field osocomon
      *
-     * @param string $data_atualizacao
+     * @param string $osocomon
      * @return $this
      */
-    public function setDataAtualizacao($data_atualizacao)
+    public function setOsocomon($osocomon)
     {
-        $this->data_atualizacao = $data_atualizacao;
+        $this->osocomon = $osocomon;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field valoranterior
+     *
+     * @param string $valoranterior
+     * @return $this
+     */
+    public function setValoranterior($valoranterior)
+    {
+        $this->valoranterior = $valoranterior;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field valoratualizado
+     *
+     * @param string $valoratualizado
+     * @return $this
+     */
+    public function setValoratualizado($valoratualizado)
+    {
+        $this->valoratualizado = $valoratualizado;
 
         return $this;
     }
@@ -159,19 +172,6 @@ class Movimentos extends \Phalcon\Mvc\Model
     public function setObservacao($observacao)
     {
         $this->observacao = $observacao;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field anexo
-     *
-     * @param string $anexo
-     * @return $this
-     */
-    public function setAnexo($anexo)
-    {
-        $this->anexo = $anexo;
 
         return $this;
     }
@@ -207,16 +207,6 @@ class Movimentos extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id_statusmovimento
-     *
-     * @return integer
-     */
-    public function getIdStatusmovimento()
-    {
-        return $this->id_statusmovimento;
-    }
-
-    /**
      * Returns the value of field id_usuario
      *
      * @return integer
@@ -237,13 +227,33 @@ class Movimentos extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field data_atualizacao
+     * Returns the value of field osocomon
      *
      * @return string
      */
-    public function getDataAtualizacao()
+    public function getOsocomon()
     {
-        return $this->data_atualizacao;
+        return $this->osocomon;
+    }
+
+    /**
+     * Returns the value of field valoranterior
+     *
+     * @return string
+     */
+    public function getValoranterior()
+    {
+        return $this->valoranterior;
+    }
+
+    /**
+     * Returns the value of field valoratualizado
+     *
+     * @return string
+     */
+    public function getValoratualizado()
+    {
+        return $this->valoratualizado;
     }
 
     /**
@@ -257,16 +267,6 @@ class Movimentos extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field anexo
-     *
-     * @return string
-     */
-    public function getAnexo()
-    {
-        return $this->anexo;
-    }
-
-    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -275,7 +275,6 @@ class Movimentos extends \Phalcon\Mvc\Model
         $this->setSource("movimentos");
         $this->belongsTo('id_circuitos', 'Circuitos\Models\Circuitos', 'id', ['alias' => 'Circuitos']);
         $this->belongsTo('id_tipomovimento', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_statusmovimento', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
         $this->belongsTo('id_usuario', 'Circuitos\Models\Usuario', 'id', ['alias' => 'Usuario']);
     }
 
@@ -323,12 +322,12 @@ class Movimentos extends \Phalcon\Mvc\Model
             'id' => 'id',
             'id_circuitos' => 'id_circuitos',
             'id_tipomovimento' => 'id_tipomovimento',
-            'id_statusmovimento' => 'id_statusmovimento',
             'id_usuario' => 'id_usuario',
             'data_movimento' => 'data_movimento',
-            'data_atualizacao' => 'data_atualizacao',
-            'observacao' => 'observacao',
-            'anexo' => 'anexo'
+            'osocomon' => 'osocomon',
+            'valoranterior' => 'valoranterior',
+            'valoratualizado' => 'valoratualizado',
+            'observacao' => 'observacao'
         ];
     }
 

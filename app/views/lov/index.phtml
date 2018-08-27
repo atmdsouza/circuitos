@@ -43,7 +43,28 @@
                     $lovtipo = "Tipo Cliente (PF/PJ)";
                     break;
                     case '10':
-                    $lovtipo = "Tipo Status Movimento";
+                    $lovtipo = "Sexo";
+                    break;
+                    case '11':
+                    $lovtipo = "Tipo Endereço";
+                    break;
+                    case '12':
+                    $lovtipo = "Tipo Telefone";
+                    break;
+                    case '13':
+                    $lovtipo = "Tipo Contato (Cargo Empresa)";
+                    break;
+                    case '14':
+                    $lovtipo = "Cluster";
+                    break;
+                    case '15':
+                    $lovtipo = "Tipo Equipamento";
+                    break;
+                    case '16':
+                    $lovtipo = "Tipo Movimento";
+                    break;
+                    case '17':
+                    $lovtipo = "Tipo Banda";
                     break;
                 }
             ?>
@@ -75,6 +96,7 @@
                         <div class="col-12">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
+                                    <label for="tipo">Tipo de Registro</label>
                                     <?php echo $this->tag->select(["tipo", $tipos_lov, "class" => "form-control", "id" => "tipo",
                                         "useEmpty" => true,
                                         "emptyText" => "Selecione um tipo",
@@ -82,19 +104,23 @@
                                     ?>
                                 </div>
                                 <div class="form-group col-md-6">
+                                    <label for="descricao">Descrição</label>
                                     <?php echo $this->tag->textField(["descricao", "size" => 200, "class" => "form-control", "id" => "descricao", "placeholder" => "Descricao"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
+                                    <label for="codigoespecifico">Código Específico</label>
                                     <?php echo $this->tag->textField(["codigoespecifico", "size" => 60, "class" => "form-control", "id" => "codigoespecifico", "placeholder" => "Código Específico"]) ?>
                                 </div>
                                 <div class="form-group col-md-6">
+                                    <label for="valor">Valor</label>
                                     <?php echo $this->tag->textField(["valor", "size" => 60, "class" => "form-control", "id" => "valor", "placeholder" => "Valor"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
+                                    <label for="duracao">Duração</label>
                                     <?php echo $this->tag->timeField(["duracao", "size" => 60, "class" => "form-control", "id" => "duracao", "placeholder" => "Duração"]) ?>
                                 </div>
                             </div>

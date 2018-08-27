@@ -6,7 +6,10 @@
                     <th>Código</th>
                     <th>Fabricante</th>
                     <th>Modelo</th>
+                    <th>Tipo</th>
                     <th>Equipamento</th>
+                    <th>Nº Série</th>
+                    <th>Nº Patrimônio</th>
                     <th>Ativo</th>
                 </tr>
             </thead>
@@ -26,7 +29,10 @@
                         <td><?php echo $equipamento->id ?></td>
                         <td><?php echo $equipamento->Fabricante->Pessoa->nome ?></td>
                         <td><?php echo $equipamento->Modelo->modelo ?></td>
+                        <td><?php echo $equipamento->Lov->descricao ?></td>
                         <td><?php echo $equipamento->nome ?></td>
+                        <td><?php echo $equipamento->numserie ?></td>
+                        <td><?php echo $equipamento->numpatrimonio ?></td>
                         <td><?php echo $ativo ?></td>
                     </tr>
             <?php endforeach; ?>
@@ -49,24 +55,47 @@
                         <div class="col-12">
                             <div class="form-row">
                                 <div class="form-group col-md-4">
+                                    <label for="id_fabricante">Fabricante</label>
                                     <?php echo $this->tag->select(["id_fabricante", $fabricante, "class" => "form-control", "id" => "id_fabricante",
                                         "using" => ["id", "nome",],
                                         "useEmpty" => true,
-                                        "emptyText" => "Selecione um fabricante",
+                                        "emptyText" => "Selecione o fabricante",
                                         "emptyValue" => ""])
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4">
+                                    <label for="id_modelo">Modelo</label>
                                     <select disabled name="id_modelo" id="id_modelo" class="form-control">
-                                        <option value="">Selecione um modelo</option>
+                                        <option value="">Selecione o modelo</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4">
+                                    <label for="id_tipoequipamento">Tipo de Equipamento</label>
+                                    <?php echo $this->tag->select(["id_tipoequipamento", $tipoequipamento, "class" => "form-control", "id" => "id_tipoequipamento",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione o tipo",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="nome">Nome do Equipamento</label>
                                     <?php echo $this->tag->textField(["nome", "size" => 200, "class" => "form-control", "id" => "nome", "placeholder" => "Nome do Equipamento"]) ?>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="numserie">Número de Série</label>
+                                    <?php echo $this->tag->textField(["numserie", "size" => 60, "class" => "form-control", "id" => "numserie", "placeholder" => "Número de Série"]) ?>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="numpatrimonio">Número de Patrimônio</label>
+                                    <?php echo $this->tag->textField(["numpatrimonio", "size" => 60, "class" => "form-control", "id" => "numpatrimonio", "placeholder" => "Número de Patrimônio"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
+                                    <label for="descricao">Descrição do Equipamento</label>
                                     <?php echo $this->tag->textArea(["descricao", "size" => 200, "class" => "form-control", "id" => "descricao", "placeholder" => "Descricao"]) ?>
                                 </div>
                             </div>

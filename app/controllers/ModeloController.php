@@ -41,12 +41,7 @@ class ModeloController extends ControllerBase
     public function indexAction()
     {
         $numberPage = 1;
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-        }
-        $parameters["order"] = "id";
-        $modelo = Modelo::find($parameters);
+        $modelo = Modelo::find();
         $fabricante = Fabricante::buscaCompletaFabricante();
         $paginator = new Paginator([
             'data' => $modelo,

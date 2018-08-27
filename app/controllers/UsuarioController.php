@@ -46,14 +46,8 @@ class UsuarioController extends ControllerBase
      */
     public function indexAction()
     {
-        $this->persistent->parameters = null;
         $numberPage = 1;
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-        }
-        $parameters["order"] = "id";
-        $usuarios = Usuario::find($parameters);
+        $usuarios = Usuario::find();
         $roles = PhalconRoles::find();
         $paginator = new Paginator([
             'data' => $usuarios,

@@ -41,23 +41,25 @@ class LovController extends ControllerBase
     public function indexAction()
     {
         $numberPage = 1;
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-        }
-        $parameters["order"] = "id";
-        $lov = Lov::find($parameters);
+        $lov = Lov::find("codigoespecifico <> 'SYS' OR codigoespecifico IS NULL");
         $tipos_lov = [
             "1" => "Tipo Unidade",
-            // "2" => "Usa Contrato",
+            "2" => "Usa Contrato",
             "3" => "Função",
-            // "4" => "Esfera",
+            "4" => "Esfera",
             "5" => "Setor",
             "6" => "Status",
             "7" => "Enlace",
             "8" => "Tipo Email",
-            // "9" => "Tipo Cliente (PF/PJ)",
-            // "10" => "Tipo Status Movimento"
+            "9" => "Tipo Cliente (PF/PJ)",
+            "10" => "Sexo",
+            "11" => "Tipo Endereço",
+            "12" => "Tipo Telefone",
+            "13" => "Tipo Contato (Cargo Empresa)",
+            "14" => "Cluster",
+            "15" => "Tipo Equipamento",
+            "16" => "Tipo Movimento",
+            "17" => "Tipo Banda"
         ];
         $paginator = new Paginator([
             'data' => $lov,
