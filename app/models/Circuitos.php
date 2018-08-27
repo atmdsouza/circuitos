@@ -742,12 +742,12 @@ class Circuitos extends \Phalcon\Mvc\Model
         $this->belongsTo('id_cliente', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Cliente']);
         $this->belongsTo('id_cliente_unidade', 'Circuitos\Models\ClienteUnidade', 'id', ['alias' => 'ClienteUnidade']);
         $this->belongsTo('id_equipamento', 'Circuitos\Models\Equipamento', 'id', ['alias' => 'Equipamento']);
-        $this->belongsTo('id_contrato', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_status', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_cluster', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_tipounidade', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_funcao', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_enlace', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
+        $this->belongsTo('id_contrato', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov1']);
+        $this->belongsTo('id_status', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov2']);
+        $this->belongsTo('id_cluster', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov3']);
+        $this->belongsTo('id_tipounidade', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov4']);
+        $this->belongsTo('id_funcao', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov5']);
+        $this->belongsTo('id_enlace', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov6']);
         $this->belongsTo('id_usuario_criacao', 'Circuitos\Models\Usuario', 'id', ['alias' => 'Usuario']);
         $this->belongsTo('id_usuario_atualizacao', 'Circuitos\Models\Usuario', 'id', ['alias' => 'Usuario']);
     }

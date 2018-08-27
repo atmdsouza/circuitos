@@ -109,11 +109,37 @@ $di->set('flash', function () {
 /**
  * Dispatcher use a default namespace
  */
-$di->set('dispatcher', function () {
+// $di->set('dispatcher', function () {
+//     $dispatcher = new Dispatcher();
+//     $dispatcher->setDefaultNamespace('Circuitos\Controllers');
+//     return $dispatcher;
+// });
+$di->set('dispatcher', function() use ($di) {
+    $evManager = $di->getShared('eventsManager');
+    $evManager->attach(
+        "dispatch:beforeException",
+        function($event, $dispatcher, $exception)
+        {
+            switch ($exception->getCode()) {
+                case Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:
+                case Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
+                    $dispatcher->forward(
+                        array(
+                            'controller' => 'error',
+                            'action'     => 'show404',
+                        )
+                    );
+                    return false;
+            }
+        }
+    );
     $dispatcher = new Dispatcher();
+    $dispatcher->setEventsManager($evManager);
     $dispatcher->setDefaultNamespace('Circuitos\Controllers');
     return $dispatcher;
-});
+},
+true
+);
 
 /**
  * Start the session the first time some component request the session service

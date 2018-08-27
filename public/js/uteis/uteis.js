@@ -418,6 +418,7 @@ $(document).ready(function () {
     $(".perc").mask("000,00 %"); //Limite do Percentual
     $(".ano").mask("0000"); //Ano
     $(".cnpj").mask("00.000.000/0000-00"); //CNPJ
+    $(".ip").mask("000.000.000.000"); //IP
     $(".cpf").mask("000.000.000-00"); //CPF
     $(".data").mask("00/00/0000"); //Data
     $(".hora").mask("00:00"); //Hora

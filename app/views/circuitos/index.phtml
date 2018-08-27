@@ -1,210 +1,339 @@
 <?php
-/**
- * @var \Phalcon\Mvc\View\Engine\Php $this
- */
+
+use Util\Util;
+
 ?>
 
-<div class="page-header">
-    <h1>
-        Search circuitos
-    </h1>
-    <p>
-        <?php echo $this->tag->linkTo(["circuitos/new", "Create circuitos"]) ?>
-    </p>
-</div>
-
-<?php echo $this->getContent() ?>
-
-<?php
-    echo $this->tag->form(
-        [
-            "circuitos/search",
-            "autocomplete" => "off",
-            "class" => "form-horizontal"
-        ]
-    );
-?>
-
-<div class="form-group">
-    <label for="fieldId" class="col-sm-2 control-label">Id</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["id", "type" => "number", "class" => "form-control", "id" => "fieldId"]) ?>
+<div class="col-12">
+    <div class="card-box">
+        <table id="tb_circuitos" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Designação</th>
+                    <th>Cliente</th>
+                    <th>Unidade</th>
+                    <th>Função</th>
+                    <th>Enlace</th>
+                    <th>Data Cadastro</th>
+                    <th>Data Atualização</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($page->items as $circuitos): ?>
+                <?php            
+                $util = new Util();
+                $data_cadastro = ($circuitos->data_ativacao) ? $util->converterDataHoraParaBr($circuitos->data_ativacao) : null;
+                $data_atualizacao = ($circuitos->data_atualizacao) ? $util->converterDataHoraParaBr($circuitos->data_atualizacao) : null;
+                switch($circuitos->Cliente->id_tipocliente)
+                {
+                    case "45"://Pessoa Física
+                        $unidade = null;
+                    break;
+                    case "44"://Pessoa Jurídica
+                        $unidade = $circuitos->ClienteUnidade->Pessoa->nome;
+                    break;
+                }
+            ?>
+                <tr>
+                    <td>
+                        <?php echo $circuitos->id ?>
+                    </td>
+                    <td>
+                        <?php echo $circuitos->designacao ?>
+                    </td>
+                    <td>
+                        <?php echo $circuitos->Cliente->Pessoa->nome ?>
+                    </td>
+                    <td>
+                        <?php echo $unidade ?>
+                    </td>
+                    <td>
+                        <?php echo $circuitos->Lov5->descricao ?>
+                    </td>
+                    <td>
+                        <?php echo $circuitos->Lov6->descricao ?>
+                    </td>
+                    <td>
+                        <?php echo $data_cadastro ?>
+                    </td>
+                    <td>
+                        <?php echo $data_atualizacao ?>
+                    </td>
+                    <td>
+                        <?php echo $circuitos->Lov2->descricao ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
 </div>
+<!--  Modal Circuitos -->
+<div id="modalcircuitos" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalcircuitos" aria-hidden="true"
+    style="display: none;" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h5 class="modal-title" id="modalcircuitos">Dados do Circuito</h5>
+            </div>
+            <form id="formCircuitos">
+                <input type="hidden" id="token" name="<?php echo $token['tokenKey'] ?>" value="<?php echo $token['tokenValue'] ?>">
+                <!-- CSRFToken Control -->
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="col-12">
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <input type="hidden" id="tipocliente" name="tipocliente" value=""><!-- Manter como hidden -->
+                                    <?php echo $this->tag->select(["id_cliente", $clientes, "class" => "form-control", "id" => "id_cliente",
+                                        "using" => ["id", "nome",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione um Cliente",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <select disabled name="id_cliente_unidade" id="id_cliente_unidade" class="form-control">
+                                        <option value="">Selecione uma Unidade</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->textField(["designacao", "size" => 60, "class" => "form-control", "id" => "designacao", "placeholder" => "Designacao"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->textField(["vlan", "size" => 60, "class" => "form-control", "id" => "vlan", "placeholder" => "VLAN"]) ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->select(["id_contrato", $usacontrato, "class" => "form-control", "id" => "id_contrato",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione o tipo de Contrato",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->select(["id_cluster", $cluster, "class" => "form-control", "id" => "id_cluster",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione um Cluster",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->select(["id_tipounidade", $tipounindade, "class" => "form-control", "id" => "id_tipounidade",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione o tipo de Unidade",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->select(["id_funcao", $funcao, "class" => "form-control", "id" => "id_funcao",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione a Função",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->select(["id_enlace", $enlace, "class" => "form-control", "id" => "id_enlace",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione o Enlace",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->select(["id_fabricante", $fabricantes, "class" => "form-control", "id" => "id_fabricante",
+                                        "using" => ["id", "nome",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione um Fabricante",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <select disabled name="id_modelo" id="id_modelo" class="form-control">
+                                        <option value="">Selecione um Modelo</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <select disabled name="id_equipamento" id="id_equipamento" class="form-control">
+                                        <option value="">Selecione um Equipamento</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->textField(["ip_redelocal", "size" => 30, "class" => "form-control ip", "id" => "ip_redelocal", "placeholder" => "IP Rede Local"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->textField(["ip_gerencia", "size" => 30, "class" => "form-control ip", "id" => "ip_gerencia", "placeholder" => "IP Rede Gerencial"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <?php echo $this->tag->textField(["ccode", "size" => 30, "class" => "form-control", "id" => "ccode", "placeholder" => "CCODE"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <?php echo $this->tag->textField(["tag", "size" => 120, "class" => "form-control", "id" => "tag", "placeholder" => "TAG"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <?php echo $this->tag->textField(["banda", "size" => 120, "class" => "form-control", "id" => "banda", "placeholder" => "Banda"]) ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <?php echo $this->tag->textArea(["observacao", "size" => 400, "class" => "form-control", "id" => "observacao", "placeholder" => "Observação"]) ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
+                    <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="limparModal()" data-dismiss="modal">Fechar</button>
+                    <button id="salvaCircuitos" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
+                </div><!-- /.modal-footer -->
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
-<div class="form-group">
-    <label for="fieldIdCliente" class="col-sm-2 control-label">Id Of Cliente</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["id_cliente", "type" => "number", "class" => "form-control", "id" => "fieldIdCliente"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldIdClienteUnidade" class="col-sm-2 control-label">Id Of Cliente Of Unidade</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["id_cliente_unidade", "type" => "number", "class" => "form-control", "id" => "fieldIdClienteUnidade"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldIdEquipamento" class="col-sm-2 control-label">Id Of Equipamento</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["id_equipamento", "type" => "number", "class" => "form-control", "id" => "fieldIdEquipamento"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldIdContrato" class="col-sm-2 control-label">Id Of Contrato</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["id_contrato", "type" => "number", "class" => "form-control", "id" => "fieldIdContrato"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldIdStatus" class="col-sm-2 control-label">Id Of Status</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["id_status", "type" => "number", "class" => "form-control", "id" => "fieldIdStatus"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldIdCluster" class="col-sm-2 control-label">Id Of Cluster</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["id_cluster", "type" => "number", "class" => "form-control", "id" => "fieldIdCluster"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldIdTipounidade" class="col-sm-2 control-label">Id Of Tipounidade</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["id_tipounidade", "type" => "number", "class" => "form-control", "id" => "fieldIdTipounidade"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldIdFuncao" class="col-sm-2 control-label">Id Of Funcao</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["id_funcao", "type" => "number", "class" => "form-control", "id" => "fieldIdFuncao"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldIdEnlace" class="col-sm-2 control-label">Id Of Enlace</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["id_enlace", "type" => "number", "class" => "form-control", "id" => "fieldIdEnlace"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldIdUsuarioCriacao" class="col-sm-2 control-label">Id Of Usuario Of Criacao</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["id_usuario_criacao", "type" => "number", "class" => "form-control", "id" => "fieldIdUsuarioCriacao"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldIdUsuarioAtualizacao" class="col-sm-2 control-label">Id Of Usuario Of Atualizacao</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["id_usuario_atualizacao", "type" => "number", "class" => "form-control", "id" => "fieldIdUsuarioAtualizacao"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldDesignacao" class="col-sm-2 control-label">Designacao</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["designacao", "size" => 30, "class" => "form-control", "id" => "fieldDesignacao"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldUf" class="col-sm-2 control-label">Uf</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["uf", "size" => 30, "class" => "form-control", "id" => "fieldUf"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldCidade" class="col-sm-2 control-label">Cidade</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["cidade", "size" => 30, "class" => "form-control", "id" => "fieldCidade"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldVlan" class="col-sm-2 control-label">Vlan</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["vlan", "size" => 30, "class" => "form-control", "id" => "fieldVlan"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldCcode" class="col-sm-2 control-label">Ccode</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["ccode", "size" => 30, "class" => "form-control", "id" => "fieldCcode"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldIpRedelocal" class="col-sm-2 control-label">Ip Of Redelocal</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["ip_redelocal", "size" => 30, "class" => "form-control", "id" => "fieldIpRedelocal"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldIpGerencia" class="col-sm-2 control-label">Ip Of Gerencia</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["ip_gerencia", "size" => 30, "class" => "form-control", "id" => "fieldIpGerencia"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldTag" class="col-sm-2 control-label">Tag</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["tag", "size" => 30, "class" => "form-control", "id" => "fieldTag"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldBanda" class="col-sm-2 control-label">Banda</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["banda", "size" => 30, "class" => "form-control", "id" => "fieldBanda"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldObservacao" class="col-sm-2 control-label">Observacao</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textArea(["observacao", "cols" => 30, "rows" => 4, "class" => "form-control", "id" => "fieldObservacao"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldDataAtivacao" class="col-sm-2 control-label">Data Of Ativacao</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["data_ativacao", "size" => 30, "class" => "form-control", "id" => "fieldDataAtivacao"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldDataAtualizacao" class="col-sm-2 control-label">Data Of Atualizacao</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["data_atualizacao", "size" => 30, "class" => "form-control", "id" => "fieldDataAtualizacao"]) ?>
-    </div>
-</div>
-
-<div class="form-group">
-    <label for="fieldAtivo" class="col-sm-2 control-label">Ativo</label>
-    <div class="col-sm-10">
-        <?php echo $this->tag->textField(["ativo", "type" => "number", "class" => "form-control", "id" => "fieldAtivo"]) ?>
-    </div>
-</div>
-
-
-<div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-        <?php echo $this->tag->submitButton(["Search", "class" => "btn btn-default"]) ?>
-    </div>
-</div>
-
-<?php echo $this->tag->endForm(); ?>
+<!--  Modal Movimento -->
+<div id="modalcircuitosmov" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalcircuitosmov" aria-hidden="true"
+    style="display: none;" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h5 class="modal-title" id="modalcircuitosmov">Dados do Movimmento</h5>
+            </div>
+            <form id="formCircuitosmov">
+                <input type="hidden" id="token" name="<?php echo $token['tokenKey'] ?>" value="<?php echo $token['tokenValue'] ?>">
+                <!-- CSRFToken Control -->
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="col-12">
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <input type="hidden" id="tipocliente" name="tipocliente" value=""><!-- Manter como hidden -->
+                                    <?php echo $this->tag->select(["id_cliente", $clientes, "class" => "form-control", "id" => "id_cliente",
+                                        "using" => ["id", "nome",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione um Cliente",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <select disabled name="id_cliente_unidade" id="id_cliente_unidade" class="form-control">
+                                        <option value="">Selecione uma Unidade</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->textField(["designacao", "size" => 60, "class" => "form-control", "id" => "designacao", "placeholder" => "Designacao"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->textField(["vlan", "size" => 60, "class" => "form-control", "id" => "vlan", "placeholder" => "VLAN"]) ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->select(["id_contrato", $usacontrato, "class" => "form-control", "id" => "id_contrato",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione o tipo de Contrato",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->select(["id_cluster", $cluster, "class" => "form-control", "id" => "id_cluster",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione um Cluster",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->select(["id_tipounidade", $tipounindade, "class" => "form-control", "id" => "id_tipounidade",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione o tipo de Unidade",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->select(["id_funcao", $funcao, "class" => "form-control", "id" => "id_funcao",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione a Função",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->select(["id_enlace", $enlace, "class" => "form-control", "id" => "id_enlace",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione o Enlace",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->select(["id_fabricante", $fabricantes, "class" => "form-control", "id" => "id_fabricante",
+                                        "using" => ["id", "nome",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione um Fabricante",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <select disabled name="id_modelo" id="id_modelo" class="form-control">
+                                        <option value="">Selecione um Modelo</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <select disabled name="id_equipamento" id="id_equipamento" class="form-control">
+                                        <option value="">Selecione um Equipamento</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->textField(["ip_redelocal", "size" => 30, "class" => "form-control ip", "id" => "ip_redelocal", "placeholder" => "IP Rede Local"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <?php echo $this->tag->textField(["ip_gerencia", "size" => 30, "class" => "form-control ip", "id" => "ip_gerencia", "placeholder" => "IP Rede Gerencial"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <?php echo $this->tag->textField(["ccode", "size" => 30, "class" => "form-control", "id" => "ccode", "placeholder" => "CCODE"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <?php echo $this->tag->textField(["tag", "size" => 120, "class" => "form-control", "id" => "tag", "placeholder" => "TAG"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <?php echo $this->tag->textField(["banda", "size" => 120, "class" => "form-control", "id" => "banda", "placeholder" => "Banda"]) ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <?php echo $this->tag->textArea(["observacao", "size" => 400, "class" => "form-control", "id" => "observacao", "placeholder" => "Observação"]) ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="id" name="idmov" value=""><!-- Manter como hidden -->
+                    <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="limparModal()" data-dismiss="modal">Fechar</button>
+                    <button id="salvaCircuitosmov" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
+                </div><!-- /.modal-footer -->
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
