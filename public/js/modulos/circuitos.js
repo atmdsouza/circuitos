@@ -548,24 +548,53 @@ $(".bt_edit").on("click", function(){
             error: function () {
             },
             success: function (data) {
+                $(".remove_unidade").remove();
+                $.each(data.unidadescli, function (key, value) {
+                    var linhas = "<option class='remove_unidade' value='" + value.id + "'>" + value.nome + "</option>";
+                    $("#id_cliente_unidade").append(linhas);
+                    $("#id_cliente_unidade").removeAttr("disabled");
+                });
+                $(".remove_modelo").remove();
+                $.each(data.modelos, function (key, value) {
+                    var linhas = "<option class='remove_modelo' value='" + value.id + "'>" + value.modelo + "</option>";
+                    $("#id_modelo").append(linhas);
+                });
+                $(".remove_equipamento").remove();
+                $.each(data.equipamentos, function (key, value) {
+                    var linhas = "<option class='remove_equipamento' value='" + value.id + "'>" + value.nome + "</option>";
+                    $("#id_equipamento").append(linhas);
+                });
                 $("#id").val(data.dados.id);
-                $("#cliente").val(data.dados.id_cliente).selected = "true";
-                $("#nome_pessoa").val(data.dados.nome);
-                $("#sigla").val(data.dados.sigla);
-                $("#rzsocial").val(data.dados.razaosocial);
-                $("#cnpj").val(data.dados.cnpj);
-                $("#inscricaoestadual").val(data.dados.inscricaoestadual);
-                $("#inscricaomunicipal").val(data.dados.inscricaomunicipal);
-                $("#datafund").val(data.dados.datafund);
-                $("#sigla_uf").val(data.dados.pessoaendereco.sigla_uf);
-                $("#cep").val(data.dados.pessoaendereco.cep);
-                $("#endereco").val(data.dados.pessoaendereco.endereco);
-                $("#numero").val(data.dados.pessoaendereco.numero);
-                $("#bairro").val(data.dados.pessoaendereco.bairro);
-                $("#cidade").val(data.dados.pessoaendereco.cidade);
-                $("#estado").val(data.dados.pessoaendereco.estado);
-                $("#complemento").val(data.dados.pessoaendereco.complemento);
-                $("#cliente").attr("disabled", "true");
+                $("#tipocliente").val(data.cliente.id_tipocliente);
+                $("#id_cliente").val(data.dados.id_cliente).selected = "true";
+                $("#id_cliente_unidade").val(data.dados.id_cliente_unidade).selected = "true";
+                $("#id_fabricante").attr("disabled", "true");
+                $("#id_fabricante").val(data.equip.id_fabricante).selected = "true";
+                $("#id_modelo").attr("disabled", "true");
+                $("#id_modelo").val(data.equip.id_modelo).selected = "true";
+                $("#id_equipamento").attr("disabled", "true");
+                $("#id_equipamento").val(data.dados.id_equipamento).selected = "true";
+                $("#id_contrato").val(data.dados.id_contrato).selected = "true";
+                // $("#id_status").val(data.dados.id_status).selected = "true";
+                $("#id_cluster").val(data.dados.id_cluster).selected = "true";
+                $("#id_tipounidade").val(data.dados.id_tipounidade).selected = "true";
+                $("#id_funcao").val(data.dados.id_funcao).selected = "true";
+                $("#id_enlace").val(data.dados.id_enlace).selected = "true";
+                $("#banda").attr("disabled", "true");
+                $("#banda").val(data.dados.id_banda).selected = "true";
+                // $("#id_usuario_criacao").val(data.dados.id_usuario_criacao);
+                // $("#id_usuario_atualizacao").val(data.dados.id_usuario_atualizacao);
+                $("#designacao").val(data.dados.designacao);
+                $("#uf").val(data.dados.uf);
+                $("#cidade").val(data.dados.cidade);
+                $("#vlan").val(data.dados.vlan);
+                $("#ccode").val(data.dados.ccode);
+                $("#ip_redelocal").attr("disabled", "true");
+                $("#ip_redelocal").val(data.dados.ip_redelocal);
+                $("#ip_gerencia").attr("disabled", "true");
+                $("#ip_gerencia").val(data.dados.ip_gerencia);
+                $("#tag").val(data.dados.tag);
+                $("#observacao").val(data.dados.observacao);
                 $("#modalcircuitos").modal();
             }
         });
@@ -627,242 +656,723 @@ $(".bt_visual").on("click", function(){
 });
 
 $(document).on("click", ".editar_circuitos", function(){
-    //Validação de formulário
-    $("#formCircuitos").validate({
-        rules : {
-            nome_pessoa:{
-                required: true
-            },
-            cliente:{
-                required: true
-            },
-            cep:{
-                required: true
-            },
-            endereco:{
-                required: true
-            },
-            numero:{
-                required: true
-            },
-            bairro:{
-                required: true
-            },
-            cidade:{
-                required: true
-            },
-            estado:{
-                required: true
-            }
-        },
-        messages:{
-            nome_pessoa:{
-                required:"É necessário informar o nome fantasia da unidade"
-            },
-            cliente:{
-                required:"É necessário selecionar um cliente para a unidade"
-            },
-            cep:{
-                required:"É necessário informar o CEP do endereço"
-            },
-            endereco:{
-                required: "É necessário informar uma endereço"
-            },
-            numero:{
-                required: "É necessário informar um número"
-            },
-            bairro:{
-                required: "É necessário informar um bairro"
-            },
-            cidade:{
-                required: "É necessário informar uma cidade"
-            },
-            estado:{
-                required: "É necessário informar um estado"
-            }
-        },
-        submitHandler: function(form) {
-            var dados = $("#formCircuitos").serialize();
-            $.ajax({
-                type: 'POST',
-                dataType: 'JSON',
-                url: 'circuitos/editarCircuitos',
-                data: {
-                    tokenKey: $('#token').attr('name'),
-                    tokenValue: $('#token').attr('value'),
-                    dados: dados
+    var tipocliente = $("#tipocliente").val();
+    switch (tipocliente)
+    {
+        case "44"://Pessoa Jurídica
+        //Validação de formulário
+        $("#formCircuitos").validate({
+            rules : {
+                id_cliente:{
+                    required: true
                 },
-                beforeSend: function () {
+                id_circuitos:{
+                    required: true
                 },
-                complete: function () {
+                designacao:{
+                    required: true
                 },
-                error: function () {
+                vlan:{
+                    required: true
                 },
-                success: function (data) {
-                    if (data.operacao){
-                        swal({
-                            title: 'Cadastro de Circuitos',
-                            text: 'Cadastro da Circuitos concluído!',
-                            type: 'success',
-                            showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Ok'
-                          }).then((result) => {
-                            window.location.reload(true);
-                          });
-                    } else {
-                        swal({
-                            title: 'Cadastro de Circuitos',
-                            text: data.mensagem,
-                            type: 'error'
-                        });
-                    }
+                id_contrato:{
+                    required: true
+                },
+                id_cluster:{
+                    required: true
+                },
+                id_tipounidade:{
+                    required: true
+                },
+                id_funcao:{
+                    required: true
+                },
+                id_enlace:{
+                    required: true
+                },
+                id_fabricante:{
+                    required: true
+                },
+                id_modelo:{
+                    required: true
+                },
+                id_equipamento:{
+                    required: true
+                },
+                ip_redelocal:{
+                    required: true
+                },
+                ip_gerencia:{
+                    required: true
                 }
-            });
+            },
+            messages:{
+                id_cliente:{
+                    required:"É necessário informar um Circuitos"
+                },
+                id_circuitos:{
+                    required:"É necessário selecionar uma Circuitos"
+                },
+                designacao:{
+                    required:"É necessário informar a Designação"
+                },
+                vlan:{
+                    required: "É necessário informar a VLAN"
+                },
+                id_contrato:{
+                    required: "É necessário informar o tipo de Contrato"
+                },
+                id_cluster:{
+                    required: "É necessário informar um Cluster"
+                },
+                id_tipounidade:{
+                    required: "É necessário informar um tipo de Circuitos"
+                },
+                id_funcao:{
+                    required: "É necessário informar uma Função"
+                },
+                id_enlace:{
+                    required: "É necessário informar um Enlce"
+                },
+                id_fabricante:{
+                    required: "É necessário informar um Fabricante"
+                },
+                id_modelo:{
+                    required: "É necessário informar um Modelo"
+                },
+                id_equipamento:{
+                    required: "É necessário informar um Equipamento"
+                },
+                ip_redelocal:{
+                    required: "É necessário informar um IP de Rede Local"
+                },
+                ip_gerencia:{
+                    required: "É necessário informar um IP de Rede Gerencial"
+                }
+            },
+            submitHandler: function(form) {
+                var dados = $("#formCircuitos").serialize();
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: 'circuitos/editarCircuitos',
+                    data: {
+                        tokenKey: $('#token').attr('name'),
+                        tokenValue: $('#token').attr('value'),
+                        dados: dados
+                    },
+                    beforeSend: function () {
+                    },
+                    complete: function () {
+                    },
+                    error: function () {
+                    },
+                    success: function (data) {
+                        if (data.operacao){
+                            swal({
+                                title: 'Cadastro de Circuitos',
+                                text: 'Cadastro da Circuitos concluído!',
+                                type: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                              }).then((result) => {
+                                window.location.reload(true);
+                              });
+                        } else {
+                            swal({
+                                title: 'Cadastro de Circuitos',
+                                text: data.mensagem,
+                                type: 'error'
+                            });
+                        }
+                    }
+                });
+            }
+        });
+        break;
+        default://Pessoa Física
+        //Validação de formulário
+        $("#formCircuitos").validate({
+            rules : {
+                id_cliente:{
+                    required: true
+                },
+                designacao:{
+                    required: true
+                },
+                vlan:{
+                    required: true
+                },
+                id_contrato:{
+                    required: true
+                },
+                id_cluster:{
+                    required: true
+                },
+                id_tipounidade:{
+                    required: true
+                },
+                id_funcao:{
+                    required: true
+                },
+                id_enlace:{
+                    required: true
+                },
+                id_fabricante:{
+                    required: true
+                },
+                id_modelo:{
+                    required: true
+                },
+                id_equipamento:{
+                    required: true
+                },
+                ip_redelocal:{
+                    required: true
+                },
+                ip_gerencia:{
+                    required: true
+                }
+            },
+            messages:{
+                id_cliente:{
+                    required:"É necessário informar um Circuitos"
+                },
+                designacao:{
+                    required:"É necessário informar a Designação"
+                },
+                vlan:{
+                    required: "É necessário informar a VLAN"
+                },
+                id_contrato:{
+                    required: "É necessário informar o tipo de Contrato"
+                },
+                id_cluster:{
+                    required: "É necessário informar um Cluster"
+                },
+                id_tipounidade:{
+                    required: "É necessário informar um tipo de Circuitos"
+                },
+                id_funcao:{
+                    required: "É necessário informar uma Função"
+                },
+                id_enlace:{
+                    required: "É necessário informar um Enlce"
+                },
+                id_fabricante:{
+                    required: "É necessário informar um Fabricante"
+                },
+                id_modelo:{
+                    required: "É necessário informar um Modelo"
+                },
+                id_equipamento:{
+                    required: "É necessário informar um Equipamento"
+                },
+                ip_redelocal:{
+                    required: "É necessário informar um IP de Rede Local"
+                },
+                ip_gerencia:{
+                    required: "É necessário informar um IP de Rede Gerencial"
+                }
+            },
+            submitHandler: function(form) {
+                var dados = $("#formCircuitos").serialize();
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: 'circuitos/editarCircuitos',
+                    data: {
+                        tokenKey: $('#token').attr('name'),
+                        tokenValue: $('#token').attr('value'),
+                        dados: dados
+                    },
+                    beforeSend: function () {
+                    },
+                    complete: function () {
+                    },
+                    error: function () {
+                    },
+                    success: function (data) {
+                        if (data.operacao){
+                            swal({
+                                title: 'Cadastro de Circuitos',
+                                text: 'Cadastro da Circuitos concluído!',
+                                type: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                              }).then((result) => {
+                                window.location.reload(true);
+                              });
+                        } else {
+                            swal({
+                                title: 'Cadastro de Circuitos',
+                                text: data.mensagem,
+                                type: 'error'
+                            });
+                        }
+                    }
+                });
+            }
+        });
+        break;
+    }
+});
+
+$(".bt_mov").on("click", function(){
+    $("#id_circuito").val(ids[0]);
+    $("#modalcircuitosmov").modal();
+    $("#salvaCircuitosmov").addClass("criar_mov");
+});
+
+$("#id_tipomovimento").on("change", function(){
+    var id_tipomovimento = $("#id_tipomovimento").val();
+    switch(id_tipomovimento)
+    {
+        case "61"://Alteração de Banda
+            $("#bandamovdiv").show();
+            $("#redelocalmovdiv").hide();
+            $("#gerenciamovdiv").hide();
+            $("#statusmovdiv").hide();
+            $(".equip").hide();
+            $("#salvaCircuitosmov").removeAttr("disabled");
+        break;
+        case "62"://Mudança de Status do Circuito
+            $("#statusmovdiv").show();
+            $("#gerenciamovdiv").hide();
+            $("#redelocalmovdiv").hide();
+            $("#bandamovdiv").hide();
+            $(".equip").hide();
+            $("#salvaCircuitosmov").removeAttr("disabled");
+        break;
+        case "63"://Alteração de IP Gerencial
+            $("#gerenciamovdiv").show();
+            $("#bandamovdiv").hide();
+            $("#redelocalmovdiv").hide();
+            $("#statusmovdiv").hide();
+            $(".equip").hide();
+            $("#salvaCircuitosmov").removeAttr("disabled");
+        break;
+        case "64"://Alteração de IP Local
+            $("#redelocalmovdiv").show();
+            $("#statusmovdiv").hide();
+            $("#bandamovdiv").hide();
+            $("#gerenciamovdiv").hide();
+            $(".equip").hide();
+            $("#salvaCircuitosmov").removeAttr("disabled");
+        break;
+        case "89"://Alteração de Equipamento
+            $(".equip").show();
+            $("#redelocalmovdiv").hide();
+            $("#statusmovdiv").hide();
+            $("#bandamovdiv").hide();
+            $("#gerenciamovdiv").hide();
+            $("#salvaCircuitosmov").removeAttr("disabled");
+        break;
+        default:
+            $(".equip").hide();
+            $("#redelocalmovdiv").hide();
+            $("#statusmovdiv").hide();
+            $("#bandamovdiv").hide();
+            $("#gerenciamovdiv").hide();
+            $("#salvaCircuitosmov").attr("disabled", "true");
+        break;
+    }
+});
+
+$("#id_fabricantemov").on("change", function(){
+    var id_fabricante = $(this).val();
+    $.ajax({
+        type: 'GET',
+        dataType: 'JSON',
+        url: 'circuitos/modeloFabricante',
+        data: {id_fabricante: id_fabricante},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function () {
+        },
+        success: function (data) {
+            if (data.operacao){
+                $(".remove_modelo").remove();
+                $.each(data.dados, function (key, value) {
+                    var linhas = "<option class='remove_modelo' value='" + value.id + "'>" + value.modelo + "</option>";
+                    $("#id_modelomov").append(linhas);
+                    $("#id_modelomov").removeAttr("disabled");
+                    $(".remove_equip").remove();
+                    $("#id_equipamentomov").val(null).selected = "true";
+                    $("#id_equipamentomov").attr("disabled", "true");
+                });
+            } else {
+                $(".remove_modelo").remove();
+                $("#id_modelomov").val(null).selected = "true";
+                $("#id_modelomov").attr("disabled", "true");
+                $(".remove_equip").remove();
+                $("#id_equipamentomov").val(null).selected = "true";
+                $("#id_equipamentomov").attr("disabled", "true");
+            }
         }
     });
 });
 
-$("#tb_telefone").on("click", ".del_tel", function(){
-    var id = $(this).attr("id");
-    swal({
-        title: 'Tem certeza que deseja deletar este telefone?',
-        text: "O sistema irá deletar o telefone selecionado com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
-        type: 'info',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sim, apagar!'
-      }).then((result) => {
-          $.ajax({
-              type: 'POST',
-              dataType: 'JSON',
-              url: 'core/deletarPessoaTelefone',
-              data: {id: id},
-              beforeSend: function () {
-              },
-              complete: function () {
-              },
-              error: function () {
-              },
-              success: function (data) {
-                  if (data.operacao){
-                      swal({
-                          title: 'Deletado!',
-                          text: 'O telefone selecionado foi deletado com sucesso.',
-                          type: 'success',
-                          showCancelButton: false,
-                          confirmButtonColor: '#3085d6',
-                          cancelButtonColor: '#d33',
-                          confirmButtonText: 'Ok'
-                        }).then((result) => {
-                            $("#trte" + id).remove();
-                        });
-                  } else {
-                      swal({
-                          title: 'Deletar',
-                          text: data.mensagem,
-                          type: 'error'
-                      });
-                  }
-              }
-          });
+$("#id_modelomov").on("change", function(){
+    var id_modelo = $(this).val();
+    $.ajax({
+        type: 'GET',
+        dataType: 'JSON',
+        url: 'circuitos/equipamentoModelo',
+        data: {id_modelo: id_modelo},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function () {
+        },
+        success: function (data) {
+            if (data.operacao){
+                $(".remove_equip").remove();
+                $.each(data.dados, function (key, value) {
+                    var numserie = (value.numserie) ? value.numserie : "Sem Nº Série";
+                    var numpatrimonio = (value.numpatrimonio) ? value.numpatrimonio : "Sem Nº Patrimônio";
+                    var linhas = "<option class='remove_equip' value='" + value.id + "'>" + value.nome + " (" + numserie + " / " + numpatrimonio + ")</option>";
+                    $("#id_equipamentomov").append(linhas);
+                    $("#id_equipamentomov").removeAttr("disabled");
+                });
+            } else {
+                $(".remove_equip").remove();
+                $("#id_equipamentomov").val(null).selected = "true";
+                $("#id_equipamentomov").attr("disabled", "true");
+            }
+        }
     });
 });
 
-$("#tb_email").on("click", ".del_eml", function(){
-    var id = $(this).attr("id");
-    swal({
-        title: 'Tem certeza que deseja deletar este e-mail?',
-        text: "O sistema irá deletar o e-mail selecionado com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
-        type: 'info',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sim, apagar!'
-      }).then((result) => {
-          $.ajax({
-              type: 'POST',
-              dataType: 'JSON',
-              url: 'core/deletarPessoaEmail',
-              data: {id: id},
-              beforeSend: function () {
-              },
-              complete: function () {
-              },
-              error: function () {
-              },
-              success: function (data) {
-                  if (data.operacao){
-                      swal({
-                          title: 'Deletado!',
-                          text: 'O e-mail selecionado foi deletado com sucesso.',
-                          type: 'success',
-                          showCancelButton: false,
-                          confirmButtonColor: '#3085d6',
-                          cancelButtonColor: '#d33',
-                          confirmButtonText: 'Ok'
-                        }).then((result) => {
-                            $("#trem" + id).remove();
-                        });
-                  } else {
-                      swal({
-                          title: 'Deletar',
-                          text: data.mensagem,
-                          type: 'error'
-                      });
-                  }
-              }
-          });
-    });
-});
-
-$("#tb_contato").on("click", ".del_cto", function(){
-    var id = $(this).attr("id");
-    swal({
-        title: 'Tem certeza que deseja deletar este contato?',
-        text: "O sistema irá deletar o contato selecionado com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
-        type: 'info',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sim, apagar!'
-      }).then((result) => {
-          $.ajax({
-              type: 'POST',
-              dataType: 'JSON',
-              url: 'core/deletarPessoaContato',
-              data: {id: id},
-              beforeSend: function () {
-              },
-              complete: function () {
-              },
-              error: function () {
-              },
-              success: function (data) {
-                  if (data.operacao){
-                      swal({
-                          title: 'Deletado!',
-                          text: 'O contato selecionado foi deletado com sucesso.',
-                          type: 'success',
-                          showCancelButton: false,
-                          confirmButtonColor: '#3085d6',
-                          cancelButtonColor: '#d33',
-                          confirmButtonText: 'Ok'
-                        }).then((result) => {
-                            $("#trct" + id).remove();
-                        });
-                  } else {
-                      swal({
-                          title: 'Deletar',
-                          text: data.mensagem,
-                          type: 'error'
-                      });
-                  }
-              }
-          });
-    });
+$(document).on("click", ".criar_mov", function(){
+    var id_tipomovimento = $("#id_tipomovimento").val();
+    switch (id_tipomovimento)
+    {
+        case "61"://Alteração de Banda
+        //Validação de formulário
+        $("#formCircuitosmov").validate({
+            rules : {
+                id_tipomovimento:{
+                    required: true
+                },
+                bandamov:{
+                    required: true
+                }
+            },
+            messages:{
+                id_tipomovimento:{
+                    required:"É necessário informar um tipo de movimento"
+                },
+                bandamov:{
+                    required:"É necessário informar a banda"
+                }
+            },
+            submitHandler: function(form) {
+                var dados = $("#formCircuitosmov").serialize();
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: 'circuitos/movCircuitos',
+                    data: {
+                        tokenKey: $('#token').attr('name'),
+                        tokenValue: $('#token').attr('value'),
+                        dados: dados
+                    },
+                    beforeSend: function () {
+                    },
+                    complete: function () {
+                    },
+                    error: function () {
+                    },
+                    success: function (data) {
+                        if (data.operacao){
+                            swal({
+                                title: 'Movimento de Circuito',
+                                text: 'Movimento de Circuito concluído!',
+                                type: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                              }).then((result) => {
+                                window.location.reload(true);
+                              });
+                        } else {
+                            swal({
+                                title: 'Movimento de Circuito',
+                                text: data.mensagem,
+                                type: 'error'
+                            });
+                        }
+                    }
+                });
+            }
+        });
+        break;
+        case "62"://Mudança de Status do Circuito
+        //Validação de formulário
+        $("#formCircuitosmov").validate({
+            rules : {
+                id_tipomovimento:{
+                    required: true
+                },
+                id_statusmov:{
+                    required: true
+                }
+            },
+            messages:{
+                id_tipomovimento:{
+                    required:"É necessário informar um tipo de movimento"
+                },
+                id_statusmov:{
+                    required:"É necessário informar um status"
+                }
+            },
+            submitHandler: function(form) {
+                var dados = $("#formCircuitosmov").serialize();
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: 'circuitos/movCircuitos',
+                    data: {
+                        tokenKey: $('#token').attr('name'),
+                        tokenValue: $('#token').attr('value'),
+                        dados: dados
+                    },
+                    beforeSend: function () {
+                    },
+                    complete: function () {
+                    },
+                    error: function () {
+                    },
+                    success: function (data) {
+                        if (data.operacao){
+                            swal({
+                                title: 'Movimento de Circuito',
+                                text: 'Movimento de Circuito concluído!',
+                                type: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                              }).then((result) => {
+                                window.location.reload(true);
+                              });
+                        } else {
+                            swal({
+                                title: 'Movimento de Circuito',
+                                text: data.mensagem,
+                                type: 'error'
+                            });
+                        }
+                    }
+                });
+            }
+        });
+        break;
+        case "63"://Alteração de IP Gerencial
+        //Validação de formulário
+        $("#formCircuitosmov").validate({
+            rules : {
+                id_tipomovimento:{
+                    required: true
+                },
+                ip_gerenciamov:{
+                    required: true
+                }
+            },
+            messages:{
+                id_tipomovimento:{
+                    required:"É necessário informar um tipo de movimento"
+                },
+                ip_gerenciamov:{
+                    required:"É necessário informar um IP Gerencial"
+                }
+            },
+            submitHandler: function(form) {
+                var dados = $("#formCircuitosmov").serialize();
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: 'circuitos/movCircuitos',
+                    data: {
+                        tokenKey: $('#token').attr('name'),
+                        tokenValue: $('#token').attr('value'),
+                        dados: dados
+                    },
+                    beforeSend: function () {
+                    },
+                    complete: function () {
+                    },
+                    error: function () {
+                    },
+                    success: function (data) {
+                        if (data.operacao){
+                            swal({
+                                title: 'Movimento de Circuito',
+                                text: 'Movimento de Circuito concluído!',
+                                type: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                              }).then((result) => {
+                                window.location.reload(true);
+                              });
+                        } else {
+                            swal({
+                                title: 'Movimento de Circuito',
+                                text: data.mensagem,
+                                type: 'error'
+                            });
+                        }
+                    }
+                });
+            }
+        });
+        break;
+        case "64"://Alteração de IP Local
+        //Validação de formulário
+        $("#formCircuitosmov").validate({
+            rules : {
+                id_tipomovimento:{
+                    required: true
+                },
+                ip_redelocalmov:{
+                    required: true
+                }
+            },
+            messages:{
+                id_tipomovimento:{
+                    required:"É necessário informar um tipo de movimento"
+                },
+                ip_redelocalmov:{
+                    required:"É necessário informar um IP Local"
+                }
+            },
+            submitHandler: function(form) {
+                var dados = $("#formCircuitosmov").serialize();
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: 'circuitos/movCircuitos',
+                    data: {
+                        tokenKey: $('#token').attr('name'),
+                        tokenValue: $('#token').attr('value'),
+                        dados: dados
+                    },
+                    beforeSend: function () {
+                    },
+                    complete: function () {
+                    },
+                    error: function () {
+                    },
+                    success: function (data) {
+                        if (data.operacao){
+                            swal({
+                                title: 'Movimento de Circuito',
+                                text: 'Movimento de Circuito concluído!',
+                                type: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                              }).then((result) => {
+                                window.location.reload(true);
+                              });
+                        } else {
+                            swal({
+                                title: 'Movimento de Circuito',
+                                text: data.mensagem,
+                                type: 'error'
+                            });
+                        }
+                    }
+                });
+            }
+        });
+        break;
+        case "89"://Alteração de Equipamento
+        //Validação de formulário
+        $("#formCircuitosmov").validate({
+            rules : {
+                id_tipomovimento:{
+                    required: true
+                },
+                id_fabricantemov:{
+                    required: true
+                },
+                id_modelomov:{
+                    required: true
+                },
+                id_equipamentomov:{
+                    required: true
+                }
+            },
+            messages:{
+                id_tipomovimento:{
+                    required:"É necessário informar um tipo de movimento"
+                },
+                id_fabricantemov:{
+                    required:"É necessário informar um fabricante"
+                },
+                id_modelomov:{
+                    required:"É necessário informar um modelo"
+                },
+                id_equipamentomov:{
+                    required:"É necessário informar um equipamento"
+                }
+            },
+            submitHandler: function(form) {
+                var dados = $("#formCircuitosmov").serialize();
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: 'circuitos/movCircuitos',
+                    data: {
+                        tokenKey: $('#token').attr('name'),
+                        tokenValue: $('#token').attr('value'),
+                        dados: dados
+                    },
+                    beforeSend: function () {
+                    },
+                    complete: function () {
+                    },
+                    error: function () {
+                    },
+                    success: function (data) {
+                        if (data.operacao){
+                            swal({
+                                title: 'Movimento de Circuito',
+                                text: 'Movimento de Circuito concluído!',
+                                type: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                              }).then((result) => {
+                                window.location.reload(true);
+                              });
+                        } else {
+                            swal({
+                                title: 'Movimento de Circuito',
+                                text: data.mensagem,
+                                type: 'error'
+                            });
+                        }
+                    }
+                });
+            }
+        });
+        break;
+    }
 });
 
 $(".bt_del").on("click", function(){
@@ -954,204 +1464,6 @@ $(".bt_del").on("click", function(){
                       } else {
                           swal({
                               title: 'Deletar',
-                              text: data.mensagem,
-                              type: 'error'
-                          });
-                      }
-                  }
-              });
-        });
-    }
-});
-
-$(".bt_ativo").on("click", function(){
-    var nm_rows = ids.length;
-    if(nm_rows > 1){
-        swal({
-            title: 'Tem certeza que deseja ativar múltipas unidades?',
-            text: "O sistema irá ativar um total de " + nm_rows + " unidades com essa ação.",
-            type: 'info',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim, ativar!'
-          }).then((result) => {
-              $.ajax({
-                  type: 'POST',
-                  dataType: 'JSON',
-                  url: 'circuitos/ativarCircuitos',
-                  data: {ids: ids},
-                  beforeSend: function () {
-                  },
-                  complete: function () {
-                  },
-                  error: function () {
-                  },
-                  success: function (data) {
-                      if (data.operacao){
-                          swal({
-                              title: 'Ativadas!',
-                              text: 'As unidades selecionadas foram ativadas com sucesso.',
-                              type: 'success',
-                              showCancelButton: false,
-                              confirmButtonColor: '#3085d6',
-                              cancelButtonColor: '#d33',
-                              confirmButtonText: 'Ok'
-                            }).then((result) => {
-                              window.location.reload(true);
-                            });
-                      } else {
-                          swal({
-                              title: 'Ativar',
-                              text: data.mensagem,
-                              type: 'error'
-                          });
-                      }
-                  }
-              });
-        });
-    } else if (nm_rows == 0) {
-        swal({
-            title: 'Ativar Circuitoss',
-            text: 'Você precisa selecionar uma ou mais unidades para serem ativadas!',
-            type: 'warning'
-          });
-     } else {
-        swal({
-            title: 'Tem certeza que deseja ativar esta unidade?',
-            text: "O sistema irá ativar a unidade selecionada com essa ação.",
-            type: 'info',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim, ativar!'
-          }).then((result) => {
-              $.ajax({
-                  type: 'POST',
-                  dataType: 'JSON',
-                  url: 'circuitos/ativarCircuitos',
-                  data: {ids: ids},
-                  beforeSend: function () {
-                  },
-                  complete: function () {
-                  },
-                  error: function () {
-                  },
-                  success: function (data) {
-                      if (data.operacao){
-                          swal({
-                              title: 'Ativada!',
-                              text: 'A unidade selecionada foi ativada com sucesso.',
-                              type: 'success',
-                              showCancelButton: false,
-                              confirmButtonColor: '#3085d6',
-                              cancelButtonColor: '#d33',
-                              confirmButtonText: 'Ok'
-                            }).then((result) => {
-                              window.location.reload(true);
-                            });
-                      } else {
-                          swal({
-                              title: 'Ativar',
-                              text: data.mensagem,
-                              type: 'error'
-                          });
-                      }
-                  }
-              });
-        });
-    }
-});
-
-$(".bt_inativo").on("click", function(){
-    var nm_rows = ids.length;
-    if(nm_rows > 1){
-        swal({
-            title: 'Tem certeza que deseja inativar múltipos unidades?',
-            text: "O sistema irá inativar um total de " + nm_rows + " unidades com essa ação.",
-            type: 'info',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim, inativar!'
-          }).then((result) => {
-              $.ajax({
-                  type: 'POST',
-                  dataType: 'JSON',
-                  url: 'circuitos/inativarCircuitos',
-                  data: {ids: ids},
-                  beforeSend: function () {
-                  },
-                  complete: function () {
-                  },
-                  error: function () {
-                  },
-                  success: function (data) {
-                      if (data.operacao){
-                          swal({
-                              title: 'Inativadas!',
-                              text: 'As unidades selecionados foram inativadas com sucesso.',
-                              type: 'success',
-                              showCancelButton: false,
-                              confirmButtonColor: '#3085d6',
-                              cancelButtonColor: '#d33',
-                              confirmButtonText: 'Ok'
-                            }).then((result) => {
-                              window.location.reload(true);
-                            });
-                      } else {
-                          swal({
-                              title: 'Inativar',
-                              text: data.mensagem,
-                              type: 'error'
-                          });
-                      }
-                  }
-              });
-        });
-    } else if (nm_rows == 0) {
-        swal({
-            title: 'Inativar Circuitos',
-            text: 'Você precisa selecionar uma ou mais unidades para serem inativadas!',
-            type: 'warning'
-          });
-     } else {
-        swal({
-            title: 'Tem certeza que deseja inativar esta unidade?',
-            text: "O sistema irá inativar a unidade selecionada com essa ação.",
-            type: 'info',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim, inativar!'
-          }).then((result) => {
-              $.ajax({
-                  type: 'POST',
-                  dataType: 'JSON',
-                  url: 'circuitos/inativarCircuitos',
-                  data: {ids: ids},
-                  beforeSend: function () {
-                  },
-                  complete: function () {
-                  },
-                  error: function () {
-                  },
-                  success: function (data) {
-                      if (data.operacao){
-                          swal({
-                              title: 'Inativada!',
-                              text: 'A unidade selecionada foi inativada com sucesso.',
-                              type: 'success',
-                              showCancelButton: false,
-                              confirmButtonColor: '#3085d6',
-                              cancelButtonColor: '#d33',
-                              confirmButtonText: 'Ok'
-                            }).then((result) => {
-                              window.location.reload(true);
-                            });
-                      } else {
-                          swal({
-                              title: 'Inativar',
                               text: data.mensagem,
                               type: 'error'
                           });

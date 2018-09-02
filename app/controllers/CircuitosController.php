@@ -10,6 +10,7 @@ use Phalcon\Http\Response as Response;
 use Circuitos\Controllers\ControllerBase;
 
 use Circuitos\Models\Circuitos;
+use Circuitos\Models\Movimentos;
 use Circuitos\Models\Cliente;
 use Circuitos\Models\ClienteUnidade;
 use Circuitos\Models\Usuario;
@@ -76,7 +77,7 @@ class CircuitosController extends ControllerBase
             "tipo = 17"
         ));
         $tipomovimento = Lov::find(array(
-            "tipo = 16",
+            "tipo = 16 AND valor IS NULL",
             "order" => "descricao"
         ));
         $clientes = Cliente::buscaClienteAtivo();
@@ -124,8 +125,6 @@ class CircuitosController extends ControllerBase
             'id_tipounidade' => $circuitos->id_tipounidade,
             'id_funcao' => $circuitos->id_funcao,
             'id_enlace' => $circuitos->id_enlace,
-            'id_usuario_criacao' => $circuitos->id_usuario_criacao,
-            'id_usuario_atualizacao' => $circuitos->id_usuario_atualizacao,
             'designacao' => $circuitos->designacao,
             'uf' => $circuitos->uf,
             'cidade' => $circuitos->cidade,
@@ -137,11 +136,23 @@ class CircuitosController extends ControllerBase
             'id_banda' => $circuitos->id_banda,
             'observacao' => $circuitos->observacao,
             'data_ativacao' => $circuitos->data_ativacao,
-            'data_atualizacao' => $circuitos->data_atualizacao,
-            'excluido' => $circuitos->excluido
         );
+        $cliente = Cliente::findFirst("id={$circuitos->id_cliente}");
+        $unidades = ClienteUnidade::buscaClienteUnidade($circuitos->id_cliente);
+        $equipamentos = Equipamento::find();
+        $modelos = Modelo::find();
+        $equip = Equipamento::findFirst("id={$circuitos->id_equipamento}");
+        $banda = Lov::find(array(
+            "tipo = 17"
+        ));
         $response->setContent(json_encode(array(
-            "dados" => $dados
+            "dados" => $dados,
+            "cliente" => $cliente,
+            "equipamentos" => $equipamentos,
+            "modelos" => $modelos,
+            "equip" => $equip,
+            "unidadescli" => $unidades,
+            "banda" => $banda
         )));
         return $response;
     }
@@ -165,8 +176,6 @@ class CircuitosController extends ControllerBase
             'id_tipounidade' => $circuitos->id_tipounidade,
             'id_funcao' => $circuitos->id_funcao,
             'id_enlace' => $circuitos->id_enlace,
-            'id_usuario_criacao' => $circuitos->id_usuario_criacao,
-            'id_usuario_atualizacao' => $circuitos->id_usuario_atualizacao,
             'designacao' => $circuitos->designacao,
             'uf' => $circuitos->uf,
             'cidade' => $circuitos->cidade,
@@ -181,6 +190,8 @@ class CircuitosController extends ControllerBase
             'data_atualizacao' => $circuitos->data_atualizacao,
             'excluido' => $circuitos->excluido
         );
+        $user_create = Usuario::findFirst("id={$circuitos->id_usuario_criacao}");
+        $user_update = Usuario::findFirst("id={$circuitos->id_usuario_atualizacao}");
         $response->setContent(json_encode(array(
             "dados" => $dados
         )));
@@ -220,7 +231,6 @@ class CircuitosController extends ControllerBase
                 $circuitos->id_tipounidade = $params["id_tipounidade"];
                 $circuitos->id_funcao = $params["id_funcao"];
                 $circuitos->id_enlace = $params["id_enlace"];
-                $circuitos->id_usuario_criacao = $identity["id"];
                 $circuitos->designacao = $params["designacao"];
                 $circuitos->uf = $uf;
                 $circuitos->cidade = $cidade;
@@ -233,7 +243,31 @@ class CircuitosController extends ControllerBase
                 $circuitos->observacao = $params["observacao"];
                 $circuitos->data_ativacao = date("Y-m-d H:i:s");
                 if ($circuitos->save() == false) {
-                    $transaction->rollback("Não foi possível salvar o circuito!");
+                    $messages = $circuitos->getMessages();
+                    $errors = '';
+                    for ($i = 0; $i < count($messages); $i++) {
+                        $errors .= '['.$messages[$i].'] ';
+                    }
+                    $transaction->rollback('Erro ao criar o circuito: ' . $errors);
+                }
+                //Registrando o movimento de entrada do circuito
+                $movimento = new Movimentos();
+                $movimento->setTransaction($transaction);
+                $movimento->id_circuitos = $circuitos->id;
+                $movimento->id_tipomovimento = 86;//Criação
+                $movimento->id_usuario = $identity["id"];
+                $movimento->data_movimento = date("Y-m-d H:i:s");
+                $movimento->osocomon = null;
+                $movimento->valoranterior = null;
+                $movimento->valoratualizado = null;
+                $movimento->observacao = null;
+                if ($movimento->save() == false) {
+                    $messages = $movimento->getMessages();
+                    $errors = '';
+                    for ($i = 0; $i < count($messages); $i++) {
+                        $errors .= '['.$messages[$i].'] ';
+                    }
+                    $transaction->rollback('Erro ao criar o movimento: ' . $errors);
                 }
                 //Commita a transação
                 $transaction->commit();
@@ -262,10 +296,12 @@ class CircuitosController extends ControllerBase
         //Desabilita o layout para o ajax
         $this->view->disable();
         //Instanciando classes
+        $auth = new Autentica();
         $util = new Util();
         $response = new Response();
         $manager = new TxManager();
         $transaction = $manager->get();
+        $identity = $auth->getIdentity();
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados["dados"], $params);
@@ -281,27 +317,45 @@ class CircuitosController extends ControllerBase
                 $circuitos->setTransaction($transaction);
                 $circuitos->id_cliente = $params["id_cliente"];
                 $circuitos->id_cliente_unidade = $unidade;
-                $circuitos->id_equipamento = $params["id_equipamento"];
                 $circuitos->id_contrato = $params["id_contrato"];
-                $circuitos->id_status = 34;//Ativo por Default
                 $circuitos->id_cluster = $params["id_cluster"];
                 $circuitos->id_tipounidade = $params["id_tipounidade"];
                 $circuitos->id_funcao = $params["id_funcao"];
                 $circuitos->id_enlace = $params["id_enlace"];
-                $circuitos->id_usuario_criacao = $identity["id"];
                 $circuitos->designacao = $params["designacao"];
                 $circuitos->uf = $uf;
                 $circuitos->cidade = $cidade;
                 $circuitos->vlan = $params["vlan"];
                 $circuitos->ccode = $params["ccode"];
-                $circuitos->ip_redelocal = $params["ip_redelocal"];
-                $circuitos->ip_gerencia = $params["ip_gerencia"];
                 $circuitos->tag = $params["tag"];
-                $circuitos->id_banda = $params["banda"];
                 $circuitos->observacao = $params["observacao"];
-                $circuitos->data_ativacao = date("Y-m-d H:i:s");
+                $circuitos->data_atualizacao = date("Y-m-d H:i:s");
                 if ($circuitos->save() == false) {
-                    $transaction->rollback("Não foi possível salvar o circuito!");
+                    $messages = $circuitos->getMessages();
+                    $errors = '';
+                    for ($i = 0; $i < count($messages); $i++) {
+                        $errors .= '['.$messages[$i].'] ';
+                    }
+                    $transaction->rollback('Erro ao editar o circuito: ' . $errors);
+                }
+                //Registrando o movimento de alteração do circuito
+                $movimento = new Movimentos();
+                $movimento->setTransaction($transaction);
+                $movimento->id_circuitos = $circuitos->id;
+                $movimento->id_tipomovimento = 88;//Atualização
+                $movimento->id_usuario = $identity["id"];
+                $movimento->data_movimento = date("Y-m-d H:i:s");
+                $movimento->osocomon = null;
+                $movimento->valoranterior = null;
+                $movimento->valoratualizado = null;
+                $movimento->observacao = null;
+                if ($movimento->save() == false) {
+                    $messages = $movimento->getMessages();
+                    $errors = '';
+                    for ($i = 0; $i < count($messages); $i++) {
+                        $errors .= '['.$messages[$i].'] ';
+                    }
+                    $transaction->rollback('Erro ao criar o movimento: ' . $errors);
                 }
                 //Commita a transação
                 $transaction->commit();
@@ -329,23 +383,223 @@ class CircuitosController extends ControllerBase
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
-        $core = new Core();
+        //Instanciando classes
+        $auth = new Autentica();
+        $util = new Util();
         $response = new Response();
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $identity = $auth->getIdentity();
         $dados = filter_input_array(INPUT_POST);
-        $del = null;
-        foreach($dados["ids"] as $dado){
-            $circuitos = Circuitos::findFirst("id={$dado}");
-            $del = $core->ativarPessoaAction($circuitos->id_pessoa);
-        }
-        if($del){
-            $response->setContent(json_encode(array(
-                "operacao" => True
-            )));
-            return $response;
-        } else {
+        $params = array();
+        parse_str($dados["dados"], $params);
+        $circuitos = Circuitos::findFirst("id={$params["id_circuito"]}");
+        //CSRF Token Check
+        if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
+            try {
+                switch($params["id_tipomovimento"])
+                {
+                    case "61"://Alteração de Banda
+                        $anterior = Circuitos::findFirst("id={$params["id_circuito"]}");
+                        $vl_anterior = $anterior->Lov7->descricao;
+                        //Alterando o Circuito
+                        $circuitos->setTransaction($transaction);
+                        $circuitos->id_banda = $params["bandamov"];
+                        $circuitos->data_atualizacao = date("Y-m-d H:i:s");
+                        if ($circuitos->save() == false) {
+                            $messages = $circuitos->getMessages();
+                            $errors = '';
+                            for ($i = 0; $i < count($messages); $i++) {
+                                $errors .= '['.$messages[$i].'] ';
+                            }
+                            $transaction->rollback('Erro ao editar o circuito: ' . $errors);
+                        }
+                        //Registrando o movimento de entrada do circuito
+                        $bd = Lov::findFirst("id={$params["bandamov"]}");
+                        $vl_novo = $bd->descricao;
+                        $movimento = new Movimentos();
+                        $movimento->setTransaction($transaction);
+                        $movimento->id_circuitos = $circuitos->id;
+                        $movimento->id_tipomovimento = 61;//Alteração de Banda
+                        $movimento->id_usuario = $identity["id"];
+                        $movimento->data_movimento = date("Y-m-d H:i:s");
+                        $movimento->osocomon = $params["osocomon"];
+                        $movimento->valoranterior = $vl_anterior;
+                        $movimento->valoratualizado = $vl_novo;
+                        $movimento->observacao = $params["observacaomov"];
+                        if ($movimento->save() == false) {
+                            $messages = $movimento->getMessages();
+                            $errors = '';
+                            for ($i = 0; $i < count($messages); $i++) {
+                                $errors .= '['.$messages[$i].'] ';
+                            }
+                            $transaction->rollback('Erro ao criar o movimento: ' . $errors);
+                        }
+                    break;
+                    case "62"://Mudança de Status do Circuito
+                        $anterior = Circuitos::findFirst("id={$params["id_circuito"]}");
+                        $vl_anterior = $anterior->Lov2->descricao;
+                        //Alterando o Circuito
+                        $circuitos->setTransaction($transaction);
+                        $circuitos->id_status = $params["id_statusmov"];
+                        $circuitos->data_atualizacao = date("Y-m-d H:i:s");
+                        if ($circuitos->save() == false) {
+                            $messages = $circuitos->getMessages();
+                            $errors = '';
+                            for ($i = 0; $i < count($messages); $i++) {
+                                $errors .= '['.$messages[$i].'] ';
+                            }
+                            $transaction->rollback('Erro ao editar o circuito: ' . $errors);
+                        }
+                        //Registrando o movimento de entrada do circuito
+                        $bd = Lov::findFirst("id={$params["id_statusmov"]}");
+                        $vl_novo = $bd->descricao;
+                        $movimento = new Movimentos();
+                        $movimento->setTransaction($transaction);
+                        $movimento->id_circuitos = $circuitos->id;
+                        $movimento->id_tipomovimento = 62;//Alteração de Status do Circuito
+                        $movimento->id_usuario = $identity["id"];
+                        $movimento->data_movimento = date("Y-m-d H:i:s");
+                        $movimento->osocomon = $params["osocomon"];
+                        $movimento->valoranterior = $vl_anterior;
+                        $movimento->valoratualizado = $vl_novo;
+                        $movimento->observacao = $params["observacaomov"];
+                        if ($movimento->save() == false) {
+                            $messages = $movimento->getMessages();
+                            $errors = '';
+                            for ($i = 0; $i < count($messages); $i++) {
+                                $errors .= '['.$messages[$i].'] ';
+                            }
+                            $transaction->rollback('Erro ao criar o movimento: ' . $errors);
+                        }
+                    break;
+                    case "63"://Alteração de IP Gerencial
+                        $anterior = Circuitos::findFirst("id={$params["id_circuito"]}");
+                        $vl_anterior = $anterior->ip_gerencia;
+                        //Alterando o Circuito
+                        $circuitos->setTransaction($transaction);
+                        $circuitos->ip_gerencia = $params["ip_gerenciamov"];
+                        $circuitos->data_atualizacao = date("Y-m-d H:i:s");
+                        if ($circuitos->save() == false) {
+                            $messages = $circuitos->getMessages();
+                            $errors = '';
+                            for ($i = 0; $i < count($messages); $i++) {
+                                $errors .= '['.$messages[$i].'] ';
+                            }
+                            $transaction->rollback('Erro ao editar o circuito: ' . $errors);
+                        }
+                        //Registrando o movimento de entrada do circuito
+                        $vl_novo = $params["ip_gerenciamov"];
+                        $movimento = new Movimentos();
+                        $movimento->setTransaction($transaction);
+                        $movimento->id_circuitos = $circuitos->id;
+                        $movimento->id_tipomovimento = 63;//Alteração de IP Gerencial
+                        $movimento->id_usuario = $identity["id"];
+                        $movimento->data_movimento = date("Y-m-d H:i:s");
+                        $movimento->osocomon = $params["osocomon"];
+                        $movimento->valoranterior = $vl_anterior;
+                        $movimento->valoratualizado = $vl_novo;
+                        $movimento->observacao = $params["observacaomov"];
+                        if ($movimento->save() == false) {
+                            $messages = $movimento->getMessages();
+                            $errors = '';
+                            for ($i = 0; $i < count($messages); $i++) {
+                                $errors .= '['.$messages[$i].'] ';
+                            }
+                            $transaction->rollback('Erro ao criar o movimento: ' . $errors);
+                        }
+                    break;
+                    case "64"://Alteração de IP Local
+                        $anterior = Circuitos::findFirst("id={$params["id_circuito"]}");
+                        $vl_anterior = $anterior->ip_redelocal;
+                        //Alterando o Circuito
+                        $circuitos->setTransaction($transaction);
+                        $circuitos->ip_redelocal = $params["ip_redelocalmov"];
+                        $circuitos->data_atualizacao = date("Y-m-d H:i:s");
+                        if ($circuitos->save() == false) {
+                            $messages = $circuitos->getMessages();
+                            $errors = '';
+                            for ($i = 0; $i < count($messages); $i++) {
+                                $errors .= '['.$messages[$i].'] ';
+                            }
+                            $transaction->rollback('Erro ao editar o circuito: ' . $errors);
+                        }
+                        //Registrando o movimento de entrada do circuito
+                        $vl_novo = $params["ip_redelocalmov"];
+                        $movimento = new Movimentos();
+                        $movimento->setTransaction($transaction);
+                        $movimento->id_circuitos = $circuitos->id;
+                        $movimento->id_tipomovimento = 64;//Alteração de IP Local
+                        $movimento->id_usuario = $identity["id"];
+                        $movimento->data_movimento = date("Y-m-d H:i:s");
+                        $movimento->osocomon = $params["osocomon"];
+                        $movimento->valoranterior = $vl_anterior;
+                        $movimento->valoratualizado = $vl_novo;
+                        $movimento->observacao = $params["observacaomov"];
+                        if ($movimento->save() == false) {
+                            $messages = $movimento->getMessages();
+                            $errors = '';
+                            for ($i = 0; $i < count($messages); $i++) {
+                                $errors .= '['.$messages[$i].'] ';
+                            }
+                            $transaction->rollback('Erro ao criar o movimento: ' . $errors);
+                        }
+                    break;
+                    case "89"://Alteração de Equipamento
+                        $anterior = Circuitos::findFirst("id={$params["id_circuito"]}");
+                        $vl_anterior = $anterior->Equipamento->nome;
+                        //Alterando o Circuito
+                        $circuitos->setTransaction($transaction);
+                        $circuitos->id_equipamento = $params["id_equipamentomov"];
+                        $circuitos->data_atualizacao = date("Y-m-d H:i:s");
+                        if ($circuitos->save() == false) {
+                            $messages = $circuitos->getMessages();
+                            $errors = '';
+                            for ($i = 0; $i < count($messages); $i++) {
+                                $errors .= '['.$messages[$i].'] ';
+                            }
+                            $transaction->rollback('Erro ao editar o circuito: ' . $errors);
+                        }
+                        //Registrando o movimento de entrada do circuito
+                        $novo_equip = Equipamento::findFirst("id={$params["id_equipamentomov"]}");
+                        $vl_novo = $novo_equip->nome;
+                        $movimento = new Movimentos();
+                        $movimento->setTransaction($transaction);
+                        $movimento->id_circuitos = $circuitos->id;
+                        $movimento->id_tipomovimento = 89;//Alteração de Equipamento
+                        $movimento->id_usuario = $identity["id"];
+                        $movimento->data_movimento = date("Y-m-d H:i:s");
+                        $movimento->osocomon = $params["osocomon"];
+                        $movimento->valoranterior = $vl_anterior;
+                        $movimento->valoratualizado = $vl_novo;
+                        $movimento->observacao = $params["observacaomov"];
+                        if ($movimento->save() == false) {
+                            $messages = $movimento->getMessages();
+                            $errors = '';
+                            for ($i = 0; $i < count($messages); $i++) {
+                                $errors .= '['.$messages[$i].'] ';
+                            }
+                            $transaction->rollback('Erro ao criar o movimento: ' . $errors);
+                        }
+                    break;
+                }
+                //Commita a transação
+                $transaction->commit();
+                $response->setContent(json_encode(array(
+                    "operacao" => True
+                )));
+                return $response;
+            } catch (TxFailed $e) {
+                $response->setContent(json_encode(array(
+                    "operacao" => False,
+                    "mensagem" => $e->getMessage()
+                )));
+                return $response;
+            }
+        } else {//Formulário Inválido
             $response->setContent(json_encode(array(
                 "operacao" => False,
-                "mensagem" => "Erro ao tentar realizar a operação!"
+                "mensagem" => "Check de formulário inválido!"
             )));
             return $response;
         }
@@ -355,23 +609,58 @@ class CircuitosController extends ControllerBase
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
-        $core = new Core();
+        $auth = new Autentica();
         $response = new Response();
+        $response = new Response();
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $identity = $auth->getIdentity();
         $dados = filter_input_array(INPUT_POST);
-        $del = null;
-        foreach($dados["ids"] as $dado){
-            $circuitos = Circuitos::findFirst("id={$dado}");
-            $del = $core->deletarPessoaAction($circuitos->id_pessoa);
-        }
-        if($del){
+        try {
+            foreach($dados["ids"] as $dado){
+                $circuitos = Circuitos::findFirst("id={$dado}");
+                $circuitos->setTransaction($transaction);
+                $circuitos->excluido = 1;
+                $circuitos->id_status = 35;//Desativado
+                $circuitos->data_atualizacao = date("Y-m-d H:i:s");
+                if ($circuitos->save() == false) {
+                    $messages = $circuitos->getMessages();
+                    $errors = '';
+                    for ($i = 0; $i < count($messages); $i++) {
+                        $errors .= '['.$messages[$i].'] ';
+                    }
+                    $transaction->rollback('Erro ao editar o circuito: ' . $errors);
+                }
+                //Registrando o movimento de exclusão do circuito
+                $movimento = new Movimentos();
+                $movimento->setTransaction($transaction);
+                $movimento->id_circuitos = $circuitos->id;
+                $movimento->id_tipomovimento = 87;//Exclusão
+                $movimento->id_usuario = $identity["id"];
+                $movimento->data_movimento = date("Y-m-d H:i:s");
+                $movimento->osocomon = null;
+                $movimento->valoranterior = null;
+                $movimento->valoratualizado = null;
+                $movimento->observacao = null;
+                if ($movimento->save() == false) {
+                    $messages = $movimento->getMessages();
+                    $errors = '';
+                    for ($i = 0; $i < count($messages); $i++) {
+                        $errors .= '['.$messages[$i].'] ';
+                    }
+                    $transaction->rollback('Erro ao criar o movimento: ' . $errors);
+                }
+            }
+            //Commita a transação
+            $transaction->commit();
             $response->setContent(json_encode(array(
                 "operacao" => True
             )));
             return $response;
-        } else {
+        } catch (TxFailed $e) {
             $response->setContent(json_encode(array(
                 "operacao" => False,
-                "mensagem" => "Erro ao tentar realizar a operação!"
+                "mensagem" => $e->getMessage()
             )));
             return $response;
         }
