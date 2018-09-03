@@ -192,6 +192,46 @@ $("#email").on("change", function(){
     });    
 });
 
+$("#cep").on("change", function(){
+    var cep_t = $("#cep").val();
+    if (cep_t) {
+        var cep = formata_cep(cep_t);
+        $.ajax({
+            type: 'GET',
+            dataType: 'JSON',
+            url: 'core/completaEndereco',
+            data: {cep: cep},
+            beforeSend: function () {
+                $("#bairro").val(null);
+                $("#cidade").val(null);
+                $("#endereco").val(null);
+                $("#sigla_uf").val(null);
+                $("#estado").val(null);
+            },
+            complete: function () {
+            },
+            error: function () {
+            },
+            success: function (data) {
+                if (data.operacao){
+                    $("#bairro").val(data.endereco["bairro"]);
+                    $("#cidade").val(data.endereco["cidade"]);
+                    $("#endereco").val(data.endereco["logradouro"]);
+                    $("#sigla_uf").val(data.endereco["sigla_uf"]);
+                    $("#estado").val(data.endereco["uf"]);
+                    $("#numero").focus();
+                } else {
+                    swal({
+                        title: 'Atenção',
+                        text: 'O CEP digitado não retorno nenhum endereço válido! Por favor, insira o endereço de forma manual.',
+                        type: 'warning'
+                      });
+                }
+            }
+        }); 
+    }   
+});
+
 $(".bt_novo").on("click", function(){
     $("#modalempresa").modal();
     $("#salvaEmpresa").removeClass("editar_empresa").addClass("criar_empresa");
@@ -224,6 +264,12 @@ $(document).on("click", ".criar_empresa", function(){
             },
             mail_passwrd:{
                 required: true
+            },
+            cep:{
+                required: true
+            },
+            endereco:{
+                required: true
             }
         },
         messages:{
@@ -250,6 +296,12 @@ $(document).on("click", ".criar_empresa", function(){
             },
             mail_passwrd:{
                 required: "É necessário informar uma senha"
+            },
+            cep:{
+                required: "É necessário informar um cep"
+            },
+            endereco:{
+                required: "É necessário informar um endereço"
             }
         },
         submitHandler: function(form) {
@@ -350,6 +402,14 @@ $(".bt_edit").on("click", function(){
                 $("#mail_smtpssl").val(data.dados.mail_smtpssl);
                 $("#mail_user").val(data.dados.mail_user);
                 $("#mail_passwrd").val(data.dados.mail_passwrd);
+                $("#sigla_uf").val(data.dados.pessoaendereco.sigla_uf);
+                $("#cep").val(data.dados.pessoaendereco.cep);
+                $("#endereco").val(data.dados.pessoaendereco.endereco);
+                $("#numero").val(data.dados.pessoaendereco.numero);
+                $("#bairro").val(data.dados.pessoaendereco.bairro);
+                $("#cidade").val(data.dados.pessoaendereco.cidade);
+                $("#estado").val(data.dados.pessoaendereco.estado);
+                $("#complemento").val(data.dados.pessoaendereco.complemento);
                 $("#modalempresa").modal();
             }
         });
@@ -385,6 +445,12 @@ $(document).on("click", ".editar_empresa", function(){
             },
             mail_passwrd:{
                 required: true
+            },
+            cep:{
+                required: true
+            },
+            endereco:{
+                required: true
             }
         },
         messages:{
@@ -411,6 +477,12 @@ $(document).on("click", ".editar_empresa", function(){
             },
             mail_passwrd:{
                 required: "É necessário informar uma senha"
+            },
+            cep:{
+                required: "É necessário informar um cep"
+            },
+            endereco:{
+                required: "É necessário informar um endereço"
             }
         },
         submitHandler: function(form) {

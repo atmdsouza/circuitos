@@ -435,8 +435,6 @@ class UsuarioController extends ControllerBase
         $this->view->nome = $user->Pessoa->nome;
         if ($this->request->isPost()) {
             if ($this->security->checkToken()) {
-                $password = $this->request->getPost('password');
-                $password2 = $this->request->getPost('password2');
                 if (!$this->request->getPost('password') && !$this->request->getPost('password2')){
                     $this->flash->error("Os campos senha e confirmação de senha não podem ser vazios!");
                     $this->dispatcher->forward([
@@ -457,7 +455,7 @@ class UsuarioController extends ControllerBase
                     ]);
                 } else {
                     if($this->request->getPost('password') === $this->request->getPost('password2')) {
-                        $this->alterarSenhaAction($identity["id"], $password);
+                        $this->alterarSenhaAction($identity["id"], $this->request->getPost('password'));
                         $user->primeiroacesso = 1;
                         $user->save();
                         return $this->response->redirect("index/index");
@@ -532,6 +530,48 @@ class UsuarioController extends ControllerBase
         } catch (TxFailed $e) {
             return False;
         }
+    }
 
+    public function trocarAction()
+    {
+        //Pegar o login na session auth;
+        $auth = new Autentica();
+        $identity = $auth->getIdentity();
+        $user = Usuario::findFirst("id={$identity["id"]}");
+        $this->view->nome = $user->Pessoa->nome;
+        if ($this->request->isPost()) {
+            if ($this->security->checkToken()) {
+                if (!$this->request->getPost('password') && !$this->request->getPost('password2')){
+                    $this->flash->error("Os campos senha e confirmação de senha não podem ser vazios!");
+                    $this->dispatcher->forward([
+                        "controller" => "usuario",
+                        "action" => "trocar"
+                    ]);
+                } else if (!$this->request->getPost('password')) {
+                    $this->flash->error("O campo senha não pode ser vazio!");
+                    $this->dispatcher->forward([
+                        "controller" => "usuario",
+                        "action" => "trocar"
+                    ]);
+                } else if (!$this->request->getPost('password2')) {
+                    $this->flash->error("O campo confirmação de senha não pode ser vazio!");
+                    $this->dispatcher->forward([
+                        "controller" => "usuario",
+                        "action" => "trocar"
+                    ]);
+                } else {
+                    if($this->request->getPost('password') === $this->request->getPost('password2')) {
+                        $this->alterarSenhaAction($identity["id"], $this->request->getPost('password'));
+                        return $this->response->redirect("index/index");
+                    } else {
+                        $this->flash->error("As senhas não conferem! Por favor, tente novamente!");
+                        $this->dispatcher->forward([
+                            "controller" => "usuario",
+                            "action" => "trocar"
+                        ]);
+                    }
+                }
+            }
+        }
     }
 }

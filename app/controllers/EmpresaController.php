@@ -13,6 +13,7 @@ use Circuitos\Models\Empresa;
 use Circuitos\Models\EmpresaParametros;
 use Circuitos\Models\Pessoa;
 use Circuitos\Models\PessoaJuridica;
+use Circuitos\Models\PessoaEndereco;
 use Circuitos\Models\PessoaEmail;
 use Circuitos\Models\Lov;
 
@@ -68,6 +69,7 @@ class EmpresaController extends ControllerBase
         $response = new Response();
         $dados = filter_input_array(INPUT_GET);
         $empresa = Empresa::findFirst("id={$dados["id_empresa"]}");
+        $pessoaendereco = PessoaEndereco::findFirst("id_pessoa={$empresa->id_pessoa}");
         $dados = array(
             "id" => $empresa->id,
             "nome_pessoa" => $empresa->Pessoa->nome,
@@ -84,6 +86,7 @@ class EmpresaController extends ControllerBase
             "mail_smtpssl" => $empresa->EmpresaParametros->mail_smtpssl,
             "mail_user" => $empresa->EmpresaParametros->mail_user,
             "mail_passwrd" => $empresa->EmpresaParametros->mail_passwrd,
+            "pessoaendereco" => $pessoaendereco,
         );
         $response->setContent(json_encode(array(
             "dados" => $dados
@@ -124,6 +127,22 @@ class EmpresaController extends ControllerBase
                 $pessoajuridica->datafund = $util->converterDataUSA($params["fundacao"]);
                 if ($pessoajuridica->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pj!");
+                }
+                $pessoaendereco = new PessoaEndereco();
+                $pessoaendereco->setTransaction($transaction);
+                $pessoaendereco->id_pessoa = $pessoa->id;
+                $pessoaendereco->id_tipoendereco = 50;//Comercial
+                $pessoaendereco->cep = $util->formataCpfCnpj($params["cep"]);
+                $pessoaendereco->principal = 1;//Principal
+                $pessoaendereco->endereco = $params["endereco"];
+                $pessoaendereco->numero = $params["numero"];
+                $pessoaendereco->bairro = $params["bairro"];
+                $pessoaendereco->cidade = $params["cidade"];
+                $pessoaendereco->estado = $params["estado"];
+                $pessoaendereco->complemento = $params["complemento"];
+                $pessoaendereco->sigla_estado = $params["sigla_uf"];
+                if ($pessoaendereco->save() == false) {
+                    $transaction->rollback("Não foi possível salvar o pessoaendereco!");
                 }
                 $pessoaemail = new PessoaEmail();
                 $pessoaemail->setTransaction($transaction);
@@ -190,6 +209,7 @@ class EmpresaController extends ControllerBase
         $pessoa = Pessoa::findFirst("id={$empresa->id_pessoa}");
         $pessoajuridica = PessoaJuridica::findFirst("id={$empresa->id_pessoa}");
         $pessoaemail = PessoaEmail::findFirst("id_pessoa={$empresa->id_pessoa}");
+        $pessoaendereco = PessoaEndereco::findFirst("id_pessoa={$empresa->id_pessoa}");
         $empresaparams = EmpresaParametros::findFirst("id_empresa={$params["id"]}");
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -206,12 +226,32 @@ class EmpresaController extends ControllerBase
                 if ($pessoajuridica->cnpj != $util->formataCpfCnpj($params["cnpj"])) {
                     $pessoajuridica->cnpj = $util->formataCpfCnpj($params["cnpj"]);
                 }
+                $datafund = $params["fundacao"] ? $util->converterDataUSA($params["fundacao"]) : null;
                 $pessoajuridica->razaosocial = $params["razaosocial"];
                 $pessoajuridica->inscricaoestadual = $params["inscestadual"];
                 $pessoajuridica->inscricaomunicipal = $params["inscmunicipal"];
-                $pessoajuridica->datafund = $util->converterDataUSA($params["fundacao"]);
+                $pessoajuridica->datafund = $datafund;
                 if ($pessoajuridica->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pj!");
+                }
+                $pessoaendereco->setTransaction($transaction);
+                $pessoaendereco->id_tipoendereco = 50;//Comercial
+                $pessoaendereco->cep = $util->formataCpfCnpj($params["cep"]);
+                $pessoaendereco->principal = 1;//Principal
+                $pessoaendereco->endereco = $params["endereco"];
+                $pessoaendereco->numero = $params["numero"];
+                $pessoaendereco->bairro = $params["bairro"];
+                $pessoaendereco->cidade = $params["cidade"];
+                $pessoaendereco->estado = $params["estado"];
+                $pessoaendereco->complemento = $params["complemento"];
+                $pessoaendereco->sigla_estado = $params["sigla_uf"];
+                if ($pessoaendereco->save() == false) {
+                    $messages = $pessoaendereco->getMessages();
+                    $errors = '';
+                    for ($i = 0; $i < count($messages); $i++) {
+                        $errors .= '['.$messages[$i].'] ';
+                    }
+                    $transaction->rollback('Erro ao editar o endereço: ' . $errors);
                 }
                 if($params["email"] != $pessoaemail->email){
                     $pessoaemail->setTransaction($transaction);

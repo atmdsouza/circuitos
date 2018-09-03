@@ -78,6 +78,7 @@ use Util\Util;
                             <h6>Dados Cadastrais</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-3">
+                                    <label for="cliente">Cliente</label>
                                     <?php echo $this->tag->select(["cliente", $clientes, "class" => "form-control", "id" => "cliente",
                                         "using" => ["id", "nome",],
                                         "useEmpty" => true,
@@ -86,28 +87,35 @@ use Util\Util;
                                     ?>
                                 </div>
                                 <div class="form-group col-md-6">
+                                    <label for="nome_pessoa">Nome Fantasia</label>
                                     <?php echo $this->tag->textField(["nome_pessoa", "size" => 200, "class" => "form-control", "id" => "nome_pessoa", "placeholder" => "Nome Fantasia"]) ?>
                                 </div>
                                 <div class="form-group col-md-3">
+                                    <label for="sigla">Sigla</label>
                                     <?php echo $this->tag->textField(["sigla", "size" => 200, "class" => "form-control", "id" => "sigla", "placeholder" => "Sigla"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
+                                    <label for="rzsocial">Razão Social</label>
                                     <?php echo $this->tag->textField(["rzsocial", "size" => 200, "class" => "form-control", "id" => "rzsocial", "placeholder" => "Razão Social"]) ?>
                                 </div>
                                 <div class="form-group col-md-3">
+                                    <label for="cnpj">CNPJ</label>
                                     <?php echo $this->tag->textField(["cnpj", "size" => 120, "class" => "form-control cnpj", "id" => "cnpj", "placeholder" => "CNPJ"]) ?>
                                 </div>
                                 <div class="form-group col-md-3">
+                                    <label for="datafund">Data Fundação</label>
                                     <?php echo $this->tag->textField(["datafund", "size" => 120, "class" => "form-control data", "id" => "datafund", "placeholder" => "Data Fundação"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
+                                    <label for="inscricaoestadual">Inscrição Estadual</label>
                                     <?php echo $this->tag->textField(["inscricaoestadual", "size" => 120, "class" => "form-control", "id" => "inscricaoestadual", "placeholder" => "Inscrição Estadual"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
+                                    <label for="inscricaomunicipal">Inscrição Municipal</label>
                                     <?php echo $this->tag->textField(["inscricaomunicipal", "size" => 120, "class" => "form-control", "id" => "inscricaomunicipal", "placeholder" => "Inscrição Municipal"]) ?>
                                 </div>
                             </div>
@@ -115,44 +123,55 @@ use Util\Util;
                             <div class="form-row">
                                 <input type="hidden" id="sigla_uf" name="sigla_uf" value=""><!-- Manter como hidden -->
                                 <div class="form-group col-md-3">
+                                    <label for="cep">CEP</label>
                                     <?php echo $this->tag->textField(["cep", "size" => 200, "class" => "form-control cep", "id" => "cep", "placeholder" => "CEP"]) ?>
                                 </div>
                                 <div class="form-group col-md-6">
+                                    <label for="endereco">Endereço</label>
                                     <?php echo $this->tag->textField(["endereco", "size" => 200, "class" => "form-control", "id" => "endereco", "placeholder" => "Endereço"]) ?>
                                 </div>
                                 <div class="form-group col-md-3">
+                                    <label for="numero">Número</label>
                                     <?php echo $this->tag->textField(["numero", "size" => 120, "class" => "form-control", "id" => "numero", "placeholder" => "Número"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-5">
+                                    <label for="complemento">Complemento</label>
                                     <?php echo $this->tag->textField(["complemento", "size" => 120, "class" => "form-control", "id" => "complemento", "placeholder" => "Complemento"]) ?>
                                 </div>
                                 <div class="form-group col-md-3">
+                                    <label for="bairro">Bairro</label>
                                     <?php echo $this->tag->textField(["bairro", "size" => 120, "class" => "form-control", "id" => "bairro", "placeholder" => "Bairro"]) ?>
                                 </div>
                                 <div class="form-group col-md-2">
+                                    <label for="cidade">Cidade</label>
                                     <?php echo $this->tag->textField(["cidade", "size" => 120, "class" => "form-control", "id" => "cidade", "placeholder" => "Cidade"]) ?>
                                 </div>
                                 <div class="form-group col-md-2">
+                                    <label for="estado">Estado</label>
                                     <?php echo $this->tag->textField(["estado", "size" => 120, "class" => "form-control", "id" => "estado", "placeholder" => "Estado"]) ?>
                                 </div>
                             </div>
                             <h6>Dados de Contato</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-3">
+                                    <label for="telefone_t">Número Telefone</label>
                                     <?php echo $this->tag->textField(["telefone_t", "size" => 200, "class" => "form-control celular", "id" => "telefone_t", "placeholder" => "Número Telefone"]) ?>
                                 </div>
                                 <div class="form-group col-md-2">
+                                    <label for="princtel_t">Principal</label>
                                     <?php echo $this->tag->select(["princtel_t", ["0" => "Não", "1" => "Sim"], "class" => "form-control", "id" => "princtel_t", "useEmpty" => true, "emptyText" => "Principal?", "emptyValue" => ""]) ?>
                                 </div>
                                 <div class="form-group col-md-1">
                                     <button id="insert_telefone" name="insert_telefone" type="button" class="btn btn-sucess btn-rounded waves-light waves-effect">Inserir</button>
                                 </div>
                                 <div class="form-group col-md-3">
+                                    <label for="email_t">Endereço de E-mail</label>
                                     <?php echo $this->tag->emailField(["email_t", "size" => 200, "class" => "form-control email_val", "id" => "email_t", "placeholder" => "Endereço de E-mail"]) ?>
                                 </div>
                                 <div class="form-group col-md-2">
+                                    <label for="princemail_t">Principal</label>
                                     <?php echo $this->tag->select(["princemail_t", ["0" => "Não", "1" => "Sim"], "class" => "form-control", "id" => "princemail_t", "useEmpty" => true, "emptyText" => "Principal?", "emptyValue" => ""]) ?>
                                 </div>
                                 <div class="form-group col-md-1">
@@ -190,9 +209,11 @@ use Util\Util;
                             <h6>Pessoas de Contato na Unidade</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-1">
+                                    <label for="principal_contato_t">Principal</label>
                                     <?php echo $this->tag->select(["principal_contato_t", ["0" => "Não", "1" => "Sim"], "class" => "form-control", "id" => "principal_contato_t", "useEmpty" => true, "emptyText" => "Principal?", "emptyValue" => ""]) ?>
                                 </div>
                                 <div class="form-group col-md-2">
+                                    <label for="id_tipocontato_t">Tipo</label>
                                     <?php echo $this->tag->select(["id_tipocontato_t", $tipocontato, "class" => "form-control", "id" => "id_tipocontato_t",
                                         "using" => ["id", "descricao",],
                                         "useEmpty" => true,
@@ -201,12 +222,15 @@ use Util\Util;
                                     ?>
                                 </div>
                                 <div class="form-group col-md-3">
+                                    <label for="nome_contato_t">Nome do Contato</label>
                                     <?php echo $this->tag->textField(["nome_contato_t", "size" => 200, "class" => "form-control", "id" => "nome_contato_t", "placeholder" => "Nome do Contato"]) ?>
                                 </div>
                                 <div class="form-group col-md-2">
+                                    <label for="telefone_contato_t">Número Telefone</label>
                                     <?php echo $this->tag->textField(["telefone_contato_t", "size" => 200, "class" => "form-control celular", "id" => "telefone_contato_t", "placeholder" => "Número Telefone"]) ?>
                                 </div>
                                 <div class="form-group col-md-3">
+                                    <label for="email_contato_t">Endereço de E-mail</label>
                                     <?php echo $this->tag->emailField(["email_contato_t", "size" => 200, "class" => "form-control email_val", "id" => "email_contato_t", "placeholder" => "Endereço de E-mail"]) ?>
                                 </div>
                                 <div class="form-group col-md-1">

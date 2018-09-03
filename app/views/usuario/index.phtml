@@ -74,17 +74,21 @@ use Util\Util;
                         <div class="col-12">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
+                                    <label for="nome_pessoa">Nome</label>
                                     <?php echo $this->tag->textField(["nome_pessoa", "size" => 120, "class" => "form-control", "id" => "nome_pessoa", "placeholder" => "Nome"]) ?>
                                 </div>
                                 <div class="form-group col-md-6">
+                                    <label for="size">Login</label>
                                     <?php echo $this->tag->textField(["login", "size" => 80, "class" => "form-control", "id" => "login", "placeholder" => "Login"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
+                                    <label for="email">E-mail</label>
                                     <?php echo $this->tag->emailField(["email", "size" => 120, "class" => "form-control", "id" => "email", "placeholder" => "E-mail"]) ?>
                                 </div>
                                 <div class="form-group col-md-6">
+                                    <label for="roles_name">Perfil</label>
                                     <?php echo $this->tag->select(["roles_name", $roles, "class" => "form-control", "id" => "roles_name",
                                         "using" => ["name", "name",],
                                         "useEmpty" => true,

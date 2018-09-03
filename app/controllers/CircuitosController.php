@@ -22,6 +22,7 @@ use Circuitos\Models\Lov;
 use Auth\Autentica;
 use Util\Util;
 use Util\TokenManager;
+use Util\Relatorio;
 use Circuitos\Models\PessoaEndereco;
 
 class CircuitosController extends ControllerBase
@@ -165,6 +166,7 @@ class CircuitosController extends ControllerBase
         $response = new Response();
         $dados = filter_input_array(INPUT_GET);
         $circuitos = Circuitos::findFirst("id={$dados["id_circuitos"]}");
+        $movimentos = Movimentos::find("id_circuitos={$circuitos->id}");
         $dados = array(
             'id' => $circuitos->id,
             'id_cliente' => $circuitos->id_cliente,
@@ -186,14 +188,30 @@ class CircuitosController extends ControllerBase
             'tag' => $circuitos->tag,
             'id_banda' => $circuitos->id_banda,
             'observacao' => $circuitos->observacao,
-            'data_ativacao' => $circuitos->data_ativacao,
-            'data_atualizacao' => $circuitos->data_atualizacao,
-            'excluido' => $circuitos->excluido
+            'data_ativacao' => $util->converterDataHoraParaBr($circuitos->data_ativacao),
+            'data_atualizacao' => $util->converterDataHoraParaBr($circuitos->data_atualizacao),
+            'numserie' => $circuitos->Equipamento->numserie,
+            'numpatrimonio' => $circuitos->Equipamento->numpatrimonio
         );
-        $user_create = Usuario::findFirst("id={$circuitos->id_usuario_criacao}");
-        $user_update = Usuario::findFirst("id={$circuitos->id_usuario_atualizacao}");
+        $mov = array();
+        foreach($movimentos as $movimento){
+            array_push($mov, array(
+                'id' => $movimento->id,
+                'id_circuitos' => $movimento->id_circuitos,
+                'id_tipomovimento' => $movimento->Lov->descricao,
+                'id_usuario' => $movimento->Usuario->Pessoa->nome,
+                'data_movimento' => $util->converterDataHoraParaBr($movimento->data_movimento),
+                'osocomon' => $movimento->osocomon,
+                'valoranterior' => $movimento->valoranterior,
+                'valoratualizado' => $movimento->valoratualizado,
+                'observacao' => $movimento->observacao
+            ));
+        }
+        $equip = Equipamento::findFirst("id={$circuitos->id_equipamento}");
         $response->setContent(json_encode(array(
-            "dados" => $dados
+            "dados" => $dados,
+            "equip" => $equip,
+            "mov" => $mov
         )));
         return $response;
     }
@@ -755,5 +773,20 @@ class CircuitosController extends ControllerBase
             )));
             return $response;
         }
+    }
+
+    public function pdfCircuitoAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $gerar = new Relatorio();
+        $dados = filter_input_array(INPUT_POST);
+        $url = $gerar->gerarPDFCircuito($dados["id_circuito"]);
+        ## Enviando os dados via JSON ##
+        $response->setContent(json_encode(array(
+            'url' => $url
+        )));
+        return $response;
     }
 }

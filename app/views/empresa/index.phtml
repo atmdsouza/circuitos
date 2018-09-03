@@ -71,28 +71,35 @@ use Util\Util;
                             <h6>Dados Cadastrais</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
+                                    <label for="nome_pessoa">Nome Fantasia</label>
                                     <?php echo $this->tag->textField(["nome_pessoa", "size" => 200, "class" => "form-control", "id" => "nome_pessoa", "placeholder" => "Nome Fantasia"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
+                                    <label for="razaosocial">Razão Social</label>
                                     <?php echo $this->tag->textField(["razaosocial", "size" => 200, "class" => "form-control", "id" => "razaosocial", "placeholder" => "Razão Social"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
+                                    <label for="cnpj">CNPJ</label>
                                     <?php echo $this->tag->textField(["cnpj", "size" => 30, "class" => "form-control cnpj", "id" => "cnpj", "placeholder" => "CNPJ"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
+                                    <label for="inscestadual">Inscrição Estadual</label>
                                     <?php echo $this->tag->textField(["inscestadual", "size" => 30, "class" => "form-control", "id" => "inscestadual", "placeholder" => "Inscrição Estadual"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
+                                    <label for="inscmunicipal">Inscrição Municipal</label>
                                     <?php echo $this->tag->textField(["inscmunicipal", "size" => 30, "class" => "form-control", "id" => "inscmunicipal", "placeholder" => "Inscrição Municipal"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
+                                    <label for="fundacao">Data Fundação</label>
                                     <?php echo $this->tag->textField(["fundacao", "size" => 30, "class" => "form-control data", "id" => "fundacao", "placeholder" => "Data Fundação"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
+                                    <label for="setor">Setor</label>
                                     <?php echo $this->tag->select(["setor", $setor, "class" => "form-control", "id" => "setor",
                                         "using" => ["id", "descricao",],
                                         "useEmpty" => true,
@@ -101,6 +108,7 @@ use Util\Util;
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4">
+                                    <label for="esfera">Esfera</label>
                                     <?php echo $this->tag->select(["esfera", $esfera, "class" => "form-control", "id" => "esfera",
                                         "using" => ["id", "descricao",],
                                         "useEmpty" => true,
@@ -109,31 +117,71 @@ use Util\Util;
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4">
+                                    <label for="email">E-mail</label>
                                     <?php echo $this->tag->emailField(["email", "size" => 120, "class" => "form-control", "id" => "email", "placeholder" => "E-mail (Aparecerá como remetente dos envios)"]) ?>
+                                </div>
+                            </div>
+                            <h6>Dados do Endereço</h6>
+                            <div class="form-row">
+                                <input type="hidden" id="sigla_uf" name="sigla_uf" value=""><!-- Manter como hidden -->
+                                <div class="form-group col-md-3">
+                                    <label for="cep">CEP</label>
+                                    <?php echo $this->tag->textField(["cep", "size" => 200, "class" => "form-control cep", "id" => "cep", "placeholder" => "CEP"]) ?>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="endereco">Endereço</label>
+                                    <?php echo $this->tag->textField(["endereco", "size" => 200, "class" => "form-control", "id" => "endereco", "placeholder" => "Endereço"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="numero">Número</label>
+                                    <?php echo $this->tag->textField(["numero", "size" => 120, "class" => "form-control", "id" => "numero", "placeholder" => "Número"]) ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-5">
+                                    <label for="complemento">Complemento</label>
+                                    <?php echo $this->tag->textField(["complemento", "size" => 120, "class" => "form-control", "id" => "complemento", "placeholder" => "Complemento"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="bairro">Bairro</label>
+                                    <?php echo $this->tag->textField(["bairro", "size" => 120, "class" => "form-control", "id" => "bairro", "placeholder" => "Bairro"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="cidade">Cidade</label>
+                                    <?php echo $this->tag->textField(["cidade", "size" => 120, "class" => "form-control", "id" => "cidade", "placeholder" => "Cidade"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="estado">Estado</label>
+                                    <?php echo $this->tag->textField(["estado", "size" => 120, "class" => "form-control", "id" => "estado", "placeholder" => "Estado"]) ?>
                                 </div>
                             </div>
                             <h6>Dados do Servidor de E-mails (Configura o serviço de envio de mensagens do sistema)</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
+                                    <label for="mail_host">Endereço do HOST</label>
                                     <?php echo $this->tag->textField(["mail_host", "size" => 200, "class" => "form-control", "id" => "mail_host", "placeholder" => "Endereço do HOST"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
+                                    <label for="mail_port">Porta SMTP</label>
                                     <?php echo $this->tag->textField(["mail_port", "size" => 90, "class" => "form-control", "id" => "mail_port", "placeholder" => "Porta SMTP (587, 995, etc)"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
+                                    <label for="mail_smtpssl">Protolo de Segurança</label>
                                     <?php echo $this->tag->textField(["mail_smtpssl", "size" => 90, "class" => "form-control", "id" => "mail_smtpssl", "placeholder" => "Protolo de Segurança (TLS, SSL, etc)"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
+                                    <label for="mail_user">Usuário a ser utilizado</label>
                                     <?php echo $this->tag->textField(["mail_user", "size" => 200, "class" => "form-control", "id" => "mail_user", "placeholder" => "Usuário a ser utilizado"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
+                                    <label for="mail_passwrd">Senha de Acesso</label>
                                     <?php echo $this->tag->passwordField(["mail_passwrd", "size" => 90, "class" => "form-control", "id" => "mail_passwrd", "placeholder" => "Senha de Acesso"]) ?>
                                 </div>
-                                <div class="form-group col-md-4">
+                                <!--<div class="form-group col-md-4">
                                     <button id="testa_email" name="testa_email" type="button" class="btn btn-danger btn-rounded waves-light waves-effect w-md">Testar Configurações</button>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>

@@ -575,15 +575,12 @@ $(".bt_edit").on("click", function(){
                 $("#id_equipamento").attr("disabled", "true");
                 $("#id_equipamento").val(data.dados.id_equipamento).selected = "true";
                 $("#id_contrato").val(data.dados.id_contrato).selected = "true";
-                // $("#id_status").val(data.dados.id_status).selected = "true";
                 $("#id_cluster").val(data.dados.id_cluster).selected = "true";
                 $("#id_tipounidade").val(data.dados.id_tipounidade).selected = "true";
                 $("#id_funcao").val(data.dados.id_funcao).selected = "true";
                 $("#id_enlace").val(data.dados.id_enlace).selected = "true";
                 $("#banda").attr("disabled", "true");
                 $("#banda").val(data.dados.id_banda).selected = "true";
-                // $("#id_usuario_criacao").val(data.dados.id_usuario_criacao);
-                // $("#id_usuario_atualizacao").val(data.dados.id_usuario_atualizacao);
                 $("#designacao").val(data.dados.designacao);
                 $("#uf").val(data.dados.uf);
                 $("#cidade").val(data.dados.cidade);
@@ -630,28 +627,62 @@ $(".bt_visual").on("click", function(){
             error: function () {
             },
             success: function (data) {
-                $("#id").val(data.dados.id);
-                $("#cliente").val(data.dados.id_cliente).selected = "true";
-                $("#nome_pessoa").val(data.dados.nome);
-                $("#sigla").val(data.dados.sigla);
-                $("#rzsocial").val(data.dados.razaosocial);
-                $("#cnpj").val(data.dados.cnpj);
-                $("#inscricaoestadual").val(data.dados.inscricaoestadual);
-                $("#inscricaomunicipal").val(data.dados.inscricaomunicipal);
-                $("#datafund").val(data.dados.datafund);
-                $("#sigla_uf").val(data.dados.pessoaendereco.sigla_uf);
-                $("#cep").val(data.dados.pessoaendereco.cep);
-                $("#endereco").val(data.dados.pessoaendereco.endereco);
-                $("#numero").val(data.dados.pessoaendereco.numero);
-                $("#bairro").val(data.dados.pessoaendereco.bairro);
-                $("#cidade").val(data.dados.pessoaendereco.cidade);
-                $("#estado").val(data.dados.pessoaendereco.estado);
-                $("#complemento").val(data.dados.pessoaendereco.complemento);
-                $("#cliente").attr("disabled", "true");
+                $("#idv").val(data.dados.id);
+                $("#id_clientev").val(data.dados.id_cliente).selected = "true";
+                $("#id_cliente_unidadev").val(data.dados.id_cliente_unidade).selected = "true";
+                $("#id_fabricantev").val(data.equip.id_fabricante).selected = "true";
+                $("#id_modelov").val(data.equip.id_modelo).selected = "true";
+                $("#id_equipamentov").val(data.dados.id_equipamento).selected = "true";
+                $("#id_contratov").val(data.dados.id_contrato).selected = "true";
+                $("#id_statusv").val(data.dados.id_status).selected = "true";
+                $("#id_clusterv").val(data.dados.id_cluster).selected = "true";
+                $("#id_tipounidadev").val(data.dados.id_tipounidade).selected = "true";
+                $("#id_funcaov").val(data.dados.id_funcao).selected = "true";
+                $("#id_enlacev").val(data.dados.id_enlace).selected = "true";
+                $("#bandav").val(data.dados.id_banda).selected = "true";
+                $("#designacaov").val(data.dados.designacao);
+                $("#ufv").val(data.dados.uf);
+                $("#cidadev").val(data.dados.cidade);
+                $("#vlanv").val(data.dados.vlan);
+                $("#ccodev").val(data.dados.ccode);
+                $("#ip_redelocalv").val(data.dados.ip_redelocal);
+                $("#ip_gerenciav").val(data.dados.ip_gerencia);
+                $("#tagv").val(data.dados.tag);
+                $("#observacaov").val(data.dados.observacao);
+                $("#dtativacaov").val(data.dados.data_ativacao);
+                $("#dtatualizacaov").val(data.dados.data_atualizacao);
+                $("#numpatserv").val(data.dados.numpatrimonio + " / " + data.dados.numserie);
+                var linhas;
+                if(data.mov)
+                {
+                    $(".rem_mov").remove();
+                    $.each(data.mov, function (key, value) {
+                        var os = value.osocomon ? value.osocomon : '';
+                        var ant = value.valoranterior ? value.valoranterior : '';
+                        var atu = value.valoratualizado ? value.valoratualizado : '';
+                        var obs = value.observacao ? value.observacao : '';
+                        linhas = "<tr class='rem_mov'>";
+                        linhas += "<td>" + os + "</td>";
+                        linhas += "<td>" + value.data_movimento + "</td>";
+                        linhas += "<td>" + value.id_tipomovimento + "</td>";
+                        linhas += "<td>" + value.id_usuario + "</td>";
+                        linhas += "<td>" + ant + "</td>";
+                        linhas += "<td>" + atu + "</td>";
+                        linhas += "<td>" + obs + "</td>";
+                        linhas += "</tr>";
+                        $("#tb_movimento").append(linhas);
+                    });
+                } 
+                else
+                {
+                    linhas = "<tr>";
+                    linhas = "<td colspan='7' style='text-align: center;'>Não existem dados para serem exibidos! Dados Importados!</td>";
+                    linhas += "</tr>";
+                    $("#tb_movimento").append(linhas);
+                }
                 $("#modalvisualizar").modal();
             }
         });
-        $("#salvaCircuitos").removeClass("criar_circuitos").addClass("editar_circuitos");
     }
 });
 
@@ -1472,4 +1503,24 @@ $(".bt_del").on("click", function(){
               });
         });
     }
+});
+
+$("#pdfCircuito").on("click", function () {
+    var id_circuito = $("#idv").val();
+    $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: 'circuitos/pdfCircuito',
+        data: {id_circuito: id_circuito},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function () {
+            swal("Erro!", "Erro ao gerar o PDF com os dados do circuito!", "error");
+        },
+        success: function (data) {
+            window.open(data.url);
+        }
+    });
 });
