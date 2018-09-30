@@ -57,16 +57,12 @@ class CircuitosController extends ControllerBase
             "tipo=6",
             "order" => "descricao"
         ));
-        $tipounindade = Lov::find(array(
-            "tipo = 1",
-            "order" => "descricao"
-        ));
         $usacontrato = Lov::find("tipo=2");
         $funcao = Lov::find(array(
             "tipo = 3",
             "order" => "descricao"
         ));
-        $enlace = Lov::find(array(
+        $tipoacesso = Lov::find(array(
             "tipo = 7",
             "order" => "descricao"
         ));
@@ -76,6 +72,9 @@ class CircuitosController extends ControllerBase
         ));
         $banda = Lov::find(array(
             "tipo = 17"
+        ));
+        $tipolink = Lov::find(array(
+            "tipo = 19"
         ));
         $tipomovimento = Lov::find(array(
             "tipo = 16 AND valor IS NULL",
@@ -93,18 +92,18 @@ class CircuitosController extends ControllerBase
         ]);
         $this->view->page = $paginator->getPaginate();
         $this->view->clientes = $clientes;
-        $this->view->unidades = $unidades;
         $this->view->fabricantes = $fabricantes;
         $this->view->modelos = $modelos;
         $this->view->equipamentos = $equipamentos;
         $this->view->statuscircuito = $statuscircuito;
-        $this->view->tipounindade = $tipounindade;
         $this->view->usacontrato = $usacontrato;
         $this->view->funcao = $funcao;
-        $this->view->enlace = $enlace;
+        $this->view->tipoacesso = $tipoacesso;
         $this->view->cluster = $cluster;
         $this->view->banda = $banda;
         $this->view->tipomovimento = $tipomovimento;
+        $this->view->tipolink = $tipolink;
+        $this->view->unidades = $unidades;
     }
 
     public function formCircuitosAction()
@@ -123,14 +122,15 @@ class CircuitosController extends ControllerBase
             'id_contrato' => $circuitos->id_contrato,
             'id_status' => $circuitos->id_status,
             'id_cluster' => $circuitos->id_cluster,
-            'id_tipounidade' => $circuitos->id_tipounidade,
             'id_funcao' => $circuitos->id_funcao,
-            'id_enlace' => $circuitos->id_enlace,
+            'id_tipoacesso' => $circuitos->id_tipoacesso,
+            'id_tipolink' => $circuitos->id_tipolink,
             'designacao' => $circuitos->designacao,
+            'designacao_anterior' => $circuitos->designacao_anterior,
             'uf' => $circuitos->uf,
             'cidade' => $circuitos->cidade,
-            'vlan' => $circuitos->vlan,
-            'ccode' => $circuitos->ccode,
+            'chamado' => $circuitos->chamado,
+            'ssid' => $circuitos->ssid,
             'ip_redelocal' => $circuitos->ip_redelocal,
             'ip_gerencia' => $circuitos->ip_gerencia,
             'tag' => $circuitos->tag,
@@ -175,14 +175,14 @@ class CircuitosController extends ControllerBase
             'id_contrato' => $circuitos->id_contrato,
             'id_status' => $circuitos->id_status,
             'id_cluster' => $circuitos->id_cluster,
-            'id_tipounidade' => $circuitos->id_tipounidade,
             'id_funcao' => $circuitos->id_funcao,
-            'id_enlace' => $circuitos->id_enlace,
+            'id_tipoacesso' => $circuitos->id_tipoacesso,
+            'id_tipolink' => $circuitos->id_tipolink,
             'designacao' => $circuitos->designacao,
+            'designacao_anterior' => $circuitos->designacao_anterior,
             'uf' => $circuitos->uf,
             'cidade' => $circuitos->cidade,
-            'vlan' => $circuitos->vlan,
-            'ccode' => $circuitos->ccode,
+            'ssid' => $circuitos->ssid,
             'ip_redelocal' => $circuitos->ip_redelocal,
             'ip_gerencia' => $circuitos->ip_gerencia,
             'tag' => $circuitos->tag,
@@ -246,14 +246,15 @@ class CircuitosController extends ControllerBase
                 $circuitos->id_contrato = $params["id_contrato"];
                 $circuitos->id_status = 34;//Ativo por Default
                 $circuitos->id_cluster = $params["id_cluster"];
-                $circuitos->id_tipounidade = $params["id_tipounidade"];
                 $circuitos->id_funcao = $params["id_funcao"];
-                $circuitos->id_enlace = $params["id_enlace"];
+                $circuitos->id_tipoacesso = $params["id_tipoacesso"];
+                $circuitos->id_tipolink = $params["id_tipolink"];
                 $circuitos->designacao = $params["designacao"];
+                $circuitos->designacao_anterior = $params["designacao_anterior"];
                 $circuitos->uf = $uf;
                 $circuitos->cidade = $cidade;
-                $circuitos->vlan = $params["vlan"];
-                $circuitos->ccode = $params["ccode"];
+                $circuitos->ssid = $params["ssid"];
+                $circuitos->chamado = $params["chamado"];
                 $circuitos->ip_redelocal = $params["ip_redelocal"];
                 $circuitos->ip_gerencia = $params["ip_gerencia"];
                 $circuitos->tag = $params["tag"];
@@ -337,14 +338,14 @@ class CircuitosController extends ControllerBase
                 $circuitos->id_cliente_unidade = $unidade;
                 $circuitos->id_contrato = $params["id_contrato"];
                 $circuitos->id_cluster = $params["id_cluster"];
-                $circuitos->id_tipounidade = $params["id_tipounidade"];
                 $circuitos->id_funcao = $params["id_funcao"];
-                $circuitos->id_enlace = $params["id_enlace"];
-                $circuitos->designacao = $params["designacao"];
+                $circuitos->id_tipoacesso = $params["id_tipoacesso"];
+                $circuitos->id_tipolink = $params["id_tipolink"];
+                $circuitos->designacao_anterior = $params["designacao_anterior"];
                 $circuitos->uf = $uf;
                 $circuitos->cidade = $cidade;
-                $circuitos->vlan = $params["vlan"];
-                $circuitos->ccode = $params["ccode"];
+                $circuitos->ssid = $params["ssid"];
+                $circuitos->chamado = $params["chamado"];
                 $circuitos->tag = $params["tag"];
                 $circuitos->observacao = $params["observacao"];
                 $circuitos->data_atualizacao = date("Y-m-d H:i:s");

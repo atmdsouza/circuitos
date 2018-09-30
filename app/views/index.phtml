@@ -115,6 +115,7 @@
                             <li>
                                 <a href="javascript: void(0);"><i class="fi-layers"></i> <span> Cadastros </span> <span class="menu-arrow"></span></a>
                                 <ul class="nav-second-level" aria-expanded="false">
+                                    <li><?php echo $this->tag->linkTo(["cidade_digital", "Cidade Digital"]) ?></li>
                                     <li><?php echo $this->tag->linkTo(["cliente", "Clientes"]) ?></li>
                                     <li><?php echo $this->tag->linkTo(["cliente_unidade", "Unidades de Clientes"]) ?></li>
                                     <li><?php echo $this->tag->linkTo(["fabricante", "Fabricantes"]) ?></li>
@@ -216,6 +217,9 @@
             <?php break;
             case "cliente":?>
                 <script src="<?= DIR_STATICS ?>public/js/modulos/cliente.js"></script>
+            <?php break;
+            case "cidade_digital":?>
+                <script src="<?= DIR_STATICS ?>public/js/modulos/cidade_digital.js"></script>
             <?php break;
             case "cliente_unidade":?>
                 <script src="<?= DIR_STATICS ?>public/js/modulos/cliente_unidade.js"></script>

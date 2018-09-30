@@ -1,4 +1,4 @@
-var table = $('#tb_equipamento').DataTable({
+var table = $('#tb_cidadedigital').DataTable({
     language: {
         sEmptyTable: "Nenhum registro encontrado",
         sInfo: "Mostrando de _START_ até _END_ de _TOTAL_ registros",
@@ -117,7 +117,7 @@ var table = $('#tb_equipamento').DataTable({
     ]
 });
 
-table.buttons().container().appendTo('#tb_equipamento_wrapper .col-md-6:eq(0)');
+table.buttons().container().appendTo('#tb_cidadedigital_wrapper .col-md-6:eq(0)');
 
 table.on( 'select deselect', function () {
     var selectedRows = table.rows( { selected: true } ).count();
@@ -129,82 +129,64 @@ table.on( 'select deselect', function () {
 });
 
 $(".bt_novo").on("click", function(){
-    $("#modalequipamento").modal();
-    $("#salvarEquipamento").removeClass("editar_equipamento").addClass("criar_equipamento");
+    $("#modalcidadedigital").modal();
+    $("#salvarCidadeDigital").removeClass("editar_cidadedigital").addClass("criar_cidadedigital");
 });
 
-$("#id_fabricante").on("change", function(){
-    var id_fabricante = $(this).val();
-    $.ajax({
-        type: 'GET',
-        dataType: 'JSON',
-        url: 'equipamento/carregaModelos',
-        data: {id_fabricante: id_fabricante},
-        beforeSend: function () {
-        },
-        complete: function () {
-        },
-        error: function () {
-        },
-        success: function (data) {
-            if (data.operacao){
-                $(".remove").remove();
-                $.each(data.dados, function (key, value) {
-                    var linhas = "<option class='remove' value='" + value.id + "'>" + value.modelo + "</option>";
-                    $("#id_modelo").append(linhas);
-                    $("#id_modelo").removeAttr("disabled");
-                });
-            } else {
-                $(".remove").remove();
-                $("#id_modelo").val(null).selected = "true";
-                $("#id_modelo").attr("disabled", "true");
-                swal({
-                    title: 'Cadastro de Equipamentos',
-                    text: data.mensagem,
-                    type: 'error'
-                });
-            }
-        }
-    });
+$("#id_tipo").on("change", function(){
+
+    // var tipocidade_desc = document.getElementById("id_tipo").options[document.getElementById("id_tipo").selectedIndex].text + " ";
+    // var cidade = document.getElementById("id_cidade").options[document.getElementById("id_cidade").selectedIndex].text;
+    
+
+    $(".result").val();
+
+    var arrayValor = $(".concat").map(function () {
+        return document.getElementById("id_tipo").options[document.getElementById("id_tipo").selectedIndex].text;
+    }).get().join(" ");
+
+    $(".result").val(arrayValor);
 });
 
-$(document).on("click", ".criar_equipamento", function(){
+// $("#id_cidade").on("change", function(){
+//     // var tipocidade_desc = document.getElementById("id_tipo").options[document.getElementById("id_tipo").selectedIndex].text + " ";
+//     // var cidade = document.getElementById("id_cidade").options[document.getElementById("id_cidade").selectedIndex].text;
+//     $('#descricao').val( function( index, cidade ) {
+//         return tipocidade_desc + cidade;
+//     });
+// });
+
+$(document).on("click", ".criar_cidadedigital", function(){
     //Validação de formulário
-    $("#formEquipamento").validate({
+    $("#formCidadeDigital").validate({
         rules : {
-            id_fabricante:{
+            id_cidade:{
                 required: true
             },
-            id_modelo:{
+            id_tipo:{
                 required: true
             },
-            id_tipoequipamento:{
-                required: true
-            },
-            nome:{
+            descricao:{
                 required: true
             }
         },
         messages:{
-            id_fabricante:{
-                required:"É necessário informar um fabricante"
+            id_cidade:{
+                required:"É necessário informar uma cidade"
             },
-            id_modelo:{
-                required:"É necessário informar um modelo"
+            id_tipo:{
+                required:"É necessário informar um tipo"
             },
-            id_tipoequipamento:{
-                required:"É necessário informar um tipo de equipamento"
-            },
-            nome:{
-                required:"É necessário informar um nome para o equipamento"
+            descricao:{
+                required:"É necessário informar uma descrição"
             }
         },
         submitHandler: function(form) {
-            var dados = $("#formEquipamento").serialize();
+            var dados = $("#formCidadeDigital").serialize();
             $.ajax({
                 type: 'POST',
                 dataType: 'JSON',
-                url: 'equipamento/criarEquipamento',
+                url: 'cidadedigital/criarCidadeDigital',
                 data: {
                     tokenKey: $('#token').attr('name'),
                     tokenValue: $('#token').attr('value'),
@@ -219,8 +201,8 @@ $(document).on("click", ".criar_equipamento", function(){
                 success: function (data) {
                     if (data.operacao){
                         swal({
-                            title: 'Cadastro de Equipamentos',
-                            text: 'Cadastro do equipamento concluído!',
+                            title: 'Cadastro de Cidade Digital',
+                            text: 'Cadastro do cidade digital concluído!',
                             type: 'success',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
@@ -231,7 +213,7 @@ $(document).on("click", ".criar_equipamento", function(){
                           });
                     } else {
                         swal({
-                            title: 'Cadastro de Equipamentos',
+                            title: 'Cadastro de Cidade Digital',
                             text: data.mensagem,
                             type: 'error'
                         });
@@ -244,7 +226,7 @@ $(document).on("click", ".criar_equipamento", function(){
 
 //Coletando os ids das linhas selecionadas na tabela
 var ids = [];   
-$("#tb_equipamento").on("click", "tr", function () {
+$("#tb_cidadedigital").on("click", "tr", function () {
     var valr = $(this)[0].cells[0].innerText;
     if (!ids.includes(valr)) {
         ids.push(valr);
@@ -258,23 +240,23 @@ $(".bt_edit").on("click", function(){
     nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Edição de Equipamentos',
+            title: 'Edição de Cidade Digital',
             text: 'Você somente pode editar um único valor! Selecione apenas um e tente novamente!',
             type: 'warning'
           });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Edição de Equipamentos',
+            title: 'Edição de Cidade Digital',
             text: 'Você precisa selecionar um registro para a edição!',
             type: 'warning'
           });
      } else {
-        var id_equipamento = ids[0];
+        var id_cidadedigital = ids[0];
         $.ajax({
             type: 'GET',
             dataType: 'JSON',
-            url: 'equipamento/formEquipamento',
-            data: {id_equipamento: id_equipamento},
+            url: 'cidadedigital/formCidadeDigital',
+            data: {id_cidadedigital: id_cidadedigital},
             beforeSend: function () {
             },
             complete: function () {
@@ -282,90 +264,50 @@ $(".bt_edit").on("click", function(){
             error: function () {
             },
             success: function (data) {
-                $.ajax({
-                    type: 'GET',
-                    dataType: 'JSON',
-                    url: 'equipamento/carregaModelos',
-                    data: {id_fabricante: data.dados.id_fabricante},
-                    beforeSend: function () {
-                    },
-                    complete: function () {
-                    },
-                    error: function () {
-                    },
-                    success: function (data) {
-                        if (data.operacao){
-                            $(".remove").remove();
-                            $.each(data.dados, function (key, value) {
-                                var selected = (value.id_modelo == data.dados.id_modelo) ? "selected" : null;
-                                var linhas = "<option " + selected + " class='remove' value='" + value.id + "'>" + value.modelo + "</option>";
-                                $("#id_modelo").append(linhas);
-                                $("#id_modelo").removeAttr("disabled");
-                            });
-                        } else {
-                            $(".remove").remove();
-                            $("#id_modelo").val(null).selected = "true";
-                            $("#id_modelo").attr("disabled", "true");
-                            swal({
-                                title: 'Cadastro de Equipamentos',
-                                text: data.mensagem,
-                                type: 'error'
-                            });
-                        }
-                    }
-                });
                 $("#id").val(data.dados.id);
-                $("#id_fabricante").val(data.dados.id_fabricante).selected = "true";
-                $("#id_tipoequipamento").val(data.dados.id_tipoequipamento).selected = "true";
-                $("#nome").val(data.dados.nome);
-                $("#numserie").val(data.dados.numserie);
-                $("#numpatrimonio").val(data.dados.numpatrimonio);
+                $("#id_tipo").val(data.dados.id_tipo).selected = "true";
+                $("#id_cidade").val(data.dados.id_cidade).selected = "true";
                 $("#descricao").val(data.dados.descricao);
-                $("#modalequipamento").modal();
+                $("#endereco").val(data.dados.endereco);
+                $("#modalcidadedigital").modal();
             }
         });
-        $("#salvarEquipamento").removeClass("criar_equipamento").addClass("editar_equipamento");
+        $("#salvarCidadeDigital").removeClass("criar_cidadedigital").addClass("editar_cidadedigital");
     }
 
 });
 
-$(document).on("click", ".editar_equipamento", function(){
+$(document).on("click", ".editar_cidadedigital", function(){
     //Validação de formulário
-    $("#formEquipamento").validate({
+    $("#formCidadeDigital").validate({
         rules : {
-            id_fabricante:{
+            id_cidade:{
                 required: true
             },
-            id_modelo:{
+            id_tipo:{
                 required: true
             },
-            id_tipoequipamento:{
-                required: true
-            },
-            equipamento:{
+            descricao:{
                 required: true
             }
         },
         messages:{
-            id_fabricante:{
-                required:"É necessário informar um fabricante"
+            id_cidade:{
+                required:"É necessário informar uma cidade"
             },
-            id_modelo:{
-                required:"É necessário informar um modelo"
+            id_tipo:{
+                required:"É necessário informar um tipo"
             },
-            id_tipoequipamento:{
-                required:"É necessário informar um tipo de equipamento"
-            },
-            equipamento:{
-                required:"É necessário informar um equipamento"
+            descricao:{
+                required:"É necessário informar uma descrição"
             }
         },
         submitHandler: function(form) {
-            var dados = $("#formEquipamento").serialize();
+            var dados = $("#formCidadeDigital").serialize();
             $.ajax({
                 type: 'POST',
                 dataType: 'JSON',
-                url: 'equipamento/editarEquipamento',
+                url: 'cidadedigital/editarCidadeDigital',
                 data: {
                     tokenKey: $('#token').attr('name'),
                     tokenValue: $('#token').attr('value'),
@@ -380,8 +322,8 @@ $(document).on("click", ".editar_equipamento", function(){
                 success: function (data) {
                     if (data.operacao){
                         swal({
-                            title: 'Cadastro de Equipamentos',
-                            text: 'Edição de equipamento concluída!',
+                            title: 'Cadastro de Cidade Digital',
+                            text: 'Edição de cidade digital concluída!',
                             type: 'success',
                             showCancelButton: false,
                             confirmButtonColor: '#3085d6',
@@ -392,7 +334,7 @@ $(document).on("click", ".editar_equipamento", function(){
                           });
                     } else {
                         swal({
-                            title: 'Cadastro de Equipamentos',
+                            title: 'Cadastro de Cidade Digital',
                             text: data.mensagem,
                             type: 'error'
                         });
@@ -407,8 +349,8 @@ $(".bt_del").on("click", function(){
     var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Tem certeza que deseja deletar múltipos equipamentos?',
-            text: "O sistema irá deletar um total de " + nm_rows + " equipamentos com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
+            title: 'Tem certeza que deseja deletar múltipos registros?',
+            text: "O sistema irá deletar um total de " + nm_rows + " registros com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -418,7 +360,7 @@ $(".bt_del").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'equipamento/deletarEquipamento',
+                  url: 'cidadedigital/deletarCidadeDigital',
                   data: {ids: ids},
                   beforeSend: function () {
                   },
@@ -430,7 +372,7 @@ $(".bt_del").on("click", function(){
                       if (data.operacao){
                           swal({
                               title: 'Deletados!',
-                              text: 'Os equipamentos selecionados foram deletados com sucesso.',
+                              text: 'Os registros selecionados foram deletados com sucesso.',
                               type: 'success',
                               showCancelButton: false,
                               confirmButtonColor: '#3085d6',
@@ -452,13 +394,13 @@ $(".bt_del").on("click", function(){
     } else if (nm_rows == 0) {
         swal({
             title: 'Deletar Valor',
-            text: 'Você precisa selecionar um valor ou mais equipamentos para serem deletados!',
+            text: 'Você precisa selecionar um valor ou mais registros para serem deletados!',
             type: 'warning'
           });
      } else {
         swal({
-            title: 'Tem certeza que deseja deletar este equipamento?',
-            text: "O sistema irá deletar o equipamento selecionado com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
+            title: 'Tem certeza que deseja deletar este registro?',
+            text: "O sistema irá deletar o registro selecionado com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -468,7 +410,7 @@ $(".bt_del").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'equipamento/deletarEquipamento',
+                  url: 'cidadedigital/deletarCidadeDigital',
                   data: {ids: ids},
                   beforeSend: function () {
                   },
@@ -480,7 +422,7 @@ $(".bt_del").on("click", function(){
                       if (data.operacao){
                           swal({
                               title: 'Deletado!',
-                              text: 'O equipamento selecionado foi deletado com sucesso.',
+                              text: 'O registro selecionado foi deletado com sucesso.',
                               type: 'success',
                               showCancelButton: false,
                               confirmButtonColor: '#3085d6',
@@ -518,8 +460,8 @@ $(".bt_ativo").on("click", function(){
     var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Tem certeza que deseja ativar múltipos equipamentos?',
-            text: "O sistema irá ativar um total de " + nm_rows + " equipamentos com essa ação.",
+            title: 'Tem certeza que deseja ativar múltipos registros?',
+            text: "O sistema irá ativar um total de " + nm_rows + " registros com essa ação.",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -529,7 +471,7 @@ $(".bt_ativo").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'equipamento/ativarEquipamento',
+                  url: 'cidadedigital/ativarCidadeDigital',
                   data: {
                     tokenKey: $('#token').attr('name'),
                     tokenValue: $('#token').attr('value'),
@@ -545,7 +487,7 @@ $(".bt_ativo").on("click", function(){
                       if (data.operacao){
                           swal({
                               title: 'Ativados!',
-                              text: 'Os equipamentos selecionados foram ativados com sucesso.',
+                              text: 'Os registros selecionados foram ativados com sucesso.',
                               type: 'success',
                               showCancelButton: false,
                               confirmButtonColor: '#3085d6',
@@ -566,14 +508,14 @@ $(".bt_ativo").on("click", function(){
         });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Ativar Equipamentos',
-            text: 'Você precisa selecionar um ou mais equipamentos para serem ativados!',
+            title: 'Ativar Cidade Digital',
+            text: 'Você precisa selecionar um ou mais registros para serem ativados!',
             type: 'warning'
           });
      } else {
         swal({
-            title: 'Tem certeza que deseja ativar este equipamento?',
-            text: "O sistema irá ativar o equipamento selecionado com essa ação.",
+            title: 'Tem certeza que deseja ativar este registro?',
+            text: "O sistema irá ativar o registro selecionado com essa ação.",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -583,7 +525,7 @@ $(".bt_ativo").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'equipamento/ativarEquipamento',
+                  url: 'cidadedigital/ativarCidadeDigital',
                   data: {
                     tokenKey: $('#token').attr('name'),
                     tokenValue: $('#token').attr('value'),
@@ -599,7 +541,7 @@ $(".bt_ativo").on("click", function(){
                       if (data.operacao){
                           swal({
                               title: 'Ativado!',
-                              text: 'O equipamento selecionado foi ativado com sucesso.',
+                              text: 'O registro selecionado foi ativado com sucesso.',
                               type: 'success',
                               showCancelButton: false,
                               confirmButtonColor: '#3085d6',
@@ -625,8 +567,8 @@ $(".bt_inativo").on("click", function(){
     var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Tem certeza que deseja inativar múltipos equipamentos?',
-            text: "O sistema irá inativar um total de " + nm_rows + " equipamentos com essa ação.",
+            title: 'Tem certeza que deseja inativar múltipos registros?',
+            text: "O sistema irá inativar um total de " + nm_rows + " registros com essa ação.",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -636,7 +578,7 @@ $(".bt_inativo").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'equipamento/inativarEquipamento',
+                  url: 'cidadedigital/inativarCidadeDigital',
                   data: {
                     tokenKey: $('#token').attr('name'),
                     tokenValue: $('#token').attr('value'),
@@ -652,7 +594,7 @@ $(".bt_inativo").on("click", function(){
                       if (data.operacao){
                           swal({
                               title: 'Inativadas!',
-                              text: 'As equipamentos selecionados foram inativadas com sucesso.',
+                              text: 'Os registros selecionados foram inativadas com sucesso.',
                               type: 'success',
                               showCancelButton: false,
                               confirmButtonColor: '#3085d6',
@@ -673,14 +615,14 @@ $(".bt_inativo").on("click", function(){
         });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Inativar Equipamento',
-            text: 'Você precisa selecionar um ou mais equipamentos para serem inativados!',
+            title: 'Inativar Cidade Digital',
+            text: 'Você precisa selecionar um ou mais registros para serem inativados!',
             type: 'warning'
           });
      } else {
         swal({
-            title: 'Tem certeza que deseja inativar este equipamento?',
-            text: "O sistema irá inativar o equipamento selecionado com essa ação.",
+            title: 'Tem certeza que deseja inativar este registro?',
+            text: "O sistema irá inativar o registro selecionado com essa ação.",
             type: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -690,7 +632,7 @@ $(".bt_inativo").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'equipamento/inativarEquipamento',
+                  url: 'cidadedigital/inativarCidadeDigital',
                   data: {
                     tokenKey: $('#token').attr('name'),
                     tokenValue: $('#token').attr('value'),
@@ -706,7 +648,7 @@ $(".bt_inativo").on("click", function(){
                       if (data.operacao){
                           swal({
                               title: 'Inativado!',
-                              text: 'O equipamento selecionado foi inativado com sucesso.',
+                              text: 'O registro selecionado foi inativado com sucesso.',
                               type: 'success',
                               showCancelButton: false,
                               confirmButtonColor: '#3085d6',

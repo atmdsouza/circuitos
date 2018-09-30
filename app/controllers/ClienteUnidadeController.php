@@ -88,7 +88,6 @@ class ClienteUnidadeController extends ControllerBase
             "razaosocial" => $pessoajuridica->razaosocial,
             "inscricaoestadual" => $pessoajuridica->inscricaoestadual,
             "inscricaomunicipal" => $pessoajuridica->inscricaomunicipal,
-            "datafund" => $datafund = ($pessoajuridica->datafund) ? $util->converterDataParaBr($pessoajuridica->datafund) : null,
             "sigla" => $pessoajuridica->sigla,
             "pessoaendereco" => $pessoaendereco,
             "pessoaemail" => $pessoaemail,
@@ -122,7 +121,6 @@ class ClienteUnidadeController extends ControllerBase
                 if ($pessoa->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pessoa!");
                 }
-                $datafund = ($params["datafund"]) ? $util->converterDataUSA($params["datafund"]) : null;
                 $cnpj = ($params["cnpj"]) ? $util->formataCpfCnpj($params["cnpj"]) : null;
                 $pessoajuridica = new PessoaJuridica();
                 $pessoajuridica->setTransaction($transaction);
@@ -131,7 +129,6 @@ class ClienteUnidadeController extends ControllerBase
                 $pessoajuridica->razaosocial = $params["rzsocial"];
                 $pessoajuridica->inscricaoestadual = $params["inscricaoestadual"];
                 $pessoajuridica->inscricaomunicipal = $params["inscricaomunicipal"];
-                $pessoajuridica->datafund = $datafund;
                 $pessoajuridica->sigla = $params["sigla"];
                 if ($pessoajuridica->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pessoa juridica!");
@@ -252,14 +249,12 @@ class ClienteUnidadeController extends ControllerBase
                 if ($pessoa->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pessoa!");
                 }
-                $datafund = ($params["datafund"]) ? $util->converterDataUSA($params["datafund"]) : null;
                 $cnpj = ($params["cnpj"]) ? $util->formataCpfCnpj($params["cnpj"]) : null;
                 $pessoajuridica->setTransaction($transaction);
                 $pessoajuridica->cnpj = $cnpj;
                 $pessoajuridica->razaosocial = $params["rzsocial"];
                 $pessoajuridica->inscricaoestadual = $params["inscricaoestadual"];
                 $pessoajuridica->inscricaomunicipal = $params["inscricaomunicipal"];
-                $pessoajuridica->datafund = $datafund;
                 $pessoajuridica->sigla = $params["sigla"];
                 if ($pessoajuridica->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pessoa juridica!");

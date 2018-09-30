@@ -71,11 +71,11 @@ use Util\Util;
                             <h6>Dados Cadastrais</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
-                                    <label for="nome_pessoa">Nome Fantasia</label>
+                                    <label for="nome_pessoa">Nome Fantasia <span class="required">*</span></label>
                                     <?php echo $this->tag->textField(["nome_pessoa", "size" => 200, "class" => "form-control", "id" => "nome_pessoa", "placeholder" => "Nome Fantasia"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="razaosocial">Razão Social</label>
+                                    <label for="razaosocial">Razão Social <span class="required">*</span></label>
                                     <?php echo $this->tag->textField(["razaosocial", "size" => 200, "class" => "form-control", "id" => "razaosocial", "placeholder" => "Razão Social"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
@@ -117,7 +117,7 @@ use Util\Util;
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="email">E-mail</label>
+                                    <label for="email">E-mail <span class="required">*</span></label>
                                     <?php echo $this->tag->emailField(["email", "size" => 120, "class" => "form-control", "id" => "email", "placeholder" => "E-mail (Aparecerá como remetente dos envios)"]) ?>
                                 </div>
                             </div>
@@ -125,11 +125,11 @@ use Util\Util;
                             <div class="form-row">
                                 <input type="hidden" id="sigla_uf" name="sigla_uf" value=""><!-- Manter como hidden -->
                                 <div class="form-group col-md-3">
-                                    <label for="cep">CEP</label>
+                                    <label for="cep">CEP <span class="required">*</span></label>
                                     <?php echo $this->tag->textField(["cep", "size" => 200, "class" => "form-control cep", "id" => "cep", "placeholder" => "CEP"]) ?>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="endereco">Endereço</label>
+                                    <label for="endereco">Endereço <span class="required">*</span></label>
                                     <?php echo $this->tag->textField(["endereco", "size" => 200, "class" => "form-control", "id" => "endereco", "placeholder" => "Endereço"]) ?>
                                 </div>
                                 <div class="form-group col-md-3">
@@ -158,25 +158,25 @@ use Util\Util;
                             <h6>Dados do Servidor de E-mails (Configura o serviço de envio de mensagens do sistema)</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
-                                    <label for="mail_host">Endereço do HOST</label>
+                                    <label for="mail_host">Endereço do HOST <span class="required">*</span></label>
                                     <?php echo $this->tag->textField(["mail_host", "size" => 200, "class" => "form-control", "id" => "mail_host", "placeholder" => "Endereço do HOST"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="mail_port">Porta SMTP</label>
+                                    <label for="mail_port">Porta SMTP <span class="required">*</span></label>
                                     <?php echo $this->tag->textField(["mail_port", "size" => 90, "class" => "form-control", "id" => "mail_port", "placeholder" => "Porta SMTP (587, 995, etc)"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="mail_smtpssl">Protolo de Segurança</label>
+                                    <label for="mail_smtpssl">Protolo de Segurança <span class="required">*</span></label>
                                     <?php echo $this->tag->textField(["mail_smtpssl", "size" => 90, "class" => "form-control", "id" => "mail_smtpssl", "placeholder" => "Protolo de Segurança (TLS, SSL, etc)"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
-                                    <label for="mail_user">Usuário a ser utilizado</label>
+                                    <label for="mail_user">Usuário a ser utilizado <span class="required">*</span></label>
                                     <?php echo $this->tag->textField(["mail_user", "size" => 200, "class" => "form-control", "id" => "mail_user", "placeholder" => "Usuário a ser utilizado"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="mail_passwrd">Senha de Acesso</label>
+                                    <label for="mail_passwrd">Senha de Acesso <span class="required">*</span></label>
                                     <?php echo $this->tag->passwordField(["mail_passwrd", "size" => 90, "class" => "form-control", "id" => "mail_passwrd", "placeholder" => "Senha de Acesso"]) ?>
                                 </div>
                                 <!--<div class="form-group col-md-4">
@@ -186,9 +186,14 @@ use Util\Util;
                         </div>
                     </div>
                     <div class="modal-footer">
-                    <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
-                    <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" data-dismiss="modal">Fechar</button>
-                    <button id="salvaEmpresa" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
+                        <div class="form-group col-md-6">
+                            <p class="texto_rodape">Os campos com <span class="required">*</span> são obrigatórios!</p>
+                        </div>
+                        <div class="form-group col-md-6 botoes_rodape">
+                            <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
+                            <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" data-dismiss="modal">Fechar</button>
+                            <button id="salvaEmpresa" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
+                        </div>
                     </div><!-- /.modal-footer -->
             </form>
         </div><!-- /.modal-content -->

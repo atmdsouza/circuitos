@@ -96,7 +96,7 @@
                         <div class="col-12">
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="tipo">Tipo de Registro</label>
+                                    <label for="tipo">Tipo de Registro <span class="required">*</span></label>
                                     <?php echo $this->tag->select(["tipo", $tipos_lov, "class" => "form-control", "id" => "tipo",
                                         "useEmpty" => true,
                                         "emptyText" => "Selecione um tipo",
@@ -104,7 +104,7 @@
                                     ?>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="descricao">Descrição</label>
+                                    <label for="descricao">Descrição <span class="required">*</span></label>
                                     <?php echo $this->tag->textField(["descricao", "size" => 200, "class" => "form-control", "id" => "descricao", "placeholder" => "Descricao"]) ?>
                                 </div>
                             </div>
@@ -128,10 +128,15 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
-                    <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" data-dismiss="modal">Fechar</button>
-                    <button id="salvarLov" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
-                    </div><!-- /.modal-footer -->
+                    <div class="form-group col-md-6">
+                        <p class="texto_rodape">Os campos com <span class="required">*</span> são obrigatórios!</p>
+                    </div>
+                    <div class="form-group col-md-6 botoes_rodape">
+                        <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
+                        <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" data-dismiss="modal">Fechar</button>
+                        <button id="salvarLov" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
+                    </div>
+                </div><!-- /.modal-footer -->
             </form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

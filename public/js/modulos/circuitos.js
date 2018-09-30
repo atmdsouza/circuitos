@@ -273,7 +273,7 @@ $(document).on("click", ".criar_circuitos", function(){
                 id_funcao:{
                     required: true
                 },
-                id_enlace:{
+                id_tipoacesso:{
                     required: true
                 },
                 id_fabricante:{
@@ -317,7 +317,7 @@ $(document).on("click", ".criar_circuitos", function(){
                 id_funcao:{
                     required: "É necessário informar uma Função"
                 },
-                id_enlace:{
+                id_tipoacesso:{
                     required: "É necessário informar um Enlce"
                 },
                 id_fabricante:{
@@ -403,7 +403,7 @@ $(document).on("click", ".criar_circuitos", function(){
                 id_funcao:{
                     required: true
                 },
-                id_enlace:{
+                id_tipoacesso:{
                     required: true
                 },
                 id_fabricante:{
@@ -444,7 +444,7 @@ $(document).on("click", ".criar_circuitos", function(){
                 id_funcao:{
                     required: "É necessário informar uma Função"
                 },
-                id_enlace:{
+                id_tipoacesso:{
                     required: "É necessário informar um Enlce"
                 },
                 id_fabricante:{
@@ -578,7 +578,7 @@ $(".bt_edit").on("click", function(){
                 $("#id_cluster").val(data.dados.id_cluster).selected = "true";
                 $("#id_tipounidade").val(data.dados.id_tipounidade).selected = "true";
                 $("#id_funcao").val(data.dados.id_funcao).selected = "true";
-                $("#id_enlace").val(data.dados.id_enlace).selected = "true";
+                $("#id_tipoacesso").val(data.dados.id_tipoacesso).selected = "true";
                 $("#banda").attr("disabled", "true");
                 $("#banda").val(data.dados.id_banda).selected = "true";
                 $("#designacao").val(data.dados.designacao);
@@ -638,7 +638,7 @@ $(".bt_visual").on("click", function(){
                 $("#id_clusterv").val(data.dados.id_cluster).selected = "true";
                 $("#id_tipounidadev").val(data.dados.id_tipounidade).selected = "true";
                 $("#id_funcaov").val(data.dados.id_funcao).selected = "true";
-                $("#id_enlacev").val(data.dados.id_enlace).selected = "true";
+                $("#id_tipoacessov").val(data.dados.id_tipoacesso).selected = "true";
                 $("#bandav").val(data.dados.id_banda).selected = "true";
                 $("#designacaov").val(data.dados.designacao);
                 $("#ufv").val(data.dados.uf);
@@ -718,7 +718,7 @@ $(document).on("click", ".editar_circuitos", function(){
                 id_funcao:{
                     required: true
                 },
-                id_enlace:{
+                id_tipoacesso:{
                     required: true
                 },
                 id_fabricante:{
@@ -762,7 +762,7 @@ $(document).on("click", ".editar_circuitos", function(){
                 id_funcao:{
                     required: "É necessário informar uma Função"
                 },
-                id_enlace:{
+                id_tipoacesso:{
                     required: "É necessário informar um Enlce"
                 },
                 id_fabricante:{
@@ -848,7 +848,7 @@ $(document).on("click", ".editar_circuitos", function(){
                 id_funcao:{
                     required: true
                 },
-                id_enlace:{
+                id_tipoacesso:{
                     required: true
                 },
                 id_fabricante:{
@@ -889,7 +889,7 @@ $(document).on("click", ".editar_circuitos", function(){
                 id_funcao:{
                     required: "É necessário informar uma Função"
                 },
-                id_enlace:{
+                id_tipoacesso:{
                     required: "É necessário informar um Enlce"
                 },
                 id_fabricante:{

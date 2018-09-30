@@ -529,7 +529,6 @@ $(".bt_edit").on("click", function(){
                 $("#cnpj").val(data.dados.cnpj);
                 $("#inscricaoestadual").val(data.dados.inscricaoestadual);
                 $("#inscricaomunicipal").val(data.dados.inscricaomunicipal);
-                $("#datafund").val(data.dados.datafund);
                 $("#sigla_uf").val(data.dados.pessoaendereco.sigla_uf);
                 $("#cep").val(data.dados.pessoaendereco.cep);
                 $("#endereco").val(data.dados.pessoaendereco.endereco);

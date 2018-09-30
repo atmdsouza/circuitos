@@ -55,7 +55,7 @@
                         <div class="col-12">
                             <div class="form-row">
                                 <div class="form-group col-md-4">
-                                    <label for="id_fabricante">Fabricante</label>
+                                    <label for="id_fabricante">Fabricante <span class="required">*</span></label>
                                     <?php echo $this->tag->select(["id_fabricante", $fabricante, "class" => "form-control", "id" => "id_fabricante",
                                         "using" => ["id", "nome",],
                                         "useEmpty" => true,
@@ -64,13 +64,13 @@
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="id_modelo">Modelo</label>
+                                    <label for="id_modelo">Modelo <span class="required">*</span></label>
                                     <select disabled name="id_modelo" id="id_modelo" class="form-control">
                                         <option value="">Selecione o modelo</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="id_tipoequipamento">Tipo de Equipamento</label>
+                                    <label for="id_tipoequipamento">Tipo de Equipamento <span class="required">*</span></label>
                                     <?php echo $this->tag->select(["id_tipoequipamento", $tipoequipamento, "class" => "form-control", "id" => "id_tipoequipamento",
                                         "using" => ["id", "descricao",],
                                         "useEmpty" => true,
@@ -81,7 +81,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
-                                    <label for="nome">Nome do Equipamento</label>
+                                    <label for="nome">Nome do Equipamento <span class="required">*</span></label>
                                     <?php echo $this->tag->textField(["nome", "size" => 200, "class" => "form-control", "id" => "nome", "placeholder" => "Nome do Equipamento"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
@@ -103,10 +103,15 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
-                    <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" data-dismiss="modal">Fechar</button>
-                    <button id="salvarEquipamento" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
-                    </div><!-- /.modal-footer -->
+                    <div class="form-group col-md-6">
+                        <p class="texto_rodape">Os campos com <span class="required">*</span> são obrigatórios!</p>
+                    </div>
+                    <div class="form-group col-md-6 botoes_rodape">
+                        <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
+                        <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" data-dismiss="modal">Fechar</button>
+                        <button id="salvarEquipamento" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
+                    </div>
+                </div><!-- /.modal-footer -->
             </form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

@@ -51,7 +51,7 @@ class Circuitos extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $id_tipounidade;
+    protected $id_tipoacesso;
 
     /**
      *
@@ -63,13 +63,13 @@ class Circuitos extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $id_enlace;
+    protected $id_tipolink;
 
     /**
      *
      * @var integer
      */
-    protected $id_usuario_criacao;
+    protected $excluido;
 
     /**
      *
@@ -79,9 +79,9 @@ class Circuitos extends \Phalcon\Mvc\Model
 
     /**
      *
-     * @var integer
+     * @var string
      */
-    protected $id_usuario_atualizacao;
+    protected $chamado;
 
     /**
      *
@@ -105,13 +105,13 @@ class Circuitos extends \Phalcon\Mvc\Model
      *
      * @var string
      */
-    protected $vlan;
+    protected $designacao_anterior;
 
     /**
      *
      * @var string
      */
-    protected $ccode;
+    protected $ssid;
 
     /**
      *
@@ -247,14 +247,14 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field id_tipounidade
+     * Method to set the value of field id_tipoacesso
      *
-     * @param integer $id_tipounidade
+     * @param integer $id_tipoacesso
      * @return $this
      */
-    public function setIdTipounidade($id_tipounidade)
+    public function setIdTipoacesso($id_tipoacesso)
     {
-        $this->id_tipounidade = $id_tipounidade;
+        $this->id_tipoacesso = $id_tipoacesso;
 
         return $this;
     }
@@ -273,27 +273,27 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field id_enlace
+     * Method to set the value of field id_tipolink
      *
-     * @param integer $id_enlace
+     * @param integer $id_tipolink
      * @return $this
      */
-    public function setIdEnlace($id_enlace)
+    public function setIdTipolink($id_tipolink)
     {
-        $this->id_enlace = $id_enlace;
+        $this->id_tipolink = $id_tipolink;
 
         return $this;
     }
 
     /**
-     * Method to set the value of field id_usuario_criacao
+     * Method to set the value of field excluido
      *
-     * @param integer $id_usuario_criacao
+     * @param integer $excluido
      * @return $this
      */
-    public function setIdUsuarioCriacao($id_usuario_criacao)
+    public function setExcluido($excluido)
     {
-        $this->id_usuario_criacao = $id_usuario_criacao;
+        $this->excluido = $excluido;
 
         return $this;
     }
@@ -312,14 +312,14 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field id_usuario_atualizacao
+     * Method to set the value of field chamado
      *
-     * @param integer $id_usuario_atualizacao
+     * @param string $chamado
      * @return $this
      */
-    public function setIdUsuarioAtualizacao($id_usuario_atualizacao)
+    public function setChamado($chamado)
     {
-        $this->id_usuario_atualizacao = $id_usuario_atualizacao;
+        $this->chamado = $chamado;
 
         return $this;
     }
@@ -364,27 +364,27 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field vlan
+     * Method to set the value of field designacao_anterior
      *
-     * @param string $vlan
+     * @param string $designacao_anterior
      * @return $this
      */
-    public function setVlan($vlan)
+    public function setDesignacaoAnterior($designacao_anterior)
     {
-        $this->vlan = $vlan;
+        $this->designacao_anterior = $designacao_anterior;
 
         return $this;
     }
 
     /**
-     * Method to set the value of field ccode
+     * Method to set the value of field ssid
      *
-     * @param string $ccode
+     * @param string $ssid
      * @return $this
      */
-    public function setCcode($ccode)
+    public function setSsid($ssid)
     {
-        $this->ccode = $ccode;
+        $this->ssid = $ssid;
 
         return $this;
     }
@@ -551,13 +551,13 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id_tipounidade
+     * Returns the value of field id_tipoacesso
      *
      * @return integer
      */
-    public function getIdTipounidade()
+    public function getIdTipoacesso()
     {
-        return $this->id_tipounidade;
+        return $this->id_tipoacesso;
     }
 
     /**
@@ -571,23 +571,23 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id_enlace
+     * Returns the value of field id_tipolink
      *
      * @return integer
      */
-    public function getIdEnlace()
+    public function getIdTipolink()
     {
-        return $this->id_enlace;
+        return $this->id_tipolink;
     }
 
     /**
-     * Returns the value of field id_usuario_criacao
+     * Returns the value of field excluido
      *
      * @return integer
      */
-    public function getIdUsuarioCriacao()
+    public function getExcluido()
     {
-        return $this->id_usuario_criacao;
+        return $this->excluido;
     }
 
     /**
@@ -601,13 +601,13 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id_usuario_atualizacao
+     * Returns the value of field chamado
      *
-     * @return integer
+     * @return string
      */
-    public function getIdUsuarioAtualizacao()
+    public function getChamado()
     {
-        return $this->id_usuario_atualizacao;
+        return $this->chamado;
     }
 
     /**
@@ -641,23 +641,23 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field vlan
+     * Returns the value of field designacao_anterior
      *
      * @return string
      */
-    public function getVlan()
+    public function getDesignacaoAnterior()
     {
-        return $this->vlan;
+        return $this->designacao_anterior;
     }
 
     /**
-     * Returns the value of field ccode
+     * Returns the value of field ssid
      *
      * @return string
      */
-    public function getCcode()
+    public function getSsid()
     {
-        return $this->ccode;
+        return $this->ssid;
     }
 
     /**
@@ -745,11 +745,10 @@ class Circuitos extends \Phalcon\Mvc\Model
         $this->belongsTo('id_contrato', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov1']);
         $this->belongsTo('id_status', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov2']);
         $this->belongsTo('id_cluster', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov3']);
-        $this->belongsTo('id_tipounidade', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov4']);
+        $this->belongsTo('id_tipoacesso', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov4']);
         $this->belongsTo('id_funcao', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov5']);
-        $this->belongsTo('id_enlace', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov6']);
-        $this->belongsTo('id_usuario_criacao', 'Circuitos\Models\Usuario', 'id', ['alias' => 'Usuario1']);
-        $this->belongsTo('id_usuario_atualizacao', 'Circuitos\Models\Usuario', 'id', ['alias' => 'Usuario2']);
+        $this->belongsTo('id_tipolink', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov6']);
+        $this->belongsTo('id_cidadedigital', 'Circuitos\Models\CidadeDigital', 'id', ['alias' => 'CidadeDigital']);
     }
 
     /**
@@ -800,15 +799,17 @@ class Circuitos extends \Phalcon\Mvc\Model
             'id_contrato' => 'id_contrato',
             'id_status' => 'id_status',
             'id_cluster' => 'id_cluster',
-            'id_tipounidade' => 'id_tipounidade',
+            'id_tipoacesso' => 'id_tipoacesso',
+            'id_tipolink' => 'id_tipolink',
+            'id_cidadedigital' => 'id_cidadedigital',
             'id_funcao' => 'id_funcao',
-            'id_enlace' => 'id_enlace',
             'id_banda' => 'id_banda',
             'designacao' => 'designacao',
+            'designacao_anterior' => 'designacao_anterior',
             'uf' => 'uf',
             'cidade' => 'cidade',
-            'vlan' => 'vlan',
-            'ccode' => 'ccode',
+            'ssid' => 'ssid',
+            'chamado' => 'chamado',
             'ip_redelocal' => 'ip_redelocal',
             'ip_gerencia' => 'ip_gerencia',
             'tag' => 'tag',

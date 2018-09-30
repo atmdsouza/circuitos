@@ -5,3 +5,22 @@
 .modal-xl {
     max-width: 70% !important;
 }
+
+.required {
+    text-align: center;
+    color: red;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.texto_rodape {
+    float: left;
+}
+
+.botoes_rodape {
+    text-align: right;
+}
+
+.bt_inserir {
+    margin-top: 30px;
+}

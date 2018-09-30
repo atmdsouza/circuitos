@@ -94,7 +94,7 @@ use Util\Util;
                             <h6>Tipo de Cliente</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-3">
-                                    <label for="descrtipoclienteicao">Tipo</label>
+                                    <label for="descrtipoclienteicao">Tipo <span class="required">*</span></label>
                                     <?php echo $this->tag->select(["tipocliente", $tipocliente, "class" => "form-control", "id" => "tipocliente",
                                         "using" => ["id", "descricao",],
                                         "useEmpty" => true,
@@ -107,11 +107,11 @@ use Util\Util;
                                 <h6>Dados do Cliente Jurídico</h6>
                                 <div class="form-row">
                                     <div class="form-group col-md-5">
-                                    <label for="nome_pessoa">Nome Fantasia</label>
+                                    <label for="nome_pessoa">Nome Fantasia <span class="required">*</span></label>
                                         <?php echo $this->tag->textField(["nome_pessoa", "size" => 200, "class" => "form-control", "id" => "nome_pessoa", "placeholder" => "Nome Fantasia"]) ?>
                                     </div>
                                     <div class="form-group col-md-5">
-                                    <label for="rzsocial">Razão Social</label>
+                                    <label for="rzsocial">Razão Social <span class="required">*</span></label>
                                         <?php echo $this->tag->textField(["rzsocial", "size" => 200, "class" => "form-control", "id" => "rzsocial", "placeholder" => "Razão Social"]) ?>
                                     </div>
                                     <div class="form-group col-md-2">
@@ -121,7 +121,7 @@ use Util\Util;
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-4">
-                                    <label for="cnpj">CNPJ</label>
+                                    <label for="cnpj">CNPJ <span class="required">*</span></label>
                                         <?php echo $this->tag->textField(["cnpj", "size" => 120, "class" => "form-control cnpj", "id" => "cnpj", "placeholder" => "CNPJ"]) ?>
                                     </div>
                                     <div class="form-group col-md-4">
@@ -135,7 +135,7 @@ use Util\Util;
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-4">
-                                    <label for="esfera">Esfera</label>
+                                    <label for="esfera">Esfera <span class="required">*</span></label>
                                         <?php echo $this->tag->select(["esfera", $esfera, "class" => "form-control", "id" => "esfera",
                                             "using" => ["id", "descricao",],
                                             "useEmpty" => true,
@@ -144,7 +144,7 @@ use Util\Util;
                                         ?>
                                     </div>
                                     <div class="form-group col-md-4">
-                                    <label for="setor">Setor</label>
+                                    <label for="setor">Setor <span class="required">*</span></label>
                                         <?php echo $this->tag->select(["setor", $setor, "class" => "form-control", "id" => "setor",
                                             "using" => ["id", "descricao",],
                                             "useEmpty" => true,
@@ -167,17 +167,17 @@ use Util\Util;
                                 <h6>Dados do Cliente Físico</h6>
                                 <div class="form-row">
                                     <div class="form-group col-md-8">
-                                    <label for="nome_pessoa2">Nome Completo</label>
+                                    <label for="nome_pessoa2">Nome Completo <span class="required">*</span></label>
                                         <?php echo $this->tag->textField(["nome_pessoa2", "size" => 200, "class" => "form-control", "id" => "nome_pessoa2", "placeholder" => "Nome Completo"]) ?>
                                     </div>
                                     <div class="form-group col-md-4">
-                                    <label for="cpf">CPF</label>
+                                    <label for="cpf">CPF <span class="required">*</span></label>
                                         <?php echo $this->tag->textField(["cpf", "size" => 200, "class" => "form-control cpf", "id" => "cpf", "placeholder" => "CPF"]) ?>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-4">
-                                    <label for="sexo">Sexo</label>
+                                    <label for="sexo">Sexo <span class="required">*</span></label>
                                         <?php echo $this->tag->select(["sexo", $sexo, "class" => "form-control", "id" => "sexo",
                                             "using" => ["id", "descricao",],
                                             "useEmpty" => true,
@@ -243,7 +243,7 @@ use Util\Util;
                                         <?php echo $this->tag->select(["principal_t", ["0" => "Não", "1" => "Sim"], "class" => "form-control", "id" => "principal_t", "useEmpty" => true, "emptyText" => "Principal?", "emptyValue" => ""]) ?>
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <button id="insert_endereco" name="insert_endereco" type="button" class="btn btn-sucess btn-rounded waves-light waves-effect">Inserir</button>
+                                        <button id="insert_endereco" name="insert_endereco" type="button" class="btn btn-sucess btn-rounded waves-light waves-effect bt_inserir">Inserir</button>
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -283,8 +283,7 @@ use Util\Util;
                                         <?php echo $this->tag->select(["princtel_t", ["0" => "Não", "1" => "Sim"], "class" => "form-control", "id" => "princtel_t", "useEmpty" => true, "emptyText" => "Principal?", "emptyValue" => ""]) ?>
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <label for="descricao">Descrição</label>
-                                        <button id="insert_telefone" name="insert_telefone" type="button" class="btn btn-sucess btn-rounded waves-light waves-effect">Inserir</button>
+                                        <button id="insert_telefone" name="insert_telefone" type="button" class="btn btn-sucess btn-rounded waves-light waves-effect bt_inserir">Inserir</button>
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -322,7 +321,7 @@ use Util\Util;
                                         <?php echo $this->tag->select(["princemail_t", ["0" => "Não", "1" => "Sim"], "class" => "form-control", "id" => "princemail_t", "useEmpty" => true, "emptyText" => "Principal?", "emptyValue" => ""]) ?>
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <button id="insert_email" name="insert_email" type="button" class="btn btn-sucess btn-rounded waves-light waves-effect">Inserir</button>
+                                        <button id="insert_email" name="insert_email" type="button" class="btn btn-sucess btn-rounded waves-light waves-effect bt_inserir">Inserir</button>
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -346,9 +345,14 @@ use Util\Util;
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
-                    <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="limparModal()" data-dismiss="modal">Fechar</button>
-                    <button id="salvaCliente" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
+                    <div class="form-group col-md-6">
+                        <p class="texto_rodape">Os campos com <span class="required">*</span> são obrigatórios!</p>
+                    </div>
+                    <div class="form-group col-md-6 botoes_rodape">
+                        <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
+                        <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="limparModal()" data-dismiss="modal">Fechar</button>
+                        <button id="salvaCliente" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
+                    </div>
                 </div><!-- /.modal-footer -->
             </form>
         </div><!-- /.modal-content -->
