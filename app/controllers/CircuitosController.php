@@ -10,6 +10,7 @@ use Phalcon\Http\Response as Response;
 use Circuitos\Controllers\ControllerBase;
 
 use Circuitos\Models\Circuitos;
+use Circuitos\Models\CidadeDigital;
 use Circuitos\Models\Movimentos;
 use Circuitos\Models\Cliente;
 use Circuitos\Models\ClienteUnidade;
@@ -80,6 +81,10 @@ class CircuitosController extends ControllerBase
             "tipo = 16 AND valor IS NULL",
             "order" => "descricao"
         ));
+        $cidadedigital = CidadeDigital::find(array(
+            "excluido = 0 AND ativo = 1",
+            "order" => "descricao"
+        ));
         $clientes = Cliente::buscaClienteAtivo();
         $unidades = ClienteUnidade::buscaUnidadeAtiva();
         $fabricantes = Fabricante::buscaFabricanteAtivo();
@@ -104,6 +109,7 @@ class CircuitosController extends ControllerBase
         $this->view->tipomovimento = $tipomovimento;
         $this->view->tipolink = $tipolink;
         $this->view->unidades = $unidades;
+        $this->view->cidadedigital = $cidadedigital;
     }
 
     public function formCircuitosAction()
@@ -119,12 +125,16 @@ class CircuitosController extends ControllerBase
             'id_cliente' => $circuitos->id_cliente,
             'id_cliente_unidade' => $circuitos->id_cliente_unidade,
             'id_equipamento' => $circuitos->id_equipamento,
+            'desc_equip' => $circuitos->Equipamento->nome,
+            'patr_equip' => $circuitos->Equipamento->numpatrimonio,
+            'nums_equip' => $circuitos->Equipamento->numserie,
             'id_contrato' => $circuitos->id_contrato,
             'id_status' => $circuitos->id_status,
             'id_cluster' => $circuitos->id_cluster,
             'id_funcao' => $circuitos->id_funcao,
             'id_tipoacesso' => $circuitos->id_tipoacesso,
             'id_tipolink' => $circuitos->id_tipolink,
+            'id_cidadedigital' => $circuitos->id_cidadedigital,
             'designacao' => $circuitos->designacao,
             'designacao_anterior' => $circuitos->designacao_anterior,
             'uf' => $circuitos->uf,
@@ -178,11 +188,13 @@ class CircuitosController extends ControllerBase
             'id_funcao' => $circuitos->id_funcao,
             'id_tipoacesso' => $circuitos->id_tipoacesso,
             'id_tipolink' => $circuitos->id_tipolink,
+            'id_cidadedigital' => $circuitos->id_cidadedigital,
             'designacao' => $circuitos->designacao,
             'designacao_anterior' => $circuitos->designacao_anterior,
             'uf' => $circuitos->uf,
             'cidade' => $circuitos->cidade,
             'ssid' => $circuitos->ssid,
+            'chamado' => $circuitos->chamado,
             'ip_redelocal' => $circuitos->ip_redelocal,
             'ip_gerencia' => $circuitos->ip_gerencia,
             'tag' => $circuitos->tag,
@@ -238,6 +250,8 @@ class CircuitosController extends ControllerBase
                 $unidade = (isset($params["id_cliente_unidade"])) ? $params["id_cliente_unidade"] : null ;
                 $uf = ($pessoaendereco->sigla_estado) ? $pessoaendereco->sigla_estado : null;
                 $cidade = ($pessoaendereco->cidade) ? $pessoaendereco->cidade : null;
+                $circuito = Circuitos::findFirst("designacao = (SELECT MAX(designacao) FROM Circuitos\Models\Circuitos)");
+                $vl_designacao = $circuito->designacao + 1;
                 $circuitos = new Circuitos();
                 $circuitos->setTransaction($transaction);
                 $circuitos->id_cliente = $params["id_cliente"];
@@ -249,7 +263,8 @@ class CircuitosController extends ControllerBase
                 $circuitos->id_funcao = $params["id_funcao"];
                 $circuitos->id_tipoacesso = $params["id_tipoacesso"];
                 $circuitos->id_tipolink = $params["id_tipolink"];
-                $circuitos->designacao = $params["designacao"];
+                $circuitos->id_cidadedigital = $params["id_cidadedigital"];
+                $circuitos->designacao = $vl_designacao;
                 $circuitos->designacao_anterior = $params["designacao_anterior"];
                 $circuitos->uf = $uf;
                 $circuitos->cidade = $cidade;
@@ -341,6 +356,7 @@ class CircuitosController extends ControllerBase
                 $circuitos->id_funcao = $params["id_funcao"];
                 $circuitos->id_tipoacesso = $params["id_tipoacesso"];
                 $circuitos->id_tipolink = $params["id_tipolink"];
+                $circuitos->id_cidadedigital = $params["id_cidadedigital"];
                 $circuitos->designacao_anterior = $params["designacao_anterior"];
                 $circuitos->uf = $uf;
                 $circuitos->cidade = $cidade;
@@ -696,14 +712,14 @@ class CircuitosController extends ControllerBase
             $unidade = ClienteUnidade::buscaClienteUnidade($dados["id_cliente"]);
             switch($cliente->id_tipocliente)
             {
-                case "45"://Pessoa Física
+                case "44"://Pessoa Física
                 $response->setContent(json_encode(array(
                     "operacao" => False,
                     "tipocliente" => $cliente->id_tipocliente
                 )));
                 return $response;
                 break;
-                case "44"://Pessoa Jurídica
+                case "43"://Pessoa Jurídica
                 $response->setContent(json_encode(array(
                     "operacao" => True,
                     "dados" => $unidade,

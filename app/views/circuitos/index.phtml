@@ -29,10 +29,10 @@ use Util\Util;
                 $data_atualizacao = ($circuitos->data_atualizacao) ? $util->converterDataHoraParaBr($circuitos->data_atualizacao) : null;
                 switch($circuitos->Cliente->id_tipocliente)
                 {
-                    case "45"://Pessoa Física
+                    case "44"://Pessoa Física
                         $unidade = null;
                     break;
-                    case "44"://Pessoa Jurídica
+                    case "43"://Pessoa Jurídica
                         $unidade = $circuitos->ClienteUnidade->Pessoa->nome;
                     break;
                 }
@@ -107,13 +107,23 @@ use Util\Util;
                                         <option value="">Selecione uma Unidade</option>
                                     </select>
                                 </div>
+                                <!-- Designação
                                 <div class="form-group col-md-3">
                                     <label for="designacao">Designação <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["designacao", "size" => 60, "class" => "form-control", "id" => "designacao", "placeholder" => "Designação"]) ?>
-                                </div>
+                                    <?php //echo $this->tag->textField(["designacao", "size" => 60, "class" => "form-control", "readonly" => "true", "id" => "designacao", "placeholder" => "Designação"]) ?>
+                                </div> -->
                                 <div class="form-group col-md-3">
                                     <label for="designacao_anterior">Designação Anterior</label>
                                     <?php echo $this->tag->textField(["designacao_anterior", "size" => 60, "class" => "form-control", "id" => "designacao_anterior", "placeholder" => "Designação Anterior"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="id_cidadedigital">Cidade Digital <span class="required">*</span></label>
+                                    <?php echo $this->tag->select(["id_cidadedigital", $cidadedigital, "class" => "form-control", "id" => "id_cidadedigital",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione a Cidade Digital",
+                                        "emptyValue" => ""])
+                                    ?>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -180,20 +190,24 @@ use Util\Util;
                                     </select>
                                 </div>
                                 <div class="form-group col-md-3">
+                                    <!--
                                     <label for="id_equipamento">Equipamento <span class="required">*</span></label>
                                     <select disabled name="id_equipamento" id="id_equipamento" class="form-control">
                                         <option value="">Selecione um Equipamento</option>
-                                    </select>
+                                    </select> -->
+                                    <label for="lid_equipamento">Equipamento <span class="required">*</span></label>
+                                    <?php echo $this->tag->textField(["lid_equipamento", "disabled" => "true", "size" => 60, "class" => "form-control", "id" => "lid_equipamento", "placeholder" => "Equipamento"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_equipamento", "size" => 60, "class" => "form-control", "id" => "id_equipamento"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-3">
                                     <label for="ip_redelocal">Rede Cliente <span class="required">*</span></label> <!-- Antigo IP Rede Local -->
-                                    <?php echo $this->tag->textField(["ip_redelocal", "size" => 30, "class" => "form-control", "id" => "ip_redelocal", "placeholder" => "Rede Cliente"]) ?>
+                                    <?php echo $this->tag->textField(["ip_redelocal", "size" => 30, "class" => "form-control ip2", "id" => "ip_redelocal", "placeholder" => "Rede Cliente"]) ?>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="ip_gerencia">IP de Gerência <span class="required">*</span></label> <!-- Antigo IP Rede Gerencial -->
-                                    <?php echo $this->tag->textField(["ip_gerencia", "size" => 30, "class" => "form-control", "id" => "ip_gerencia", "placeholder" => "IP de Gerência"]) ?>
+                                    <?php echo $this->tag->textField(["ip_gerencia", "size" => 30, "class" => "form-control ip", "id" => "ip_gerencia", "placeholder" => "IP de Gerência"]) ?>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="banda">Banda <span class="required">*</span></label>
@@ -301,8 +315,13 @@ use Util\Util;
                                     <?php echo $this->tag->textField(["designacaov", "size" => 60, "readonly" => "true", "class" => "form-control", "id" => "designacaov", "placeholder" => "Designação"]) ?>
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label for="designacao_anteriorv">Designação Anterior</label>
-                                    <?php echo $this->tag->textField(["designacao_anteriorv", "size" => 60, "class" => "form-control", "id" => "designacao_anteriorv", "placeholder" => "Designação Anterior"]) ?>
+                                    <label for="id_cidadedigitalv">Cidade Digital</label>
+                                    <?php echo $this->tag->select(["id_cidadedigitalv", $cidadedigital, "readonly" => "true", "class" => "form-control", "id" => "id_cidadedigitalv",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione a Cidade Digital",
+                                        "emptyValue" => ""])
+                                    ?>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="id_contratov">Contrato</label>
@@ -417,6 +436,10 @@ use Util\Util;
                                     <label for="ssidv">SSID</label> <!-- Antigo ccode -->
                                     <?php echo $this->tag->textField(["ssidv", "size" => 30, "readonly" => "true", "class" => "form-control", "id" => "ssidv", "placeholder" => "SSID"]) ?>
                                 </div>
+                                <div class="form-group col-md-3">
+                                    <label for="designacao_anteriorv">Designação Anterior</label>
+                                    <?php echo $this->tag->textField(["designacao_anteriorv", "size" => 60, "readonly" => "true", "class" => "form-control", "id" => "designacao_anteriorv", "placeholder" => "Designação Anterior"]) ?>
+                                </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
@@ -500,11 +523,11 @@ use Util\Util;
                                 </div>
                                 <div id="redelocalmovdiv" class="form-group col-md-4" style="display: none;">
                                     <label for="ip_redelocalmov">Rede Cliente <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["ip_redelocalmov", "size" => 30, "class" => "form-control", "id" => "ip_redelocalmov", "placeholder" => "Rede Cliente"]) ?>
+                                    <?php echo $this->tag->textField(["ip_redelocalmov", "size" => 30, "class" => "form-control ip2", "id" => "ip_redelocalmov", "placeholder" => "Rede Cliente"]) ?>
                                 </div>
                                 <div id="gerenciamovdiv" class="form-group col-md-4" style="display: none;">
                                     <label for="ip_gerenciamov">IP de Gerência <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["ip_gerenciamov", "size" => 30, "class" => "form-control", "id" => "ip_gerenciamov", "placeholder" => "IP de Gerência"]) ?>
+                                    <?php echo $this->tag->textField(["ip_gerenciamov", "size" => 30, "class" => "form-control ip", "id" => "ip_gerenciamov", "placeholder" => "IP de Gerência"]) ?>
                                 </div>
                                 <div id="statusmovdiv" class="form-group col-md-4" style="display: none;">
                                     <label for="id_statusmov">Status <span class="required">*</span></label>
@@ -531,10 +554,15 @@ use Util\Util;
                                     </select>
                                 </div>
                                 <div class="form-group col-md-4 equip" style="display: none;">
+                                    <!--
                                     <label for="id_equipamentomov">Equipamento <span class="required">*</span></label>
                                     <select disabled name="id_equipamentomov" id="id_equipamentomov" class="form-control">
                                         <option value="">Selecione um Equipamento</option>
                                     </select>
+                                    -->
+                                    <label for="lid_equipamentomov">Equipamento <span class="required">*</span></label>
+                                    <?php echo $this->tag->textField(["lid_equipamentomov", "disabled" => "true", "size" => 60, "class" => "form-control", "id" => "lid_equipamentomov", "placeholder" => "Equipamento"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_equipamentomov", "size" => 60, "class" => "form-control", "id" => "id_equipamentomov"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">

@@ -133,28 +133,29 @@ $(".bt_novo").on("click", function(){
     $("#salvarCidadeDigital").removeClass("editar_cidadedigital").addClass("criar_cidadedigital");
 });
 
-$("#id_tipo").on("change", function(){
-
-    // var tipocidade_desc = document.getElementById("id_tipo").options[document.getElementById("id_tipo").selectedIndex].text + " ";
-    // var cidade = document.getElementById("id_cidade").options[document.getElementById("id_cidade").selectedIndex].text;
-    
-
-    $(".result").val();
-
-    var arrayValor = $(".concat").map(function () {
-        return document.getElementById("id_tipo").options[document.getElementById("id_tipo").selectedIndex].text;
-    }).get().join(" ");
-
-    $(".result").val(arrayValor);
+$("#id_tipo").on("change", function() {
+    $("#descricao").val("");
+    var tipocidade_desc = document.getElementById("id_tipo").options[document.getElementById("id_tipo").selectedIndex].text;
+    var cidade = null;
+    if ($("#id_cidade").val() != "") {
+        cidade = document.getElementById("id_cidade").options[document.getElementById("id_cidade").selectedIndex].text;
+    } else {
+        cidade = "";
+    }
+    $("#descricao").val(tipocidade_desc + " " + cidade);
 });
 
-// $("#id_cidade").on("change", function(){
-//     // var tipocidade_desc = document.getElementById("id_tipo").options[document.getElementById("id_tipo").selectedIndex].text + " ";
-//     // var cidade = document.getElementById("id_cidade").options[document.getElementById("id_cidade").selectedIndex].text;
-//     $('#descricao').val( function( index, cidade ) {
-//         return tipocidade_desc + cidade;
-//     });
-// });
+$("#id_cidade").on("change", function(){
+    $("#descricao").val("");
+    var tipocidade_desc = null;
+    var cidade = document.getElementById("id_cidade").options[document.getElementById("id_cidade").selectedIndex].text;
+    if ($("#id_cidade").val() != "") {
+        tipocidade_desc = document.getElementById("id_tipo").options[document.getElementById("id_tipo").selectedIndex].text;
+    } else {
+        tipocidade_desc = "";
+    }
+    $("#descricao").val(tipocidade_desc + " " + cidade);
+});
 
 $(document).on("click", ".criar_cidadedigital", function(){
     //Validação de formulário
@@ -186,7 +187,7 @@ $(document).on("click", ".criar_cidadedigital", function(){
             $.ajax({
                 type: 'POST',
                 dataType: 'JSON',
-                url: 'cidadedigital/criarCidadeDigital',
+                url: 'cidade_digital/criarCidadeDigital',
                 data: {
                     tokenKey: $('#token').attr('name'),
                     tokenValue: $('#token').attr('value'),
@@ -255,7 +256,7 @@ $(".bt_edit").on("click", function(){
         $.ajax({
             type: 'GET',
             dataType: 'JSON',
-            url: 'cidadedigital/formCidadeDigital',
+            url: 'cidade_digital/formCidadeDigital',
             data: {id_cidadedigital: id_cidadedigital},
             beforeSend: function () {
             },
@@ -307,7 +308,7 @@ $(document).on("click", ".editar_cidadedigital", function(){
             $.ajax({
                 type: 'POST',
                 dataType: 'JSON',
-                url: 'cidadedigital/editarCidadeDigital',
+                url: 'cidade_digital/editarCidadeDigital',
                 data: {
                     tokenKey: $('#token').attr('name'),
                     tokenValue: $('#token').attr('value'),
@@ -360,8 +361,12 @@ $(".bt_del").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'cidadedigital/deletarCidadeDigital',
-                  data: {ids: ids},
+                  url: 'cidade_digital/deletarCidadeDigital',
+                  data: {
+                    tokenKey: $('#token').attr('name'),
+                    tokenValue: $('#token').attr('value'),
+                    ids: ids
+                    },
                   beforeSend: function () {
                   },
                   complete: function () {
@@ -410,8 +415,12 @@ $(".bt_del").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'cidadedigital/deletarCidadeDigital',
-                  data: {ids: ids},
+                  url: 'cidade_digital/deletarCidadeDigital',
+                  data: {
+                    tokenKey: $('#token').attr('name'),
+                    tokenValue: $('#token').attr('value'),
+                    ids: ids
+                    },
                   beforeSend: function () {
                   },
                   complete: function () {
@@ -471,7 +480,7 @@ $(".bt_ativo").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'cidadedigital/ativarCidadeDigital',
+                  url: 'cidade_digital/ativarCidadeDigital',
                   data: {
                     tokenKey: $('#token').attr('name'),
                     tokenValue: $('#token').attr('value'),
@@ -525,7 +534,7 @@ $(".bt_ativo").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'cidadedigital/ativarCidadeDigital',
+                  url: 'cidade_digital/ativarCidadeDigital',
                   data: {
                     tokenKey: $('#token').attr('name'),
                     tokenValue: $('#token').attr('value'),
@@ -578,7 +587,7 @@ $(".bt_inativo").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'cidadedigital/inativarCidadeDigital',
+                  url: 'cidade_digital/inativarCidadeDigital',
                   data: {
                     tokenKey: $('#token').attr('name'),
                     tokenValue: $('#token').attr('value'),
@@ -632,7 +641,7 @@ $(".bt_inativo").on("click", function(){
               $.ajax({
                   type: 'POST',
                   dataType: 'JSON',
-                  url: 'cidadedigital/inativarCidadeDigital',
+                  url: 'cidade_digital/inativarCidadeDigital',
                   data: {
                     tokenKey: $('#token').attr('name'),
                     tokenValue: $('#token').attr('value'),

@@ -133,11 +133,11 @@ $("#tipocliente").on("change", function(){
     var tipocliente = $("#tipocliente").val();
     switch (tipocliente)
     {
-        case "45"://Pessoa Física
+        case "44"://Pessoa Física
             $(".form_jur").hide();
             $(".form_fis").show();
         break;
-        case "44"://Pessoa Jurídica
+        case "43"://Pessoa Jurídica
             $(".form_fis").hide();
             $(".form_jur").show();
         break;
@@ -472,7 +472,7 @@ $(document).on("click", ".criar_cliente", function(){
     if (tipocliente){
         switch (tipocliente)
         {
-            case "45"://Pessoa Física
+            case "44"://Pessoa Física
             //Validação de formulário
             $("#formCliente").validate({
                 rules : {
@@ -539,7 +539,7 @@ $(document).on("click", ".criar_cliente", function(){
                 }
             });
             break;
-            case "44"://Pessoa Jurídica
+            case "43"://Pessoa Jurídica
             //Validação de formulário
             $("#formCliente").validate({
                 rules : {
@@ -670,7 +670,7 @@ $(".bt_edit").on("click", function(){
             success: function (data) {
                 switch (data.dados.tipo)
                 {
-                    case "45"://Pessoa Física
+                    case "44"://Pessoa Física
                         $("#id").val(data.dados.id);
                         $("#tipocliente").val(data.dados.tipo).selected = "true";
                         $("#nome_pessoa2").val(data.dados.nome);
@@ -730,7 +730,7 @@ $(".bt_edit").on("click", function(){
                         $(".form_jur").hide();
                         $(".form_fis").show();
                     break;
-                    case "44"://Pessoa Jurídica
+                    case "43"://Pessoa Jurídica
                         $("#id").val(data.dados.id);
                         $("#tipocliente").val(data.dados.tipo).selected = "true";
                         $("#nome_pessoa").val(data.dados.nome);
@@ -758,7 +758,7 @@ $(document).on("click", ".editar_cliente", function(){
     if (tipocliente){
         switch (tipocliente)
         {
-            case "45"://Pessoa Física
+            case "44"://Pessoa Física
             //Validação de formulário
             $("#formCliente").validate({
                 rules : {
@@ -825,7 +825,7 @@ $(document).on("click", ".editar_cliente", function(){
                 }
             });
             break;
-            case "44"://Pessoa Jurídica
+            case "43"://Pessoa Jurídica
             //Validação de formulário
             $("#formCliente").validate({
                 rules : {

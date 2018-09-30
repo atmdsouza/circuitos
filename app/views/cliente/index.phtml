@@ -25,11 +25,11 @@ use Util\Util;
                 $util = new Util();
                 
                 switch($cliente->id_tipocliente){
-                    case '45'://Pessoa Física
+                    case '44'://Pessoa Física
                     $cnpjcfp = $util->mask($cliente->Pessoa->PessoaFisica->cpf,'###.###.###-##');
                     $esfera_cli = null;
                     break;
-                    case '44'://Pessoa Juridica
+                    case '43'://Pessoa Juridica
                     $cnpjcfp = $util->mask($cliente->Pessoa->PessoaJuridica->cnpj,'##.###.###/####-##');
                     $esfera_cli = $cliente->Pessoa->PessoaJuridica->Lov->descricao;
                     break;

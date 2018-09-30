@@ -168,6 +168,7 @@ $("#id_cliente").on("change", function(){
     });
 });
 
+var listEquip = [];
 $("#id_fabricante").on("change", function(){
     var id_fabricante = $(this).val();
     $.ajax({
@@ -188,17 +189,17 @@ $("#id_fabricante").on("change", function(){
                     var linhas = "<option class='remove_modelo' value='" + value.id + "'>" + value.modelo + "</option>";
                     $("#id_modelo").append(linhas);
                     $("#id_modelo").removeAttr("disabled");
-                    $(".remove_equip").remove();
-                    $("#id_equipamento").val(null).selected = "true";
-                    $("#id_equipamento").attr("disabled", "true");
+                    $("#lid_equipamento").val("");
+                    $("#id_equipamento").val("");
+                    $("#lid_equipamento").attr("disabled", "true");
                 });
             } else {
                 $(".remove_modelo").remove();
                 $("#id_modelo").val(null).selected = "true";
                 $("#id_modelo").attr("disabled", "true");
-                $(".remove_equip").remove();
-                $("#id_equipamento").val(null).selected = "true";
-                $("#id_equipamento").attr("disabled", "true");
+                $("#lid_equipamento").val("");
+                $("#id_equipamento").val("");
+                $("#lid_equipamento").attr("disabled", "true");
             }
         }
     });
@@ -219,21 +220,28 @@ $("#id_modelo").on("change", function(){
         },
         success: function (data) {
             if (data.operacao){
-                $(".remove_equip").remove();
                 $.each(data.dados, function (key, value) {
                     var numserie = (value.numserie) ? value.numserie : "Sem Nº Série";
                     var numpatrimonio = (value.numpatrimonio) ? value.numpatrimonio : "Sem Nº Patrimônio";
-                    var linhas = "<option class='remove_equip' value='" + value.id + "'>" + value.nome + " (" + numserie + " / " + numpatrimonio + ")</option>";
-                    $("#id_equipamento").append(linhas);
-                    $("#id_equipamento").removeAttr("disabled");
+                    listEquip.push({ value: value.nome + " (" + numserie + " / " + numpatrimonio + ")", data: value.id });
+                    $("#lid_equipamento").removeAttr("disabled");
                 });
             } else {
-                $(".remove_equip").remove();
-                $("#id_equipamento").val(null).selected = "true";
-                $("#id_equipamento").attr("disabled", "true");
+                listEquip = [];
+                $("#lid_equipamento").val("");
+                $("#id_equipamento").val("");
+                $("#lid_equipamento").attr("disabled", "true");
             }
         }
     });
+});
+
+//Autocomplete de Equipamento
+$("#lid_equipamento").autocomplete({
+    lookup: listEquip,
+    onSelect: function (suggestion) {
+        $("#id_equipamento").val(suggestion.data);
+    }
 });
 
 $(".bt_novo").on("click", function(){
@@ -245,7 +253,7 @@ $(document).on("click", ".criar_circuitos", function(){
     var tipocliente = $("#tipocliente").val();
     switch (tipocliente)
     {
-        case "44"://Pessoa Jurídica
+        case "43"://Pessoa Jurídica
         //Validação de formulário
         $("#formCircuitos").validate({
             rules : {
@@ -258,7 +266,16 @@ $(document).on("click", ".criar_circuitos", function(){
                 designacao:{
                     required: true
                 },
-                vlan:{
+                chamado:{
+                    required: true
+                },
+                banda:{
+                    required: true
+                },
+                tag:{
+                    required: true
+                },
+                id_cidadedigital:{
                     required: true
                 },
                 id_contrato:{
@@ -267,7 +284,7 @@ $(document).on("click", ".criar_circuitos", function(){
                 id_cluster:{
                     required: true
                 },
-                id_tipounidade:{
+                id_tipolink:{
                     required: true
                 },
                 id_funcao:{
@@ -302,8 +319,17 @@ $(document).on("click", ".criar_circuitos", function(){
                 designacao:{
                     required:"É necessário informar a Designação"
                 },
-                vlan:{
-                    required: "É necessário informar a VLAN"
+                chamado:{
+                    required: "É necessário informar um códido de Chamado"
+                },
+                banda:{
+                    required: "É necessário informar uma Banda"
+                },
+                tag:{
+                    required: "É necessário informar uma TAG"
+                },
+                id_cidadedigital:{
+                    required: "É necessário informar a Cidade Digital"
                 },
                 id_contrato:{
                     required: "É necessário informar o tipo de Contrato"
@@ -311,8 +337,8 @@ $(document).on("click", ".criar_circuitos", function(){
                 id_cluster:{
                     required: "É necessário informar um Cluster"
                 },
-                id_tipounidade:{
-                    required: "É necessário informar um tipo de Circuitos"
+                id_tipolink:{
+                    required: "É necessário informar um tipo de Link"
                 },
                 id_funcao:{
                     required: "É necessário informar uma Função"
@@ -388,7 +414,16 @@ $(document).on("click", ".criar_circuitos", function(){
                 designacao:{
                     required: true
                 },
-                vlan:{
+                chamado:{
+                    required: true
+                },
+                id_cidadedigital:{
+                    required: true
+                },
+                banda:{
+                    required: true
+                },
+                tag:{
                     required: true
                 },
                 id_contrato:{
@@ -397,7 +432,7 @@ $(document).on("click", ".criar_circuitos", function(){
                 id_cluster:{
                     required: true
                 },
-                id_tipounidade:{
+                id_tipolink:{
                     required: true
                 },
                 id_funcao:{
@@ -429,8 +464,17 @@ $(document).on("click", ".criar_circuitos", function(){
                 designacao:{
                     required:"É necessário informar a Designação"
                 },
-                vlan:{
-                    required: "É necessário informar a VLAN"
+                chamado:{
+                    required: "É necessário informar um código de Chamado"
+                },
+                banda:{
+                    required: "É necessário informar uma Banda"
+                },
+                tag:{
+                    required: "É necessário informar uma TAG"
+                },
+                id_cidadedigital:{
+                    required: "É necessário informar a Cidade Digital"
                 },
                 id_contrato:{
                     required: "É necessário informar o tipo de Contrato"
@@ -438,8 +482,8 @@ $(document).on("click", ".criar_circuitos", function(){
                 id_cluster:{
                     required: "É necessário informar um Cluster"
                 },
-                id_tipounidade:{
-                    required: "É necessário informar um tipo de Circuitos"
+                id_tipolink:{
+                    required: "É necessário informar um tipo de Link"
                 },
                 id_funcao:{
                     required: "É necessário informar uma Função"
@@ -559,11 +603,6 @@ $(".bt_edit").on("click", function(){
                     var linhas = "<option class='remove_modelo' value='" + value.id + "'>" + value.modelo + "</option>";
                     $("#id_modelo").append(linhas);
                 });
-                $(".remove_equipamento").remove();
-                $.each(data.equipamentos, function (key, value) {
-                    var linhas = "<option class='remove_equipamento' value='" + value.id + "'>" + value.nome + "</option>";
-                    $("#id_equipamento").append(linhas);
-                });
                 $("#id").val(data.dados.id);
                 $("#tipocliente").val(data.cliente.id_tipocliente);
                 $("#id_cliente").val(data.dados.id_cliente).selected = "true";
@@ -573,19 +612,22 @@ $(".bt_edit").on("click", function(){
                 $("#id_modelo").attr("disabled", "true");
                 $("#id_modelo").val(data.equip.id_modelo).selected = "true";
                 $("#id_equipamento").attr("disabled", "true");
-                $("#id_equipamento").val(data.dados.id_equipamento).selected = "true";
+                $("#lid_equipamento").val(data.dados.desc_equip + " ("+ data.dados.nums_equip +" / "+ data.dados.patr_equip +")");
+                $("#id_equipamento").val(data.dados.id_equipamento);
                 $("#id_contrato").val(data.dados.id_contrato).selected = "true";
                 $("#id_cluster").val(data.dados.id_cluster).selected = "true";
-                $("#id_tipounidade").val(data.dados.id_tipounidade).selected = "true";
+                $("#id_tipolink").val(data.dados.id_tipolink).selected = "true";
+                $("#id_cidadedigital").val(data.dados.id_cidadedigital).selected = "true";
                 $("#id_funcao").val(data.dados.id_funcao).selected = "true";
                 $("#id_tipoacesso").val(data.dados.id_tipoacesso).selected = "true";
                 $("#banda").attr("disabled", "true");
                 $("#banda").val(data.dados.id_banda).selected = "true";
                 $("#designacao").val(data.dados.designacao);
+                $("#designacao_anterior").val(data.dados.designacao_anterior);
+                $("#chamado").val(data.dados.chamado);
                 $("#uf").val(data.dados.uf);
                 $("#cidade").val(data.dados.cidade);
-                $("#vlan").val(data.dados.vlan);
-                $("#ccode").val(data.dados.ccode);
+                $("#ssid").val(data.dados.cssidcode);
                 $("#ip_redelocal").attr("disabled", "true");
                 $("#ip_redelocal").val(data.dados.ip_redelocal);
                 $("#ip_gerencia").attr("disabled", "true");
@@ -636,15 +678,17 @@ $(".bt_visual").on("click", function(){
                 $("#id_contratov").val(data.dados.id_contrato).selected = "true";
                 $("#id_statusv").val(data.dados.id_status).selected = "true";
                 $("#id_clusterv").val(data.dados.id_cluster).selected = "true";
-                $("#id_tipounidadev").val(data.dados.id_tipounidade).selected = "true";
+                $("#id_tipolinkv").val(data.dados.id_tipolink).selected = "true";
+                $("#id_cidadedigitalv").val(data.dados.id_cidadedigital).selected = "true";
                 $("#id_funcaov").val(data.dados.id_funcao).selected = "true";
                 $("#id_tipoacessov").val(data.dados.id_tipoacesso).selected = "true";
                 $("#bandav").val(data.dados.id_banda).selected = "true";
                 $("#designacaov").val(data.dados.designacao);
+                $("#designacao_anteriorv").val(data.dados.designacao_anterior);
                 $("#ufv").val(data.dados.uf);
                 $("#cidadev").val(data.dados.cidade);
-                $("#vlanv").val(data.dados.vlan);
-                $("#ccodev").val(data.dados.ccode);
+                $("#chamadov").val(data.dados.chamado);
+                $("#ssidv").val(data.dados.ssid);
                 $("#ip_redelocalv").val(data.dados.ip_redelocal);
                 $("#ip_gerenciav").val(data.dados.ip_gerencia);
                 $("#tagv").val(data.dados.tag);
@@ -690,7 +734,7 @@ $(document).on("click", ".editar_circuitos", function(){
     var tipocliente = $("#tipocliente").val();
     switch (tipocliente)
     {
-        case "44"://Pessoa Jurídica
+        case "43"://Pessoa Jurídica
         //Validação de formulário
         $("#formCircuitos").validate({
             rules : {
@@ -703,7 +747,16 @@ $(document).on("click", ".editar_circuitos", function(){
                 designacao:{
                     required: true
                 },
-                vlan:{
+                chamado:{
+                    required: true
+                },
+                banda:{
+                    required: true
+                },
+                tag:{
+                    required: true
+                },
+                id_cidadedigital:{
                     required: true
                 },
                 id_contrato:{
@@ -712,7 +765,7 @@ $(document).on("click", ".editar_circuitos", function(){
                 id_cluster:{
                     required: true
                 },
-                id_tipounidade:{
+                id_tipolink:{
                     required: true
                 },
                 id_funcao:{
@@ -747,8 +800,17 @@ $(document).on("click", ".editar_circuitos", function(){
                 designacao:{
                     required:"É necessário informar a Designação"
                 },
-                vlan:{
-                    required: "É necessário informar a VLAN"
+                chamado:{
+                    required: "É necessário informar um códido de Chamado"
+                },
+                banda:{
+                    required: "É necessário informar uma Banda"
+                },
+                tag:{
+                    required: "É necessário informar uma TAG"
+                },
+                id_cidadedigital:{
+                    required: "É necessário informar a Cidade Digital"
                 },
                 id_contrato:{
                     required: "É necessário informar o tipo de Contrato"
@@ -756,8 +818,8 @@ $(document).on("click", ".editar_circuitos", function(){
                 id_cluster:{
                     required: "É necessário informar um Cluster"
                 },
-                id_tipounidade:{
-                    required: "É necessário informar um tipo de Circuitos"
+                id_tipolink:{
+                    required: "É necessário informar um tipo de Link"
                 },
                 id_funcao:{
                     required: "É necessário informar uma Função"
@@ -833,7 +895,16 @@ $(document).on("click", ".editar_circuitos", function(){
                 designacao:{
                     required: true
                 },
-                vlan:{
+                chamado:{
+                    required: true
+                },
+                id_cidadedigital:{
+                    required: true
+                },
+                banda:{
+                    required: true
+                },
+                tag:{
                     required: true
                 },
                 id_contrato:{
@@ -842,7 +913,7 @@ $(document).on("click", ".editar_circuitos", function(){
                 id_cluster:{
                     required: true
                 },
-                id_tipounidade:{
+                id_tipolink:{
                     required: true
                 },
                 id_funcao:{
@@ -874,8 +945,17 @@ $(document).on("click", ".editar_circuitos", function(){
                 designacao:{
                     required:"É necessário informar a Designação"
                 },
-                vlan:{
-                    required: "É necessário informar a VLAN"
+                chamado:{
+                    required: "É necessário informar um código de Chamado"
+                },
+                banda:{
+                    required: "É necessário informar uma Banda"
+                },
+                tag:{
+                    required: "É necessário informar uma TAG"
+                },
+                id_cidadedigital:{
+                    required: "É necessário informar a Cidade Digital"
                 },
                 id_contrato:{
                     required: "É necessário informar o tipo de Contrato"
@@ -883,8 +963,8 @@ $(document).on("click", ".editar_circuitos", function(){
                 id_cluster:{
                     required: "É necessário informar um Cluster"
                 },
-                id_tipounidade:{
-                    required: "É necessário informar um tipo de Circuitos"
+                id_tipolink:{
+                    required: "É necessário informar um tipo de Link"
                 },
                 id_funcao:{
                     required: "É necessário informar uma Função"
@@ -1014,6 +1094,8 @@ $("#id_tipomovimento").on("change", function(){
     }
 });
 
+var listEquip2 = [];
+
 $("#id_fabricantemov").on("change", function(){
     var id_fabricante = $(this).val();
     $.ajax({
@@ -1034,17 +1116,17 @@ $("#id_fabricantemov").on("change", function(){
                     var linhas = "<option class='remove_modelo' value='" + value.id + "'>" + value.modelo + "</option>";
                     $("#id_modelomov").append(linhas);
                     $("#id_modelomov").removeAttr("disabled");
-                    $(".remove_equip").remove();
-                    $("#id_equipamentomov").val(null).selected = "true";
-                    $("#id_equipamentomov").attr("disabled", "true");
+                    $("#lid_equipamentomov").val("");
+                    $("#id_equipamentomov").val("");
+                    $("#lid_equipamentomov").attr("disabled", "true");
                 });
             } else {
                 $(".remove_modelo").remove();
                 $("#id_modelomov").val(null).selected = "true";
                 $("#id_modelomov").attr("disabled", "true");
-                $(".remove_equip").remove();
-                $("#id_equipamentomov").val(null).selected = "true";
-                $("#id_equipamentomov").attr("disabled", "true");
+                $("#lid_equipamentomov").val("");
+                $("#id_equipamentomov").val("");
+                $("#lid_equipamentomov").attr("disabled", "true");
             }
         }
     });
@@ -1069,17 +1151,25 @@ $("#id_modelomov").on("change", function(){
                 $.each(data.dados, function (key, value) {
                     var numserie = (value.numserie) ? value.numserie : "Sem Nº Série";
                     var numpatrimonio = (value.numpatrimonio) ? value.numpatrimonio : "Sem Nº Patrimônio";
-                    var linhas = "<option class='remove_equip' value='" + value.id + "'>" + value.nome + " (" + numserie + " / " + numpatrimonio + ")</option>";
-                    $("#id_equipamentomov").append(linhas);
-                    $("#id_equipamentomov").removeAttr("disabled");
+                    listEquip2.push({ value: value.nome + " (" + numserie + " / " + numpatrimonio + ")", data: value.id });
+                    $("#lid_equipamentomov").removeAttr("disabled");
                 });
             } else {
-                $(".remove_equip").remove();
-                $("#id_equipamentomov").val(null).selected = "true";
-                $("#id_equipamentomov").attr("disabled", "true");
+                listEquip = [];
+                $("#lid_equipamentomov").val("");
+                $("#id_equipamentomov").val("");
+                $("#lid_equipamentomov").attr("disabled", "true");
             }
         }
     });
+});
+
+//Autocomplete de Equipamento
+$("#lid_equipamentomov").autocomplete({
+    lookup: listEquip2,
+    onSelect: function (suggestion) {
+        $("#id_equipamentomov").val(suggestion.data);
+    }
 });
 
 $(document).on("click", ".criar_mov", function(){

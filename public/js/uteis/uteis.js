@@ -418,7 +418,6 @@ $(document).ready(function () {
     $(".perc").mask("000,00 %"); //Limite do Percentual
     $(".ano").mask("0000"); //Ano
     $(".cnpj").mask("00.000.000/0000-00"); //CNPJ
-    $(".ip").mask("000.000.000.000"); //IP
     $(".cpf").mask("000.000.000-00"); //CPF
     $(".data").mask("00/00/0000"); //Data
     $(".hora").mask("00:00"); //Hora
@@ -429,4 +428,18 @@ $(document).ready(function () {
     $(".valor_monetario").maskMoney({ symbol: 'R$ ', symbolStay: false, allowNegative: true, thousands: '.', decimal: ',', affixesStay: false }); //Valor Monetário R$
     $(".valor_monetario_limpo").maskMoney({ allowNegative: true, thousands: '.', decimal: ',', affixesStay: false }); //Valor Monetário sem R$
     $(".valor_percentual").maskMoney({ allowNegative: true, thousands: '', decimal: ',', affixesStay: false }); //Valor Decimal
+    $('.ip').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
+        translation: {
+          'Z': {
+            pattern: /[0-9]/, optional: true
+          }
+        }
+    });
+    $('.ip2').mask('0ZZ.0ZZ.0ZZ.0ZZ/00', {
+        translation: {
+          'Z': {
+            pattern: /[0-9]/, optional: true
+          }
+        }
+    });
 });

@@ -83,7 +83,7 @@ class ClienteController extends ControllerBase
         $cliente = Cliente::findFirst("id={$dados["id_cliente"]}");
         $pessoa = Pessoa::findFirst("id={$cliente->id_pessoa}");
         switch ($cliente->id_tipocliente) {
-                case "44"://Pessoa Jurídica
+                case "43"://Pessoa Jurídica
                 $pessoajuridica = PessoaJuridica::findFirst("id={$pessoa->id}");
                 $dados = array(
                     "id" => $cliente->id,
@@ -103,7 +103,7 @@ class ClienteController extends ControllerBase
                 )));
                 return $response;
             break;
-            case "45"://Pessoa Física
+            case "44"://Pessoa Física
                 $pessoafisica = PessoaFisica::findFirst("id={$pessoa->id}");
                 $pessoaendereco = PessoaEndereco::buscaCompletaLov($pessoa->id);
                 $pessoaemail = PessoaEmail::buscaCompletaLov($pessoa->id);
@@ -141,7 +141,7 @@ class ClienteController extends ControllerBase
         $params = array();
         parse_str($dados["dados"], $params);
         switch($params["tipocliente"]){
-            case "44"://Pessoa Jurídica
+            case "43"://Pessoa Jurídica
             //CSRF Token Check
             if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
                 try {
@@ -194,7 +194,7 @@ class ClienteController extends ControllerBase
                 return $response;
             }
             break;
-            case "45"://Pessoa Física
+            case "44"://Pessoa Física
             //CSRF Token Check
             if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
                 try {
@@ -309,7 +309,7 @@ class ClienteController extends ControllerBase
         $cliente = Cliente::findFirst("id={$params["id"]}");
         $pessoa = Pessoa::findFirst("id={$cliente->id_pessoa}");
         switch($params["tipocliente"]){
-            case "44"://Pessoa Jurídica
+            case "43"://Pessoa Jurídica
             $pessoajuridica = PessoaJuridica::findFirst("id={$cliente->id_pessoa}");
             //CSRF Token Check
             if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -354,7 +354,7 @@ class ClienteController extends ControllerBase
                 return $response;
             }
             break;
-            case "45"://Pessoa Física
+            case "44"://Pessoa Física
             $pessoafisica = PessoaFisica::findFirst("id={$cliente->id_pessoa}");
             //CSRF Token Check
             if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
