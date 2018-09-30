@@ -258,7 +258,7 @@ class CircuitosController extends ControllerBase
                 $circuitos->id_cliente_unidade = $unidade;
                 $circuitos->id_equipamento = $params["id_equipamento"];
                 $circuitos->id_contrato = $params["id_contrato"];
-                $circuitos->id_status = 34;//Ativo por Default
+                $circuitos->id_status = 31;//Ativo por Default
                 $circuitos->id_cluster = $params["id_cluster"];
                 $circuitos->id_funcao = $params["id_funcao"];
                 $circuitos->id_tipoacesso = $params["id_tipoacesso"];
@@ -288,7 +288,7 @@ class CircuitosController extends ControllerBase
                 $movimento = new Movimentos();
                 $movimento->setTransaction($transaction);
                 $movimento->id_circuitos = $circuitos->id;
-                $movimento->id_tipomovimento = 86;//Criação
+                $movimento->id_tipomovimento = 60;//Criação
                 $movimento->id_usuario = $identity["id"];
                 $movimento->data_movimento = date("Y-m-d H:i:s");
                 $movimento->osocomon = null;
@@ -377,7 +377,7 @@ class CircuitosController extends ControllerBase
                 $movimento = new Movimentos();
                 $movimento->setTransaction($transaction);
                 $movimento->id_circuitos = $circuitos->id;
-                $movimento->id_tipomovimento = 88;//Atualização
+                $movimento->id_tipomovimento = 62;//Atualização
                 $movimento->id_usuario = $identity["id"];
                 $movimento->data_movimento = date("Y-m-d H:i:s");
                 $movimento->osocomon = null;
@@ -434,7 +434,7 @@ class CircuitosController extends ControllerBase
             try {
                 switch($params["id_tipomovimento"])
                 {
-                    case "61"://Alteração de Banda
+                    case "63"://Alteração de Banda
                         $anterior = Circuitos::findFirst("id={$params["id_circuito"]}");
                         $vl_anterior = $anterior->Lov7->descricao;
                         //Alterando o Circuito
@@ -455,7 +455,7 @@ class CircuitosController extends ControllerBase
                         $movimento = new Movimentos();
                         $movimento->setTransaction($transaction);
                         $movimento->id_circuitos = $circuitos->id;
-                        $movimento->id_tipomovimento = 61;//Alteração de Banda
+                        $movimento->id_tipomovimento = 63;//Alteração de Banda
                         $movimento->id_usuario = $identity["id"];
                         $movimento->data_movimento = date("Y-m-d H:i:s");
                         $movimento->osocomon = $params["osocomon"];
@@ -471,7 +471,7 @@ class CircuitosController extends ControllerBase
                             $transaction->rollback('Erro ao criar o movimento: ' . $errors);
                         }
                     break;
-                    case "62"://Mudança de Status do Circuito
+                    case "64"://Mudança de Status do Circuito
                         $anterior = Circuitos::findFirst("id={$params["id_circuito"]}");
                         $vl_anterior = $anterior->Lov2->descricao;
                         //Alterando o Circuito
@@ -492,7 +492,7 @@ class CircuitosController extends ControllerBase
                         $movimento = new Movimentos();
                         $movimento->setTransaction($transaction);
                         $movimento->id_circuitos = $circuitos->id;
-                        $movimento->id_tipomovimento = 62;//Alteração de Status do Circuito
+                        $movimento->id_tipomovimento = 64;//Alteração de Status do Circuito
                         $movimento->id_usuario = $identity["id"];
                         $movimento->data_movimento = date("Y-m-d H:i:s");
                         $movimento->osocomon = $params["osocomon"];
@@ -508,7 +508,7 @@ class CircuitosController extends ControllerBase
                             $transaction->rollback('Erro ao criar o movimento: ' . $errors);
                         }
                     break;
-                    case "63"://Alteração de IP Gerencial
+                    case "65"://Alteração de IP Gerencial
                         $anterior = Circuitos::findFirst("id={$params["id_circuito"]}");
                         $vl_anterior = $anterior->ip_gerencia;
                         //Alterando o Circuito
@@ -528,7 +528,7 @@ class CircuitosController extends ControllerBase
                         $movimento = new Movimentos();
                         $movimento->setTransaction($transaction);
                         $movimento->id_circuitos = $circuitos->id;
-                        $movimento->id_tipomovimento = 63;//Alteração de IP Gerencial
+                        $movimento->id_tipomovimento = 65;//Alteração de IP Gerencial
                         $movimento->id_usuario = $identity["id"];
                         $movimento->data_movimento = date("Y-m-d H:i:s");
                         $movimento->osocomon = $params["osocomon"];
@@ -544,7 +544,7 @@ class CircuitosController extends ControllerBase
                             $transaction->rollback('Erro ao criar o movimento: ' . $errors);
                         }
                     break;
-                    case "64"://Alteração de IP Local
+                    case "66"://Alteração de IP Local
                         $anterior = Circuitos::findFirst("id={$params["id_circuito"]}");
                         $vl_anterior = $anterior->ip_redelocal;
                         //Alterando o Circuito
@@ -564,7 +564,7 @@ class CircuitosController extends ControllerBase
                         $movimento = new Movimentos();
                         $movimento->setTransaction($transaction);
                         $movimento->id_circuitos = $circuitos->id;
-                        $movimento->id_tipomovimento = 64;//Alteração de IP Local
+                        $movimento->id_tipomovimento = 66;//Alteração de IP Local
                         $movimento->id_usuario = $identity["id"];
                         $movimento->data_movimento = date("Y-m-d H:i:s");
                         $movimento->osocomon = $params["osocomon"];
@@ -580,7 +580,7 @@ class CircuitosController extends ControllerBase
                             $transaction->rollback('Erro ao criar o movimento: ' . $errors);
                         }
                     break;
-                    case "89"://Alteração de Equipamento
+                    case "67"://Alteração de Equipamento
                         $anterior = Circuitos::findFirst("id={$params["id_circuito"]}");
                         $vl_anterior = $anterior->Equipamento->nome;
                         //Alterando o Circuito
@@ -601,7 +601,7 @@ class CircuitosController extends ControllerBase
                         $movimento = new Movimentos();
                         $movimento->setTransaction($transaction);
                         $movimento->id_circuitos = $circuitos->id;
-                        $movimento->id_tipomovimento = 89;//Alteração de Equipamento
+                        $movimento->id_tipomovimento = 67;//Alteração de Equipamento
                         $movimento->id_usuario = $identity["id"];
                         $movimento->data_movimento = date("Y-m-d H:i:s");
                         $movimento->osocomon = $params["osocomon"];
@@ -656,7 +656,7 @@ class CircuitosController extends ControllerBase
                 $circuitos = Circuitos::findFirst("id={$dado}");
                 $circuitos->setTransaction($transaction);
                 $circuitos->excluido = 1;
-                $circuitos->id_status = 35;//Desativado
+                $circuitos->id_status = 32;//Desativado
                 $circuitos->data_atualizacao = date("Y-m-d H:i:s");
                 if ($circuitos->save() == false) {
                     $messages = $circuitos->getMessages();
@@ -670,7 +670,7 @@ class CircuitosController extends ControllerBase
                 $movimento = new Movimentos();
                 $movimento->setTransaction($transaction);
                 $movimento->id_circuitos = $circuitos->id;
-                $movimento->id_tipomovimento = 87;//Exclusão
+                $movimento->id_tipomovimento = 61;//Exclusão
                 $movimento->id_usuario = $identity["id"];
                 $movimento->data_movimento = date("Y-m-d H:i:s");
                 $movimento->osocomon = null;

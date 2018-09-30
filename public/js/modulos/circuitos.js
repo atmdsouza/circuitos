@@ -1043,7 +1043,7 @@ $("#id_tipomovimento").on("change", function(){
     var id_tipomovimento = $("#id_tipomovimento").val();
     switch(id_tipomovimento)
     {
-        case "61"://Alteração de Banda
+        case "63"://Alteração de Banda
             $("#bandamovdiv").show();
             $("#redelocalmovdiv").hide();
             $("#gerenciamovdiv").hide();
@@ -1051,7 +1051,7 @@ $("#id_tipomovimento").on("change", function(){
             $(".equip").hide();
             $("#salvaCircuitosmov").removeAttr("disabled");
         break;
-        case "62"://Mudança de Status do Circuito
+        case "64"://Mudança de Status do Circuito
             $("#statusmovdiv").show();
             $("#gerenciamovdiv").hide();
             $("#redelocalmovdiv").hide();
@@ -1059,7 +1059,7 @@ $("#id_tipomovimento").on("change", function(){
             $(".equip").hide();
             $("#salvaCircuitosmov").removeAttr("disabled");
         break;
-        case "63"://Alteração de IP Gerencial
+        case "65"://Alteração de IP Gerencial
             $("#gerenciamovdiv").show();
             $("#bandamovdiv").hide();
             $("#redelocalmovdiv").hide();
@@ -1067,7 +1067,7 @@ $("#id_tipomovimento").on("change", function(){
             $(".equip").hide();
             $("#salvaCircuitosmov").removeAttr("disabled");
         break;
-        case "64"://Alteração de IP Local
+        case "66"://Alteração de IP Local
             $("#redelocalmovdiv").show();
             $("#statusmovdiv").hide();
             $("#bandamovdiv").hide();
@@ -1075,7 +1075,7 @@ $("#id_tipomovimento").on("change", function(){
             $(".equip").hide();
             $("#salvaCircuitosmov").removeAttr("disabled");
         break;
-        case "89"://Alteração de Equipamento
+        case "67"://Alteração de Equipamento
             $(".equip").show();
             $("#redelocalmovdiv").hide();
             $("#statusmovdiv").hide();
@@ -1176,7 +1176,7 @@ $(document).on("click", ".criar_mov", function(){
     var id_tipomovimento = $("#id_tipomovimento").val();
     switch (id_tipomovimento)
     {
-        case "61"://Alteração de Banda
+        case "63"://Alteração de Banda
         //Validação de formulário
         $("#formCircuitosmov").validate({
             rules : {
@@ -1237,7 +1237,7 @@ $(document).on("click", ".criar_mov", function(){
             }
         });
         break;
-        case "62"://Mudança de Status do Circuito
+        case "64"://Mudança de Status do Circuito
         //Validação de formulário
         $("#formCircuitosmov").validate({
             rules : {
@@ -1298,7 +1298,7 @@ $(document).on("click", ".criar_mov", function(){
             }
         });
         break;
-        case "63"://Alteração de IP Gerencial
+        case "65"://Alteração de IP Gerencial
         //Validação de formulário
         $("#formCircuitosmov").validate({
             rules : {
@@ -1359,7 +1359,7 @@ $(document).on("click", ".criar_mov", function(){
             }
         });
         break;
-        case "64"://Alteração de IP Local
+        case "66"://Alteração de IP Local
         //Validação de formulário
         $("#formCircuitosmov").validate({
             rules : {
@@ -1420,7 +1420,7 @@ $(document).on("click", ".criar_mov", function(){
             }
         });
         break;
-        case "89"://Alteração de Equipamento
+        case "67"://Alteração de Equipamento
         //Validação de formulário
         $("#formCircuitosmov").validate({
             rules : {

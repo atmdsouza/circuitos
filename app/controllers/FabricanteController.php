@@ -111,7 +111,7 @@ class FabricanteController extends ControllerBase
                 $pessoaendereco = new PessoaEndereco();
                 $pessoaendereco->setTransaction($transaction);
                 $pessoaendereco->id_pessoa = $pessoa->id;
-                $pessoaendereco->id_tipoendereco = 50;//Comercial
+                $pessoaendereco->id_tipoendereco = 49;//Comercial
                 $pessoaendereco->cep = $util->formataCpfCnpj($params["cep"]);
                 $pessoaendereco->principal = 1;//Principal
                 $pessoaendereco->endereco = $params["endereco"];
@@ -129,7 +129,7 @@ class FabricanteController extends ControllerBase
                         $pessoaemail = new PessoaEmail();
                         $pessoaemail->setTransaction($transaction);
                         $pessoaemail->id_pessoa = $pessoa->id;
-                        $pessoaemail->id_tipoemail = 43;//Comercial
+                        $pessoaemail->id_tipoemail = 42;//Comercial
                         $pessoaemail->principal = $params["principal_email"][$key];
                         $pessoaemail->email = $email;
                         if ($pessoaemail->save() == false) {
@@ -143,7 +143,7 @@ class FabricanteController extends ControllerBase
                         $pessoatelefone = new PessoaTelefone();
                         $pessoatelefone->setTransaction($transaction);
                         $pessoatelefone->id_pessoa = $pessoa->id;
-                        $pessoatelefone->id_tipotelefone = 51;//Fixo
+                        $pessoatelefone->id_tipotelefone = 50;//Fixo
                         $pessoatelefone->principal = $params["principal_tel"][$key];
                         $pessoatelefone->ddd = $tel["ddd"];
                         $pessoatelefone->telefone = $tel["fone"];
@@ -223,7 +223,7 @@ class FabricanteController extends ControllerBase
                     $transaction->rollback("Não foi possível salvar a pessoa!");
                 }
                 $pessoaendereco->setTransaction($transaction);
-                $pessoaendereco->id_tipoendereco = 50;//Comercial
+                $pessoaendereco->id_tipoendereco = 49;//Comercial
                 $pessoaendereco->cep = $util->formataCpfCnpj($params["cep"]);
                 $pessoaendereco->principal = 1;//Principal
                 $pessoaendereco->endereco = $params["endereco"];
@@ -241,7 +241,7 @@ class FabricanteController extends ControllerBase
                         $pessoaemail = new PessoaEmail();
                         $pessoaemail->setTransaction($transaction);
                         $pessoaemail->id_pessoa = $pessoa->id;
-                        $pessoaemail->id_tipoemail = 43;//Comercial
+                        $pessoaemail->id_tipoemail = 42;//Comercial
                         $pessoaemail->principal = $params["principal_email"][$key];
                         $pessoaemail->email = $email;
                         if ($pessoaemail->save() == false) {
@@ -255,7 +255,7 @@ class FabricanteController extends ControllerBase
                         $pessoatelefone = new PessoaTelefone();
                         $pessoatelefone->setTransaction($transaction);
                         $pessoatelefone->id_pessoa = $pessoa->id;
-                        $pessoatelefone->id_tipotelefone = 51;//Fixo
+                        $pessoatelefone->id_tipotelefone = 50;//Fixo
                         $pessoatelefone->principal = $params["principal_tel"][$key];
                         $pessoatelefone->ddd = $tel["ddd"];
                         $pessoatelefone->telefone = $tel["fone"];

@@ -127,7 +127,7 @@ class UsuarioController extends ControllerBase
                 $pessoaemail = new PessoaEmail();
                 $pessoaemail->setTransaction($transaction);
                 $pessoaemail->id_pessoa = $pessoa->id;
-                $pessoaemail->id_tipoemail = 43;
+                $pessoaemail->id_tipoemail = 42;
                 $pessoaemail->principal = 1;
                 $pessoaemail->email = $params["email"];
                 $pessoaemail->ativo = 1;
