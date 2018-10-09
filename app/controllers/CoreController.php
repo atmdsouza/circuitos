@@ -282,16 +282,16 @@ class CoreController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_GET);
-        $endereço = EndEndereco::findFirst("cep='{$dados["cep"]}'");
-        $end = array(
-            "cep" => $endereço->cep,
-            "logradouro" => $endereço->tipo_logradouro . " " . $endereço->logradouro,
-            "bairro" => $endereço->EndBairro->bairro,
-            "cidade" => $endereço->EndCidade->cidade,
-            "uf" => $endereço->EndCidade->EndEstado->estado,
-            "sigla_uf" => $endereço->EndCidade->EndEstado->uf
-        );
-        if ($endereço) {
+        $endereco = EndEndereco::findFirst("cep='{$dados["cep"]}'");
+        $end = [
+            "cep" => $endereco->cep,
+            "logradouro" => $endereco->tipo_logradouro . " " . $endereco->logradouro,
+            "bairro" => $endereco->EndBairro->bairro,
+            "cidade" => $endereco->EndCidade->cidade,
+            "uf" => $endereco->EndCidade->EndEstado->estado,
+            "sigla_uf" => $endereco->EndCidade->EndEstado->uf
+        ];
+        if ($endereco) {
             $response->setContent(json_encode(array(
                 "endereco" => $end,
                 "operacao" => True

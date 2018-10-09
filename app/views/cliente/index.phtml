@@ -26,12 +26,12 @@ use Util\Util;
                 
                 switch($cliente->id_tipocliente){
                     case '44'://Pessoa Física
-                    $cnpjcfp = $util->mask($cliente->Pessoa->PessoaFisica->cpf,'###.###.###-##');
+                    $cnpjcfp = ($cliente->Pessoa->PessoaFisica->cpf) ?  $util->mask($cliente->Pessoa->PessoaFisica->cpf,'###.###.###-##') : null;
                     $esfera_cli = null;
                     break;
                     case '43'://Pessoa Juridica
-                    $cnpjcfp = $util->mask($cliente->Pessoa->PessoaJuridica->cnpj,'##.###.###/####-##');
-                    $esfera_cli = $cliente->Pessoa->PessoaJuridica->Lov->descricao;
+                    $cnpjcfp = (isset($cliente->Pessoa->PessoaJuridica->cnpj)) ? $util->mask($cliente->Pessoa->PessoaJuridica->cnpj,'##.###.###/####-##') : null;
+                    $esfera_cli = (isset($cliente->Pessoa->PessoaJuridica->Lov->descricao)) ? $cliente->Pessoa->PessoaJuridica->Lov->descricao : null;;
                     break;
                 }
                 switch($cliente->Pessoa->ativo){

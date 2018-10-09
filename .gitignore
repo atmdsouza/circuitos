@@ -1,3 +1,4 @@
-/nbproject/
-/.phalcon/
-/public/relatorios/
+/nbproject/*
+/.phalcon/*
+/public/relatorios/*
+/.idea/*
