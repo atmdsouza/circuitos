@@ -18,6 +18,8 @@ class ModeloController extends ControllerBase
 {
     public $tokenManager;
 
+    private $encode = "UTF-8";
+
     public function initialize()
     {
         //Voltando o usuário não autenticado para a página de login
@@ -45,7 +47,7 @@ class ModeloController extends ControllerBase
         $fabricante = Fabricante::buscaCompletaFabricante();
         $paginator = new Paginator([
             'data' => $modelo,
-            'limit'=> 500,
+            'limit'=> 10000,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();
@@ -60,10 +62,10 @@ class ModeloController extends ControllerBase
         $dados = filter_input_array(INPUT_GET);
         $modelo = Modelo::findFirst("id={$dados["id_modelo"]}");
         $dados = array(
-            "id" => $modelo->id,
-            "id_fabricante" => $modelo->id_fabricante,
-            "modelo" => $modelo->modelo,
-            "descricao" => $modelo->descricao,
+            "id" => $modelo->getId(),
+            "id_fabricante" => $modelo->getIdFabricante(),
+            "modelo" => $modelo->getModelo(),
+            "descricao" => $modelo->getDescricao(),
         );
         $response->setContent(json_encode(array(
             "dados" => $dados
@@ -87,9 +89,9 @@ class ModeloController extends ControllerBase
             try {
                 $modelo = new Modelo();
                 $modelo->setTransaction($transaction);
-                $modelo->id_fabricante = $params["id_fabricante"];
-                $modelo->modelo = $params["modelo"];
-                $modelo->descricao = $params["descricao"];
+                $modelo->setIdFabricante($params["id_fabricante"]);
+                $modelo->setModelo(mb_strtoupper($params["modelo"], $this->encode));
+                $modelo->setDescricao(mb_strtoupper($params["descricao"], $this->encode));
                 if ($modelo->save() == false) {
                     $transaction->rollback("Não foi possível salvar o modelo!");
                 }
@@ -131,9 +133,9 @@ class ModeloController extends ControllerBase
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             try {
                 $modelo->setTransaction($transaction);
-                $modelo->id_fabricante = $params["id_fabricante"];
-                $modelo->modelo = $params["modelo"];
-                $modelo->descricao = $params["descricao"];
+                $modelo->setIdFabricante($params["id_fabricante"]);
+                $modelo->setModelo(mb_strtoupper($params["modelo"], $this->encode));
+                $modelo->setDescricao(mb_strtoupper($params["descricao"], $this->encode));
                 if ($modelo->save() == false) {
                     $transaction->rollback("Não foi possível editar o modelo!");
                 }
@@ -173,7 +175,7 @@ class ModeloController extends ControllerBase
                 foreach($dados["ids"] as $dado){
                     $modelo = Modelo::findFirst("id={$dado}");
                     $modelo->setTransaction($transaction);
-                    $modelo->ativo = 1;
+                    $modelo->setAtivo(1);
                     if ($modelo->save() == false) {
                         $transaction->rollback("Não foi possível editar o modelo!");
                     }
@@ -214,7 +216,7 @@ class ModeloController extends ControllerBase
                 foreach($dados["ids"] as $dado){
                     $modelo = Modelo::findFirst("id={$dado}");
                     $modelo->setTransaction($transaction);
-                    $modelo->ativo = 0;
+                    $modelo->setAtivo(0);
                     if ($modelo->save() == false) {
                         $transaction->rollback("Não foi possível editar o modelo!");
                     }

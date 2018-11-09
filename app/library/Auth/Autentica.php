@@ -23,7 +23,7 @@ class Autentica extends Component
             return false;
         }
         // Check the password
-        if (!$this->security->checkHash($credentials['password'], $user->senha)) {
+        if (!$this->security->checkHash($credentials['password'], $user->getSenha())) {
             return false;
         }
         // Check if the remember me was selected
@@ -31,8 +31,8 @@ class Autentica extends Component
             $this->createRememberEnvironment($user);
         }
         $this->session->set('auth-identity', array(
-            'id' => $user->id,
-            'login' => $user->login,
+            'id' => $user->getId(),
+            'login' => $user->getLogin(),
             'nome' => $user->Pessoa->nome
         ));
         return true;

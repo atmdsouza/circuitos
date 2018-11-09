@@ -26,6 +26,8 @@ class EmpresaController extends ControllerBase
 {
     public $tokenManager;
 
+    private $encode = "UTF-8";
+
     public function initialize()
     {
         //Voltando o usuário não autenticado para a página de login
@@ -54,7 +56,7 @@ class EmpresaController extends ControllerBase
         $esfera = Lov::find("tipo=4");
         $paginator = new Paginator([
             'data' => $empresa,
-            'limit'=> 10,
+            'limit'=> 10000,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();
@@ -69,9 +71,9 @@ class EmpresaController extends ControllerBase
         $response = new Response();
         $dados = filter_input_array(INPUT_GET);
         $empresa = Empresa::findFirst("id={$dados["id_empresa"]}");
-        $pessoaendereco = PessoaEndereco::findFirst("id_pessoa={$empresa->id_pessoa}");
+        $pessoaendereco = PessoaEndereco::findFirst("id_pessoa={$empresa->getIdPessoa()}");
         $dados = array(
-            "id" => $empresa->id,
+            "id" => $empresa->getId(),
             "nome_pessoa" => $empresa->Pessoa->nome,
             "razaosocial" => $empresa->Pessoa->PessoaJuridica->razaosocial,
             "cnpj" => $empresa->Pessoa->PessoaJuridica->cnpj,
@@ -111,63 +113,66 @@ class EmpresaController extends ControllerBase
             try {
                 $pessoa = new Pessoa();
                 $pessoa->setTransaction($transaction);
-                $pessoa->nome = $params["nome_pessoa"];
+                $pessoa->setNome(mb_strtoupper($params["nome_pessoa"], $this->encode));
                 if ($pessoa->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pessoa!");
                 }
+                $cnpj = ($params["cnpj"]) ? $util->formataCpfCnpj($params["cnpj"]) : null;
+                $datafund = $params["fundacao"] ? $util->converterDataUSA($params["fundacao"]) : null;
                 $pessoajuridica = new PessoaJuridica();
                 $pessoajuridica->setTransaction($transaction);
-                $pessoajuridica->id = $pessoa->id;
-                $pessoajuridica->id_tipoesfera = $params["esfera"];
-                $pessoajuridica->id_setor = $params["setor"];
-                $pessoajuridica->cnpj = $util->formataCpfCnpj($params["cnpj"]);
-                $pessoajuridica->razaosocial = $params["razaosocial"];
-                $pessoajuridica->inscricaoestadual = $params["inscestadual"];
-                $pessoajuridica->inscricaomunicipal = $params["inscmunicipal"];
-                $pessoajuridica->datafund = $util->converterDataUSA($params["fundacao"]);
+                $pessoajuridica->setId($pessoa->getId());
+                $pessoajuridica->setIdTipoesfera($params["esfera"]);
+                $pessoajuridica->setIdSetor($params["setor"]);
+                $pessoajuridica->setCnpj($cnpj);
+                $pessoajuridica->setRazaosocial(mb_strtoupper($params["razaosocial"], $this->encode));
+                $pessoajuridica->setInscricaoestadual($params["inscestadual"]);
+                $pessoajuridica->setInscricaomunicipal($params["inscmunicipal"]);
+                $pessoajuridica->setDatafund($datafund);
                 if ($pessoajuridica->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pj!");
                 }
+                $cep = (!empty($params["cep"])) ? $util->formataCpfCnpj($params["cep"]) : null;
                 $pessoaendereco = new PessoaEndereco();
                 $pessoaendereco->setTransaction($transaction);
-                $pessoaendereco->id_pessoa = $pessoa->id;
-                $pessoaendereco->id_tipoendereco = 50;//Comercial
-                $pessoaendereco->cep = $util->formataCpfCnpj($params["cep"]);
-                $pessoaendereco->principal = 1;//Principal
-                $pessoaendereco->endereco = $params["endereco"];
-                $pessoaendereco->numero = $params["numero"];
-                $pessoaendereco->bairro = $params["bairro"];
-                $pessoaendereco->cidade = $params["cidade"];
-                $pessoaendereco->estado = $params["estado"];
-                $pessoaendereco->complemento = $params["complemento"];
-                $pessoaendereco->sigla_estado = $params["sigla_uf"];
+                $pessoaendereco->setIdPessoa($pessoa->getId());
+                $pessoaendereco->setIdTipoendereco(49);//Comercial
+                $pessoaendereco->setCep($cep);
+                $pessoaendereco->setPrincipal(1);//Principal
+                $pessoaendereco->setEndereco(mb_strtoupper($params["endereco"], $this->encode));
+                $pessoaendereco->setNumero(mb_strtoupper($params["numero"], $this->encode));
+                $pessoaendereco->setBairro(mb_strtoupper($params["bairro"], $this->encode));
+                $pessoaendereco->setCidade(mb_strtoupper($params["cidade"], $this->encode));
+                $pessoaendereco->setEstado(mb_strtoupper($params["estado"], $this->encode));
+                $pessoaendereco->setComplemento(mb_strtoupper($params["complemento"], $this->encode));
+                $pessoaendereco->setSiglaEstado(mb_strtoupper($params["sigla_uf"], $this->encode));
                 if ($pessoaendereco->save() == false) {
                     $transaction->rollback("Não foi possível salvar o pessoaendereco!");
                 }
                 $pessoaemail = new PessoaEmail();
                 $pessoaemail->setTransaction($transaction);
-                $pessoaemail->id_pessoa = $pessoa->id;
-                $pessoaemail->id_tipoemail = 43;
-                $pessoaemail->principal = 1;
-                $pessoaemail->email = $params["email"];
-                $pessoaemail->ativo = 1;
+                $pessoaemail->setIdPessoa($pessoa->getId());
+                $pessoaemail->setIdTipoemail(43);
+                $pessoaemail->setPrincipal(1);
+                $pessoaemail->setEmail($params["email"]);
+                $pessoaemail->setAtivo(1);
                 if ($pessoaemail->save() == false) {
                     $transaction->rollback("Não foi possível salvar o email!");
                 }
                 $empresa = new Empresa();
                 $empresa->setTransaction($transaction);
-                $empresa->id_pessoa = $pessoa->id;
+                $empresa->setIdPessoa($pessoa->getId());
                 if ($empresa->save() == false) {
                     $transaction->rollback("Não foi possível salvar o usuário!");
                 }
                 $empresaparams = new EmpresaParametros();
                 $empresaparams->setTransaction($transaction);
-                $empresaparams->id_empresa = $empresa->id;
-                $empresaparams->mail_host = $params["mail_host"];
-                $empresaparams->mail_smtpssl = $params["mail_smtpssl"];
-                $empresaparams->mail_user = $params["mail_user"];
-                $empresaparams->mail_passwrd = $params["mail_passwrd"];
-                $empresaparams->mail_port = $params["mail_port"];
+                $empresaparams->setIdEmpresa($empresa->getId());
+                $empresaparams->setMailHost($params["mail_host"]);
+                $empresaparams->setMailSmtpssl($params["mail_smtpssl"]);
+                $empresaparams->setMailUser($params["mail_user"]);
+                $empresaparams->setMailPasswrd($params["mail_passwrd"]);
+                $empresaparams->setMailPort($params["mail_port"]);
                 if ($empresaparams->save() == false) {
                     $transaction->rollback("Não foi possível salvar o usuário!");
                 }
@@ -180,7 +185,7 @@ class EmpresaController extends ControllerBase
             } catch (TxFailed $e) {
                 $response->setContent(json_encode(array(
                     "operacao" => False,
-                    "mensagem" => $e->getMessages()
+                    "mensagem" => $e->getMessage()
                 )));
                 return $response;
             }
@@ -206,45 +211,47 @@ class EmpresaController extends ControllerBase
         $params = array();
         parse_str($dados["dados"], $params);
         $empresa = Empresa::findFirst("id={$params["id"]}");
-        $pessoa = Pessoa::findFirst("id={$empresa->id_pessoa}");
-        $pessoajuridica = PessoaJuridica::findFirst("id={$empresa->id_pessoa}");
-        $pessoaemail = PessoaEmail::findFirst("id_pessoa={$empresa->id_pessoa}");
-        $pessoaendereco = PessoaEndereco::findFirst("id_pessoa={$empresa->id_pessoa}");
+        $pessoa = Pessoa::findFirst("id={$empresa->getIdPessoa()}");
+        $pessoajuridica = PessoaJuridica::findFirst("id={$empresa->getIdPessoa()}");
+        $pessoaemail = PessoaEmail::findFirst("id_pessoa={$empresa->getIdPessoa()}");
+        $pessoaendereco = PessoaEndereco::findFirst("id_pessoa={$empresa->getIdPessoa()}");
         $empresaparams = EmpresaParametros::findFirst("id_empresa={$params["id"]}");
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             try {
                 $pessoa->setTransaction($transaction);
-                $pessoa->nome = $params["nome_pessoa"];
-                $pessoa->update_at = date("Y-m-d H:i:s");
+                $pessoa->setNome(mb_strtoupper($params["nome_pessoa"], $this->encode));
+                $pessoa->setUpdateAt(date("Y-m-d H:i:s"));
                 if ($pessoa->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pessoa!");
                 }
+                $cnpj = ($params["cnpj"]) ? $util->formataCpfCnpj($params["cnpj"]) : null;
                 $pessoajuridica->setTransaction($transaction);
-                $pessoajuridica->id_tipoesfera = $params["esfera"];
-                $pessoajuridica->id_setor = $params["setor"];
-                if ($pessoajuridica->cnpj != $util->formataCpfCnpj($params["cnpj"])) {
-                    $pessoajuridica->cnpj = $util->formataCpfCnpj($params["cnpj"]);
+                $pessoajuridica->setIdTipoesfera($params["esfera"]);
+                $pessoajuridica->setIdSetor($params["setor"]);
+                if ($pessoajuridica->getCnpj() != $cnpj) {
+                    $pessoajuridica->setCnpj($cnpj);
                 }
                 $datafund = $params["fundacao"] ? $util->converterDataUSA($params["fundacao"]) : null;
-                $pessoajuridica->razaosocial = $params["razaosocial"];
-                $pessoajuridica->inscricaoestadual = $params["inscestadual"];
-                $pessoajuridica->inscricaomunicipal = $params["inscmunicipal"];
-                $pessoajuridica->datafund = $datafund;
+                $pessoajuridica->setRazaosocial(mb_strtoupper($params["razaosocial"], $this->encode));
+                $pessoajuridica->setInscricaoestadual($params["inscestadual"]);
+                $pessoajuridica->setInscricaomunicipal($params["inscmunicipal"]);
+                $pessoajuridica->setDatafund($datafund);
                 if ($pessoajuridica->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pj!");
                 }
+                $cep = (!empty($params["cep"])) ? $util->formataCpfCnpj($params["cep"]) : null;
                 $pessoaendereco->setTransaction($transaction);
-                $pessoaendereco->id_tipoendereco = 50;//Comercial
-                $pessoaendereco->cep = $util->formataCpfCnpj($params["cep"]);
-                $pessoaendereco->principal = 1;//Principal
-                $pessoaendereco->endereco = $params["endereco"];
-                $pessoaendereco->numero = $params["numero"];
-                $pessoaendereco->bairro = $params["bairro"];
-                $pessoaendereco->cidade = $params["cidade"];
-                $pessoaendereco->estado = $params["estado"];
-                $pessoaendereco->complemento = $params["complemento"];
-                $pessoaendereco->sigla_estado = $params["sigla_uf"];
+                $pessoaendereco->setIdTipoendereco(49);//Comercial
+                $pessoaendereco->setCep($cep);
+                $pessoaendereco->setPrincipal(1);//Principal
+                $pessoaendereco->setEndereco(mb_strtoupper($params["endereco"], $this->encode));
+                $pessoaendereco->setNumero(mb_strtoupper($params["numero"], $this->encode));
+                $pessoaendereco->setBairro(mb_strtoupper($params["bairro"], $this->encode));
+                $pessoaendereco->setCidade(mb_strtoupper($params["cidade"], $this->encode));
+                $pessoaendereco->setEstado(mb_strtoupper($params["estado"], $this->encode));
+                $pessoaendereco->setComplemento(mb_strtoupper($params["complemento"], $this->encode));
+                $pessoaendereco->setSiglaEstado(mb_strtoupper($params["sigla_uf"], $this->encode));
                 if ($pessoaendereco->save() == false) {
                     $messages = $pessoaendereco->getMessages();
                     $errors = '';
@@ -253,19 +260,19 @@ class EmpresaController extends ControllerBase
                     }
                     $transaction->rollback('Erro ao editar o endereço: ' . $errors);
                 }
-                if($params["email"] != $pessoaemail->email){
+                if($params["email"] != $pessoaemail->getEmail()){
                     $pessoaemail->setTransaction($transaction);
-                    $pessoaemail->email = $params["email"];
+                    $pessoaemail->setEmail($params["email"]);
                     if ($pessoaemail->save() == false) {
                         $transaction->rollback("Não foi possível salvar o email!");
                     }
                 }
                 $empresaparams->setTransaction($transaction);
-                $empresaparams->mail_host = $params["mail_host"];
-                $empresaparams->mail_smtpssl = $params["mail_smtpssl"];
-                $empresaparams->mail_user = $params["mail_user"];
-                $empresaparams->mail_passwrd = $params["mail_passwrd"];
-                $empresaparams->mail_port = $params["mail_port"];
+                $empresaparams->setMailHost($params["mail_host"]);
+                $empresaparams->setMailSmtpssl($params["mail_smtpssl"]);
+                $empresaparams->setMailUser($params["mail_user"]);
+                $empresaparams->setMailPasswrd($params["mail_passwrd"]);
+                $empresaparams->setMailPort($params["mail_port"]);
                 if ($empresaparams->save() == false) {
                     $transaction->rollback("Não foi possível salvar o usuário!");
                 }
@@ -301,7 +308,7 @@ class EmpresaController extends ControllerBase
         $del = null;
         foreach($dados["ids"] as $dado){
             $empresa = Empresa::findFirst("id={$dado}");
-            $del = $core->deletarPessoaAction($empresa->id_pessoa);
+            $del = $core->deletarPessoaAction($empresa->getIdPessoa());
         }
         if($del){
             $response->setContent(json_encode(array(

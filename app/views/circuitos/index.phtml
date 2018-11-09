@@ -36,6 +36,12 @@ use Util\Util;
                         $unidade = $circuitos->ClienteUnidade->Pessoa->nome;
                     break;
                 }
+                $desc_funcao = ($circuitos->id_funcao) ? $circuitos->Lov5->descricao : "Campo Obrigatório";
+                $desc_tipoacesso = ($circuitos->id_tipoacesso) ? $circuitos->Lov4->descricao : "Campo Obrigatório";
+                $desc_banda = ($circuitos->id_banda) ? $circuitos->Lov7->descricao : "Campo Obrigatório";
+                $color_funcao = (!$circuitos->id_funcao) ? "style='font-weight: bold; color: red;'" : null;
+                $color_tipoacesso = (!$circuitos->id_tipoacesso) ? "style='font-weight: bold; color: red;'" : null;
+                $color_banda = (!$circuitos->id_banda) ? "style='font-weight: bold; color: red;'" : null;
             ?>
                 <tr>
                     <td>
@@ -50,14 +56,14 @@ use Util\Util;
                     <td>
                         <?php echo $unidade ?>
                     </td>
-                    <td>
-                        <?php echo $circuitos->Lov5->descricao ?>
+                    <td <?php echo $color_funcao ?>>
+                        <?php echo $desc_funcao ?>
                     </td>
-                    <td>
-                        <?php echo $circuitos->Lov4->descricao ?>
+                    <td <?php echo $color_tipoacesso ?>>
+                        <?php echo $desc_tipoacesso ?>
                     </td>
-                    <td>
-                        <?php echo $circuitos->Lov7->descricao ?>
+                    <td <?php echo $color_banda ?>>
+                        <?php echo $desc_banda ?>
                     </td>
                     <td>
                         <?php echo $data_cadastro ?>

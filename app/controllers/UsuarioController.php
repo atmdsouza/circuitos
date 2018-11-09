@@ -24,6 +24,8 @@ class UsuarioController extends ControllerBase
 {
     public $tokenManager;
 
+    private $encode = "UTF-8";
+
     public function initialize()
     {
         //Voltando o usuário não autenticado para a página de login
@@ -51,7 +53,7 @@ class UsuarioController extends ControllerBase
         $roles = PhalconRoles::find();
         $paginator = new Paginator([
             'data' => $usuarios,
-            'limit'=> 500,
+            'limit'=> 10000,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();
@@ -64,14 +66,14 @@ class UsuarioController extends ControllerBase
         $this->view->disable();
         $dados = filter_input_array(INPUT_GET);
         $usuario = Usuario::findFirst("id={$dados["id_usuario"]}");
-        $pessoa = Pessoa::findFirst("id={$usuario->id_pessoa}");
-        $pessoaemail = PessoaEmail::findFirst("id_pessoa={$pessoa->id}");
+        $pessoa = Pessoa::findFirst("id={$usuario->getIdPessoa()}");
+        $pessoaemail = PessoaEmail::findFirst("id_pessoa={$pessoa->getId()}");
         $dados = array(
-            "id" => $usuario->id,
-            "login" => $usuario->login,
-            "email" => $pessoaemail->email,
-            "perfil" => $usuario->roles_name,
-            "nome" => $pessoa->nome,
+            "id" => $usuario->getId(),
+            "login" => $usuario->getLogin(),
+            "email" => $pessoaemail->getEmail(),
+            "perfil" => $usuario->getRolesName(),
+            "nome" => $pessoa->getNome(),
         );
         //Instanciar a resposta HTTP
         $response = new Response();
@@ -120,26 +122,26 @@ class UsuarioController extends ControllerBase
             try {
                 $pessoa = new Pessoa();
                 $pessoa->setTransaction($transaction);
-                $pessoa->nome = $params["nome_pessoa"];
+                $pessoa->setNome(mb_strtoupper($params["nome_pessoa"], $this->encode));
                 if ($pessoa->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pessoa!");
                 }
                 $pessoaemail = new PessoaEmail();
                 $pessoaemail->setTransaction($transaction);
-                $pessoaemail->id_pessoa = $pessoa->id;
-                $pessoaemail->id_tipoemail = 42;
-                $pessoaemail->principal = 1;
-                $pessoaemail->email = $params["email"];
-                $pessoaemail->ativo = 1;
+                $pessoaemail->setIdPessoa($pessoa->getId());
+                $pessoaemail->setIdTipoemail(42);
+                $pessoaemail->setPrincipal(1);
+                $pessoaemail->setEmail($params["email"]);
+                $pessoaemail->setAtivo(1);
                 if ($pessoaemail->save() == false) {
                     $transaction->rollback("Não foi possível salvar o email!");
                 }
                 $usuario = new Usuario();
                 $usuario->setTransaction($transaction);
-                $usuario->id_pessoa = $pessoa->id;
-                $usuario->roles_name = $params["roles_name"];
-                $usuario->login = $params["login"];
-                $usuario->senha = $this->security->hash($senha);
+                $usuario->setIdPessoa($pessoa->getId());
+                $usuario->setRolesName($params["roles_name"]);
+                $usuario->setLogin($params["login"]);
+                $usuario->setSenha($this->security->hash($senha));
                 if ($usuario->save() == false) {
                     $transaction->rollback("Não foi possível salvar o usuário!");
                 }
@@ -185,28 +187,28 @@ class UsuarioController extends ControllerBase
         $params = array();
         parse_str($dados["dados"], $params);
         $usuario = Usuario::findFirst("id={$params["id"]}");
-        $pessoa = Pessoa::findFirst("id={$usuario->id_pessoa}");
-        $pessoaemail = PessoaEmail::findFirst("id_pessoa={$usuario->id_pessoa}");
+        $pessoa = Pessoa::findFirst("id={$usuario->getIdPessoa()}");
+        $pessoaemail = PessoaEmail::findFirst("id_pessoa={$usuario->getIdPessoa()}");
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             try {
                 $pessoa->setTransaction($transaction);
-                $pessoa->nome = $params["nome_pessoa"];
-                $pessoa->update_at = date("Y-m-d H:i:s");
+                $pessoa->setNome(mb_strtoupper($params["nome_pessoa"], $this->encode));
+                $pessoa->setUpdateAt(date("Y-m-d H:i:s"));
                 if ($pessoa->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pessoa!");
                 }
-                if($params["email"] != $pessoaemail->email){
+                if($params["email"] != $pessoaemail->getEmail()){
                     $pessoaemail->setTransaction($transaction);
-                    $pessoaemail->email = $params["email"];
+                    $pessoaemail->setEmail($params["email"]);
                     if ($pessoaemail->save() == false) {
                         $transaction->rollback("Não foi possível salvar o email!");
                     }
                 }
                 $usuario->setTransaction($transaction);
-                $usuario->roles_name = $params["roles_name"];
-                if($usuario->login != $params["login"]){
-                    $usuario->login = $params["login"];
+                $usuario->setRolesName($params["roles_name"]);
+                if($usuario->getLogin() != $params["login"]){
+                    $usuario->setLogin($params["login"]);
                 }
                 if ($usuario->save() == false) {
                     $transaction->rollback("Não foi possível salvar o usuário!");
@@ -277,27 +279,27 @@ class UsuarioController extends ControllerBase
         $transaction = $manager->get();
         $dados = filter_input_array(INPUT_POST);
         $usuario = Usuario::findFirst("id={$dados["id"]}");
-        $pessoa = Pessoa::findFirst("id={$usuario->id_pessoa}");
-        $pessoaemail = PessoaEmail::findFirst("id_pessoa={$usuario->id_pessoa}");
+        $pessoa = Pessoa::findFirst("id={$usuario->getIdPessoa()}");
+        $pessoaemail = PessoaEmail::findFirst("id_pessoa={$usuario->getIdPessoa()}");
         $senha = $this->gerarSenhaAction(6,true,true,false);
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             try {
                 $pessoa->setTransaction($transaction);
-                $pessoa->update_at = date("Y-m-d H:i:s");
+                $pessoa->setUpdateAt(date("Y-m-d H:i:s"));
                 if ($pessoa->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pessoa!");
                 }
                 $usuario->setTransaction($transaction);
-                $usuario->senha = $this->security->hash($senha);
-                $usuario->primeiroacesso = 0;
+                $usuario->setSenha($this->security->hash($senha));
+                $usuario->setPrimeiroacesso(0);
                 if ($usuario->save() == false) {
                     $transaction->rollback("Não foi possível salvar o usuário!");
                 }
                 //Commita a transação
                 $transaction->commit();
                 $html = $template->recuperaSenha($senha);
-                $core->enviarEmailAction(1,$pessoaemail->email,$pessoa->nome,null,"E-mail de Segurança",$html);
+                $core->enviarEmailAction(1,$pessoaemail->getEmail(),$pessoa->getNome(),null,"E-mail de Segurança",$html);
                 $response->setContent(json_encode(array(
                     "operacao" => True
                 )));
@@ -328,7 +330,7 @@ class UsuarioController extends ControllerBase
         $del = null;
         foreach($dados["ids"] as $dado){
             $usuario = Usuario::findFirst("id={$dado}");
-            $del = $core->ativarPessoaAction($usuario->id_pessoa);
+            $del = $core->ativarPessoaAction($usuario->getIdPessoa());
         }
         if($del){
             $response->setContent(json_encode(array(
@@ -354,7 +356,7 @@ class UsuarioController extends ControllerBase
         $del = null;
         foreach($dados["ids"] as $dado){
             $usuario = Usuario::findFirst("id={$dado}");
-            $del = $core->inativarPessoaAction($usuario->id_pessoa);
+            $del = $core->inativarPessoaAction($usuario->getIdPessoa());
         }
         if($del){
             $response->setContent(json_encode(array(
@@ -380,7 +382,7 @@ class UsuarioController extends ControllerBase
         $del = null;
         foreach($dados["ids"] as $dado){
             $usuario = Usuario::findFirst("id={$dado}");
-            $del = $core->deletarPessoaAction($usuario->id_pessoa);
+            $del = $core->deletarPessoaAction($usuario->getIdPessoa());
         }
         if($del){
             $response->setContent(json_encode(array(
@@ -405,15 +407,15 @@ class UsuarioController extends ControllerBase
         $manager = new TxManager();
         $transaction = $manager->get();
         $usuario = Usuario::findFirst("id={$id_usuario}");
-        $pessoa = Pessoa::findFirst("id={$usuario->id_pessoa}");
+        $pessoa = Pessoa::findFirst("id={$usuario->getIdPessoa()}");
         try {
             $pessoa->setTransaction($transaction);
-            $pessoa->update_at = date("Y-m-d H:i:s");
+            $pessoa->setUpdateAt(date("Y-m-d H:i:s"));
             if ($pessoa->save() == false) {
                 $transaction->rollback("Não foi possível salvar a pessoa!");
             }
             $usuario->setTransaction($transaction);
-            $usuario->senha = $this->security->hash($senha);
+            $usuario->setSenha($this->security->hash($senha));
             if ($usuario->save() == false) {
                 $transaction->rollback("Não foi possível salvar o usuário!");
             }
@@ -456,7 +458,7 @@ class UsuarioController extends ControllerBase
                 } else {
                     if($this->request->getPost('password') === $this->request->getPost('password2')) {
                         $this->alterarSenhaAction($identity["id"], $this->request->getPost('password'));
-                        $user->primeiroacesso = 1;
+                        $user->setPrimeiroacesso(1);
                         $user->save();
                         return $this->response->redirect("index/index");
                     } else {
@@ -480,7 +482,7 @@ class UsuarioController extends ControllerBase
         if ($usuario->Pessoa->ativo == 0) {
             $redirect = "session/inativo";
         } else {
-            switch ($usuario->primeiroacesso) {
+            switch ($usuario->getPrimeiroacesso()) {
                 case '1':
                 $redirect = "index/index";
                 break;
@@ -503,25 +505,25 @@ class UsuarioController extends ControllerBase
         $manager = new TxManager();
         $transaction = $manager->get();
         $usuario = Usuario::findFirst("id={$id_usuario}");
-        $pessoa = Pessoa::findFirst("id={$usuario->id_pessoa}");
-        $pessoaemail = PessoaEmail::findFirst("id_pessoa={$usuario->id_pessoa}");
+        $pessoa = Pessoa::findFirst("id={$usuario->getIdPessoa()}");
+        $pessoaemail = PessoaEmail::findFirst("id_pessoa={$usuario->getIdPessoa()}");
         $senha = $this->gerarSenhaAction(6,true,true,false);
         try {
             $pessoa->setTransaction($transaction);
-            $pessoa->update_at = date("Y-m-d H:i:s");
+            $pessoa->setUpdateAt(date("Y-m-d H:i:s"));
             if ($pessoa->save() == false) {
                 $transaction->rollback("Não foi possível salvar a pessoa!");
             }
             $usuario->setTransaction($transaction);
-            $usuario->senha = $this->security->hash($senha);
-            $usuario->primeiroacesso = 0;
+            $usuario->setSenha($this->security->hash($senha));
+            $usuario->setPrimeiroacesso(0);
             if ($usuario->save() == false) {
                 $transaction->rollback("Não foi possível salvar o usuário!");
             }
             //Commita a transação
             $transaction->commit();
             $html = $template->recuperaSenha($senha);
-            $email = $core->enviarEmailAction(1,$pessoaemail->email,$pessoa->nome,null,"E-mail de Segurança",$html);
+            $email = $core->enviarEmailAction(1,$pessoaemail->getEmail(),$pessoa->getNome(),null,"E-mail de Segurança",$html);
             if ($email) {
                 return True;
             } else {

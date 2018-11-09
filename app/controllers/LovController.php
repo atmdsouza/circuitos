@@ -18,6 +18,8 @@ class LovController extends ControllerBase
 {
     public $tokenManager;
 
+    private $encode = "UTF-8";
+
     public function initialize()
     {
         //Voltando o usuário não autenticado para a página de login
@@ -59,11 +61,13 @@ class LovController extends ControllerBase
             "14" => "Cluster",
             "15" => "Tipo Equipamento",
             "16" => "Tipo Movimento",
-            "17" => "Tipo Banda"
+            "17" => "Tipo Banda",
+            "18" => "Tipo Cidade Digital",
+            "19" => "Tipo Link"
         ];
         $paginator = new Paginator([
             'data' => $lov,
-            'limit'=> 500,
+            'limit'=> 10000,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();
@@ -78,12 +82,12 @@ class LovController extends ControllerBase
         $dados = filter_input_array(INPUT_GET);
         $lov = Lov::findFirst("id={$dados["id_lov"]}");
         $dados = array(
-            "id" => $lov->id,
-            "tipo" => $lov->tipo,
-            "descricao" => $lov->descricao,
-            "codigoespecifico" => $lov->codigoespecifico,
-            "valor" => $lov->valor,
-            "duracao" => $lov->duracao
+            "id" => $lov->getId(),
+            "tipo" => $lov->getTipo(),
+            "descricao" => $lov->getDescricao(),
+            "codigoespecifico" => $lov->getCodigoespecifico(),
+            "valor" => $lov->getValor(),
+            "duracao" => $lov->getDuracao()
         );
         $response->setContent(json_encode(array(
             "dados" => $dados
@@ -108,11 +112,11 @@ class LovController extends ControllerBase
             try {
                 $lov = new Lov();
                 $lov->setTransaction($transaction);
-                $lov->tipo = $params["tipo"];
-                $lov->descricao = $params["descricao"];
-                $lov->codigoespecifico = $params["codigoespecifico"];
-                $lov->valor = $params["valor"];
-                $lov->duracao = $params["duracao"];
+                $lov->setTipo($params["tipo"]);
+                $lov->setDescricao(mb_strtoupper($params["descricao"], $this->encode));
+                $lov->setCodigoespecifico(mb_strtoupper($params["codigoespecifico"], $this->encode));
+                $lov->setValor(mb_strtoupper($params["valor"], $this->encode));
+                $lov->setDuracao($params["duracao"]);
                 if ($lov->save() == false) {
                     $transaction->rollback("Não foi possível salvar o registro!");
                 }
@@ -154,11 +158,11 @@ class LovController extends ControllerBase
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             try {
                 $lov->setTransaction($transaction);
-                $lov->tipo = $params["tipo"];
-                $lov->descricao = $params["descricao"];
-                $lov->codigoespecifico = $params["codigoespecifico"];
-                $lov->valor = $params["valor"];
-                $lov->duracao = $params["duracao"];
+                $lov->setTipo($params["tipo"]);
+                $lov->setDescricao(mb_strtoupper($params["descricao"], $this->encode));
+                $lov->setCodigoespecifico(mb_strtoupper($params["codigoespecifico"], $this->encode));
+                $lov->setValor(mb_strtoupper($params["valor"], $this->encode));
+                $lov->setDuracao($params["duracao"]);
                 if ($lov->save() == false) {
                     $transaction->rollback("Não foi possível salvar o registro!");
                 }

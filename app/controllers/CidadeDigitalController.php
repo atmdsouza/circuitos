@@ -19,6 +19,8 @@ class CidadeDigitalController extends ControllerBase
 {
     public $tokenManager;
 
+    private $encode = "UTF-8";
+
     public function initialize()
     {
         //Voltando o usuário não autenticado para a página de login
@@ -53,7 +55,7 @@ class CidadeDigitalController extends ControllerBase
         ));
         $paginator = new Paginator([
             'data' => $cidadedigital,
-            'limit'=> 500,
+            'limit'=> 10000,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();
@@ -69,11 +71,11 @@ class CidadeDigitalController extends ControllerBase
         $dados = filter_input_array(INPUT_GET);
         $cidadedigital = CidadeDigital::findFirst("id={$dados["id_cidadedigital"]}");
         $dados = array(
-            "id" => $cidadedigital->id,
-            "id_tipo" => $cidadedigital->id_tipo,
-            "id_cidade" => $cidadedigital->id_cidade,
-            "descricao" => $cidadedigital->descricao,
-            "endereco" => $cidadedigital->endereco
+            "id" => $cidadedigital->getId(),
+            "id_tipo" => $cidadedigital->getIdTipo(),
+            "id_cidade" => $cidadedigital->getIdCidade(),
+            "descricao" => $cidadedigital->getDescricao(),
+            "endereco" => $cidadedigital->getEndereco()
         );
         $response->setContent(json_encode(array(
             "dados" => $dados
@@ -97,10 +99,10 @@ class CidadeDigitalController extends ControllerBase
             try {
                 $cidadedigital = new CidadeDigital();
                 $cidadedigital->setTransaction($transaction);
-                $cidadedigital->id_tipo = $params["id_tipo"];
-                $cidadedigital->id_cidade = $params["id_cidade"];
-                $cidadedigital->descricao = $params["descricao"];
-                $cidadedigital->endereco = $params["endereco"];
+                $cidadedigital->setIdTipo($params["id_tipo"]);
+                $cidadedigital->setIdCidade($params["id_cidade"]);
+                $cidadedigital->setDescricao(mb_strtoupper($params["descricao"], $this->encode));
+                $cidadedigital->setEndereco($params["endereco"]);
                 if ($cidadedigital->save() == false) {
                     $transaction->rollback("Não foi possível salvar o cidadedigital!");
                 }
@@ -142,10 +144,10 @@ class CidadeDigitalController extends ControllerBase
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             try {
                 $cidadedigital->setTransaction($transaction);
-                $cidadedigital->id_tipo = $params["id_tipo"];
-                $cidadedigital->id_cidade = $params["id_cidade"];
-                $cidadedigital->descricao = $params["descricao"];
-                $cidadedigital->endereco = $params["endereco"];
+                $cidadedigital->setIdTipo($params["id_tipo"]);
+                $cidadedigital->setIdCidade($params["id_cidade"]);
+                $cidadedigital->setDescricao(mb_strtoupper($params["descricao"], $this->encode));
+                $cidadedigital->setEndereco($params["endereco"]);
                 if ($cidadedigital->save() == false) {
                     $transaction->rollback("Não foi possível editar o cidadedigital!");
                 }
@@ -185,7 +187,7 @@ class CidadeDigitalController extends ControllerBase
                 foreach($dados["ids"] as $dado){
                     $cidadedigital = CidadeDigital::findFirst("id={$dado}");
                     $cidadedigital->setTransaction($transaction);
-                    $cidadedigital->ativo = 1;
+                    $cidadedigital->setAtivo(1);
                     if ($cidadedigital->save() == false) {
                         $transaction->rollback("Não foi possível editar o cidadedigital!");
                     }
@@ -226,7 +228,7 @@ class CidadeDigitalController extends ControllerBase
                 foreach($dados["ids"] as $dado){
                     $cidadedigital = CidadeDigital::findFirst("id={$dado}");
                     $cidadedigital->setTransaction($transaction);
-                    $cidadedigital->ativo = 0;
+                    $cidadedigital->setAtivo(0);
                     if ($cidadedigital->save() == false) {
                         $transaction->rollback("Não foi possível editar o cidadedigital!");
                     }
@@ -267,7 +269,7 @@ class CidadeDigitalController extends ControllerBase
                 foreach($dados["ids"] as $dado){
                     $cidadedigital = CidadeDigital::findFirst("id={$dado}");
                     $cidadedigital->setTransaction($transaction);
-                    $cidadedigital->excluido = 1;
+                    $cidadedigital->setExcluido(1);
                     if ($cidadedigital->save() == false) {
                         $transaction->rollback("Não foi possível editar o cidadedigital!");
                     }

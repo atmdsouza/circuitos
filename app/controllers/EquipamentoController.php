@@ -20,6 +20,8 @@ class EquipamentoController extends ControllerBase
 {
     public $tokenManager;
 
+    private $encode = "UTF-8";
+
     public function initialize()
     {
         //Voltando o usuário não autenticado para a página de login
@@ -51,7 +53,7 @@ class EquipamentoController extends ControllerBase
         $fabricante = Fabricante::buscaCompletaFabricante();
         $paginator = new Paginator([
             'data' => $equipamento,
-            'limit'=> 500,
+            'limit'=> 10000,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();
@@ -67,14 +69,14 @@ class EquipamentoController extends ControllerBase
         $dados = filter_input_array(INPUT_GET);
         $equipamento = Equipamento::findFirst("id={$dados["id_equipamento"]}");
         $dados = array(
-            "id" => $equipamento->id,
-            "id_fabricante" => $equipamento->id_fabricante,
-            "id_modelo" => $equipamento->id_modelo,
-            "nome" => $equipamento->nome,
-            "id_tipoequipamento" => $equipamento->id_tipoequipamento,
-            "numserie" => $equipamento->numserie,
-            "numpatrimonio" => $equipamento->numpatrimonio,
-            "descricao" => $equipamento->descricao,
+            "id" => $equipamento->getId(),
+            "id_fabricante" => $equipamento->getIdFabricante(),
+            "id_modelo" => $equipamento->getIdModelo(),
+            "nome" => $equipamento->getNome(),
+            "id_tipoequipamento" => $equipamento->getIdTipoequipamento(),
+            "numserie" => $equipamento->getNumserie(),
+            "numpatrimonio" => $equipamento->getNumpatrimonio(),
+            "descricao" => $equipamento->getDescricao(),
         );
         $response->setContent(json_encode(array(
             "dados" => $dados
@@ -98,13 +100,13 @@ class EquipamentoController extends ControllerBase
             try {
                 $equipamento = new Equipamento();
                 $equipamento->setTransaction($transaction);
-                $equipamento->id_fabricante = $params["id_fabricante"];
-                $equipamento->id_modelo = $params["id_modelo"];
-                $equipamento->nome = $params["nome"];
-                $equipamento->descricao = $params["descricao"];
-                $equipamento->id_tipoequipamento = $params["id_tipoequipamento"];
-                $equipamento->numserie = $params["numserie"];
-                $equipamento->numpatrimonio = $params["numpatrimonio"];
+                $equipamento->setIdFabricante($params["id_fabricante"]);
+                $equipamento->setIdModelo($params["id_modelo"]);
+                $equipamento->setNome(mb_strtoupper($params["nome"], $this->encode));
+                $equipamento->setDescricao(mb_strtoupper($params["descricao"], $this->encode));
+                $equipamento->setIdTipoequipamento($params["id_tipoequipamento"]);
+                $equipamento->setNumserie(mb_strtoupper($params["numserie"], $this->encode));
+                $equipamento->setNumpatrimonio(mb_strtoupper($params["numpatrimonio"], $this->encode));
                 if ($equipamento->save() == false) {
                     $transaction->rollback("Não foi possível salvar o equipamento!");
                 }
@@ -146,13 +148,13 @@ class EquipamentoController extends ControllerBase
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             try {
                 $equipamento->setTransaction($transaction);
-                $equipamento->id_fabricante = $params["id_fabricante"];
-                $equipamento->id_modelo = $params["id_modelo"];
-                $equipamento->nome = $params["nome"];
-                $equipamento->descricao = $params["descricao"];
-                $equipamento->id_tipoequipamento = $params["id_tipoequipamento"];
-                $equipamento->numserie = $params["numserie"];
-                $equipamento->numpatrimonio = $params["numpatrimonio"];
+                $equipamento->setIdFabricante($params["id_fabricante"]);
+                $equipamento->setIdModelo($params["id_modelo"]);
+                $equipamento->setNome(mb_strtoupper($params["nome"], $this->encode));
+                $equipamento->setDescricao(mb_strtoupper($params["descricao"], $this->encode));
+                $equipamento->setIdTipoequipamento($params["id_tipoequipamento"]);
+                $equipamento->setNumserie(mb_strtoupper($params["numserie"], $this->encode));
+                $equipamento->setNumpatrimonio(mb_strtoupper($params["numpatrimonio"], $this->encode));
                 if ($equipamento->save() == false) {
                     $transaction->rollback("Não foi possível editar o equipamento!");
                 }
@@ -192,7 +194,7 @@ class EquipamentoController extends ControllerBase
                 foreach($dados["ids"] as $dado){
                     $equipamento = Equipamento::findFirst("id={$dado}");
                     $equipamento->setTransaction($transaction);
-                    $equipamento->ativo = 1;
+                    $equipamento->setAtivo(1);
                     if ($equipamento->save() == false) {
                         $transaction->rollback("Não foi possível editar o equipamento!");
                     }
@@ -233,7 +235,7 @@ class EquipamentoController extends ControllerBase
                 foreach($dados["ids"] as $dado){
                     $equipamento = Equipamento::findFirst("id={$dado}");
                     $equipamento->setTransaction($transaction);
-                    $equipamento->ativo = 0;
+                    $equipamento->setAtivo(0);
                     if ($equipamento->save() == false) {
                         $transaction->rollback("Não foi possível editar o equipamento!");
                     }
