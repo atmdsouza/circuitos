@@ -28,6 +28,8 @@ class ClienteUnidadeController extends ControllerBase
 {
     public $tokenManager;
 
+    private $encode = "UTF-8";
+
     public function initialize()
     {
         //Voltando o usuário não autenticado para a página de login
@@ -53,10 +55,10 @@ class ClienteUnidadeController extends ControllerBase
         $numberPage = 1;
         $clienteunidades = ClienteUnidade::find();
         $tipocontato = Lov::find("tipo=13");
-        $clientes = Cliente::buscaCompletaCliente(44);
+        $clientes = Cliente::buscaCompletaCliente(43);
         $paginator = new Paginator([
             'data' => $clienteunidades,
-            'limit'=> 500,
+            'limit'=> 10000,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();
@@ -72,23 +74,23 @@ class ClienteUnidadeController extends ControllerBase
         $response = new Response();
         $dados = filter_input_array(INPUT_GET);
         $cliente = ClienteUnidade::findFirst("id={$dados["id_clienteunidade"]}");
-        $pessoa = Pessoa::findFirst("id={$cliente->id_pessoa}");
-        $pessoajuridica = PessoaJuridica::findFirst("id={$pessoa->id}");
-        $pessoaendereco = PessoaEndereco::findFirst("id_pessoa={$pessoa->id}");
-        $pessoaemail = PessoaEmail::buscaCompletaLov($pessoa->id);
-        $pessoatelefone = PessoaTelefone::buscaCompletaLov($pessoa->id);
-        $pessoacontato = PessoaContato::buscaCompletaLov($pessoa->id);
+        $pessoa = Pessoa::findFirst("id={$cliente->getIdPessoa()}");
+        $pessoajuridica = PessoaJuridica::findFirst("id={$pessoa->getId()}");
+        $pessoaendereco = PessoaEndereco::findFirst("id_pessoa={$pessoa->getId()}");
+        $pessoaemail = PessoaEmail::buscaCompletaLov($pessoa->getId());
+        $pessoatelefone = PessoaTelefone::buscaCompletaLov($pessoa->getId());
+        $pessoacontato = PessoaContato::buscaCompletaLov($pessoa->getId());
         $dados = array(
-            "id" => $cliente->id,
-            "id_cliente" => $cliente->id_cliente,
-            "nome" => $pessoa->nome,
-            "id_tipoesfera" => $pessoajuridica->id_tipoesfera,
-            "id_setor" => $pessoajuridica->id_setor,
-            "cnpj" => $cnpj = ($pessoajuridica->cnpj) ? $util->mask($pessoajuridica->cnpj, "##.###.###/####-##") : null,
-            "razaosocial" => $pessoajuridica->razaosocial,
-            "inscricaoestadual" => $pessoajuridica->inscricaoestadual,
-            "inscricaomunicipal" => $pessoajuridica->inscricaomunicipal,
-            "sigla" => $pessoajuridica->sigla,
+            "id" => $cliente->getId(),
+            "id_cliente" => $cliente->getIdCliente(),
+            "nome" => $pessoa->getNome(),
+            "id_tipoesfera" => $pessoajuridica->getIdTipoesfera(),
+            "id_setor" => $pessoajuridica->getIdSetor(),
+            "cnpj" => $cnpj = ($pessoajuridica->getCnpj()) ? $util->mask($pessoajuridica->getCnpj(), "##.###.###/####-##") : null,
+            "razaosocial" => $pessoajuridica->getRazaosocial(),
+            "inscricaoestadual" => $pessoajuridica->getInscricaoestadual(),
+            "inscricaomunicipal" => $pessoajuridica->getInscricaomunicipal(),
+            "sigla" => $pessoajuridica->getSigla(),
             "pessoaendereco" => $pessoaendereco,
             "pessoaemail" => $pessoaemail,
             "pessoatelefone" => $pessoatelefone,
@@ -117,35 +119,36 @@ class ClienteUnidadeController extends ControllerBase
             try {
                 $pessoa = new Pessoa();
                 $pessoa->setTransaction($transaction);
-                $pessoa->nome = $params["nome_pessoa"];
+                $pessoa->setNome(mb_strtoupper($params["nome_pessoa"], $this->encode));
                 if ($pessoa->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pessoa!");
                 }
                 $cnpj = ($params["cnpj"]) ? $util->formataCpfCnpj($params["cnpj"]) : null;
                 $pessoajuridica = new PessoaJuridica();
                 $pessoajuridica->setTransaction($transaction);
-                $pessoajuridica->id = $pessoa->id;
-                $pessoajuridica->cnpj = $cnpj;
-                $pessoajuridica->razaosocial = $params["rzsocial"];
-                $pessoajuridica->inscricaoestadual = $params["inscricaoestadual"];
-                $pessoajuridica->inscricaomunicipal = $params["inscricaomunicipal"];
-                $pessoajuridica->sigla = $params["sigla"];
+                $pessoajuridica->setId($pessoa->getId());
+                $pessoajuridica->setCnpj($cnpj);
+                $pessoajuridica->setRazaosocial(mb_strtoupper($params["rzsocial"], $this->encode));
+                $pessoajuridica->setInscricaoestadual($params["inscricaoestadual"]);
+                $pessoajuridica->setInscricaomunicipal($params["inscricaomunicipal"]);
+                $pessoajuridica->setSigla($params["sigla"]);
                 if ($pessoajuridica->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pessoa juridica!");
                 }
+                $cep = (!empty($params["cep"])) ? $util->formataCpfCnpj($params["cep"]) : null;
                 $pessoaendereco = new PessoaEndereco();
                 $pessoaendereco->setTransaction($transaction);
-                $pessoaendereco->id_pessoa = $pessoa->id;
-                $pessoaendereco->id_tipoendereco = 49;//Comercial
-                $pessoaendereco->cep = $util->formataCpfCnpj($params["cep"]);
-                $pessoaendereco->principal = 1;//Principal
-                $pessoaendereco->endereco = $params["endereco"];
-                $pessoaendereco->numero = $params["numero"];
-                $pessoaendereco->bairro = $params["bairro"];
-                $pessoaendereco->cidade = $params["cidade"];
-                $pessoaendereco->estado = $params["estado"];
-                $pessoaendereco->complemento = $params["complemento"];
-                $pessoaendereco->sigla_estado = $params["sigla_uf"];
+                $pessoaendereco->setIdPessoa($pessoa->getId());
+                $pessoaendereco->setIdTipoendereco(49);//Comercial
+                $pessoaendereco->setCep($cep);
+                $pessoaendereco->setPrincipal(1);//Principal
+                $pessoaendereco->setEndereco(mb_strtoupper($params["endereco"], $this->encode));
+                $pessoaendereco->setNumero(mb_strtoupper($params["numero"], $this->encode));
+                $pessoaendereco->setBairro(mb_strtoupper($params["bairro"], $this->encode));
+                $pessoaendereco->setCidade(mb_strtoupper($params["cidade"], $this->encode));
+                $pessoaendereco->setEstado(mb_strtoupper($params["estado"], $this->encode));
+                $pessoaendereco->setComplemento(mb_strtoupper($params["complemento"], $this->encode));
+                $pessoaendereco->setSiglaEstado(mb_strtoupper($params["sigla_uf"], $this->encode));
                 if ($pessoaendereco->save() == false) {
                     $transaction->rollback("Não foi possível salvar o pessoaendereco!");
                 }
@@ -153,10 +156,10 @@ class ClienteUnidadeController extends ControllerBase
                     foreach($params["email_pf"] as $key => $email){
                         $pessoaemail = new PessoaEmail();
                         $pessoaemail->setTransaction($transaction);
-                        $pessoaemail->id_pessoa = $pessoa->id;
-                        $pessoaemail->id_tipoemail = 42;//Comercial
-                        $pessoaemail->principal = $params["principal_email"][$key];
-                        $pessoaemail->email = $email;
+                        $pessoaemail->setIdPessoa($pessoa->getId());
+                        $pessoaemail->setIdTipoemail(42);//Comercial
+                        $pessoaemail->setPrincipal($params["principal_email"][$key]);
+                        $pessoaemail->setEmail($email);
                         if ($pessoaemail->save() == false) {
                             $transaction->rollback("Não foi possível salvar o pessoaemail!");
                         }
@@ -167,11 +170,11 @@ class ClienteUnidadeController extends ControllerBase
                         $tel = $util->formataFone($telefone);
                         $pessoatelefone = new PessoaTelefone();
                         $pessoatelefone->setTransaction($transaction);
-                        $pessoatelefone->id_pessoa = $pessoa->id;
-                        $pessoatelefone->id_tipotelefone = 50;//Fixo
-                        $pessoatelefone->principal = $params["principal_tel"][$key];
-                        $pessoatelefone->ddd = $tel["ddd"];
-                        $pessoatelefone->telefone = $tel["fone"];
+                        $pessoatelefone->setIdPessoa($pessoa->getId());
+                        $pessoatelefone->setIdTipotelefone(50);//Fixo
+                        $pessoatelefone->setPrincipal($params["principal_tel"][$key]);
+                        $pessoatelefone->setDdd($tel["ddd"]);
+                        $pessoatelefone->setTelefone($tel["fone"]);
                         if ($pessoatelefone->save() == false) {
                             $transaction->rollback("Não foi possível salvar o pessoatelefone!");
                         }
@@ -184,12 +187,12 @@ class ClienteUnidadeController extends ControllerBase
                         $email = ($params["email_contato"][$key]) ? $params["email_contato"][$key] : null;
                         $pessoacontato = new PessoaContato();
                         $pessoacontato->setTransaction($transaction);
-                        $pessoacontato->id_pessoa = $pessoa->id;
-                        $pessoacontato->id_tipocontato = $params["tipo_contato"][$key];
-                        $pessoacontato->nome = $nome_contato;
-                        $pessoacontato->principal = $params["principal_contato"][$key];
-                        $pessoacontato->telefone = $tel;
-                        $pessoacontato->email = $email;
+                        $pessoacontato->setIdPessoa($pessoa->getId());
+                        $pessoacontato->setIdTipocontato($params["tipo_contato"][$key]);
+                        $pessoacontato->setNome(mb_strtoupper($nome_contato, $this->encode));
+                        $pessoacontato->setPrincipal($params["principal_contato"][$key]);
+                        $pessoacontato->setTelefone($tel);
+                        $pessoacontato->setEmail($email);
                         if ($pessoacontato->save() == false) {
                             $transaction->rollback("Não foi possível salvar a pessoa de contato!");
                         }
@@ -197,8 +200,8 @@ class ClienteUnidadeController extends ControllerBase
                 }
                 $clienteunidade = new ClienteUnidade();
                 $clienteunidade->setTransaction($transaction);
-                $clienteunidade->id_pessoa = $pessoa->id;
-                $clienteunidade->id_cliente = $params["cliente"];
+                $clienteunidade->setIdPessoa($pessoa->getId());
+                $clienteunidade->setIdCliente($params["cliente"]);
                 if ($clienteunidade->save() == false) {
                     $transaction->rollback("Não foi possível salvar a unidade!");
                 }
@@ -237,39 +240,40 @@ class ClienteUnidadeController extends ControllerBase
         $params = array();
         parse_str($dados["dados"], $params);
         $cliente = ClienteUnidade::findFirst("id={$params["id"]}");
-        $pessoa = Pessoa::findFirst("id={$cliente->id_pessoa}");
-        $pessoajuridica = PessoaJuridica::findFirst("id={$cliente->id_pessoa}");
-        $pessoaendereco = PessoaEndereco::findFirst("id_pessoa={$cliente->id_pessoa}");
+        $pessoa = Pessoa::findFirst("id={$cliente->getIdPessoa()}");
+        $pessoajuridica = PessoaJuridica::findFirst("id={$cliente->getIdPessoa()}");
+        $pessoaendereco = PessoaEndereco::findFirst("id_pessoa={$cliente->getIdPessoa()}");
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             try {
                 $pessoa->setTransaction($transaction);
-                $pessoa->nome = $params["nome_pessoa"];
-                $pessoa->update_at = date("Y-m-d H:i:s");
+                $pessoa->setNome(mb_strtoupper($params["nome_pessoa"], $this->encode));
+                $pessoa->setUpdateAt(date("Y-m-d H:i:s"));
                 if ($pessoa->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pessoa!");
                 }
                 $cnpj = ($params["cnpj"]) ? $util->formataCpfCnpj($params["cnpj"]) : null;
                 $pessoajuridica->setTransaction($transaction);
-                $pessoajuridica->cnpj = $cnpj;
-                $pessoajuridica->razaosocial = $params["rzsocial"];
-                $pessoajuridica->inscricaoestadual = $params["inscricaoestadual"];
-                $pessoajuridica->inscricaomunicipal = $params["inscricaomunicipal"];
-                $pessoajuridica->sigla = $params["sigla"];
+                $pessoajuridica->setCnpj($cnpj);
+                $pessoajuridica->setRazaosocial(mb_strtoupper($params["rzsocial"], $this->encode));
+                $pessoajuridica->setInscricaoestadual($params["inscricaoestadual"]);
+                $pessoajuridica->setInscricaomunicipal($params["inscricaomunicipal"]);
+                $pessoajuridica->setSigla($params["sigla"]);
                 if ($pessoajuridica->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pessoa juridica!");
                 }
+                $cep = (!empty($params["cep"])) ? $util->formataCpfCnpj($params["cep"]) : null;
                 $pessoaendereco->setTransaction($transaction);
-                $pessoaendereco->id_tipoendereco = 49;//Comercial
-                $pessoaendereco->cep = $util->formataCpfCnpj($params["cep"]);
-                $pessoaendereco->principal = 1;//Principal
-                $pessoaendereco->endereco = $params["endereco"];
-                $pessoaendereco->numero = $params["numero"];
-                $pessoaendereco->bairro = $params["bairro"];
-                $pessoaendereco->cidade = $params["cidade"];
-                $pessoaendereco->estado = $params["estado"];
-                $pessoaendereco->complemento = $params["complemento"];
-                $pessoaendereco->sigla_estado = $params["sigla_uf"];
+                $pessoaendereco->setIdTipoendereco(49);//Comercial
+                $pessoaendereco->setCep($cep);
+                $pessoaendereco->setPrincipal(1);//Principal
+                $pessoaendereco->setEndereco(mb_strtoupper($params["endereco"], $this->encode));
+                $pessoaendereco->setNumero(mb_strtoupper($params["numero"], $this->encode));
+                $pessoaendereco->setBairro(mb_strtoupper($params["bairro"], $this->encode));
+                $pessoaendereco->setCidade(mb_strtoupper($params["cidade"], $this->encode));
+                $pessoaendereco->setEstado(mb_strtoupper($params["estado"], $this->encode));
+                $pessoaendereco->setComplemento(mb_strtoupper($params["complemento"], $this->encode));
+                $pessoaendereco->setSiglaEstado(mb_strtoupper($params["sigla_uf"], $this->encode));
                 if ($pessoaendereco->save() == false) {
                     $transaction->rollback("Não foi possível salvar o pessoaendereco!");
                 }
@@ -277,10 +281,10 @@ class ClienteUnidadeController extends ControllerBase
                     foreach($params["email_pf"] as $key => $email){
                         $pessoaemail = new PessoaEmail();
                         $pessoaemail->setTransaction($transaction);
-                        $pessoaemail->id_pessoa = $pessoa->id;
-                        $pessoaemail->id_tipoemail = 42;//Comercial
-                        $pessoaemail->principal = $params["principal_email"][$key];
-                        $pessoaemail->email = $email;
+                        $pessoaemail->setIdPessoa($pessoa->getId());
+                        $pessoaemail->setIdTipoemail(42);//Comercial
+                        $pessoaemail->setPrincipal($params["principal_email"][$key]);
+                        $pessoaemail->setEmail($email);
                         if ($pessoaemail->save() == false) {
                             $transaction->rollback("Não foi possível salvar o pessoaemail!");
                         }
@@ -291,11 +295,11 @@ class ClienteUnidadeController extends ControllerBase
                         $tel = $util->formataFone($telefone);
                         $pessoatelefone = new PessoaTelefone();
                         $pessoatelefone->setTransaction($transaction);
-                        $pessoatelefone->id_pessoa = $pessoa->id;
-                        $pessoatelefone->id_tipotelefone = 50;//Fixo
-                        $pessoatelefone->principal = $params["principal_tel"][$key];
-                        $pessoatelefone->ddd = $tel["ddd"];
-                        $pessoatelefone->telefone = $tel["fone"];
+                        $pessoatelefone->setIdPessoa($pessoa->getId());
+                        $pessoatelefone->setIdTipotelefone(50);//Fixo
+                        $pessoatelefone->setPrincipal($params["principal_tel"][$key]);
+                        $pessoatelefone->setDdd($tel["ddd"]);
+                        $pessoatelefone->setTelefone($tel["fone"]);
                         if ($pessoatelefone->save() == false) {
                             $transaction->rollback("Não foi possível salvar o pessoatelefone!");
                         }
@@ -308,12 +312,12 @@ class ClienteUnidadeController extends ControllerBase
                         $email = ($params["email_contato"][$key]) ? $params["email_contato"][$key] : null;
                         $pessoacontato = new PessoaContato();
                         $pessoacontato->setTransaction($transaction);
-                        $pessoacontato->id_pessoa = $pessoa->id;
-                        $pessoacontato->id_tipocontato = $params["tipo_contato"][$key];
-                        $pessoacontato->nome = $nome_contato;
-                        $pessoacontato->principal = $params["principal_contato"][$key];
-                        $pessoacontato->telefone = $tel;
-                        $pessoacontato->email = $email;
+                        $pessoacontato->setIdPessoa($pessoa->getId());
+                        $pessoacontato->setIdTipocontato($params["tipo_contato"][$key]);
+                        $pessoacontato->setNome(mb_strtoupper($nome_contato, $this->encode));
+                        $pessoacontato->setPrincipal($params["principal_contato"][$key]);
+                        $pessoacontato->setTelefone($tel);
+                        $pessoacontato->setEmail($email);
                         if ($pessoacontato->save() == false) {
                             $transaction->rollback("Não foi possível salvar a pessoa de contato!");
                         }
@@ -351,7 +355,7 @@ class ClienteUnidadeController extends ControllerBase
         $del = null;
         foreach($dados["ids"] as $dado){
             $cliente = ClienteUnidade::findFirst("id={$dado}");
-            $del = $core->ativarPessoaAction($cliente->id_pessoa);
+            $del = $core->ativarPessoaAction($cliente->getIdPessoa());
         }
         if($del){
             $response->setContent(json_encode(array(
@@ -377,7 +381,7 @@ class ClienteUnidadeController extends ControllerBase
         $del = null;
         foreach($dados["ids"] as $dado){
             $cliente = ClienteUnidade::findFirst("id={$dado}");
-            $del = $core->inativarPessoaAction($cliente->id_pessoa);
+            $del = $core->inativarPessoaAction($cliente->getIdPessoa());
         }
         if($del){
             $response->setContent(json_encode(array(
@@ -403,7 +407,7 @@ class ClienteUnidadeController extends ControllerBase
         $del = null;
         foreach($dados["ids"] as $dado){
             $cliente = ClienteUnidade::findFirst("id={$dado}");
-            $del = $core->deletarPessoaAction($cliente->id_pessoa);
+            $del = $core->deletarPessoaAction($cliente->getIdPessoa());
         }
         if($del){
             $response->setContent(json_encode(array(

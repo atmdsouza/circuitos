@@ -45,8 +45,8 @@ class CoreController extends ControllerBase
             $pessoa = Pessoa::findFirst("id={$id_pessoa}");
             $transaction = $manager->get();
             $pessoa->setTransaction($transaction);
-            $pessoa->ativo = 1;
-            $pessoa->update_at = date("Y-m-d H:i:s");
+            $pessoa->setAtivo(1);
+            $pessoa->setUpdateAt(date("Y-m-d H:i:s"));
             if ($pessoa->save() == false) {
                 $transaction->rollback("Não foi possível salvar a pessoa!");
             }
@@ -66,8 +66,8 @@ class CoreController extends ControllerBase
             $pessoa = Pessoa::findFirst("id={$id_pessoa}");
             $transaction = $manager->get();
             $pessoa->setTransaction($transaction);
-            $pessoa->ativo = 0;
-            $pessoa->update_at = date("Y-m-d H:i:s");
+            $pessoa->setAtivo(0);
+            $pessoa->setUpdateAt(date("Y-m-d H:i:s"));
             if ($pessoa->save() == false) {
                 $transaction->rollback("Não foi possível salvar a pessoa!");
             }
@@ -284,8 +284,8 @@ class CoreController extends ControllerBase
         $dados = filter_input_array(INPUT_GET);
         $endereco = EndEndereco::findFirst("cep='{$dados["cep"]}'");
         $end = [
-            "cep" => $endereco->cep,
-            "logradouro" => $endereco->tipo_logradouro . " " . $endereco->logradouro,
+            "cep" => $endereco->getCep(),
+            "logradouro" => $endereco->getTipoLogradouro() . " " . $endereco->getLogradouro(),
             "bairro" => $endereco->EndBairro->bairro,
             "cidade" => $endereco->EndCidade->cidade,
             "uf" => $endereco->EndCidade->EndEstado->estado,

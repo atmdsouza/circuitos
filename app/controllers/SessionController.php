@@ -72,7 +72,7 @@ class SessionController extends ControllerBase {
                             ]);
                         } else {
                             $usuario = ModelUser::findFirst("login='{$this->request->getPost('login')}'");
-                            $usuario->data_ultimoacesso = date("Y-m-d H:i:s");
+                            $usuario->setDataUltimoacesso(date("Y-m-d H:i:s"));
                             $usuario->save();
                             $user = new Usuario();
                             $redirect = $user->redirecionaUsuarioAction($this->request->getPost('login'));
@@ -122,10 +122,12 @@ class SessionController extends ControllerBase {
                             "action" => "recuperar"
                         ]);
                     } else {
-                        $user = ModelUser::findFirst("id_pessoa={$pessoaemail->id_pessoa}");
+                        $user = ModelUser::findFirst("id_pessoa={$pessoaemail->getIdPessoa()}");
                         $usuario = new Usuario();
-                        $check = $usuario->recuperarSenhaAction($user->id);
+                        $check = $usuario->recuperarSenhaAction($user->getId());
                         if ($check){
+                            $conteudo = "<script>swal('Sucesso!', 'Senha recuperada com sucesso! Volte e tente novamente fazer login!', 'success')</script>";
+                            echo $conteudo;
                             $this->flash->success("Senha recuperada com sucesso! Volte e tente novamente fazer login!");
                             $this->response->redirect('session/login');
                         } else {

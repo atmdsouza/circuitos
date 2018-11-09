@@ -30,6 +30,8 @@ class CircuitosController extends ControllerBase
 {
     public $tokenManager;
 
+    private $encode = "UTF-8";
+
     public function initialize()
     {
         //Voltando o usuário não autenticado para a página de login
@@ -53,7 +55,10 @@ class CircuitosController extends ControllerBase
     public function indexAction()
     {
         $numberPage = 1;
-        $circuitos = Circuitos::find("excluido = 0");
+        $circuitos = Circuitos::find(array(
+            "excluido = 0",
+            "order" => "[designacao] DESC"
+        ));
         $statuscircuito = Lov::find(array(
             "tipo=6",
             "order" => "descricao"
@@ -92,7 +97,7 @@ class CircuitosController extends ControllerBase
         $equipamentos = Equipamento::find();
         $paginator = new Paginator([
             'data' => $circuitos,
-            'limit'=> 500,
+            'limit'=> 10,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();
@@ -121,38 +126,38 @@ class CircuitosController extends ControllerBase
         $dados = filter_input_array(INPUT_GET);
         $circuitos = Circuitos::findFirst("id={$dados["id_circuitos"]}");
         $dados = array(
-            'id' => $circuitos->id,
-            'id_cliente' => $circuitos->id_cliente,
-            'id_cliente_unidade' => $circuitos->id_cliente_unidade,
-            'id_equipamento' => $circuitos->id_equipamento,
-            'desc_equip' => $circuitos->Equipamento->nome,
-            'patr_equip' => $circuitos->Equipamento->numpatrimonio,
-            'nums_equip' => $circuitos->Equipamento->numserie,
-            'id_contrato' => $circuitos->id_contrato,
-            'id_status' => $circuitos->id_status,
-            'id_cluster' => $circuitos->id_cluster,
-            'id_funcao' => $circuitos->id_funcao,
-            'id_tipoacesso' => $circuitos->id_tipoacesso,
-            'id_tipolink' => $circuitos->id_tipolink,
-            'id_cidadedigital' => $circuitos->id_cidadedigital,
-            'designacao' => $circuitos->designacao,
-            'designacao_anterior' => $circuitos->designacao_anterior,
-            'uf' => $circuitos->uf,
-            'cidade' => $circuitos->cidade,
-            'chamado' => $circuitos->chamado,
-            'ssid' => $circuitos->ssid,
-            'ip_redelocal' => $circuitos->ip_redelocal,
-            'ip_gerencia' => $circuitos->ip_gerencia,
-            'tag' => $circuitos->tag,
-            'id_banda' => $circuitos->id_banda,
-            'observacao' => $circuitos->observacao,
-            'data_ativacao' => $circuitos->data_ativacao,
+            'id' => $circuitos->getId(),
+            'id_cliente' => $circuitos->getIdCliente(),
+            'id_cliente_unidade' => $circuitos->getIdClienteUnidade(),
+            'id_equipamento' => $circuitos->getIdEquipamento(),
+            'desc_equip' => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->nome : null,
+            'patr_equip' => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->numpatrimonio : null,
+            'nums_equip' => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->numserie : null,
+            'id_contrato' => $circuitos->getIdContrato(),
+            'id_status' => $circuitos->getIdStatus(),
+            'id_cluster' => $circuitos->getIdCluster(),
+            'id_funcao' => $circuitos->getIdFuncao(),
+            'id_tipoacesso' => $circuitos->getIdTipoacesso(),
+            'id_tipolink' => $circuitos->getIdTipolink(),
+            'id_cidadedigital' => $circuitos->getIdCidadedigital(),
+            'designacao' => $circuitos->getDesignacao(),
+            'designacao_anterior' => $circuitos->getDesignacaoAnterior(),
+            'uf' => $circuitos->getUf(),
+            'cidade' => $circuitos->getCidade(),
+            'chamado' => $circuitos->getChamado(),
+            'ssid' => $circuitos->getSsid(),
+            'ip_redelocal' => $circuitos->getIpRedelocal(),
+            'ip_gerencia' => $circuitos->getIpGerencia(),
+            'tag' => $circuitos->getTag(),
+            'id_banda' => $circuitos->getIdBanda(),
+            'observacao' => $circuitos->getObservacao(),
+            'data_ativacao' => $circuitos->getDataAtivacao(),
         );
-        $cliente = Cliente::findFirst("id={$circuitos->id_cliente}");
-        $unidades = ClienteUnidade::buscaClienteUnidade($circuitos->id_cliente);
+        $cliente = Cliente::findFirst("id={$circuitos->getIdCliente()}");
+        $unidades = ClienteUnidade::buscaClienteUnidade($circuitos->getIdCliente());
         $equipamentos = Equipamento::find();
         $modelos = Modelo::find();
-        $equip = Equipamento::findFirst("id={$circuitos->id_equipamento}");
+        $equip = ($circuitos->getIdEquipamento()) ? Equipamento::findFirst("id={$circuitos->getIdEquipamento()}") : null;
         $banda = Lov::find(array(
             "tipo = 17"
         ));
@@ -176,50 +181,50 @@ class CircuitosController extends ControllerBase
         $response = new Response();
         $dados = filter_input_array(INPUT_GET);
         $circuitos = Circuitos::findFirst("id={$dados["id_circuitos"]}");
-        $movimentos = Movimentos::find("id_circuitos={$circuitos->id}");
+        $movimentos = Movimentos::find("id_circuitos={$circuitos->getId()}");
         $dados = array(
-            'id' => $circuitos->id,
-            'id_cliente' => $circuitos->id_cliente,
-            'id_cliente_unidade' => $circuitos->id_cliente_unidade,
-            'id_equipamento' => $circuitos->id_equipamento,
-            'id_contrato' => $circuitos->id_contrato,
-            'id_status' => $circuitos->id_status,
-            'id_cluster' => $circuitos->id_cluster,
-            'id_funcao' => $circuitos->id_funcao,
-            'id_tipoacesso' => $circuitos->id_tipoacesso,
-            'id_tipolink' => $circuitos->id_tipolink,
-            'id_cidadedigital' => $circuitos->id_cidadedigital,
-            'designacao' => $circuitos->designacao,
-            'designacao_anterior' => $circuitos->designacao_anterior,
-            'uf' => $circuitos->uf,
-            'cidade' => $circuitos->cidade,
-            'ssid' => $circuitos->ssid,
-            'chamado' => $circuitos->chamado,
-            'ip_redelocal' => $circuitos->ip_redelocal,
-            'ip_gerencia' => $circuitos->ip_gerencia,
-            'tag' => $circuitos->tag,
-            'id_banda' => $circuitos->id_banda,
-            'observacao' => $circuitos->observacao,
-            'data_ativacao' => $util->converterDataHoraParaBr($circuitos->data_ativacao),
-            'data_atualizacao' => $util->converterDataHoraParaBr($circuitos->data_atualizacao),
-            'numserie' => $circuitos->Equipamento->numserie,
-            'numpatrimonio' => $circuitos->Equipamento->numpatrimonio
+            'id' => $circuitos->getId(),
+            'id_cliente' => $circuitos->getIdCliente(),
+            'id_cliente_unidade' => $circuitos->getIdClienteUnidade(),
+            'id_equipamento' => $circuitos->getIdEquipamento(),
+            'id_contrato' => $circuitos->getIdContrato(),
+            'id_status' => $circuitos->getIdStatus(),
+            'id_cluster' => $circuitos->getIdCluster(),
+            'id_funcao' => $circuitos->getIdFuncao(),
+            'id_tipoacesso' => $circuitos->getIdTipoacesso(),
+            'id_tipolink' => $circuitos->getIdTipolink(),
+            'id_cidadedigital' => $circuitos->getIdCidadedigital(),
+            'designacao' => $circuitos->getDesignacao(),
+            'designacao_anterior' => $circuitos->getDesignacaoAnterior(),
+            'uf' => $circuitos->getUf(),
+            'cidade' => $circuitos->getCidade(),
+            'ssid' => $circuitos->getSsid(),
+            'chamado' => $circuitos->getChamado(),
+            'ip_redelocal' => $circuitos->getIpRedelocal(),
+            'ip_gerencia' => $circuitos->getIpGerencia(),
+            'tag' => $circuitos->getTag(),
+            'id_banda' => $circuitos->getIdBanda(),
+            'observacao' => $circuitos->getObservacao(),
+            'data_ativacao' => $util->converterDataHoraParaBr($circuitos->getDataAtivacao()),
+            'data_atualizacao' => $util->converterDataHoraParaBr($circuitos->getDataAtualizacao()),
+            'numserie' => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->numserie : null,
+            'numpatrimonio' => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->numpatrimonio : null
         );
         $mov = array();
         foreach($movimentos as $movimento){
             array_push($mov, array(
-                'id' => $movimento->id,
-                'id_circuitos' => $movimento->id_circuitos,
+                'id' => $movimento->getId(),
+                'id_circuitos' => $movimento->getIdCircuitos(),
                 'id_tipomovimento' => $movimento->Lov->descricao,
                 'id_usuario' => $movimento->Usuario->Pessoa->nome,
-                'data_movimento' => $util->converterDataHoraParaBr($movimento->data_movimento),
-                'osocomon' => $movimento->osocomon,
-                'valoranterior' => $movimento->valoranterior,
-                'valoratualizado' => $movimento->valoratualizado,
-                'observacao' => $movimento->observacao
+                'data_movimento' => $util->converterDataHoraParaBr($movimento->getDataMovimento()),
+                'osocomon' => $movimento->getOsocomon(),
+                'valoranterior' => $movimento->getValoranterior(),
+                'valoratualizado' => $movimento->getValoratualizado(),
+                'observacao' => $movimento->getObservacao()
             ));
         }
-        $equip = Equipamento::findFirst("id={$circuitos->id_equipamento}");
+        $equip = ($circuitos->getIdEquipamento()) ? Equipamento::findFirst("id={$circuitos->getIdEquipamento()}") : null;
         $response->setContent(json_encode(array(
             "dados" => $dados,
             "equip" => $equip,
@@ -246,36 +251,36 @@ class CircuitosController extends ControllerBase
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             try {
                 $cliente = Cliente::findFirst("id={$params["id_cliente"]}");
-                $pessoaendereco = PessoaEndereco::findFirst("id_pessoa={$cliente->id_pessoa}");
+                $pessoaendereco = PessoaEndereco::findFirst("id_pessoa={$cliente->getIdPessoa()}");
                 $unidade = (isset($params["id_cliente_unidade"])) ? $params["id_cliente_unidade"] : null ;
-                $uf = ($pessoaendereco->sigla_estado) ? $pessoaendereco->sigla_estado : null;
-                $cidade = ($pessoaendereco->cidade) ? $pessoaendereco->cidade : null;
+                $uf = (!empty($pessoaendereco)) ? $pessoaendereco->getSiglaEstado() : null;
+                $cidade = (!empty($pessoaendereco)) ? $pessoaendereco->getCidade() : null;
                 $circuito = Circuitos::findFirst("designacao = (SELECT MAX(designacao) FROM Circuitos\Models\Circuitos)");
-                $vl_designacao = $circuito->designacao + 1;
+                $vl_designacao = $circuito->getDesignacao() + 1;
                 $circuitos = new Circuitos();
                 $circuitos->setTransaction($transaction);
-                $circuitos->id_cliente = $params["id_cliente"];
-                $circuitos->id_cliente_unidade = $unidade;
-                $circuitos->id_equipamento = $params["id_equipamento"];
-                $circuitos->id_contrato = $params["id_contrato"];
-                $circuitos->id_status = 31;//Ativo por Default
-                $circuitos->id_cluster = $params["id_cluster"];
-                $circuitos->id_funcao = $params["id_funcao"];
-                $circuitos->id_tipoacesso = $params["id_tipoacesso"];
-                $circuitos->id_tipolink = $params["id_tipolink"];
-                $circuitos->id_cidadedigital = $params["id_cidadedigital"];
-                $circuitos->designacao = $vl_designacao;
-                $circuitos->designacao_anterior = $params["designacao_anterior"];
-                $circuitos->uf = $uf;
-                $circuitos->cidade = $cidade;
-                $circuitos->ssid = $params["ssid"];
-                $circuitos->chamado = $params["chamado"];
-                $circuitos->ip_redelocal = $params["ip_redelocal"];
-                $circuitos->ip_gerencia = $params["ip_gerencia"];
-                $circuitos->tag = $params["tag"];
-                $circuitos->id_banda = $params["banda"];
-                $circuitos->observacao = $params["observacao"];
-                $circuitos->data_ativacao = date("Y-m-d H:i:s");
+                $circuitos->setIdCliente($params["id_cliente"]);
+                $circuitos->setIdClienteUnidade($unidade);
+                $circuitos->setIdEquipamento($params["id_equipamento"]);
+                $circuitos->setIdContrato($params["id_contrato"]);
+                $circuitos->setIdStatus(31);//Ativo por Default
+                $circuitos->setIdCluster($params["id_cluster"]);
+                $circuitos->setIdFuncao($params["id_funcao"]);
+                $circuitos->setIdTipoacesso($params["id_tipoacesso"]);
+                $circuitos->setIdTipolink($params["id_tipolink"]);
+                $circuitos->setIdCidadedigital($params["id_cidadedigital"]);
+                $circuitos->setDesignacao($vl_designacao);
+                $circuitos->setDesignacaoAnterior(mb_strtoupper($params["designacao_anterior"], $this->encode));
+                $circuitos->setUf(mb_strtoupper($uf, $this->encode));
+                $circuitos->setCidade(mb_strtoupper($cidade, $this->encode));
+                $circuitos->setSsid($params["ssid"]);
+                $circuitos->setChamado($params["chamado"]);
+                $circuitos->setIpRedelocal($params["ip_redelocal"]);
+                $circuitos->setIpGerencia($params["ip_gerencia"]);
+                $circuitos->setTag($params["tag"]);
+                $circuitos->setIdBanda($params["banda"]);
+                $circuitos->setObservacao(mb_strtoupper($params["observacao"], $this->encode));
+                $circuitos->setDataAtivacao(date("Y-m-d H:i:s"));
                 if ($circuitos->save() == false) {
                     $messages = $circuitos->getMessages();
                     $errors = '';
@@ -287,14 +292,10 @@ class CircuitosController extends ControllerBase
                 //Registrando o movimento de entrada do circuito
                 $movimento = new Movimentos();
                 $movimento->setTransaction($transaction);
-                $movimento->id_circuitos = $circuitos->id;
-                $movimento->id_tipomovimento = 60;//Criação
-                $movimento->id_usuario = $identity["id"];
-                $movimento->data_movimento = date("Y-m-d H:i:s");
-                $movimento->osocomon = null;
-                $movimento->valoranterior = null;
-                $movimento->valoratualizado = null;
-                $movimento->observacao = null;
+                $movimento->setIdCircuitos($circuitos->getId());
+                $movimento->setIdTipomovimento(60);//Criação
+                $movimento->setIdUsuario($identity["id"]);
+                $movimento->setDataMovimento(date("Y-m-d H:i:s"));
                 if ($movimento->save() == false) {
                     $messages = $movimento->getMessages();
                     $errors = '';
@@ -344,27 +345,27 @@ class CircuitosController extends ControllerBase
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             try {
                 $cliente = Cliente::findFirst("id={$params["id_cliente"]}");
-                $pessoaendereco = PessoaEndereco::findFirst("id_pessoa={$cliente->id_pessoa}");
+                $pessoaendereco = PessoaEndereco::findFirst("id_pessoa={$cliente->getIdPessoa()}");
                 $unidade = (isset($params["id_cliente_unidade"])) ? $params["id_cliente_unidade"] : null ;
-                $uf = ($pessoaendereco->sigla_estado) ? $pessoaendereco->sigla_estado : null;
-                $cidade = ($pessoaendereco->cidade) ? $pessoaendereco->cidade : null;
+                $uf = (!empty($pessoaendereco)) ? $pessoaendereco->getSiglaEstado() : null;
+                $cidade = (!empty($pessoaendereco)) ? $pessoaendereco->getCidade() : null;
                 $circuitos->setTransaction($transaction);
-                $circuitos->id_cliente = $params["id_cliente"];
-                $circuitos->id_cliente_unidade = $unidade;
-                $circuitos->id_contrato = $params["id_contrato"];
-                $circuitos->id_cluster = $params["id_cluster"];
-                $circuitos->id_funcao = $params["id_funcao"];
-                $circuitos->id_tipoacesso = $params["id_tipoacesso"];
-                $circuitos->id_tipolink = $params["id_tipolink"];
-                $circuitos->id_cidadedigital = $params["id_cidadedigital"];
-                $circuitos->designacao_anterior = $params["designacao_anterior"];
-                $circuitos->uf = $uf;
-                $circuitos->cidade = $cidade;
-                $circuitos->ssid = $params["ssid"];
-                $circuitos->chamado = $params["chamado"];
-                $circuitos->tag = $params["tag"];
-                $circuitos->observacao = $params["observacao"];
-                $circuitos->data_atualizacao = date("Y-m-d H:i:s");
+                $circuitos->setIdCliente($params["id_cliente"]);
+                $circuitos->setIdClienteUnidade($unidade);
+                $circuitos->setIdContrato($params["id_contrato"]);
+                $circuitos->setIdCluster($params["id_cluster"]);
+                $circuitos->setIdFuncao($params["id_funcao"]);
+                $circuitos->setIdTipoacesso($params["id_tipoacesso"]);
+                $circuitos->setIdTipolink($params["id_tipolink"]);
+                $circuitos->setIdCidadedigital($params["id_cidadedigital"]);
+                $circuitos->setDesignacaoAnterior(mb_strtoupper($params["designacao_anterior"], $this->encode));
+                $circuitos->setUf(mb_strtoupper($uf, $this->encode));
+                $circuitos->setCidade(mb_strtoupper($cidade, $this->encode));
+                $circuitos->setSsid($params["ssid"]);
+                $circuitos->setChamado($params["chamado"]);
+                $circuitos->setTag($params["tag"]);
+                $circuitos->setObservacao(mb_strtoupper($params["observacao"], $this->encode));
+                $circuitos->setDataAtualizacao(date("Y-m-d H:i:s"));
                 if ($circuitos->save() == false) {
                     $messages = $circuitos->getMessages();
                     $errors = '';
@@ -376,14 +377,10 @@ class CircuitosController extends ControllerBase
                 //Registrando o movimento de alteração do circuito
                 $movimento = new Movimentos();
                 $movimento->setTransaction($transaction);
-                $movimento->id_circuitos = $circuitos->id;
-                $movimento->id_tipomovimento = 62;//Atualização
-                $movimento->id_usuario = $identity["id"];
-                $movimento->data_movimento = date("Y-m-d H:i:s");
-                $movimento->osocomon = null;
-                $movimento->valoranterior = null;
-                $movimento->valoratualizado = null;
-                $movimento->observacao = null;
+                $movimento->setIdCircuitos($circuitos->getId());
+                $movimento->setIdTipomovimento(62);//Atualização
+                $movimento->setIdUsuario($identity["id"]);
+                $movimento->setDataMovimento(date("Y-m-d H:i:s"));
                 if ($movimento->save() == false) {
                     $messages = $movimento->getMessages();
                     $errors = '';
@@ -439,8 +436,8 @@ class CircuitosController extends ControllerBase
                         $vl_anterior = $anterior->Lov7->descricao;
                         //Alterando o Circuito
                         $circuitos->setTransaction($transaction);
-                        $circuitos->id_banda = $params["bandamov"];
-                        $circuitos->data_atualizacao = date("Y-m-d H:i:s");
+                        $circuitos->setIdBanda($params["bandamov"]);
+                        $circuitos->setDataAtualizacao(date("Y-m-d H:i:s"));
                         if ($circuitos->save() == false) {
                             $messages = $circuitos->getMessages();
                             $errors = '';
@@ -451,17 +448,17 @@ class CircuitosController extends ControllerBase
                         }
                         //Registrando o movimento de entrada do circuito
                         $bd = Lov::findFirst("id={$params["bandamov"]}");
-                        $vl_novo = $bd->descricao;
+                        $vl_novo = $bd->getDescricao();
                         $movimento = new Movimentos();
                         $movimento->setTransaction($transaction);
-                        $movimento->id_circuitos = $circuitos->id;
-                        $movimento->id_tipomovimento = 63;//Alteração de Banda
-                        $movimento->id_usuario = $identity["id"];
-                        $movimento->data_movimento = date("Y-m-d H:i:s");
-                        $movimento->osocomon = $params["osocomon"];
-                        $movimento->valoranterior = $vl_anterior;
-                        $movimento->valoratualizado = $vl_novo;
-                        $movimento->observacao = $params["observacaomov"];
+                        $movimento->setIdCircuitos($circuitos->getId());
+                        $movimento->setIdTipomovimento(63);//Alteração de Banda
+                        $movimento->setIdUsuario($identity["id"]);
+                        $movimento->setDataMovimento(date("Y-m-d H:i:s"));
+                        $movimento->setOsocomon($params["osocomon"]);
+                        $movimento->setValoranterior($vl_anterior);
+                        $movimento->setValoratualizado($vl_novo);
+                        $movimento->setObservacao(mb_strtoupper($params["observacaomov"], $this->encode));
                         if ($movimento->save() == false) {
                             $messages = $movimento->getMessages();
                             $errors = '';
@@ -476,8 +473,8 @@ class CircuitosController extends ControllerBase
                         $vl_anterior = $anterior->Lov2->descricao;
                         //Alterando o Circuito
                         $circuitos->setTransaction($transaction);
-                        $circuitos->id_status = $params["id_statusmov"];
-                        $circuitos->data_atualizacao = date("Y-m-d H:i:s");
+                        $circuitos->setIdStatus($params["id_statusmov"]);
+                        $circuitos->setDataAtualizacao(date("Y-m-d H:i:s"));
                         if ($circuitos->save() == false) {
                             $messages = $circuitos->getMessages();
                             $errors = '';
@@ -488,17 +485,17 @@ class CircuitosController extends ControllerBase
                         }
                         //Registrando o movimento de entrada do circuito
                         $bd = Lov::findFirst("id={$params["id_statusmov"]}");
-                        $vl_novo = $bd->descricao;
+                        $vl_novo = $bd->getDescricao();
                         $movimento = new Movimentos();
                         $movimento->setTransaction($transaction);
-                        $movimento->id_circuitos = $circuitos->id;
-                        $movimento->id_tipomovimento = 64;//Alteração de Status do Circuito
-                        $movimento->id_usuario = $identity["id"];
-                        $movimento->data_movimento = date("Y-m-d H:i:s");
-                        $movimento->osocomon = $params["osocomon"];
-                        $movimento->valoranterior = $vl_anterior;
-                        $movimento->valoratualizado = $vl_novo;
-                        $movimento->observacao = $params["observacaomov"];
+                        $movimento->setIdCircuitos($circuitos->getId());
+                        $movimento->setIdTipomovimento(64);//Alteração de Status do Circuito
+                        $movimento->setIdUsuario($identity["id"]);
+                        $movimento->setDataMovimento(date("Y-m-d H:i:s"));
+                        $movimento->setOsocomon($params["osocomon"]);
+                        $movimento->setValoranterior($vl_anterior);
+                        $movimento->setValoratualizado($vl_novo);
+                        $movimento->setObservacao(mb_strtoupper($params["observacaomov"], $this->encode));
                         if ($movimento->save() == false) {
                             $messages = $movimento->getMessages();
                             $errors = '';
@@ -510,11 +507,11 @@ class CircuitosController extends ControllerBase
                     break;
                     case "65"://Alteração de IP Gerencial
                         $anterior = Circuitos::findFirst("id={$params["id_circuito"]}");
-                        $vl_anterior = $anterior->ip_gerencia;
+                        $vl_anterior = $anterior->getIpGerencia();
                         //Alterando o Circuito
                         $circuitos->setTransaction($transaction);
-                        $circuitos->ip_gerencia = $params["ip_gerenciamov"];
-                        $circuitos->data_atualizacao = date("Y-m-d H:i:s");
+                        $circuitos->setIpGerencia($params["ip_gerenciamov"]);
+                        $circuitos->setDataAtualizacao(date("Y-m-d H:i:s"));
                         if ($circuitos->save() == false) {
                             $messages = $circuitos->getMessages();
                             $errors = '';
@@ -527,14 +524,14 @@ class CircuitosController extends ControllerBase
                         $vl_novo = $params["ip_gerenciamov"];
                         $movimento = new Movimentos();
                         $movimento->setTransaction($transaction);
-                        $movimento->id_circuitos = $circuitos->id;
-                        $movimento->id_tipomovimento = 65;//Alteração de IP Gerencial
-                        $movimento->id_usuario = $identity["id"];
-                        $movimento->data_movimento = date("Y-m-d H:i:s");
-                        $movimento->osocomon = $params["osocomon"];
-                        $movimento->valoranterior = $vl_anterior;
-                        $movimento->valoratualizado = $vl_novo;
-                        $movimento->observacao = $params["observacaomov"];
+                        $movimento->setIdCircuitos($circuitos->getId());
+                        $movimento->setIdTipomovimento(65);//Alteração de IP Gerencial
+                        $movimento->setIdUsuario($identity["id"]);
+                        $movimento->setDataMovimento(date("Y-m-d H:i:s"));
+                        $movimento->setOsocomon($params["osocomon"]);
+                        $movimento->setValoranterior($vl_anterior);
+                        $movimento->setValoratualizado($vl_novo);
+                        $movimento->setObservacao(mb_strtoupper($params["observacaomov"], $this->encode));
                         if ($movimento->save() == false) {
                             $messages = $movimento->getMessages();
                             $errors = '';
@@ -546,11 +543,11 @@ class CircuitosController extends ControllerBase
                     break;
                     case "66"://Alteração de IP Local
                         $anterior = Circuitos::findFirst("id={$params["id_circuito"]}");
-                        $vl_anterior = $anterior->ip_redelocal;
+                        $vl_anterior = $anterior->getIpRedelocal();
                         //Alterando o Circuito
                         $circuitos->setTransaction($transaction);
-                        $circuitos->ip_redelocal = $params["ip_redelocalmov"];
-                        $circuitos->data_atualizacao = date("Y-m-d H:i:s");
+                        $circuitos->setIpRedelocal($params["ip_redelocalmov"]);
+                        $circuitos->setDataAtualizacao(date("Y-m-d H:i:s"));
                         if ($circuitos->save() == false) {
                             $messages = $circuitos->getMessages();
                             $errors = '';
@@ -563,14 +560,14 @@ class CircuitosController extends ControllerBase
                         $vl_novo = $params["ip_redelocalmov"];
                         $movimento = new Movimentos();
                         $movimento->setTransaction($transaction);
-                        $movimento->id_circuitos = $circuitos->id;
-                        $movimento->id_tipomovimento = 66;//Alteração de IP Local
-                        $movimento->id_usuario = $identity["id"];
-                        $movimento->data_movimento = date("Y-m-d H:i:s");
-                        $movimento->osocomon = $params["osocomon"];
-                        $movimento->valoranterior = $vl_anterior;
-                        $movimento->valoratualizado = $vl_novo;
-                        $movimento->observacao = $params["observacaomov"];
+                        $movimento->setIdCircuitos($circuitos->getId());
+                        $movimento->setIdTipomovimento(66);//Alteração de IP Local
+                        $movimento->setIdUsuario($identity["id"]);
+                        $movimento->setDataMovimento(date("Y-m-d H:i:s"));
+                        $movimento->setOsocomon($params["osocomon"]);
+                        $movimento->setValoranterior($vl_anterior);
+                        $movimento->setValoratualizado($vl_novo);
+                        $movimento->setObservacao(mb_strtoupper($params["observacaomov"], $this->encode));
                         if ($movimento->save() == false) {
                             $messages = $movimento->getMessages();
                             $errors = '';
@@ -585,8 +582,8 @@ class CircuitosController extends ControllerBase
                         $vl_anterior = $anterior->Equipamento->nome;
                         //Alterando o Circuito
                         $circuitos->setTransaction($transaction);
-                        $circuitos->id_equipamento = $params["id_equipamentomov"];
-                        $circuitos->data_atualizacao = date("Y-m-d H:i:s");
+                        $circuitos->setIdEquipamento($params["id_equipamentomov"]);
+                        $circuitos->setDataAtualizacao(date("Y-m-d H:i:s"));
                         if ($circuitos->save() == false) {
                             $messages = $circuitos->getMessages();
                             $errors = '';
@@ -597,17 +594,17 @@ class CircuitosController extends ControllerBase
                         }
                         //Registrando o movimento de entrada do circuito
                         $novo_equip = Equipamento::findFirst("id={$params["id_equipamentomov"]}");
-                        $vl_novo = $novo_equip->nome;
+                        $vl_novo = $novo_equip->getNome();
                         $movimento = new Movimentos();
                         $movimento->setTransaction($transaction);
-                        $movimento->id_circuitos = $circuitos->id;
-                        $movimento->id_tipomovimento = 67;//Alteração de Equipamento
-                        $movimento->id_usuario = $identity["id"];
-                        $movimento->data_movimento = date("Y-m-d H:i:s");
-                        $movimento->osocomon = $params["osocomon"];
-                        $movimento->valoranterior = $vl_anterior;
-                        $movimento->valoratualizado = $vl_novo;
-                        $movimento->observacao = $params["observacaomov"];
+                        $movimento->setIdCircuitos($circuitos->getId());
+                        $movimento->setIdTipomovimento(67);//Alteração de Equipamento
+                        $movimento->setIdUsuario($identity["id"]);
+                        $movimento->setDataMovimento(date("Y-m-d H:i:s"));
+                        $movimento->setOsocomon($params["osocomon"]);
+                        $movimento->setValoranterior($vl_anterior);
+                        $movimento->setValoratualizado($vl_novo);
+                        $movimento->setObservacao(mb_strtoupper($params["observacaomov"], $this->encode));
                         if ($movimento->save() == false) {
                             $messages = $movimento->getMessages();
                             $errors = '';
@@ -655,9 +652,9 @@ class CircuitosController extends ControllerBase
             foreach($dados["ids"] as $dado){
                 $circuitos = Circuitos::findFirst("id={$dado}");
                 $circuitos->setTransaction($transaction);
-                $circuitos->excluido = 1;
-                $circuitos->id_status = 32;//Desativado
-                $circuitos->data_atualizacao = date("Y-m-d H:i:s");
+                $circuitos->setExcluido(1);
+                $circuitos->setIdStatus(32);//Desativado
+                $circuitos->setDataAtualizacao(date("Y-m-d H:i:s"));
                 if ($circuitos->save() == false) {
                     $messages = $circuitos->getMessages();
                     $errors = '';
@@ -669,14 +666,10 @@ class CircuitosController extends ControllerBase
                 //Registrando o movimento de exclusão do circuito
                 $movimento = new Movimentos();
                 $movimento->setTransaction($transaction);
-                $movimento->id_circuitos = $circuitos->id;
-                $movimento->id_tipomovimento = 61;//Exclusão
-                $movimento->id_usuario = $identity["id"];
-                $movimento->data_movimento = date("Y-m-d H:i:s");
-                $movimento->osocomon = null;
-                $movimento->valoranterior = null;
-                $movimento->valoratualizado = null;
-                $movimento->observacao = null;
+                $movimento->setIdCircuitos($circuitos->getId());
+                $movimento->setIdTipomovimento(61);//Exclusão
+                $movimento->setIdUsuario($identity["id"]);
+                $movimento->setDataMovimento(date("Y-m-d H:i:s"));
                 if ($movimento->save() == false) {
                     $messages = $movimento->getMessages();
                     $errors = '';
@@ -710,12 +703,12 @@ class CircuitosController extends ControllerBase
         if (!empty($dados["id_cliente"])) {
             $cliente = Cliente::findFirst("id={$dados["id_cliente"]}");
             $unidade = ClienteUnidade::buscaClienteUnidade($dados["id_cliente"]);
-            switch($cliente->id_tipocliente)
+            switch($cliente->getIdTipocliente())
             {
                 case "44"://Pessoa Física
                 $response->setContent(json_encode(array(
                     "operacao" => False,
-                    "tipocliente" => $cliente->id_tipocliente
+                    "tipocliente" => $cliente->getIdTipocliente()
                 )));
                 return $response;
                 break;
@@ -723,7 +716,7 @@ class CircuitosController extends ControllerBase
                 $response->setContent(json_encode(array(
                     "operacao" => True,
                     "dados" => $unidade,
-                    "tipocliente" => $cliente->id_tipocliente
+                    "tipocliente" => $cliente->getIdTipocliente()
                 )));
                 return $response;
                 break;

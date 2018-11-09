@@ -79,6 +79,12 @@ class Circuitos extends \Phalcon\Mvc\Model
 
     /**
      *
+     * @var integer
+     */
+    protected $id_cidadedigital;
+
+    /**
+     *
      * @var string
      */
     protected $chamado;
@@ -481,6 +487,17 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @param integer $id_cidadedigital
+     * @return $this
+     */
+    public function setIdCidadedigital($id_cidadedigital)
+    {
+        $this->id_cidadedigital = $id_cidadedigital;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field id
      *
      * @return integer
@@ -728,6 +745,14 @@ class Circuitos extends \Phalcon\Mvc\Model
     public function getAtivo()
     {
         return $this->ativo;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIdCidadedigital()
+    {
+        return $this->id_cidadedigital;
     }
 
     /**

@@ -1,44 +1,9 @@
+//Load de tela
+$(document).ajaxStop($.unblockUI);
+URLImagensSistema = "public/images";
+
+//Datatable
 var table = $('#tb_circuitos').DataTable({
-    language: {
-        sEmptyTable: "Nenhum registro encontrado",
-        sInfo: "Mostrando de _START_ até _END_ de _TOTAL_ registros",
-        sInfoEmpty: "Mostrando 0 até 0 de 0 registros",
-        sInfoFiltered: "(Filtrados de _MAX_ registros)",
-        sInfoPostFix: "",
-        sInfoThousands: ".",
-        sLengthMenu: "Exibindo _MENU_ registros por página",
-        sLoadingRecords: "Carregando...",
-        sProcessing: "Processando...",
-        sZeroRecords: "Nenhum registro encontrado",
-        sSearch: "Pesquisar",
-        oPaginate: {
-            sNext: "Próximo",
-            sPrevious: "Anterior",
-            sFirst: "Primeiro",
-            sLast: "Último"
-        },
-        oAria: {
-            sSortAscending: ": Ordenar colunas de forma ascendente",
-            sSortDescending: ": Ordenar colunas de forma descendente"
-        },
-        select: {
-            rows: {
-                _: "%d linhas selecionadas.",
-                0: "Clique em uma ou mais linhas para selecioná-las.",
-                1: "1 linha selecionada."
-            }
-        }
-    },
-    select: {
-        style: 'multi'
-    },
-    responsive: false,
-    search: {
-        caseInsensitive: false
-    },
-    ordering: true,
-    orderMulti: true,
-    lengthChange: false,
     buttons: [
         {//Botão Novo Registro
             className: 'bt_novo',
@@ -153,14 +118,14 @@ $("#id_cliente").on("change", function(){
         success: function (data) {
             $("#tipocliente").val(data.tipocliente);
             if (data.operacao){
-                $(".remove_cliente").remove();
+                $(".remove_cliente_unidade").remove();
                 $.each(data.dados, function (key, value) {
-                    var linhas = "<option class='remove_cliente' value='" + value.id + "'>" + value.nome + "</option>";
+                    var linhas = "<option class='remove_cliente_unidade' value='" + value.id + "'>" + value.nome + "</option>";
                     $("#id_cliente_unidade").append(linhas);
                     $("#id_cliente_unidade").removeAttr("disabled");
                 });
             } else {
-                $(".remove_cliente").remove();
+                $(".remove_cliente_unidade").remove();
                 $("#id_cliente_unidade").val(null).selected = "true";
                 $("#id_cliente_unidade").attr("disabled", "true");
             }
@@ -390,7 +355,7 @@ $(document).on("click", ".criar_circuitos", function(){
                                 cancelButtonColor: '#d33',
                                 confirmButtonText: 'Ok'
                               }).then((result) => {
-                                window.location.reload(true);
+                                // window.location.reload(true);
                               });
                         } else {
                             swal({
@@ -592,9 +557,11 @@ $(".bt_edit").on("click", function(){
             error: function () {
             },
             success: function (data) {
-                $(".remove_unidade").remove();
+                var id_fabricante = (data.equip) ? data.equip.id_fabricante : null;
+                var id_modelo = (data.equip) ? data.equip.id_modelo : null;
+                $(".remove_cliente_unidade").remove();
                 $.each(data.unidadescli, function (key, value) {
-                    var linhas = "<option class='remove_unidade' value='" + value.id + "'>" + value.nome + "</option>";
+                    var linhas = "<option class='remove_cliente_unidade' value='" + value.id + "'>" + value.nome + "</option>";
                     $("#id_cliente_unidade").append(linhas);
                     $("#id_cliente_unidade").removeAttr("disabled");
                 });
@@ -608,9 +575,9 @@ $(".bt_edit").on("click", function(){
                 $("#id_cliente").val(data.dados.id_cliente).selected = "true";
                 $("#id_cliente_unidade").val(data.dados.id_cliente_unidade).selected = "true";
                 $("#id_fabricante").attr("disabled", "true");
-                $("#id_fabricante").val(data.equip.id_fabricante).selected = "true";
+                $("#id_fabricante").val(id_fabricante).selected = "true";
                 $("#id_modelo").attr("disabled", "true");
-                $("#id_modelo").val(data.equip.id_modelo).selected = "true";
+                $("#id_modelo").val(id_modelo).selected = "true";
                 $("#id_equipamento").attr("disabled", "true");
                 $("#lid_equipamento").val(data.dados.desc_equip + " ("+ data.dados.nums_equip +" / "+ data.dados.patr_equip +")");
                 $("#id_equipamento").val(data.dados.id_equipamento);
@@ -669,11 +636,13 @@ $(".bt_visual").on("click", function(){
             error: function () {
             },
             success: function (data) {
+                var id_fabricante = (data.equip) ? data.equip.id_fabricante : null;
+                var id_modelo = (data.equip) ? data.equip.id_modelo : null;
                 $("#idv").val(data.dados.id);
                 $("#id_clientev").val(data.dados.id_cliente).selected = "true";
                 $("#id_cliente_unidadev").val(data.dados.id_cliente_unidade).selected = "true";
-                $("#id_fabricantev").val(data.equip.id_fabricante).selected = "true";
-                $("#id_modelov").val(data.equip.id_modelo).selected = "true";
+                $("#id_fabricantev").val(id_fabricante).selected = "true";
+                $("#id_modelov").val(id_modelo).selected = "true";
                 $("#id_equipamentov").val(data.dados.id_equipamento).selected = "true";
                 $("#id_contratov").val(data.dados.id_contrato).selected = "true";
                 $("#id_statusv").val(data.dados.id_status).selected = "true";
@@ -1603,6 +1572,7 @@ $("#pdfCircuito").on("click", function () {
         url: 'circuitos/pdfCircuito',
         data: {id_circuito: id_circuito},
         beforeSend: function () {
+            $.blockUI({ message: "<img src='" + URLImagensSistema + "/loader_gears.gif' width='50' height='50'/>      Aguarde um momento, estamos processando seu pedido...", baseZ: 2000 });
         },
         complete: function () {
         },

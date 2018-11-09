@@ -39,7 +39,6 @@
 
     </head>
 
-
     <body>
 
         <!-- Begin page -->
@@ -214,6 +213,18 @@
         <script type="text/javascript" src="<?= DIR_STATICS ?>public/plugins/autocomplete/jquery.mockjax.js"></script>
         <script type="text/javascript" src="<?= DIR_STATICS ?>public/plugins/autocomplete/jquery.autocomplete.min.js"></script>
 
+        <!-- Plugins -->
+        <script src="<?= DIR_STATICS ?>public/js/uteis/accounting.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/uteis/jquery.mask.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/uteis/maskMoney.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/uteis/multiselect.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/uteis/uteis.js"></script>
+        <script src="<?= DIR_STATICS ?>public/js/uteis/jquery-blockui.js"></script>
+
+        <!-- Sweet Alert Js  -->
+        <script src="<?= DIR_STATICS ?>public/plugins/sweet-alert/sweetalert2.min.js"></script>
+        <script src="<?= DIR_STATICS ?>public/plugins/switchery/switchery.min.js"></script>
+
         <!-- Módulos -->
         <?php $module = $this->router->getControllerName(); ?>
         <?php switch($module){
@@ -250,18 +261,6 @@
                 <script src="<?= DIR_STATICS ?>public/js/modulos/circuitos.js"></script>
             <?php break;
         } ?>
-
-        <!-- Plugins -->
-        <script src="<?= DIR_STATICS ?>public/js/uteis/accounting.js"></script>
-        <script src="<?= DIR_STATICS ?>public/js/uteis/jquery.mask.js"></script>
-        <script src="<?= DIR_STATICS ?>public/js/uteis/maskMoney.js"></script>
-        <script src="<?= DIR_STATICS ?>public/js/uteis/multiselect.js"></script>
-        <script src="<?= DIR_STATICS ?>public/js/uteis/uteis.js"></script>
-
-        <!-- Sweet Alert Js  -->
-        <script src="<?= DIR_STATICS ?>public/plugins/sweet-alert/sweetalert2.min.js"></script>
-
-        <script src="<?= DIR_STATICS ?>public/plugins/switchery/switchery.min.js"></script>
 
         <!-- App js -->
         <script src="<?= DIR_STATICS ?>public/js/jquery.core.js"></script>
