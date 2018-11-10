@@ -53,7 +53,9 @@ class ClienteUnidadeController extends ControllerBase
     public function indexAction()
     {
         $numberPage = 1;
-        $clienteunidades = ClienteUnidade::find();
+        $clienteunidades = ClienteUnidade::find(array(
+            "order" => "[id] DESC"
+        ));
         $tipocontato = Lov::find("tipo=13");
         $clientes = Cliente::buscaCompletaCliente(43);
         $paginator = new Paginator([

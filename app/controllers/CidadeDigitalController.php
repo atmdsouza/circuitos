@@ -44,7 +44,10 @@ class CidadeDigitalController extends ControllerBase
     public function indexAction()
     {
         $numberPage = 1;
-        $cidadedigital = CidadeDigital::find("excluido = 0");
+        $cidadedigital = CidadeDigital::find(array(
+            "excluido = 0",
+            "order" => "[id] DESC"
+        ));
         $cidades = EndCidade::find(array(
             "uf='PA'",
             "order" => "cidade"

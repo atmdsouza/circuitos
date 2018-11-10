@@ -190,10 +190,13 @@ use Util\Util;
                                     ?>
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label for="id_modelo">Modelo <span class="required">*</span></label>
-                                    <select disabled name="id_modelo" id="id_modelo" class="form-control">
-                                        <option value="">Selecione um Modelo</option>
-                                    </select>
+<!--                                    <label for="id_modelo">Modelo <span class="required">*</span></label>-->
+<!--                                    <select disabled name="id_modelo" id="id_modelo" class="form-control">-->
+<!--                                        <option value="">Selecione um Modelo</option>-->
+<!--                                    </select>-->
+                                    <label for="lid_modelo">Modelo <span class="required">*</span></label>
+                                    <?php echo $this->tag->textField(["lid_modelo", "disabled" => "true", "size" => 60, "class" => "form-control", "id" => "lid_modelo", "placeholder" => "Modelo"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_modelo", "size" => 60, "class" => "form-control", "id" => "id_modelo"]) ?>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <!--
@@ -231,12 +234,12 @@ use Util\Util;
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-3">
-                                    <label for="chamado">Chamado <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["chamado", "size" => 120, "class" => "form-control", "id" => "chamado", "placeholder" => "Chamado"]) ?>
-                                </div>
-                                <div class="form-group col-md-3">
                                     <label for="ssid">SSID</label> <!-- Antigo ccode -->
                                     <?php echo $this->tag->textField(["ssid", "size" => 30, "class" => "form-control", "id" => "ssid", "placeholder" => "SSID"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="chamado">Chamado <span class="required">*</span></label>
+                                    <?php echo $this->tag->textField(["chamado", "size" => 120, "class" => "form-control", "id" => "chamado", "placeholder" => "Chamado"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -435,16 +438,16 @@ use Util\Util;
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-3">
-                                    <label for="chamadov">Chamado</label>
-                                    <?php echo $this->tag->textField(["chamadov", "size" => 120, "readonly" => "true", "class" => "form-control", "id" => "chamadov", "placeholder" => "Chamado"]) ?>
-                                </div>
-                                <div class="form-group col-md-3">
                                     <label for="ssidv">SSID</label> <!-- Antigo ccode -->
                                     <?php echo $this->tag->textField(["ssidv", "size" => 30, "readonly" => "true", "class" => "form-control", "id" => "ssidv", "placeholder" => "SSID"]) ?>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="designacao_anteriorv">Designação Anterior</label>
                                     <?php echo $this->tag->textField(["designacao_anteriorv", "size" => 60, "readonly" => "true", "class" => "form-control", "id" => "designacao_anteriorv", "placeholder" => "Designação Anterior"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="chamadov">Chamado</label>
+                                    <?php echo $this->tag->textField(["chamadov", "size" => 120, "readonly" => "true", "class" => "form-control", "id" => "chamadov", "placeholder" => "Chamado"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -554,10 +557,13 @@ use Util\Util;
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4 equip" style="display: none;">
-                                    <label for="id_modelomov">Modelo <span class="required">*</span></label>
-                                    <select disabled name="id_modelomov" id="id_modelomov" class="form-control">
-                                        <option value="">Selecione um Modelo</option>
-                                    </select>
+<!--                                    <label for="id_modelomov">Modelo <span class="required">*</span></label>-->
+<!--                                    <select disabled name="id_modelomov" id="id_modelomov" class="form-control">-->
+<!--                                        <option value="">Selecione um Modelo</option>-->
+<!--                                    </select>-->
+                                    <label for="lid_equipamentomov">Modelo <span class="required">*</span></label>
+                                    <?php echo $this->tag->textField(["lid_modelomov", "disabled" => "true", "size" => 60, "class" => "form-control", "id" => "lid_modelomov", "placeholder" => "Modelo"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_modelomov", "size" => 60, "class" => "form-control", "id" => "id_modelomov"]) ?>
                                 </div>
                                 <div class="form-group col-md-4 equip" style="display: none;">
                                     <!--

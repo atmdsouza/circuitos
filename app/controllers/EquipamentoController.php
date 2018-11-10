@@ -45,7 +45,9 @@ class EquipamentoController extends ControllerBase
     public function indexAction()
     {
         $numberPage = 1;
-        $equipamento = Equipamento::find();
+        $equipamento = Equipamento::find(array(
+            "order" => "[id] DESC"
+        ));
         $tipoequipamento = Lov::find(array(
             "tipo = 15",
             "order" => "descricao"

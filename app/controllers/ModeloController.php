@@ -43,7 +43,9 @@ class ModeloController extends ControllerBase
     public function indexAction()
     {
         $numberPage = 1;
-        $modelo = Modelo::find();
+        $modelo = Modelo::find(array(
+            "order" => "[id] DESC"
+        ));
         $fabricante = Fabricante::buscaCompletaFabricante();
         $paginator = new Paginator([
             'data' => $modelo,

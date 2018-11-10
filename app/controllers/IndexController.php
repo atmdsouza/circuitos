@@ -2,6 +2,9 @@
 
 namespace Circuitos\Controllers;
 
+use Phalcon\Logger;
+use Phalcon\Logger\Adapter\File as FileAdapter;
+
 use Circuitos\Controllers\ControllerBase;
 use Auth\Autentica;
 
@@ -21,7 +24,7 @@ class IndexController extends ControllerBase
 
     public function indexAction()
     {
-        
+
     }
 
 }

@@ -51,7 +51,9 @@ class ClienteController extends ControllerBase
     public function indexAction()
     {
         $numberPage = 1;
-        $clientes = Cliente::find();
+        $clientes = Cliente::find(array(
+            "order" => "[id] DESC"
+        ));
         $tipocliente = Lov::find("tipo=9");
         $tipoendereco = Lov::find("tipo=11");
         $tipotelefone = Lov::find("tipo=12");

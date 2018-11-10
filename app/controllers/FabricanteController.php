@@ -51,7 +51,9 @@ class FabricanteController extends ControllerBase
     public function indexAction()
     {
         $numberPage = 1;
-        $fabricantes = Fabricante::find();
+        $fabricantes = Fabricante::find(array(
+            "order" => "[id] DESC"
+        ));
         $tipocontato = Lov::find("tipo=13");
         $paginator = new Paginator([
             'data' => $fabricantes,

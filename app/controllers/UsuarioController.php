@@ -49,7 +49,9 @@ class UsuarioController extends ControllerBase
     public function indexAction()
     {
         $numberPage = 1;
-        $usuarios = Usuario::find();
+        $usuarios = Usuario::find(array(
+            "order" => "[id] DESC"
+        ));
         $roles = PhalconRoles::find();
         $paginator = new Paginator([
             'data' => $usuarios,

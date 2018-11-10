@@ -225,10 +225,15 @@
         <script src="<?= DIR_STATICS ?>public/plugins/sweet-alert/sweetalert2.min.js"></script>
         <script src="<?= DIR_STATICS ?>public/plugins/switchery/switchery.min.js"></script>
 
+        <!-- Charts.js -->
+        <script src="<?= DIR_STATICS ?>public/plugins/chart.js/chart.bundle.js"></script>
+        <script src="<?= DIR_STATICS ?>public/plugins/chart.js/chart.min.js"></script>
+
         <!-- Módulos -->
         <?php $module = $this->router->getControllerName(); ?>
         <?php switch($module){
             case "index":?>
+                <script src="<?= DIR_STATICS ?>public/js/modulos/index.js"></script>
             <?php break;
             case "cliente":?>
                 <script src="<?= DIR_STATICS ?>public/js/modulos/cliente.js"></script>

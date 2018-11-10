@@ -2,6 +2,8 @@
 
 namespace Circuitos\Controllers;
 
+use Phalcon\Logger;
+use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Http\Response as Response;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
@@ -307,6 +309,7 @@ class CoreController extends ControllerBase
 
     public function enviarEmailAction($id_empresa=null, $address=null, $address_name=null, $attach=null, $subject=null, $content=null)
     {
+        $logger = new FileAdapter(BASE_PATH . "/logs/systemlog.log");
         $empresa = Empresa::findFirst("id={$id_empresa}");
         $host=$empresa->EmpresaParametros->mail_host;
         $user=$empresa->EmpresaParametros->mail_user;
@@ -344,9 +347,8 @@ class CoreController extends ControllerBase
             $mail->ClearAttachments();
             return True;
         } catch (Exception $e) {
-            var_dump('Message could not be sent. Mailer Error: ' . $mail->ErrorInfo);
+            $logger->error('Mensagem não enviada. Mailer Error: ' . $mail->ErrorInfo);
             return False;
-            exit;
         }
     }
 

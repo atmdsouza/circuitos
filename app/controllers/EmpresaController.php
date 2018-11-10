@@ -51,7 +51,9 @@ class EmpresaController extends ControllerBase
     public function indexAction()
     {
         $numberPage = 1;
-        $empresa = Empresa::find();
+        $empresa = Empresa::find(array(
+            "order" => "[id] DESC"
+        ));
         $setor = Lov::find("tipo=5");
         $esfera = Lov::find("tipo=4");
         $paginator = new Paginator([

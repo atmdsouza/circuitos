@@ -43,7 +43,10 @@ class LovController extends ControllerBase
     public function indexAction()
     {
         $numberPage = 1;
-        $lov = Lov::find("codigoespecifico <> 'SYS' OR codigoespecifico IS NULL");
+        $lov = Lov::find(array(
+            "codigoespecifico <> 'SYS' OR codigoespecifico IS NULL",
+            "order" => "[id] DESC"
+        ));
         $tipos_lov = [
             "1" => "Tipo Unidade",
             "2" => "Usa Contrato",

@@ -57,7 +57,7 @@ class CircuitosController extends ControllerBase
         $numberPage = 1;
         $circuitos = Circuitos::find(array(
             "excluido = 0",
-            "order" => "[designacao] DESC"
+            "order" => "[id] DESC"
         ));
         $statuscircuito = Lov::find(array(
             "tipo=6",

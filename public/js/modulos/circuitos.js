@@ -122,8 +122,8 @@ $("#id_cliente").on("change", function(){
                 $.each(data.dados, function (key, value) {
                     var linhas = "<option class='remove_cliente_unidade' value='" + value.id + "'>" + value.nome + "</option>";
                     $("#id_cliente_unidade").append(linhas);
-                    $("#id_cliente_unidade").removeAttr("disabled");
                 });
+                $("#id_cliente_unidade").removeAttr("disabled");
             } else {
                 $(".remove_cliente_unidade").remove();
                 $("#id_cliente_unidade").val(null).selected = "true";
@@ -133,80 +133,104 @@ $("#id_cliente").on("change", function(){
     });
 });
 
-var listEquip = [];
-$("#id_fabricante").on("change", function(){
-    var id_fabricante = $(this).val();
-    $.ajax({
-        type: 'GET',
-        dataType: 'JSON',
-        url: 'circuitos/modeloFabricante',
-        data: {id_fabricante: id_fabricante},
-        beforeSend: function () {
-        },
-        complete: function () {
-        },
-        error: function () {
-        },
-        success: function (data) {
-            if (data.operacao){
-                $(".remove_modelo").remove();
-                $.each(data.dados, function (key, value) {
-                    var linhas = "<option class='remove_modelo' value='" + value.id + "'>" + value.modelo + "</option>";
-                    $("#id_modelo").append(linhas);
-                    $("#id_modelo").removeAttr("disabled");
+$(function () {
+    'use strict';
+    var listEquip = [];
+    var listModel = [];
+    $("#id_fabricante").on("change", function(){
+        var id_fabricante = $(this).val();
+        $.ajax({
+            type: "GET",
+            dataType: "JSON",
+            url: "circuitos/modeloFabricante",
+            data: {id_fabricante: id_fabricante},
+            beforeSend: function () {
+                $("#id_modelo").val("");
+                $("#lid_modelo").val("");
+                $("#lid_modelo").attr("disabled", "true");
+                $("#lid_equipamento").val("");
+                $("#id_equipamento").val("");
+                $("#lid_equipamento").attr("disabled", "true");
+            },
+            complete: function () {
+            },
+            error: function () {
+            },
+            success: function (data) {
+                if (data.operacao){
+                    $.each(data.dados, function (key, value) {
+                        listModel.push({value: value.modelo, data: value.id});
+                    });
+                    $("#lid_modelo").removeAttr("disabled");
+                    $("#id_equipamento").val("");
+                    $("#lid_equipamento").val("");
+                    $("#lid_equipamento").attr("disabled", "true");
+                } else {
+                    $("#id_modelo").val("");
+                    $("#lid_modelo").val("");
+                    $("#lid_modelo").attr("disabled", "true");
+                    $("#id_equipamento").val("");
+                    $("#lid_equipamento").val("");
+                    $("#lid_equipamento").attr("disabled", "true");
+                    swal("Atenção","Não existem modelos para esse fabricante!","info");
+                }
+            }
+        });
+    });
+
+    //Autocomplete de Modelo
+    $("#lid_modelo").autocomplete({
+        lookup: listModel,
+        noCache: true,
+        minChars: 1,
+        showNoSuggestionNotice: true,
+        noSuggestionNotice: 'Não existem resultados para essa consulta!',
+        onSelect: function (suggestion) {
+            $("#id_modelo").val(suggestion.data);
+            $.ajax({
+                type: "GET",
+                dataType: "JSON",
+                url: "circuitos/equipamentoModelo",
+                data: {id_modelo: suggestion.data},
+                beforeSend: function () {
                     $("#lid_equipamento").val("");
                     $("#id_equipamento").val("");
                     $("#lid_equipamento").attr("disabled", "true");
-                });
-            } else {
-                $(".remove_modelo").remove();
-                $("#id_modelo").val(null).selected = "true";
-                $("#id_modelo").attr("disabled", "true");
-                $("#lid_equipamento").val("");
-                $("#id_equipamento").val("");
-                $("#lid_equipamento").attr("disabled", "true");
-            }
+                },
+                complete: function () {
+                },
+                error: function () {
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        $.each(data.dados, function (key, value) {
+                            var numserie = (value.numserie) ? value.numserie : "Sem Nº Série";
+                            var numpatrimonio = (value.numpatrimonio) ? value.numpatrimonio : "Sem Nº Patrimônio";
+                            listEquip.push({value: value.nome + " (" + numserie + " / " + numpatrimonio + ")", data: value.id});
+                        });
+                        $("#lid_equipamento").removeAttr("disabled");
+                    } else {
+                        $("#lid_equipamento").val("");
+                        $("#id_equipamento").val("");
+                        $("#lid_equipamento").attr("disabled", "true");
+                        swal("Atenção","Não existem equipamentos para este modelo!","info");
+                    }
+                }
+            });
         }
     });
-});
 
-$("#id_modelo").on("change", function(){
-    var id_modelo = $(this).val();
-    $.ajax({
-        type: 'GET',
-        dataType: 'JSON',
-        url: 'circuitos/equipamentoModelo',
-        data: {id_modelo: id_modelo},
-        beforeSend: function () {
-        },
-        complete: function () {
-        },
-        error: function () {
-        },
-        success: function (data) {
-            if (data.operacao){
-                $.each(data.dados, function (key, value) {
-                    var numserie = (value.numserie) ? value.numserie : "Sem Nº Série";
-                    var numpatrimonio = (value.numpatrimonio) ? value.numpatrimonio : "Sem Nº Patrimônio";
-                    listEquip.push({ value: value.nome + " (" + numserie + " / " + numpatrimonio + ")", data: value.id });
-                    $("#lid_equipamento").removeAttr("disabled");
-                });
-            } else {
-                listEquip = [];
-                $("#lid_equipamento").val("");
-                $("#id_equipamento").val("");
-                $("#lid_equipamento").attr("disabled", "true");
-            }
+    //Autocomplete de Equipamento
+    $("#lid_equipamento").autocomplete({
+        lookup: listEquip,
+        noCache: true,
+        minChars: 1,
+        showNoSuggestionNotice: true,
+        noSuggestionNotice: 'Não existem resultados para essa consulta!',
+        onSelect: function (suggestion) {
+            $("#id_equipamento").val(suggestion.data);
         }
     });
-});
-
-//Autocomplete de Equipamento
-$("#lid_equipamento").autocomplete({
-    lookup: listEquip,
-    onSelect: function (suggestion) {
-        $("#id_equipamento").val(suggestion.data);
-    }
 });
 
 $(".bt_novo").on("click", function(){
@@ -355,7 +379,7 @@ $(document).on("click", ".criar_circuitos", function(){
                                 cancelButtonColor: '#d33',
                                 confirmButtonText: 'Ok'
                               }).then((result) => {
-                                // window.location.reload(true);
+                                window.location.reload(true);
                               });
                         } else {
                             swal({
@@ -1063,82 +1087,99 @@ $("#id_tipomovimento").on("change", function(){
     }
 });
 
-var listEquip2 = [];
 
-$("#id_fabricantemov").on("change", function(){
-    var id_fabricante = $(this).val();
-    $.ajax({
-        type: 'GET',
-        dataType: 'JSON',
-        url: 'circuitos/modeloFabricante',
-        data: {id_fabricante: id_fabricante},
-        beforeSend: function () {
-        },
-        complete: function () {
-        },
-        error: function () {
-        },
-        success: function (data) {
-            if (data.operacao){
-                $(".remove_modelo").remove();
-                $.each(data.dados, function (key, value) {
-                    var linhas = "<option class='remove_modelo' value='" + value.id + "'>" + value.modelo + "</option>";
-                    $("#id_modelomov").append(linhas);
-                    $("#id_modelomov").removeAttr("disabled");
+$(function () {
+    'use strict';
+    var listEquip2 = [];
+    var listModel2 = [];
+    $("#id_fabricantemov").on("change", function(){
+        var id_fabricante = $(this).val();
+        $.ajax({
+            type: 'GET',
+            dataType: 'JSON',
+            url: 'circuitos/modeloFabricante',
+            data: {id_fabricante: id_fabricante},
+            beforeSend: function () {
+            },
+            complete: function () {
+            },
+            error: function () {
+            },
+            success: function (data) {
+                if (data.operacao){
+                    $(".remove_modelo").remove();
+                    $.each(data.dados, function (key, value) {
+                        listModel2.push({ value: value.modelo, data: value.id });
+                    });
+                    $("#lid_modelomov").removeAttr("disabled");
                     $("#lid_equipamentomov").val("");
                     $("#id_equipamentomov").val("");
                     $("#lid_equipamentomov").attr("disabled", "true");
-                });
-            } else {
-                $(".remove_modelo").remove();
-                $("#id_modelomov").val(null).selected = "true";
-                $("#id_modelomov").attr("disabled", "true");
-                $("#lid_equipamentomov").val("");
-                $("#id_equipamentomov").val("");
-                $("#lid_equipamentomov").attr("disabled", "true");
+                } else {
+                    $("#lid_modelomov").val("");
+                    $("#id_modelomov").val("");
+                    $("#lid_modelomov").attr("disabled", "true");
+                    $("#lid_equipamentomov").val("");
+                    $("#id_equipamentomov").val("");
+                    $("#lid_equipamentomov").attr("disabled", "true");
+                }
             }
+        });
+    });
+
+    //Autocomplete de Modelo
+    $("#lid_modelomov").autocomplete({
+        lookup: listModel2,
+        noCache: true,
+        minChars: 1,
+        showNoSuggestionNotice: true,
+        noSuggestionNotice: 'Não existem resultados para essa consulta!',
+        onSelect: function (suggestion) {
+            $("#id_modelomov").val(suggestion.data);
+            $.ajax({
+                type: "GET",
+                dataType: "JSON",
+                url: "circuitos/equipamentoModelo",
+                data: {id_modelo: suggestion.data},
+                beforeSend: function () {
+                    $("#lid_equipamentomov").val("");
+                    $("#id_equipamentomov").val("");
+                    $("#lid_equipamentomov").attr("disabled", "true");
+                },
+                complete: function () {
+                },
+                error: function () {
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        $.each(data.dados, function (key, value) {
+                            var numserie = (value.numserie) ? value.numserie : "Sem Nº Série";
+                            var numpatrimonio = (value.numpatrimonio) ? value.numpatrimonio : "Sem Nº Patrimônio";
+                            listEquip2.push({value: value.nome + " (" + numserie + " / " + numpatrimonio + ")", data: value.id});
+                        });
+                        $("#lid_equipamentomov").removeAttr("disabled");
+                    } else {
+                        $("#lid_equipamentomov").val("");
+                        $("#id_equipamentomov").val("");
+                        $("#lid_equipamentomov").attr("disabled", "true");
+                        swal("Atenção","Não existem equipamentos para este modelo!","info");
+                    }
+                }
+            });
         }
     });
-});
 
-$("#id_modelomov").on("change", function(){
-    var id_modelo = $(this).val();
-    $.ajax({
-        type: 'GET',
-        dataType: 'JSON',
-        url: 'circuitos/equipamentoModelo',
-        data: {id_modelo: id_modelo},
-        beforeSend: function () {
-        },
-        complete: function () {
-        },
-        error: function () {
-        },
-        success: function (data) {
-            if (data.operacao){
-                $(".remove_equip").remove();
-                $.each(data.dados, function (key, value) {
-                    var numserie = (value.numserie) ? value.numserie : "Sem Nº Série";
-                    var numpatrimonio = (value.numpatrimonio) ? value.numpatrimonio : "Sem Nº Patrimônio";
-                    listEquip2.push({ value: value.nome + " (" + numserie + " / " + numpatrimonio + ")", data: value.id });
-                    $("#lid_equipamentomov").removeAttr("disabled");
-                });
-            } else {
-                listEquip = [];
-                $("#lid_equipamentomov").val("");
-                $("#id_equipamentomov").val("");
-                $("#lid_equipamentomov").attr("disabled", "true");
-            }
+    //Autocomplete de Equipamento
+    $("#lid_equipamentomov").autocomplete({
+        lookup: listEquip2,
+        noCache: true,
+        minChars: 1,
+        showNoSuggestionNotice: true,
+        noSuggestionNotice: 'Não existem resultados para essa consulta!',
+        onSelect: function (suggestion) {
+            $("#id_equipamentomov").val(suggestion.data);
         }
     });
-});
-
-//Autocomplete de Equipamento
-$("#lid_equipamentomov").autocomplete({
-    lookup: listEquip2,
-    onSelect: function (suggestion) {
-        $("#id_equipamentomov").val(suggestion.data);
-    }
 });
 
 $(document).on("click", ".criar_mov", function(){
