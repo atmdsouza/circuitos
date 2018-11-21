@@ -133,6 +133,10 @@ $di->set('dispatcher', function() use ($di) {
             }
         }
     );
+    $evManager->attach(
+        "dispatch:beforeExecuteRoute",
+        new SecurityPlugin()
+    );
     $dispatcher = new Dispatcher();
     $dispatcher->setEventsManager($evManager);
     $dispatcher->setDefaultNamespace('Circuitos\Controllers');
@@ -169,9 +173,10 @@ $di->set(
 $di->set('Auth', function () {
     return new Auth();
 });
+
 /**
  * Access Control List
  */
-$di->set('Acl', function () {
-    return new Acl();
-});
+//$di->set('Acl', function () {
+//    return new Acl();
+//});

@@ -83,7 +83,8 @@ var table = $('#tb_circuitos').DataTable({
             text: 'PDF',
             titleAttr: 'Exportar para PDF'
         }
-    ]
+    ],
+    order: [[ 1, "desc" ]]
 });
 
 table.buttons().container().appendTo('#tb_circuitos_wrapper .col-md-6:eq(0)');
@@ -135,6 +136,8 @@ $("#id_cliente").on("change", function(){
 
 $(function () {
     'use strict';
+    var ac_model = $("#lid_modelo");
+    var ac_equip = $("#lid_equipamento");
     var listEquip = [];
     var listModel = [];
     $("#id_fabricante").on("change", function(){
@@ -179,7 +182,7 @@ $(function () {
     });
 
     //Autocomplete de Modelo
-    $("#lid_modelo").autocomplete({
+    ac_model.autocomplete({
         lookup: listModel,
         noCache: true,
         minChars: 1,
@@ -221,7 +224,7 @@ $(function () {
     });
 
     //Autocomplete de Equipamento
-    $("#lid_equipamento").autocomplete({
+    ac_equip.autocomplete({
         lookup: listEquip,
         noCache: true,
         minChars: 1,

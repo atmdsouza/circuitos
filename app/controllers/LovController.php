@@ -22,6 +22,8 @@ class LovController extends ControllerBase
 
     public function initialize()
     {
+        $this->tag->setTitle("Lista de Valores");
+        parent::initialize();
         //Voltando o usuário não autenticado para a página de login
         $auth = new Autentica();
         $identity = $auth->getIdentity();
@@ -70,7 +72,7 @@ class LovController extends ControllerBase
         ];
         $paginator = new Paginator([
             'data' => $lov,
-            'limit'=> 10000,
+            'limit'=> 100,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();

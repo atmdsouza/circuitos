@@ -28,6 +28,8 @@ class UsuarioController extends ControllerBase
 
     public function initialize()
     {
+        $this->tag->setTitle("Usuários");
+        parent::initialize();
         //Voltando o usuário não autenticado para a página de login
         $auth = new Autentica();
         $identity = $auth->getIdentity();
@@ -55,7 +57,7 @@ class UsuarioController extends ControllerBase
         $roles = PhalconRoles::find();
         $paginator = new Paginator([
             'data' => $usuarios,
-            'limit'=> 10000,
+            'limit'=> 100,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();

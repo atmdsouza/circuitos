@@ -33,6 +33,7 @@ class Autentica extends Component
         $this->session->set('auth-identity', array(
             'id' => $user->getId(),
             'login' => $user->getLogin(),
+            'role' => $user->getRolesName(),
             'nome' => $user->Pessoa->nome
         ));
         return true;
@@ -65,8 +66,9 @@ class Autentica extends Component
         }
 
         $this->session->set('auth-identity', array(
-            'id' => $user->id,
-            'login' => $user->login,
+            'id' => $user->getId(),
+            'login' => $user->getLogin(),
+            'roles' => $user->getRolesName(),
             'nome' => $user->Pessoa->nome
         ));
     }
@@ -238,13 +240,43 @@ class Autentica extends Component
     }
 
     /**
-     * Returns the current identity
+     * Returns the current user id
+     *
+     * @return integer
+     */
+    public function getIdUsuario() {
+        $identity = $this->session->get('auth-identity');
+        return $identity['id'];
+    }
+
+    /**
+     * Returns the current user login
+     *
+     * @return string
+     */
+    public function getLogin() {
+        $identity = $this->session->get('auth-identity');
+        return $identity['login'];
+    }
+
+    /**
+     * Returns the current user roles
+     *
+     * @return string
+     */
+    public function getRoles() {
+        $identity = $this->session->get('auth-identity');
+        return $identity['role'];
+    }
+
+    /**
+     * Returns the current user name
      *
      * @return string
      */
     public function getName() {
         $identity = $this->session->get('auth-identity');
-        return $identity['name'];
+        return $identity['nome'];
     }
 
     /**

@@ -28,10 +28,6 @@ class SessionController extends ControllerBase {
         $this->view->token = $this->tokenManager->getToken('User');
     }
 
-    public function indexAction() {
-
-    }
-
     /**
      * Login Action System
      */

@@ -30,6 +30,8 @@ class FabricanteController extends ControllerBase
 
     public function initialize()
     {
+        $this->tag->setTitle("Fabricante");
+        parent::initialize();
         //Voltando o usuário não autenticado para a página de login
         $auth = new Autentica();
         $identity = $auth->getIdentity();
@@ -57,7 +59,7 @@ class FabricanteController extends ControllerBase
         $tipocontato = Lov::find("tipo=13");
         $paginator = new Paginator([
             'data' => $fabricantes,
-            'limit'=> 10000,
+            'limit'=> 100,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();

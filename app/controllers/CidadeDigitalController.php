@@ -2,6 +2,7 @@
 
 namespace Circuitos\Controllers;
 
+use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
@@ -23,6 +24,8 @@ class CidadeDigitalController extends ControllerBase
 
     public function initialize()
     {
+        $this->tag->setTitle("Cidade Digital");
+        parent::initialize();
         //Voltando o usuário não autenticado para a página de login
         $auth = new Autentica();
         $identity = $auth->getIdentity();
@@ -43,11 +46,30 @@ class CidadeDigitalController extends ControllerBase
      */
     public function indexAction()
     {
+        $this->persistent->parameters = null;
         $numberPage = 1;
-        $cidadedigital = CidadeDigital::find(array(
-            "excluido = 0",
-            "order" => "[id] DESC"
-        ));
+        $dados = filter_input_array(INPUT_POST);
+
+        if ($this->request->isPost()) {
+            $query = Criteria::fromInput($this->di, "Circuitos\Models\CidadeDigital", $dados);
+            $this->persistent->parameters = $query->getParams();
+        } else {
+            $numberPage = $this->request->getQuery("page", "int");
+        }
+
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = [];
+            $parameters["order"] = "[id] DESC";
+            $parameters['conditions'] .= ' excluido = :excluido:';
+            $parameters['bind']['excluido'] = 0;
+        } else {
+            $parameters["order"] = "[id] DESC";
+            $parameters['conditions'] .= ' AND excluido = :excluido:';
+            $parameters['bind']['excluido'] = 0;
+        }
+
+        $cidadedigital = CidadeDigital::find($parameters);
         $cidades = EndCidade::find(array(
             "uf='PA'",
             "order" => "cidade"
@@ -58,7 +80,7 @@ class CidadeDigitalController extends ControllerBase
         ));
         $paginator = new Paginator([
             'data' => $cidadedigital,
-            'limit'=> 10000,
+            'limit'=> 100,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();

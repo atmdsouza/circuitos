@@ -13,6 +13,8 @@ class IndexController extends ControllerBase
 
     public function initialize()
     {
+        $this->tag->setTitle("Sistema de Gestão de Circuitos do Navega Pará");
+        parent::initialize();
         //Voltando o usuário não autenticado para a página de login
         $auth = new Autentica();
         $identity = $auth->getIdentity();

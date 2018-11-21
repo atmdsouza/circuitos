@@ -24,6 +24,8 @@ class EquipamentoController extends ControllerBase
 
     public function initialize()
     {
+        $this->tag->setTitle("Equipamento");
+        parent::initialize();
         //Voltando o usuário não autenticado para a página de login
         $auth = new Autentica();
         $identity = $auth->getIdentity();
@@ -55,7 +57,7 @@ class EquipamentoController extends ControllerBase
         $fabricante = Fabricante::buscaCompletaFabricante();
         $paginator = new Paginator([
             'data' => $equipamento,
-            'limit'=> 10000,
+            'limit'=> 100,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();

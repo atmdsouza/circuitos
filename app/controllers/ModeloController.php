@@ -22,6 +22,8 @@ class ModeloController extends ControllerBase
 
     public function initialize()
     {
+        $this->tag->setTitle("Modelo");
+        parent::initialize();
         //Voltando o usuário não autenticado para a página de login
         $auth = new Autentica();
         $identity = $auth->getIdentity();
@@ -49,7 +51,7 @@ class ModeloController extends ControllerBase
         $fabricante = Fabricante::buscaCompletaFabricante();
         $paginator = new Paginator([
             'data' => $modelo,
-            'limit'=> 10000,
+            'limit'=> 100,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();

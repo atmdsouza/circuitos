@@ -1,7 +1,8 @@
 <?php
 
 namespace Circuitos\Controllers;
- 
+
+use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
@@ -34,6 +35,8 @@ class CircuitosController extends ControllerBase
 
     public function initialize()
     {
+        $this->tag->setTitle("Circuitos");
+        parent::initialize();
         //Voltando o usuário não autenticado para a página de login
         $auth = new Autentica();
         $identity = $auth->getIdentity();
@@ -54,11 +57,29 @@ class CircuitosController extends ControllerBase
      */
     public function indexAction()
     {
+        $this->persistent->parameters = null;
         $numberPage = 1;
-        $circuitos = Circuitos::find(array(
-            "excluido = 0",
-            "order" => "[id] DESC"
-        ));
+        $dados = filter_input_array(INPUT_POST);
+
+        if ($this->request->isPost()) {
+            $query = Criteria::fromInput($this->di, "Circuitos\Models\Circuitos", $dados);
+            $this->persistent->parameters = $query->getParams();
+        } else {
+            $numberPage = $this->request->getQuery("page", "int");
+        }
+
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = [];
+            $parameters["order"] = "[designacao] DESC";
+            $parameters['conditions'] .= ' excluido = :excluido:';
+            $parameters['bind']['excluido'] = 0;
+        } else {
+            $parameters["order"] = "[designacao] DESC";
+            $parameters['conditions'] .= ' AND excluido = :excluido:';
+            $parameters['bind']['excluido'] = 0;
+        }
+        $circuitos = Circuitos::find($parameters);
         $statuscircuito = Lov::find(array(
             "tipo=6",
             "order" => "descricao"
@@ -97,7 +118,7 @@ class CircuitosController extends ControllerBase
         $equipamentos = Equipamento::find();
         $paginator = new Paginator([
             'data' => $circuitos,
-            'limit'=> 10,
+            'limit'=> 100,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();

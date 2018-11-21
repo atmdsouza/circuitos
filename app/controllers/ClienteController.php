@@ -30,6 +30,8 @@ class ClienteController extends ControllerBase
 
     public function initialize()
     {
+        $this->tag->setTitle("Cliente");
+        parent::initialize();
         //Voltando o usuário não autenticado para a página de login
         $auth = new Autentica();
         $identity = $auth->getIdentity();
@@ -63,7 +65,7 @@ class ClienteController extends ControllerBase
         $sexo = Lov::find("tipo=10");
         $paginator = new Paginator([
             'data' => $clientes,
-            'limit'=> 10000,
+            'limit'=> 100,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();

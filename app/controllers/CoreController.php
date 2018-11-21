@@ -33,11 +33,6 @@ require APP_PATH . '/library/PHPMailer/src/SMTP.php';
 class CoreController extends ControllerBase
 {
 
-    public function indexAction()
-    {
-
-    }
-
     public function ativarPessoaAction($id_pessoa)
     {
         //Desabilita o layout para o ajax
