@@ -61,7 +61,7 @@ class CidadeDigitalController extends ControllerBase
         if (!is_array($parameters)) {
             $parameters = [];
             $parameters["order"] = "[id] DESC";
-            $parameters['conditions'] .= ' excluido = :excluido:';
+            $parameters['conditions'] = ' excluido = :excluido:';
             $parameters['bind']['excluido'] = 0;
         } else {
             $parameters["order"] = "[id] DESC";

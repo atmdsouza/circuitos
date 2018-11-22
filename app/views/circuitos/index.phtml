@@ -8,6 +8,8 @@ use Util\Util;
 
 ?>
 
+<?php echo $this->getContent(); ?>
+
 <div class="col-12">
     <?php
     echo $this->tag->form(
@@ -19,12 +21,6 @@ use Util\Util;
     ?>
     <div class="form-row">
         <div class="form-group col-md-2">
-            <label for="fieldDesignacao" class="col-sm-2 control-label">Designação</label>
-            <div class="col-sm-10">
-                <?php echo $this->tag->textField(["designacao", "size" => 30, "class" => "form-control", "id" => "fieldDesignacao"]) ?>
-            </div>
-        </div>
-        <div class="form-group col-md-2">
             <label for="fieldIdCliente" class="col-sm-2 control-label">Cliente</label>
             <div class="col-sm-10">
                 <?php echo $this->tag->select(["id_cliente", $clientes, "class" => "form-control", "id" => "fieldIdCliente",
@@ -35,21 +31,26 @@ use Util\Util;
                 ?>
             </div>
         </div>
-<!--        <div class="form-group col-md-2">-->
-<!--            <label for="fieldIdFuncao" class="col-sm-2 control-label">Função</label>-->
-<!--            <div class="col-sm-10">-->
-<!--                --><?php //echo $this->tag->select(["id_funcao", $funcao, "class" => "form-control", "id" => "fieldIdFuncao",
-//                    "using" => ["id", "descricao",],
-//                    "useEmpty" => true,
-//                    "emptyText" => "Selecione a Função",
-//                    "emptyValue" => ""])
-//                ?>
-<!--            </div>-->
-<!--        </div>-->
         <div class="form-group col-md-2">
-            <label for="fieldIpGerencia" class="col-sm-10 control-label">IP de Gerência</label>
+            <label for="fieldIdBanda" class="col-sm-2 control-label">Banda</label>
             <div class="col-sm-10">
-                <?php echo $this->tag->textField(["ip_gerencia", "size" => 30, "class" => "form-control", "id" => "fieldIpGerencia"]) ?>
+                <?php echo $this->tag->select(["id_banda", $banda, "class" => "form-control", "id" => "fieldIdBanda",
+                    "using" => ["id", "descricao",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione a Banda",
+                    "emptyValue" => ""])
+                ?>
+            </div>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="fieldIdFuncao" class="col-sm-2 control-label">Função</label>
+            <div class="col-sm-10">
+                <?php echo $this->tag->select(["id_funcao", $funcao, "class" => "form-control", "id" => "fieldIdFuncao",
+                    "using" => ["id", "descricao",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione a Função",
+                    "emptyValue" => ""])
+                ?>
             </div>
         </div>
         <div class="form-group col-md-2">
@@ -58,7 +59,7 @@ use Util\Util;
                 <?php echo $this->tag->select(["id_tipolink", $tipolink, "class" => "form-control", "id" => "fieldIdTipolink",
                     "using" => ["id", "descricao",],
                     "useEmpty" => true,
-                    "emptyText" => "Selecione o tipo de Acesso",
+                    "emptyText" => "Selecione o Tipo de Acesso",
                     "emptyValue" => ""])
                 ?>
             </div>
@@ -74,9 +75,35 @@ use Util\Util;
                 ?>
             </div>
         </div>
-        <div class="form-group col-md-1">
+        <div class="form-group col-md-2">
             <div class="bt_menu_tabela">
                 <?php echo $this->tag->submitButton(["Pesquisar", "class" => "btn btn-info btn-rounded waves-light w-md"]) ?>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            <label for="fieldDesignacao" class="col-sm-2 control-label">Designação</label>
+            <div class="col-sm-10">
+                <?php echo $this->tag->textField(["designacao", "size" => 30, "class" => "form-control", "id" => "fieldDesignacao"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="fieldDesignacaoAnterior" class="col-sm-10 control-label">Designação Anterior</label>
+            <div class="col-sm-10">
+                <?php echo $this->tag->textField(["designacao_anterior", "size" => 30, "class" => "form-control", "id" => "fieldDesignacaoAnterior"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="fieldIpGerencia" class="col-sm-10 control-label">IP de Gerência</label>
+            <div class="col-sm-10">
+                <?php echo $this->tag->textField(["ip_gerencia", "size" => 30, "class" => "form-control ip", "id" => "fieldIpGerencia"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="fieldIpRedelocal" class="col-sm-10 control-label">Rede Cliente (IP)</label>
+            <div class="col-sm-10">
+                <?php echo $this->tag->textField(["ip_redelocal", "size" => 30, "class" => "form-control ip2", "id" => "fieldIpRedelocal"]) ?>
             </div>
         </div>
     </div>
@@ -92,6 +119,7 @@ use Util\Util;
                     <th>Designação</th>
                     <th>Cliente</th>
                     <th>Unidade</th>
+                    <th>Cidade</th>
                     <th>Tipo de Link</th>
                     <th>IP de Gerência</th>
                     <th>Função</th>
@@ -125,6 +153,7 @@ use Util\Util;
                     $color_funcao = (!$circuitos->id_funcao) ? "style='font-weight: bold; color: red;'" : null;
                     $color_tipoacesso = (!$circuitos->id_tipoacesso) ? "style='font-weight: bold; color: red;'" : null;
                     $color_banda = (!$circuitos->id_banda) ? "style='font-weight: bold; color: red;'" : null;
+                    $cidade = ($circuitos->CidadeDigital->EndCidade->cidade) ? $circuitos->CidadeDigital->EndCidade->cidade : null;
                 ?>
                 <tr>
                     <td style="display: none;">
@@ -138,6 +167,9 @@ use Util\Util;
                     </td>
                     <td>
                         <?php echo $unidade ?>
+                    </td>
+                    <td>
+                        <?php echo $cidade ?>
                     </td>
                     <td <?php echo $color_tipolink ?>>
                         <?php echo $desc_tipolink ?>

@@ -63,11 +63,11 @@ class SecurityPlugin extends Plugin
 
             // Resources para Administrador
             $superResources = [
-                "cidade_digital"    => ["index"],
+                "cidade_digital"    => ["index", "formCidadeDigital", "criarCidadeDigital", "editarCidadeDigital", "ativarCidadeDigital", "inativarCidadeDigital", "deletarCidadeDigital"],
                 "circuitos"         => ["index", "formCircuitos", "visualizaCircuitos", "criarCircuitos", "editarCircuitos", "movCircuitos", "deletarCircuitos", "unidadeCliente", "modeloFabricante", "equipamentoModelo", "pdfCircuito"],
                 "cliente"           => ["index", "formCliente", "criarCliente", "editarCliente", "ativarCliente", "inativarCliente", "deletarCliente"],
                 "cliente_unidade"   => ["index", "formClienteUnidade", "criarClienteUnidade", "editarClienteUnidade", "ativarClienteUnidade", "inativarClienteUnidade", "deletarClienteUnidade"],
-                "core"              => ["index", "ativarPessoa", "inativarPessoa", "deletarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail"],
+                "core"              => ["ativarPessoa", "inativarPessoa", "deletarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail"],
                 "empresa"           => ["index", "formEmpresa", "criarEmpresa", "editarEmpresa", "deletarEmpresa"],
                 "equipamento"       => ["index", "formEquipamento", "criarEquipamento", "editarEquipamento", "ativarEquipamento", "inativarEquipamento", "deletarEquipamento", "carregaModelos"],
                 "error"             => ["show401", "show404"],
@@ -87,20 +87,20 @@ class SecurityPlugin extends Plugin
 
             // Resources para Operacional
             $operacionalResources = [
-                "cidade_digital"    => ["index", "formCidadeDigital", "criarCidadeDigital", "editarCidadeDigital", "ativarCidadeDigital", "inativarCidadeDigital", "deletarCidadeDigital"],
-                "circuitos"         => ["index", "formCircuitos", "visualizaCircuitos", "criarCircuitos", "editarCircuitos", "movCircuitos", "deletarCircuitos", "unidadeCliente", "modeloFabricante", "equipamentoModelo", "pdfCircuito"],
-                "cliente"           => ["index", "formCliente", "criarCliente", "editarCliente", "ativarCliente", "inativarCliente", "deletarCliente"],
-                "cliente_unidade"   => ["index", "formClienteUnidade", "criarClienteUnidade", "editarClienteUnidade", "ativarClienteUnidade", "inativarClienteUnidade", "deletarClienteUnidade"],
-                "core"              => ["index", "ativarPessoa", "inativarPessoa", "deletarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail"],
-                "empresa"           => ["index", "formEmpresa", "criarEmpresa", "editarEmpresa", "deletarEmpresa"],
-                "equipamento"       => ["index", "formEquipamento", "criarEquipamento", "editarEquipamento", "ativarEquipamento", "inativarEquipamento", "deletarEquipamento", "carregaModelos"],
+                "cidade_digital"    => ["index", "formCidadeDigital", "criarCidadeDigital", "editarCidadeDigital", "ativarCidadeDigital", "inativarCidadeDigital"],
+                "circuitos"         => ["index", "formCircuitos", "visualizaCircuitos", "criarCircuitos", "editarCircuitos", "movCircuitos", "unidadeCliente", "modeloFabricante", "equipamentoModelo", "pdfCircuito"],
+                "cliente"           => ["index", "formCliente", "criarCliente", "editarCliente", "ativarCliente", "inativarCliente"],
+                "cliente_unidade"   => ["index", "formClienteUnidade", "criarClienteUnidade", "editarClienteUnidade", "ativarClienteUnidade", "inativarClienteUnidade"],
+                "core"              => ["ativarPessoa", "inativarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail"],
+//                "empresa"           => ["index", "formEmpresa", "criarEmpresa", "editarEmpresa", "deletarEmpresa"],
+                "equipamento"       => ["index", "formEquipamento", "criarEquipamento", "editarEquipamento", "ativarEquipamento", "inativarEquipamento", "carregaModelos"],
                 "error"             => ["show401", "show404"],
-                "fabricante"        => ["index", "formFabricante", "criarFabricante", "editarFabricante", "ativarFabricante", "inativarFabricante", "deletarFabricante"],
+                "fabricante"        => ["index", "formFabricante", "criarFabricante", "editarFabricante", "ativarFabricante", "inativarFabricante"],
                 "index"             => ["index"],
-                "lov"               => ["index", "formLov", "criarLov", "editarLov", "deletarLov"],
-                "modelo"            => ["index", "formModelo", "criarModelo", "editarModelo", "ativarModelo", "inativarModelo", "deletarModelo"],
+                "lov"               => ["index", "formLov", "criarLov", "editarLov"],
+                "modelo"            => ["index", "formModelo", "criarModelo", "editarModelo", "ativarModelo", "inativarModelo"],
                 "session"           => ["login", "logout", "sair", "recuperar", "inativo"],
-                "usuario"           => ["index", "formUsuario", "validarLogin", "criarUsuario", "editarUsuario", "gerarSenha", "resetarSenha", "ativarUsuario", "inativarUsuario", "deletarUsuario", "alterarSenha", "primeiro", "redirecionaUsuario", "recuperarSenha", "trocar"],
+                "usuario"           => ["gerarSenha", "resetarSenha", "alterarSenha", "primeiro", "redirecionaUsuario", "recuperarSenha", "trocar"],
             ];
             foreach ($operacionalResources as $resource => $actions) {
                 $acl->addResource(new Resource($resource), $actions);
@@ -111,20 +111,20 @@ class SecurityPlugin extends Plugin
 
             // Resources para Analista
             $analistaResources = [
-                "cidade_digital"    => ["index", "formCidadeDigital", "criarCidadeDigital", "editarCidadeDigital", "ativarCidadeDigital", "inativarCidadeDigital", "deletarCidadeDigital"],
-                "circuitos"         => ["index", "formCircuitos", "visualizaCircuitos", "criarCircuitos", "editarCircuitos", "movCircuitos", "deletarCircuitos", "unidadeCliente", "modeloFabricante", "equipamentoModelo", "pdfCircuito"],
-                "cliente"           => ["index", "formCliente", "criarCliente", "editarCliente", "ativarCliente", "inativarCliente", "deletarCliente"],
-                "cliente_unidade"   => ["index", "formClienteUnidade", "criarClienteUnidade", "editarClienteUnidade", "ativarClienteUnidade", "inativarClienteUnidade", "deletarClienteUnidade"],
-                "core"              => ["index", "ativarPessoa", "inativarPessoa", "deletarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail"],
-                "empresa"           => ["index", "formEmpresa", "criarEmpresa", "editarEmpresa", "deletarEmpresa"],
-                "equipamento"       => ["index", "formEquipamento", "criarEquipamento", "editarEquipamento", "ativarEquipamento", "inativarEquipamento", "deletarEquipamento", "carregaModelos"],
+                "cidade_digital"    => ["index", "formCidadeDigital"],
+                "circuitos"         => ["index", "formCircuitos", "visualizaCircuitos", "pdfCircuito"],
+                "cliente"           => ["index", "formCliente"],
+                "cliente_unidade"   => ["index", "formClienteUnidade"],
+                "core"              => ["enviarEmail"],
+//                "empresa"           => ["index", "formEmpresa", "criarEmpresa", "editarEmpresa", "deletarEmpresa"],
+                "equipamento"       => ["index", "formEquipamento"],
                 "error"             => ["show401", "show404"],
-                "fabricante"        => ["index", "formFabricante", "criarFabricante", "editarFabricante", "ativarFabricante", "inativarFabricante", "deletarFabricante"],
+                "fabricante"        => ["index", "formFabricante"],
                 "index"             => ["index"],
-                "lov"               => ["index", "formLov", "criarLov", "editarLov", "deletarLov"],
-                "modelo"            => ["index", "formModelo", "criarModelo", "editarModelo", "ativarModelo", "inativarModelo", "deletarModelo"],
+//                "lov"               => ["index", "formLov", "criarLov", "editarLov", "deletarLov"],
+                "modelo"            => ["index", "formModelo"],
                 "session"           => ["login", "logout", "sair", "recuperar", "inativo"],
-                "usuario"           => ["index", "formUsuario", "validarLogin", "criarUsuario", "editarUsuario", "gerarSenha", "resetarSenha", "ativarUsuario", "inativarUsuario", "deletarUsuario", "alterarSenha", "primeiro", "redirecionaUsuario", "recuperarSenha", "trocar"],
+                "usuario"           => ["gerarSenha", "resetarSenha", "alterarSenha", "primeiro", "redirecionaUsuario", "recuperarSenha", "trocar"],
             ];
             foreach ($analistaResources as $resource => $actions) {
                 $acl->addResource(new Resource($resource), $actions);
@@ -136,6 +136,7 @@ class SecurityPlugin extends Plugin
             // Resources para Convidado
             $convidadoResources = [
                 "session"   => ["login", "logout", "sair", "recuperar", "inativo"],
+                "usuario"   => ["gerarSenha", "resetarSenha", "alterarSenha", "primeiro", "redirecionaUsuario", "recuperarSenha", "trocar"],
                 "error"     => ["show401", "show404"]
             ];
             foreach ($convidadoResources as $resource => $actions) {
@@ -167,7 +168,8 @@ class SecurityPlugin extends Plugin
         $auth = new Autentica();
         $role = $auth->getRoles();
 
-        if (!$role) {
+        if (!$role)
+        {
             $role = "Convidado";
         }
 
@@ -176,21 +178,28 @@ class SecurityPlugin extends Plugin
 
         $acl = $this->getAcl();
 
-        if (!$acl->isResource($controller)) {
+        if (!$acl->isResource($controller))
+        {
             return $this->response->redirect("error/show404");
         }
 
         $allowed = $acl->isAllowed($role, $controller, $action);
 
-        if (!$allowed) {
-            if ($this->request->isAjax()) {
+        if (!$allowed)
+        {
+            if ($this->request->isAjax())
+            {
+                $this->view->disable();
                 unset($this->persistent->acl);
+                $this->response->setStatusCode(401);
+                $this->response->send();
                 return False;
-            }else {
+            }
+            else
+            {
                 unset($this->persistent->acl);
                 return $this->response->redirect("error/show401");
             }
-
         }
     }
 }

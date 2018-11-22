@@ -157,7 +157,15 @@ $(document).on("click", ".criar_cidadedigital", function(){
                 },
                 complete: function () {
                 },
-                error: function () {
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
                 },
                 success: function (data) {
                     if (data.operacao){
@@ -201,28 +209,36 @@ $(".bt_edit").on("click", function(){
     nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Edição de Cidade Digital',
-            text: 'Você somente pode editar um único valor! Selecione apenas um e tente novamente!',
-            type: 'warning'
+            title: "Edição de Cidade Digital",
+            text: "Você somente pode editar um único valor! Selecione apenas um e tente novamente!",
+            type: "warning"
           });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Edição de Cidade Digital',
-            text: 'Você precisa selecionar um registro para a edição!',
-            type: 'warning'
+            title: "Edição de Cidade Digital",
+            text: "Você precisa selecionar um registro para a edição!",
+            type: "warning"
           });
      } else {
         var id_cidadedigital = ids[0];
         $.ajax({
-            type: 'GET',
-            dataType: 'JSON',
-            url: 'cidade_digital/formCidadeDigital',
+            type: "GET",
+            dataType: "JSON",
+            url: "cidade_digital/formCidadeDigital",
             data: {id_cidadedigital: id_cidadedigital},
             beforeSend: function () {
             },
             complete: function () {
             },
-            error: function () {
+            error: function (data) {
+                if (data.status && data.status === 401)
+                {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
             },
             success: function (data) {
                 $("#id").val(data.dados.id);
@@ -278,7 +294,15 @@ $(document).on("click", ".editar_cidadedigital", function(){
                 },
                 complete: function () {
                 },
-                error: function () {
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
                 },
                 success: function (data) {
                     if (data.operacao){
@@ -331,7 +355,15 @@ $(".bt_del").on("click", function(){
                   },
                   complete: function () {
                   },
-                  error: function () {
+                  error: function (data) {
+                      if (data.status && data.status === 401)
+                      {
+                          swal({
+                              title: "Erro de Permissão",
+                              text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                              type: "warning"
+                          });
+                      }
                   },
                   success: function (data) {
                       if (data.operacao){
@@ -385,7 +417,15 @@ $(".bt_del").on("click", function(){
                   },
                   complete: function () {
                   },
-                  error: function () {
+                  error: function (data) {
+                      if (data.status && data.status === 401)
+                      {
+                          swal({
+                              title: "Erro de Permissão",
+                              text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                              type: "warning"
+                          });
+                      }
                   },
                   success: function (data) {
                       if (data.operacao){
@@ -450,7 +490,15 @@ $(".bt_ativo").on("click", function(){
                   },
                   complete: function () {
                   },
-                  error: function () {
+                  error: function (data) {
+                      if (data.status && data.status === 401)
+                      {
+                          swal({
+                              title: "Erro de Permissão",
+                              text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                              type: "warning"
+                          });
+                      }
                   },
                   success: function (data) {
                       if (data.operacao){
@@ -504,7 +552,15 @@ $(".bt_ativo").on("click", function(){
                   },
                   complete: function () {
                   },
-                  error: function () {
+                  error: function (data) {
+                      if (data.status && data.status === 401)
+                      {
+                          swal({
+                              title: "Erro de Permissão",
+                              text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                              type: "warning"
+                          });
+                      }
                   },
                   success: function (data) {
                       if (data.operacao){
@@ -557,7 +613,15 @@ $(".bt_inativo").on("click", function(){
                   },
                   complete: function () {
                   },
-                  error: function () {
+                  error: function (data) {
+                      if (data.status && data.status === 401)
+                      {
+                          swal({
+                              title: "Erro de Permissão",
+                              text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                              type: "warning"
+                          });
+                      }
                   },
                   success: function (data) {
                       if (data.operacao){
@@ -611,7 +675,15 @@ $(".bt_inativo").on("click", function(){
                   },
                   complete: function () {
                   },
-                  error: function () {
+                  error: function (data) {
+                      if (data.status && data.status === 401)
+                      {
+                          swal({
+                              title: "Erro de Permissão",
+                              text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                              type: "warning"
+                          });
+                      }
                   },
                   success: function (data) {
                       if (data.operacao){
