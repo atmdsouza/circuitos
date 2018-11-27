@@ -2,6 +2,8 @@
 
 namespace Circuitos\Controllers;
 
+use Phalcon\Logger;
+use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\Controller;
 
@@ -26,16 +28,13 @@ class SessionController extends ControllerBase {
         $this->view->token = $this->tokenManager->getToken('User');
     }
 
-    public function indexAction() {
-
-    }
-
     /**
      * Login Action System
      */
     public function loginAction()
     {
         $this->view->setRenderLevel(View::LEVEL_ACTION_VIEW);
+        $logger = new FileAdapter(BASE_PATH . "/logs/systemlog.log");
         try {
             if ($this->request->isPost()) {
                 if ($this->security->checkToken()) {
@@ -76,6 +75,7 @@ class SessionController extends ControllerBase {
                             $usuario->save();
                             $user = new Usuario();
                             $redirect = $user->redirecionaUsuarioAction($this->request->getPost('login'));
+                            $logger->info("Acesso do usuário {$this->request->getPost('login')} ao sistema.");
                             return $this->response->redirect($redirect);
                         }
                     }
@@ -92,7 +92,10 @@ class SessionController extends ControllerBase {
     public function logoutAction()
     {
         $this->session->destroy();
+        $logger = new FileAdapter(BASE_PATH . "/logs/systemlog.log");
         $auth = new Autentica();
+        $identity = $auth->getIdentity();
+        $logger->info("Saída do usuário {$identity["login"]} do sistema.");
         $auth->remove();
         return $this->response->redirect('session/sair');
     }
@@ -105,6 +108,7 @@ class SessionController extends ControllerBase {
     public function recuperarAction()
     {
         $this->view->setRenderLevel(View::LEVEL_ACTION_VIEW);
+        $logger = new FileAdapter(BASE_PATH . "/logs/systemlog.log");
         if ($this->request->isPost()) {
             if ($this->security->checkToken()) {
                 if (!$this->request->getPost('email')){

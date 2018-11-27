@@ -7,9 +7,10 @@ $loader = new \Phalcon\Loader();
  */
 $loader->registerDirs(
     [
-       $config->application->controllersDir,
-       $config->application->modelsDir,
-       $config->application->libraryDir,
+        $config->application->controllersDir,
+        $config->application->modelsDir,
+        $config->application->libraryDir,
+        $config->application->pluginsDir,
     ]);
 
 
@@ -19,7 +20,6 @@ $loader->registerNamespaces(
         'Circuitos\Controllers' => $config->application->controllersDir,
         'Circuitos\Library'     => $config->application->libraryDir,
         'Auth'                  => $config->application->libraryDir . 'Auth/Autentica.php',
-        'Acl'                   => $config->application->libraryDir . 'Acl/Acl.php',
         'Util'                  => $config->application->libraryDir . 'Util/Util.php',
         'TemplatesEmails'       => $config->application->libraryDir . 'Util/TemplatesEmails.php',
         'TokenManager'          => $config->application->libraryDir . 'Util/TokenManager.php'

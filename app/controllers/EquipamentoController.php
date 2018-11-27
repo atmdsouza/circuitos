@@ -2,6 +2,7 @@
 
 namespace Circuitos\Controllers;
 
+use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
@@ -24,6 +25,8 @@ class EquipamentoController extends ControllerBase
 
     public function initialize()
     {
+        $this->tag->setTitle("Equipamento");
+        parent::initialize();
         //Voltando o usuário não autenticado para a página de login
         $auth = new Autentica();
         $identity = $auth->getIdentity();
@@ -44,8 +47,26 @@ class EquipamentoController extends ControllerBase
      */
     public function indexAction()
     {
+        $this->persistent->parameters = null;
         $numberPage = 1;
-        $equipamento = Equipamento::find();
+        $dados = filter_input_array(INPUT_POST);
+
+        if ($this->request->isPost()) {
+            $query = Criteria::fromInput($this->di, "Circuitos\Models\Equipamento", $dados);
+            $this->persistent->parameters = $query->getParams();
+        } else {
+            $numberPage = $this->request->getQuery("page", "int");
+        }
+
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = [];
+            $parameters["order"] = "[id] DESC";
+        } else {
+            $parameters["order"] = "[id] DESC";
+        }
+        $numberPage = 1;
+        $equipamento = Equipamento::find($parameters);
         $tipoequipamento = Lov::find(array(
             "tipo = 15",
             "order" => "descricao"
@@ -53,7 +74,7 @@ class EquipamentoController extends ControllerBase
         $fabricante = Fabricante::buscaCompletaFabricante();
         $paginator = new Paginator([
             'data' => $equipamento,
-            'limit'=> 10000,
+            'limit'=> 100,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();

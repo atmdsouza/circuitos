@@ -11,7 +11,7 @@ $.extend( $.fn.dataTable.defaults, {
         sLoadingRecords: "Carregando...",
         sProcessing: "Processando...",
         sZeroRecords: "Nenhum registro encontrado",
-        sSearch: "Pesquisar",
+        sSearch: "Pesquisar no resultado:",
         oPaginate: {
             sNext: "Próximo",
             sPrevious: "Anterior",
@@ -30,6 +30,8 @@ $.extend( $.fn.dataTable.defaults, {
             }
         }
     },
+    lengthChange: true,
+    lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Tudo"]],
     select: {
         style: 'multi'
     },
@@ -39,8 +41,7 @@ $.extend( $.fn.dataTable.defaults, {
     },
     ordering: true,
     orderMulti: true,
-    order: [[ 0, "desc" ]],
-    lengthChange: false
+    order: [[ 0, "desc" ]]
 });
 //Limpar modal bootstrap
 $('.modal').on('hidden.bs.modal', function(){

@@ -2,6 +2,7 @@
 
 namespace Circuitos\Controllers;
 
+use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
@@ -22,6 +23,8 @@ class LovController extends ControllerBase
 
     public function initialize()
     {
+        $this->tag->setTitle("Lista de Valores");
+        parent::initialize();
         //Voltando o usuário não autenticado para a página de login
         $auth = new Autentica();
         $identity = $auth->getIdentity();
@@ -42,8 +45,29 @@ class LovController extends ControllerBase
      */
     public function indexAction()
     {
+        $this->persistent->parameters = null;
         $numberPage = 1;
-        $lov = Lov::find("codigoespecifico <> 'SYS' OR codigoespecifico IS NULL");
+        $dados = filter_input_array(INPUT_POST);
+
+        if ($this->request->isPost()) {
+            $query = Criteria::fromInput($this->di, "Circuitos\Models\Lov", $dados);
+            $this->persistent->parameters = $query->getParams();
+        } else {
+            $numberPage = $this->request->getQuery("page", "int");
+        }
+
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = [];
+            $parameters["order"] = "[id] DESC";
+            $parameters["conditions"] = " codigoespecifico <> 'SYS' OR codigoespecifico IS NULL";
+        } else {
+            $parameters["order"] = "[id] DESC";
+            $parameters["conditions"] .= " AND codigoespecifico <> 'SYS' OR codigoespecifico IS NULL";
+        }
+
+        $lov = Lov::find($parameters);
+
         $tipos_lov = [
             "1" => "Tipo Unidade",
             "2" => "Usa Contrato",
@@ -67,7 +91,7 @@ class LovController extends ControllerBase
         ];
         $paginator = new Paginator([
             'data' => $lov,
-            'limit'=> 10000,
+            'limit'=> 100,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();

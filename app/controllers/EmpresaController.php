@@ -30,6 +30,8 @@ class EmpresaController extends ControllerBase
 
     public function initialize()
     {
+        $this->tag->setTitle("Empresa");
+        parent::initialize();
         //Voltando o usuário não autenticado para a página de login
         $auth = new Autentica();
         $identity = $auth->getIdentity();
@@ -51,12 +53,14 @@ class EmpresaController extends ControllerBase
     public function indexAction()
     {
         $numberPage = 1;
-        $empresa = Empresa::find();
+        $empresa = Empresa::find(array(
+            "order" => "[id] DESC"
+        ));
         $setor = Lov::find("tipo=5");
         $esfera = Lov::find("tipo=4");
         $paginator = new Paginator([
             'data' => $empresa,
-            'limit'=> 10000,
+            'limit'=> 100,
             'page' => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();

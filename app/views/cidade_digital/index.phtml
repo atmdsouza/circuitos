@@ -1,3 +1,61 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+
+use Phalcon\Tag;
+
+?>
+
+<?php echo $this->getContent(); ?>
+
+<div class="col-12">
+    <?php
+    echo $this->tag->form(
+        [
+            "cidade_digital/index",
+            "autocomplete" => "off"
+        ]
+    );
+    ?>
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            <label for="fieldDescricao" class="col-sm-2 control-label">Descrição</label>
+            <div class="col-sm-10">
+                <?php echo $this->tag->textField(["descricao", "size" => 30, "class" => "form-control", "id" => "fieldDescricao"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="fieldIdTipo" class="col-sm-2 control-label">Tipo</label>
+            <div class="col-sm-10">
+                <?php echo $this->tag->select(["id_tipo", $tipocd, "class" => "form-control", "id" => "fieldIdTipo",
+                    "using" => ["id", "descricao",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione um tipo",
+                    "emptyValue" => ""])
+                ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="fieldIdCidade" class="col-sm-2 control-label">Cidade</label>
+            <div class="col-sm-10">
+                <?php echo $this->tag->select(["id_cidade", $cidades, "class" => "form-control", "id" => "fieldIdCidade",
+                    "using" => ["id", "cidade",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione uma Cidade",
+                    "emptyValue" => ""])
+                ?>
+            </div>
+        </div>
+        <div class="form-group col-md-2">
+            <div class="bt_menu_tabela">
+                <?php echo $this->tag->submitButton(["Pesquisar", "class" => "btn btn-info btn-rounded waves-light w-md"]) ?>
+            </div>
+        </div>
+    </div>
+    <?php echo $this->tag->endForm(); ?>
+</div>
+
 <div class="col-12">
     <div class="card-box">
         <table id="tb_cidadedigital" class="table table-striped table-bordered" cellspacing="0" width="100%">

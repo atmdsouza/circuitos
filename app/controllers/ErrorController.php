@@ -13,5 +13,9 @@ class ErrorController extends Controller
         $this->view->disableLevel(View::LEVEL_MAIN_LAYOUT);
     }
 
-}
+    public function show401Action()
+    {
+        $this->view->disableLevel(View::LEVEL_MAIN_LAYOUT);
+    }
 
+}

@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>Circuitos - Sistema de Gestão de Circuitos do Navega Pará</title>
+        <title><?= Phalcon\Tag::getTitle(false); ?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
         <meta content="Coderthemes" name="author" />
@@ -104,6 +104,12 @@
             <div class="left side-menu">
                 <div class="slimscroll-menu" id="remove-scroll">
 
+                    <?php
+                        use Auth\Autentica;
+                        $auth = new Autentica();
+                        $role = $auth->getRoles();
+                    ?>
+
                     <!--- Sidemenu -->
                     <div id="sidebar-menu">
                         <!-- Left Menu Start -->
@@ -111,38 +117,82 @@
 
                             <li><?php echo $this->tag->linkTo(["index", "<i class='fi-air-play'></i> <span> Dashboard </span>"]) ?></li>
 
-                            <li>
-                                <a href="javascript: void(0);"><i class="fi-layers"></i> <span> Cadastros </span> <span class="menu-arrow"></span></a>
-                                <ul class="nav-second-level" aria-expanded="false">
-                                    <li><?php echo $this->tag->linkTo(["cidade_digital", "Cidade Digital"]) ?></li>
-                                    <li><?php echo $this->tag->linkTo(["cliente", "Clientes"]) ?></li>
-                                    <li><?php echo $this->tag->linkTo(["cliente_unidade", "Unidades de Clientes"]) ?></li>
-                                    <li><?php echo $this->tag->linkTo(["fabricante", "Fabricantes"]) ?></li>
-                                    <li><?php echo $this->tag->linkTo(["modelo", "Modelos"]) ?></li>
-                                    <li><?php echo $this->tag->linkTo(["equipamento", "Equipamentos"]) ?></li>
-                                </ul>
-                            </li>
+                            <?php switch ($role)
+                            {
+                                case "Administrador":
+                                    ?>
+                                    <li>
+                                        <a href="javascript: void(0);"><i class="fi-layers"></i> <span> Cadastros </span> <span class="menu-arrow"></span></a>
+                                        <ul class="nav-second-level" aria-expanded="false">
+                                            <li><?php echo $this->tag->linkTo(["cidade_digital", "Cidade Digital"]) ?></li>
+                                            <li><?php echo $this->tag->linkTo(["cliente", "Clientes"]) ?></li>
+                                            <li><?php echo $this->tag->linkTo(["cliente_unidade", "Unidades de Clientes"]) ?></li>
+                                            <li><?php echo $this->tag->linkTo(["fabricante", "Fabricantes"]) ?></li>
+                                            <li><?php echo $this->tag->linkTo(["modelo", "Modelos"]) ?></li>
+                                            <li><?php echo $this->tag->linkTo(["equipamento", "Equipamentos"]) ?></li>
+                                        </ul>
+                                    </li>
 
-                            <li><?php echo $this->tag->linkTo(["circuitos", "<i class='fi-link'></i> <span> Circuitos Navega Pará </span>"]) ?></li>
+                                    <li><?php echo $this->tag->linkTo(["circuitos", "<i class='fi-link'></i> <span> Circuitos Navega Pará </span>"]) ?></li>
 
-                            <li>
-                                <a href="javascript: void(0);"><i class="fi-lock"></i> <span> Segurança </span> <span class="menu-arrow"></span></a>
-                                <ul class="nav-second-level" aria-expanded="false">
-                                    <li><?php echo $this->tag->linkTo(["usuario", "Usuários"]) ?></li>
-                                    <!--
-                                    <li><?php echo $this->tag->linkTo(["", "Perfis"]) ?></li>
-                                    <li><?php echo $this->tag->linkTo(["", "Permissões"]) ?></li> -->
-                                </ul>
-                            </li>
+                                    <li>
+                                        <a href="javascript: void(0);"><i class="fi-lock"></i> <span> Segurança </span> <span class="menu-arrow"></span></a>
+                                        <ul class="nav-second-level" aria-expanded="false">
+                                            <li><?php echo $this->tag->linkTo(["usuario", "Usuários"]) ?></li>
+                                        </ul>
+                                    </li>
 
-                            <li>
-                                <a href="javascript: void(0);"><i class="fi-cog"></i> <span> Configuração </span> <span class="menu-arrow"></span></a>
-                                <ul class="nav-second-level" aria-expanded="false">
-                                    <li><?php echo $this->tag->linkTo(["empresa", "Configuração da Empresa"]) ?></li>
-                                    <li><?php echo $this->tag->linkTo(["lov", "Lista de Valores"]) ?></li>
-                                </ul>
-                            </li>
+                                    <li>
+                                        <a href="javascript: void(0);"><i class="fi-cog"></i> <span> Configuração </span> <span class="menu-arrow"></span></a>
+                                        <ul class="nav-second-level" aria-expanded="false">
+                                            <li><?php echo $this->tag->linkTo(["empresa", "Configuração da Empresa"]) ?></li>
+                                            <li><?php echo $this->tag->linkTo(["lov", "Lista de Valores"]) ?></li>
+                                        </ul>
+                                    </li>
+                                    <?php
+                                    break;
+                                case "Operacional":
+                                    ?>
+                                    <li>
+                                        <a href="javascript: void(0);"><i class="fi-layers"></i> <span> Cadastros </span> <span class="menu-arrow"></span></a>
+                                        <ul class="nav-second-level" aria-expanded="false">
+                                            <li><?php echo $this->tag->linkTo(["cidade_digital", "Cidade Digital"]) ?></li>
+                                            <li><?php echo $this->tag->linkTo(["cliente", "Clientes"]) ?></li>
+                                            <li><?php echo $this->tag->linkTo(["cliente_unidade", "Unidades de Clientes"]) ?></li>
+                                            <li><?php echo $this->tag->linkTo(["fabricante", "Fabricantes"]) ?></li>
+                                            <li><?php echo $this->tag->linkTo(["modelo", "Modelos"]) ?></li>
+                                            <li><?php echo $this->tag->linkTo(["equipamento", "Equipamentos"]) ?></li>
+                                        </ul>
+                                    </li>
 
+                                    <li><?php echo $this->tag->linkTo(["circuitos", "<i class='fi-link'></i> <span> Circuitos Navega Pará </span>"]) ?></li>
+
+                                    <li>
+                                        <a href="javascript: void(0);"><i class="fi-cog"></i> <span> Configuração </span> <span class="menu-arrow"></span></a>
+                                        <ul class="nav-second-level" aria-expanded="false">
+                                            <li><?php echo $this->tag->linkTo(["lov", "Lista de Valores"]) ?></li>
+                                        </ul>
+                                    </li>
+                                    <?php
+                                    break;
+                                case "Analista":
+                                    ?>
+                                    <li>
+                                        <a href="javascript: void(0);"><i class="fi-layers"></i> <span> Cadastros </span> <span class="menu-arrow"></span></a>
+                                        <ul class="nav-second-level" aria-expanded="false">
+                                            <li><?php echo $this->tag->linkTo(["cidade_digital", "Cidade Digital"]) ?></li>
+                                            <li><?php echo $this->tag->linkTo(["cliente", "Clientes"]) ?></li>
+                                            <li><?php echo $this->tag->linkTo(["cliente_unidade", "Unidades de Clientes"]) ?></li>
+                                            <li><?php echo $this->tag->linkTo(["fabricante", "Fabricantes"]) ?></li>
+                                            <li><?php echo $this->tag->linkTo(["modelo", "Modelos"]) ?></li>
+                                            <li><?php echo $this->tag->linkTo(["equipamento", "Equipamentos"]) ?></li>
+                                        </ul>
+                                    </li>
+
+                                    <li><?php echo $this->tag->linkTo(["circuitos", "<i class='fi-link'></i> <span> Circuitos Navega Pará </span>"]) ?></li>
+                                    <?php
+                                    break;
+                            }?>
                         </ul>
 
                     </div>
@@ -210,8 +260,7 @@
         <script src="<?= DIR_STATICS ?>public/plugins/custombox/js/legacy.min.js"></script>
         
         <!-- Autocomplete -->
-        <script type="text/javascript" src="<?= DIR_STATICS ?>public/plugins/autocomplete/jquery.mockjax.js"></script>
-        <script type="text/javascript" src="<?= DIR_STATICS ?>public/plugins/autocomplete/jquery.autocomplete.min.js"></script>
+        <script type="text/javascript" src="<?= DIR_STATICS ?>public/plugins/autocomplete/jquery.autocomplete.js"></script>
 
         <!-- Plugins -->
         <script src="<?= DIR_STATICS ?>public/js/uteis/accounting.js"></script>
@@ -225,10 +274,15 @@
         <script src="<?= DIR_STATICS ?>public/plugins/sweet-alert/sweetalert2.min.js"></script>
         <script src="<?= DIR_STATICS ?>public/plugins/switchery/switchery.min.js"></script>
 
+        <!-- Charts.js -->
+        <script src="<?= DIR_STATICS ?>public/plugins/chart.js/chart.bundle.js"></script>
+        <script src="<?= DIR_STATICS ?>public/plugins/chart.js/chart.min.js"></script>
+
         <!-- Módulos -->
         <?php $module = $this->router->getControllerName(); ?>
         <?php switch($module){
             case "index":?>
+                <script src="<?= DIR_STATICS ?>public/js/modulos/index.js"></script>
             <?php break;
             case "cliente":?>
                 <script src="<?= DIR_STATICS ?>public/js/modulos/cliente.js"></script>

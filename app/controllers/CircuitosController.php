@@ -1,7 +1,8 @@
 <?php
 
 namespace Circuitos\Controllers;
- 
+
+use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
@@ -34,19 +35,21 @@ class CircuitosController extends ControllerBase
 
     public function initialize()
     {
+        $this->tag->setTitle("Circuitos");
+        parent::initialize();
         //Voltando o usuário não autenticado para a página de login
         $auth = new Autentica();
         $identity = $auth->getIdentity();
         if (!is_array($identity)) {
-            return $this->response->redirect('session/login');
+            return $this->response->redirect("session/login");
         }
         $this->view->user = $identity["nome"];
         //CSRFToken
         $this->tokenManager = new TokenManager();
-        if (!$this->tokenManager->doesUserHaveToken('User')) {
-            $this->tokenManager->generateToken('User');
+        if (!$this->tokenManager->doesUserHaveToken("User")) {
+            $this->tokenManager->generateToken("User");
         }
-        $this->view->token = $this->tokenManager->getToken('User');
+        $this->view->token = $this->tokenManager->getToken("User");
     }
 
     /**
@@ -54,11 +57,29 @@ class CircuitosController extends ControllerBase
      */
     public function indexAction()
     {
+        $this->persistent->parameters = null;
         $numberPage = 1;
-        $circuitos = Circuitos::find(array(
-            "excluido = 0",
-            "order" => "[designacao] DESC"
-        ));
+        $dados = filter_input_array(INPUT_POST);
+
+        if ($this->request->isPost()) {
+            $query = Criteria::fromInput($this->di, "Circuitos\Models\Circuitos", $dados);
+            $this->persistent->parameters = $query->getParams();
+        } else {
+            $numberPage = $this->request->getQuery("page", "int");
+        }
+
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = [];
+            $parameters["order"] = "[designacao] DESC";
+            $parameters["conditions"] = " excluido = :excluido:";
+            $parameters["bind"]["excluido"] = 0;
+        } else {
+            $parameters["order"] = "[designacao] DESC";
+            $parameters["conditions"] .= " AND excluido = :excluido:";
+            $parameters["bind"]["excluido"] = 0;
+        }
+        $circuitos = Circuitos::find($parameters);
         $statuscircuito = Lov::find(array(
             "tipo=6",
             "order" => "descricao"
@@ -96,9 +117,9 @@ class CircuitosController extends ControllerBase
         $modelos = Modelo::find();
         $equipamentos = Equipamento::find();
         $paginator = new Paginator([
-            'data' => $circuitos,
-            'limit'=> 10,
-            'page' => $numberPage
+            "data" => $circuitos,
+            "limit"=> 100,
+            "page" => $numberPage
         ]);
         $this->view->page = $paginator->getPaginate();
         $this->view->clientes = $clientes;
@@ -126,32 +147,33 @@ class CircuitosController extends ControllerBase
         $dados = filter_input_array(INPUT_GET);
         $circuitos = Circuitos::findFirst("id={$dados["id_circuitos"]}");
         $dados = array(
-            'id' => $circuitos->getId(),
-            'id_cliente' => $circuitos->getIdCliente(),
-            'id_cliente_unidade' => $circuitos->getIdClienteUnidade(),
-            'id_equipamento' => $circuitos->getIdEquipamento(),
-            'desc_equip' => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->nome : null,
-            'patr_equip' => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->numpatrimonio : null,
-            'nums_equip' => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->numserie : null,
-            'id_contrato' => $circuitos->getIdContrato(),
-            'id_status' => $circuitos->getIdStatus(),
-            'id_cluster' => $circuitos->getIdCluster(),
-            'id_funcao' => $circuitos->getIdFuncao(),
-            'id_tipoacesso' => $circuitos->getIdTipoacesso(),
-            'id_tipolink' => $circuitos->getIdTipolink(),
-            'id_cidadedigital' => $circuitos->getIdCidadedigital(),
-            'designacao' => $circuitos->getDesignacao(),
-            'designacao_anterior' => $circuitos->getDesignacaoAnterior(),
-            'uf' => $circuitos->getUf(),
-            'cidade' => $circuitos->getCidade(),
-            'chamado' => $circuitos->getChamado(),
-            'ssid' => $circuitos->getSsid(),
-            'ip_redelocal' => $circuitos->getIpRedelocal(),
-            'ip_gerencia' => $circuitos->getIpGerencia(),
-            'tag' => $circuitos->getTag(),
-            'id_banda' => $circuitos->getIdBanda(),
-            'observacao' => $circuitos->getObservacao(),
-            'data_ativacao' => $circuitos->getDataAtivacao(),
+            "id" => $circuitos->getId(),
+            "id_cliente" => $circuitos->getIdCliente(),
+            "id_cliente_unidade" => $circuitos->getIdClienteUnidade(),
+            "id_equipamento" => $circuitos->getIdEquipamento(),
+            "desc_modelo" => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->Modelo->modelo : null,
+            "desc_equip" => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->nome : null,
+            "patr_equip" => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->numpatrimonio : null,
+            "nums_equip" => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->numserie : null,
+            "id_contrato" => $circuitos->getIdContrato(),
+            "id_status" => $circuitos->getIdStatus(),
+            "id_cluster" => $circuitos->getIdCluster(),
+            "id_funcao" => $circuitos->getIdFuncao(),
+            "id_tipoacesso" => $circuitos->getIdTipoacesso(),
+            "id_tipolink" => $circuitos->getIdTipolink(),
+            "id_cidadedigital" => $circuitos->getIdCidadedigital(),
+            "designacao" => $circuitos->getDesignacao(),
+            "designacao_anterior" => $circuitos->getDesignacaoAnterior(),
+            "uf" => $circuitos->getUf(),
+            "cidade" => $circuitos->getCidade(),
+            "chamado" => $circuitos->getChamado(),
+            "ssid" => $circuitos->getSsid(),
+            "ip_redelocal" => $circuitos->getIpRedelocal(),
+            "ip_gerencia" => $circuitos->getIpGerencia(),
+            "tag" => $circuitos->getTag(),
+            "id_banda" => $circuitos->getIdBanda(),
+            "observacao" => $circuitos->getObservacao(),
+            "data_ativacao" => $circuitos->getDataAtivacao(),
         );
         $cliente = Cliente::findFirst("id={$circuitos->getIdCliente()}");
         $unidades = ClienteUnidade::buscaClienteUnidade($circuitos->getIdCliente());
@@ -165,7 +187,6 @@ class CircuitosController extends ControllerBase
             "dados" => $dados,
             "cliente" => $cliente,
             "equipamentos" => $equipamentos,
-            "modelos" => $modelos,
             "equip" => $equip,
             "unidadescli" => $unidades,
             "banda" => $banda
@@ -181,47 +202,52 @@ class CircuitosController extends ControllerBase
         $response = new Response();
         $dados = filter_input_array(INPUT_GET);
         $circuitos = Circuitos::findFirst("id={$dados["id_circuitos"]}");
-        $movimentos = Movimentos::find("id_circuitos={$circuitos->getId()}");
+
+        $parameters = [];
+        $parameters["order"] = "[data_movimento] DESC";
+        $parameters["conditions"] .= " id_circuitos = :id_circuitos:";
+        $parameters["bind"]["id_circuitos"] = $circuitos->getId();
+        $movimentos = Movimentos::find($parameters);
         $dados = array(
-            'id' => $circuitos->getId(),
-            'id_cliente' => $circuitos->getIdCliente(),
-            'id_cliente_unidade' => $circuitos->getIdClienteUnidade(),
-            'id_equipamento' => $circuitos->getIdEquipamento(),
-            'id_contrato' => $circuitos->getIdContrato(),
-            'id_status' => $circuitos->getIdStatus(),
-            'id_cluster' => $circuitos->getIdCluster(),
-            'id_funcao' => $circuitos->getIdFuncao(),
-            'id_tipoacesso' => $circuitos->getIdTipoacesso(),
-            'id_tipolink' => $circuitos->getIdTipolink(),
-            'id_cidadedigital' => $circuitos->getIdCidadedigital(),
-            'designacao' => $circuitos->getDesignacao(),
-            'designacao_anterior' => $circuitos->getDesignacaoAnterior(),
-            'uf' => $circuitos->getUf(),
-            'cidade' => $circuitos->getCidade(),
-            'ssid' => $circuitos->getSsid(),
-            'chamado' => $circuitos->getChamado(),
-            'ip_redelocal' => $circuitos->getIpRedelocal(),
-            'ip_gerencia' => $circuitos->getIpGerencia(),
-            'tag' => $circuitos->getTag(),
-            'id_banda' => $circuitos->getIdBanda(),
-            'observacao' => $circuitos->getObservacao(),
-            'data_ativacao' => $util->converterDataHoraParaBr($circuitos->getDataAtivacao()),
-            'data_atualizacao' => $util->converterDataHoraParaBr($circuitos->getDataAtualizacao()),
-            'numserie' => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->numserie : null,
-            'numpatrimonio' => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->numpatrimonio : null
+            "id" => $circuitos->getId(),
+            "id_cliente" => $circuitos->getIdCliente(),
+            "id_cliente_unidade" => $circuitos->getIdClienteUnidade(),
+            "id_equipamento" => $circuitos->getIdEquipamento(),
+            "id_contrato" => $circuitos->getIdContrato(),
+            "id_status" => $circuitos->getIdStatus(),
+            "id_cluster" => $circuitos->getIdCluster(),
+            "id_funcao" => $circuitos->getIdFuncao(),
+            "id_tipoacesso" => $circuitos->getIdTipoacesso(),
+            "id_tipolink" => $circuitos->getIdTipolink(),
+            "id_cidadedigital" => $circuitos->getIdCidadedigital(),
+            "designacao" => $circuitos->getDesignacao(),
+            "designacao_anterior" => $circuitos->getDesignacaoAnterior(),
+            "uf" => $circuitos->getUf(),
+            "cidade" => $circuitos->getCidade(),
+            "ssid" => $circuitos->getSsid(),
+            "chamado" => $circuitos->getChamado(),
+            "ip_redelocal" => $circuitos->getIpRedelocal(),
+            "ip_gerencia" => $circuitos->getIpGerencia(),
+            "tag" => $circuitos->getTag(),
+            "id_banda" => $circuitos->getIdBanda(),
+            "observacao" => $circuitos->getObservacao(),
+            "data_ativacao" => $util->converterDataHoraParaBr($circuitos->getDataAtivacao()),
+            "data_atualizacao" => $util->converterDataHoraParaBr($circuitos->getDataAtualizacao()),
+            "numserie" => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->numserie : null,
+            "numpatrimonio" => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->numpatrimonio : null
         );
         $mov = array();
         foreach($movimentos as $movimento){
             array_push($mov, array(
-                'id' => $movimento->getId(),
-                'id_circuitos' => $movimento->getIdCircuitos(),
-                'id_tipomovimento' => $movimento->Lov->descricao,
-                'id_usuario' => $movimento->Usuario->Pessoa->nome,
-                'data_movimento' => $util->converterDataHoraParaBr($movimento->getDataMovimento()),
-                'osocomon' => $movimento->getOsocomon(),
-                'valoranterior' => $movimento->getValoranterior(),
-                'valoratualizado' => $movimento->getValoratualizado(),
-                'observacao' => $movimento->getObservacao()
+                "id" => $movimento->getId(),
+                "id_circuitos" => $movimento->getIdCircuitos(),
+                "id_tipomovimento" => $movimento->Lov->descricao,
+                "id_usuario" => $movimento->Usuario->Pessoa->nome,
+                "data_movimento" => $util->converterDataHoraParaBr($movimento->getDataMovimento()),
+                "osocomon" => $movimento->getOsocomon(),
+                "valoranterior" => $movimento->getValoranterior(),
+                "valoratualizado" => $movimento->getValoratualizado(),
+                "observacao" => $movimento->getObservacao()
             ));
         }
         $equip = ($circuitos->getIdEquipamento()) ? Equipamento::findFirst("id={$circuitos->getIdEquipamento()}") : null;

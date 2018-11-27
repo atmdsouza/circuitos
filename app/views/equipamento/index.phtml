@@ -1,3 +1,73 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+
+use Phalcon\Tag;
+
+?>
+
+<?php echo $this->getContent(); ?>
+
+<div class="col-12">
+    <?php
+    echo $this->tag->form(
+        [
+            "equipamento/index",
+            "autocomplete" => "off"
+        ]
+    );
+    ?>
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            <label for="fieldNome" class="col-sm-2 control-label">Equipamento</label>
+            <div class="col-sm-10">
+                <?php echo $this->tag->textField(["nome", "size" => 30, "class" => "form-control", "id" => "fieldNome"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="fieldNumserie" class="col-sm-10 control-label">Nº de Série</label>
+            <div class="col-sm-10">
+                <?php echo $this->tag->textField(["numserie", "size" => 30, "class" => "form-control", "id" => "fieldNumserie"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="fieldNumpatrimonio" class="col-sm-10 control-label">Nº de Patrimônio</label>
+            <div class="col-sm-10">
+                <?php echo $this->tag->textField(["numpatrimonio", "size" => 30, "class" => "form-control", "id" => "fieldNumpatrimonio"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="fieldIdFabricante" class="col-sm-2 control-label">Fabricante</label>
+            <div class="col-sm-10">
+                <?php echo $this->tag->select(["id_fabricante", $fabricante, "class" => "form-control", "id" => "fieldIdFabricante",
+                    "using" => ["id", "nome",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione o Fabricante",
+                    "emptyValue" => ""])
+                ?>
+            </div>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="fieldIdTipoequipamento" class="col-sm-2 control-label">Tipo</label>
+            <div class="col-sm-10">
+                <?php echo $this->tag->select(["id_tipoequipamento", $tipoequipamento, "class" => "form-control", "id" => "fieldIdTipoequipamento",
+                    "using" => ["id", "descricao",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione o tipo",
+                    "emptyValue" => ""])
+                ?>
+            </div>
+        </div>
+        <div class="form-group col-md-2">
+            <div class="bt_menu_tabela">
+                <?php echo $this->tag->submitButton(["Pesquisar", "class" => "btn btn-info btn-rounded waves-light w-md"]) ?>
+            </div>
+        </div>
+    </div>
+    <?php echo $this->tag->endForm(); ?>
+</div>
+
 <div class="col-12">
     <div class="card-box">
         <table id="tb_equipamento" class="table table-striped table-bordered" cellspacing="0" width="100%">
