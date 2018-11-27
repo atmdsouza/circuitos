@@ -2,6 +2,7 @@
 
 namespace Circuitos\Controllers;
 
+use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
@@ -44,11 +45,29 @@ class LovController extends ControllerBase
      */
     public function indexAction()
     {
+        $this->persistent->parameters = null;
         $numberPage = 1;
-        $lov = Lov::find(array(
-            "codigoespecifico <> 'SYS' OR codigoespecifico IS NULL",
-            "order" => "[id] DESC"
-        ));
+        $dados = filter_input_array(INPUT_POST);
+
+        if ($this->request->isPost()) {
+            $query = Criteria::fromInput($this->di, "Circuitos\Models\Lov", $dados);
+            $this->persistent->parameters = $query->getParams();
+        } else {
+            $numberPage = $this->request->getQuery("page", "int");
+        }
+
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = [];
+            $parameters["order"] = "[id] DESC";
+            $parameters["conditions"] = " codigoespecifico <> 'SYS' OR codigoespecifico IS NULL";
+        } else {
+            $parameters["order"] = "[id] DESC";
+            $parameters["conditions"] .= " AND codigoespecifico <> 'SYS' OR codigoespecifico IS NULL";
+        }
+
+        $lov = Lov::find($parameters);
+
         $tipos_lov = [
             "1" => "Tipo Unidade",
             "2" => "Usa Contrato",

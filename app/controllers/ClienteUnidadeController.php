@@ -1,7 +1,8 @@
 <?php
 
 namespace Circuitos\Controllers;
- 
+
+use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
@@ -54,10 +55,25 @@ class ClienteUnidadeController extends ControllerBase
      */
     public function indexAction()
     {
+        $this->persistent->parameters = null;
         $numberPage = 1;
-        $clienteunidades = ClienteUnidade::find(array(
-            "order" => "[id] DESC"
-        ));
+        $dados = filter_input_array(INPUT_POST);
+
+        if ($this->request->isPost()) {
+            $query = Criteria::fromInput($this->di, "Circuitos\Models\ClienteUnidade", $dados);
+            $this->persistent->parameters = $query->getParams();
+        } else {
+            $numberPage = $this->request->getQuery("page", "int");
+        }
+
+        $parameters = $this->persistent->parameters;
+        if (!is_array($parameters)) {
+            $parameters = [];
+            $parameters["order"] = "[id] DESC";
+        } else {
+            $parameters["order"] = "[id] DESC";
+        }
+        $clienteunidades = ClienteUnidade::find($parameters);
         $tipocontato = Lov::find("tipo=13");
         $clientes = Cliente::buscaCompletaCliente(43);
         $paginator = new Paginator([

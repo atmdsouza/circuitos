@@ -651,8 +651,8 @@ $(".bt_edit").on("click", function(){
                 $("#id_cliente_unidade").val(data.dados.id_cliente_unidade).selected = "true";
                 $("#id_fabricante").attr("disabled", "true");
                 $("#id_fabricante").val(id_fabricante).selected = "true";
+                $("#lid_modelo").val(data.dados.desc_modelo);
                 $("#id_modelo").attr("disabled", "true");
-                $("#id_modelo").val(id_modelo).selected = "true";
                 $("#id_equipamento").attr("disabled", "true");
                 $("#lid_equipamento").val(data.dados.desc_equip + " ("+ data.dados.nums_equip +" / "+ data.dados.patr_equip +")");
                 $("#id_equipamento").val(data.dados.id_equipamento);

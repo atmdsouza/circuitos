@@ -151,6 +151,7 @@ class CircuitosController extends ControllerBase
             "id_cliente" => $circuitos->getIdCliente(),
             "id_cliente_unidade" => $circuitos->getIdClienteUnidade(),
             "id_equipamento" => $circuitos->getIdEquipamento(),
+            "desc_modelo" => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->Modelo->modelo : null,
             "desc_equip" => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->nome : null,
             "patr_equip" => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->numpatrimonio : null,
             "nums_equip" => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->numserie : null,
@@ -186,7 +187,6 @@ class CircuitosController extends ControllerBase
             "dados" => $dados,
             "cliente" => $cliente,
             "equipamentos" => $equipamentos,
-            "modelos" => $modelos,
             "equip" => $equip,
             "unidadescli" => $unidades,
             "banda" => $banda
