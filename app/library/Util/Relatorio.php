@@ -24,8 +24,11 @@ class Relatorio
         $empresa = Empresa::findFirst();
         // var_dump($empresa->Pessoa->PessoaEndereco[0]->numero);
         // exit;
-        $circuito = Circuitos::findFirst("id={$id_circuito}");
-        $movimentos = Movimentos::find("id_circuitos={$id_circuito}");
+        $circuito = Circuitos::findFirst("id={$id_circuito}");$parameters = [];
+        $parameters["order"] = "[data_movimento] DESC";
+        $parameters["conditions"] = " id_circuitos = :id_circuitos:";
+        $parameters["bind"]["id_circuitos"] = $id_circuito;
+        $movimentos = Movimentos::find($parameters);
         $hoje = date('d/m/Y H:i:s');
         //Corpo do relatório
         $corpo_html = "<style type='text/css'>";

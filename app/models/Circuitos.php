@@ -2,6 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
+
 class Circuitos extends \Phalcon\Mvc\Model
 {
 
@@ -806,6 +809,64 @@ class Circuitos extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de clientes, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return Cliente|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarCircuitos($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
+        $query->columns("Circuitos.*");
+
+        $query->leftJoin("Circuitos\Models\Cliente", "Cliente.id = Circuitos.id_cliente", "Cliente");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa1.id = Cliente.id_pessoa", "Pessoa1");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa1.id = PessoaJuridica1.id", "PessoaJuridica1");
+        $query->leftJoin("Circuitos\Models\ClienteUnidade", "ClienteUnidade.id = Circuitos.id_cliente_unidade", "ClienteUnidade");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa2.id = ClienteUnidade.id_pessoa", "Pessoa2");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa2.id = PessoaJuridica2.id", "PessoaJuridica2");
+        $query->leftJoin("Circuitos\Models\Equipamento", "Circuitos.id_equipamento = Equipamento.id", "Equipamento");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_contrato = Lov1.id", "Lov1");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_status = Lov2.id", "Lov2");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_cluster = Lov3.id", "Lov3");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_funcao = Lov4.id", "Lov4");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_tipoacesso = Lov5.id", "Lov5");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_banda = Lov6.id", "Lov6");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_tipolink = Lov7.id", "Lov7");
+
+        $query->where("(CONVERT(Circuitos.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa1.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa2.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica1.razaosocial USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica2.razaosocial USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Equipamento.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Equipamento.numserie USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Equipamento.numpatrimonio USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov1.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov2.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov3.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov4.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov5.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov6.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov7.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.id_cidadedigital USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.designacao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.designacao_anterior USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.uf USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.cidade USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.ssid USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.ip_gerencia USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.ip_redelocal USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.tag USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.chamado USING utf8) LIKE '%{$parameters}%')");
+        $query->orderBy("Circuitos.id DESC");
+
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
     /**

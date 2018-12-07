@@ -1,85 +1,85 @@
-var table = $('#tb_equipamento').DataTable({
+var table = $("#tb_equipamento").DataTable({
     buttons: [
         {//Botão Novo Registro
-            className: 'bt_novo',
-            text: 'Novo',
-            name: 'novo', // do not change name
-            titleAttr: 'Novo registro',
+            className: "bt_novo",
+            text: "Novo",
+            name: "novo", // do not change name
+            titleAttr: "Novo registro",
             action: function (e, dt, node, config) {
             }
 
         },
         {//Botão Editar Registro
-            className: 'bt_edit',
-            text: 'Editar',
-            name: 'edit', // do not change name
-            titleAttr: 'Editar registro',
+            className: "bt_edit",
+            text: "Editar",
+            name: "edit", // do not change name
+            titleAttr: "Editar registro",
             action: function (e, dt, node, config) {
             },
             enabled: false
 
         },
         {//Botão Ativar Registro
-            className: 'bt_ativo',
-            text: 'Ativar',
-            name: 'ativo', // do not change name
-            titleAttr: 'Ativar registro',
+            className: "bt_ativo",
+            text: "Ativar",
+            name: "ativo", // do not change name
+            titleAttr: "Ativar registro",
             action: function (e, dt, node, config) {
             },
             enabled: false
 
         },
         {//Botão Inativar Registro
-            className: 'bt_inativo',
-            text: 'Inativar',
-            name: 'inativo', // do not change name
-            titleAttr: 'Inativar registro',
+            className: "bt_inativo",
+            text: "Inativar",
+            name: "inativo", // do not change name
+            titleAttr: "Inativar registro",
             action: function (e, dt, node, config) {
             },
             enabled: false
 
         },
         {//Botão Deletar Registro
-            className: 'bt_del',
-            text: 'Deletar',
-            name: 'del', // do not change name
-            titleAttr: 'Deletar registro',
+            className: "bt_del",
+            text: "Deletar",
+            name: "del", // do not change name
+            titleAttr: "Deletar registro",
             action: function (e, dt, node, config) {
             },
             enabled: false
 
         },
         // {//Botão Selecionar
-        //     extend: 'selectAll',
-        //     text: 'Selecionar',
-        //     titleAttr: 'Selecionar Todos os Registros'
+        //     extend: "selectAll",
+        //     text: "Selecionar",
+        //     titleAttr: "Selecionar Todos os Registros"
         // },
         // {//Botão Limpar Seleção
-        //     extend: 'selectNone',
-        //     text: 'Limpar',
-        //     titleAttr: 'Limpar Seleção dos Registros'
+        //     extend: "selectNone",
+        //     text: "Limpar",
+        //     titleAttr: "Limpar Seleção dos Registros"
         // },
         // {//Botão imprimir
-        //     extend: 'print',
-        //     text: 'Imprimir',
-        //     titleAttr: 'Imprimir'
+        //     extend: "print",
+        //     text: "Imprimir",
+        //     titleAttr: "Imprimir"
         // },
         // {//Botão exportar excel
-        //     extend: 'excelHtml5',
-        //     text: 'XLSX',
-        //     titleAttr: 'Exportar para Excel'
+        //     extend: "excelHtml5",
+        //     text: "XLSX",
+        //     titleAttr: "Exportar para Excel"
         // },
         // {//Botão exportar pdf
-        //     extend: 'pdfHtml5',
-        //     text: 'PDF',
-        //     titleAttr: 'Exportar para PDF'
+        //     extend: "pdfHtml5",
+        //     text: "PDF",
+        //     titleAttr: "Exportar para PDF"
         // }
     ]
 });
 
-table.buttons().container().appendTo('#tb_equipamento_wrapper .col-md-6:eq(0)');
+table.buttons().container().appendTo("#tb_equipamento_wrapper .col-md-6:eq(0)");
 
-table.on( 'select deselect', function () {
+table.on( "select deselect", function () {
     var selectedRows = table.rows( { selected: true } ).count();
 
     table.button( 1 ).enable( selectedRows === 1 );
@@ -95,10 +95,11 @@ $(".bt_novo").on("click", function(){
 
 $("#id_fabricante").on("change", function(){
     var id_fabricante = $(this).val();
+    var action = actionCorreta(window.location.href.toString(), "equipamento/carregaModelos");
     $.ajax({
-        type: 'GET',
-        dataType: 'JSON',
-        url: 'equipamento/carregaModelos',
+        type: "GET",
+        dataType: "JSON",
+        url: action,
         data: {id_fabricante: id_fabricante},
         beforeSend: function () {
         },
@@ -127,9 +128,9 @@ $("#id_fabricante").on("change", function(){
                 $("#id_modelo").val(null).selected = "true";
                 $("#id_modelo").attr("disabled", "true");
                 swal({
-                    title: 'Cadastro de Equipamentos',
+                    title: "Cadastro de Equipamentos",
                     text: data.mensagem,
-                    type: 'error'
+                    type: "error"
                 });
             }
         }
@@ -169,13 +170,14 @@ $(document).on("click", ".criar_equipamento", function(){
         },
         submitHandler: function(form) {
             var dados = $("#formEquipamento").serialize();
+            var action = actionCorreta(window.location.href.toString(), "equipamento/criarEquipamento");
             $.ajax({
-                type: 'POST',
-                dataType: 'JSON',
-                url: 'equipamento/criarEquipamento',
+                type: "POST",
+                dataType: "JSON",
+                url: action,
                 data: {
-                    tokenKey: $('#token').attr('name'),
-                    tokenValue: $('#token').attr('value'),
+                    tokenKey: $("#token").attr("name"),
+                    tokenValue: $("#token").attr("value"),
                     dados: dados
                 },
                 beforeSend: function () {
@@ -195,21 +197,21 @@ $(document).on("click", ".criar_equipamento", function(){
                 success: function (data) {
                     if (data.operacao){
                         swal({
-                            title: 'Cadastro de Equipamentos',
-                            text: 'Cadastro do equipamento concluído!',
-                            type: 'success',
+                            title: "Cadastro de Equipamentos",
+                            text: "Cadastro do equipamento concluído!",
+                            type: "success",
                             showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Ok'
-                          }).then((result) => {
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Ok"
+                        }).then((result) => {
                             window.location.reload(true);
-                          });
+                        });
                     } else {
                         swal({
-                            title: 'Cadastro de Equipamentos',
+                            title: "Cadastro de Equipamentos",
                             text: data.mensagem,
-                            type: 'error'
+                            type: "error"
                         });
                     }
                 }
@@ -219,7 +221,7 @@ $(document).on("click", ".criar_equipamento", function(){
 });
 
 //Coletando os ids das linhas selecionadas na tabela
-var ids = [];   
+var ids = [];
 $("#tb_equipamento").on("click", "tr", function () {
     var valr = $(this)[0].cells[0].innerText;
     if (!ids.includes(valr)) {
@@ -231,25 +233,26 @@ $("#tb_equipamento").on("click", "tr", function () {
 });
 
 $(".bt_edit").on("click", function(){
-    nm_rows = ids.length;
+    var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Edição de Equipamentos',
-            text: 'Você somente pode editar um único valor! Selecione apenas um e tente novamente!',
-            type: 'warning'
-          });
+            title: "Edição de Equipamentos",
+            text: "Você somente pode editar um único valor! Selecione apenas um e tente novamente!",
+            type: "warning"
+        });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Edição de Equipamentos',
-            text: 'Você precisa selecionar um registro para a edição!',
-            type: 'warning'
-          });
-     } else {
+            title: "Edição de Equipamentos",
+            text: "Você precisa selecionar um registro para a edição!",
+            type: "warning"
+        });
+    } else {
         var id_equipamento = ids[0];
+        var action = actionCorreta(window.location.href.toString(), "equipamento/formEquipamento");
         $.ajax({
-            type: 'GET',
-            dataType: 'JSON',
-            url: 'equipamento/formEquipamento',
+            type: "GET",
+            dataType: "JSON",
+            url: action,
             data: {id_equipamento: id_equipamento},
             beforeSend: function () {
             },
@@ -266,10 +269,11 @@ $(".bt_edit").on("click", function(){
                 }
             },
             success: function (data) {
+                var action = actionCorreta(window.location.href.toString(), "equipamento/carregaModelos");
                 $.ajax({
-                    type: 'GET',
-                    dataType: 'JSON',
-                    url: 'equipamento/carregaModelos',
+                    type: "GET",
+                    dataType: "JSON",
+                    url: action,
                     data: {id_fabricante: data.dados.id_fabricante},
                     beforeSend: function () {
                     },
@@ -299,9 +303,9 @@ $(".bt_edit").on("click", function(){
                             $("#id_modelo").val(null).selected = "true";
                             $("#id_modelo").attr("disabled", "true");
                             swal({
-                                title: 'Cadastro de Equipamentos',
+                                title: "Cadastro de Equipamentos",
                                 text: data.mensagem,
-                                type: 'error'
+                                type: "error"
                             });
                         }
                     }
@@ -354,13 +358,14 @@ $(document).on("click", ".editar_equipamento", function(){
         },
         submitHandler: function(form) {
             var dados = $("#formEquipamento").serialize();
+            var action = actionCorreta(window.location.href.toString(), "equipamento/editarEquipamento");
             $.ajax({
-                type: 'POST',
-                dataType: 'JSON',
-                url: 'equipamento/editarEquipamento',
+                type: "POST",
+                dataType: "JSON",
+                url: action,
                 data: {
-                    tokenKey: $('#token').attr('name'),
-                    tokenValue: $('#token').attr('value'),
+                    tokenKey: $("#token").attr("name"),
+                    tokenValue: $("#token").attr("value"),
                     dados: dados
                 },
                 beforeSend: function () {
@@ -380,21 +385,21 @@ $(document).on("click", ".editar_equipamento", function(){
                 success: function (data) {
                     if (data.operacao){
                         swal({
-                            title: 'Cadastro de Equipamentos',
-                            text: 'Edição de equipamento concluída!',
-                            type: 'success',
+                            title: "Cadastro de Equipamentos",
+                            text: "Edição de equipamento concluída!",
+                            type: "success",
                             showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Ok'
-                          }).then((result) => {
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Ok"
+                        }).then((result) => {
                             window.location.reload(true);
-                          });
+                        });
                     } else {
                         swal({
-                            title: 'Cadastro de Equipamentos',
+                            title: "Cadastro de Equipamentos",
                             text: data.mensagem,
-                            type: 'error'
+                            type: "error"
                         });
                     }
                 }
@@ -407,119 +412,121 @@ $(".bt_del").on("click", function(){
     var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Tem certeza que deseja deletar múltipos equipamentos?',
+            title: "Tem certeza que deseja deletar múltipos equipamentos?",
             text: "O sistema irá deletar um total de " + nm_rows + " equipamentos com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
-            type: 'info',
+            type: "info",
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim, apagar!'
-          }).then((result) => {
-              $.ajax({
-                  type: 'POST',
-                  dataType: 'JSON',
-                  url: 'equipamento/deletarEquipamento',
-                  data: {ids: ids},
-                  beforeSend: function () {
-                  },
-                  complete: function () {
-                  },
-                  error: function (data) {
-                      if (data.status && data.status === 401)
-                      {
-                          swal({
-                              title: "Erro de Permissão",
-                              text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                              type: "warning"
-                          });
-                      }
-                  },
-                  success: function (data) {
-                      if (data.operacao){
-                          swal({
-                              title: 'Deletados!',
-                              text: 'Os equipamentos selecionados foram deletados com sucesso.',
-                              type: 'success',
-                              showCancelButton: false,
-                              confirmButtonColor: '#3085d6',
-                              cancelButtonColor: '#d33',
-                              confirmButtonText: 'Ok'
-                            }).then((result) => {
-                              window.location.reload(true);
-                            });
-                      } else {
-                          swal({
-                              title: 'Deletar',
-                              text: data.mensagem,
-                              type: 'error'
-                          });
-                      }
-                  }
-              });
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sim, apagar!"
+        }).then((result) => {
+            var action = actionCorreta(window.location.href.toString(), "equipamento/deletarEquipamento");
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: action,
+                data: {ids: ids},
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        swal({
+                            title: "Deletados!",
+                            text: "Os equipamentos selecionados foram deletados com sucesso.",
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Ok"
+                        }).then((result) => {
+                            window.location.reload(true);
+                        });
+                    } else {
+                        swal({
+                            title: "Deletar",
+                            text: data.mensagem,
+                            type: "error"
+                        });
+                    }
+                }
+            });
         });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Deletar Valor',
-            text: 'Você precisa selecionar um valor ou mais equipamentos para serem deletados!',
-            type: 'warning'
-          });
-     } else {
+            title: "Deletar Valor",
+            text: "Você precisa selecionar um valor ou mais equipamentos para serem deletados!",
+            type: "warning"
+        });
+    } else {
         swal({
-            title: 'Tem certeza que deseja deletar este equipamento?',
+            title: "Tem certeza que deseja deletar este equipamento?",
             text: "O sistema irá deletar o equipamento selecionado com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
-            type: 'info',
+            type: "info",
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim, apagar!'
-          }).then((result) => {
-              $.ajax({
-                  type: 'POST',
-                  dataType: 'JSON',
-                  url: 'equipamento/deletarEquipamento',
-                  data: {ids: ids},
-                  beforeSend: function () {
-                  },
-                  complete: function () {
-                  },
-                  error: function (data) {
-                      if (data.status && data.status === 401)
-                      {
-                          swal({
-                              title: "Erro de Permissão",
-                              text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                              type: "warning"
-                          });
-                      }
-                  },
-                  success: function (data) {
-                      if (data.operacao){
-                          swal({
-                              title: 'Deletado!',
-                              text: 'O equipamento selecionado foi deletado com sucesso.',
-                              type: 'success',
-                              showCancelButton: false,
-                              confirmButtonColor: '#3085d6',
-                              cancelButtonColor: '#d33',
-                              confirmButtonText: 'Ok'
-                            }).then((result) => {
-                              window.location.reload(true);
-                            });
-                      } else {
-                          swal({
-                              title: 'Deletar',
-                              text: data.mensagem,
-                              type: 'error'
-                          });
-                      }
-                  }
-              });
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sim, apagar!"
+        }).then((result) => {
+            var action = actionCorreta(window.location.href.toString(), "equipamento/deletarEquipamento");
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: action,
+                data: {ids: ids},
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        swal({
+                            title: "Deletado!",
+                            text: "O equipamento selecionado foi deletado com sucesso.",
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Ok"
+                        }).then((result) => {
+                            window.location.reload(true);
+                        });
+                    } else {
+                        swal({
+                            title: "Deletar",
+                            text: data.mensagem,
+                            type: "error"
+                        });
+                    }
+                }
+            });
         });
     }
 });
 
 //Coletando os ids das linhas selecionadas na tabela
-var ids = [];   
+var ids = [];
 $("#tb_fabricantes").on("click", "tr", function () {
     var valr = $(this)[0].cells[0].innerText;
     if (!ids.includes(valr)) {
@@ -534,121 +541,123 @@ $(".bt_ativo").on("click", function(){
     var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Tem certeza que deseja ativar múltipos equipamentos?',
+            title: "Tem certeza que deseja ativar múltipos equipamentos?",
             text: "O sistema irá ativar um total de " + nm_rows + " equipamentos com essa ação.",
-            type: 'info',
+            type: "info",
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim, ativar!'
-          }).then((result) => {
-              $.ajax({
-                  type: 'POST',
-                  dataType: 'JSON',
-                  url: 'equipamento/ativarEquipamento',
-                  data: {
-                    tokenKey: $('#token').attr('name'),
-                    tokenValue: $('#token').attr('value'),
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sim, ativar!"
+        }).then((result) => {
+            var action = actionCorreta(window.location.href.toString(), "equipamento/ativarEquipamento");
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: action,
+                data: {
+                    tokenKey: $("#token").attr("name"),
+                    tokenValue: $("#token").attr("value"),
                     ids: ids
-                    },
-                  beforeSend: function () {
-                  },
-                  complete: function () {
-                  },
-                  error: function (data) {
-                      if (data.status && data.status === 401)
-                      {
-                          swal({
-                              title: "Erro de Permissão",
-                              text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                              type: "warning"
-                          });
-                      }
-                  },
-                  success: function (data) {
-                      if (data.operacao){
-                          swal({
-                              title: 'Ativados!',
-                              text: 'Os equipamentos selecionados foram ativados com sucesso.',
-                              type: 'success',
-                              showCancelButton: false,
-                              confirmButtonColor: '#3085d6',
-                              cancelButtonColor: '#d33',
-                              confirmButtonText: 'Ok'
-                            }).then((result) => {
-                              window.location.reload(true);
-                            });
-                      } else {
-                          swal({
-                              title: 'Ativar',
-                              text: data.mensagem,
-                              type: 'error'
-                          });
-                      }
-                  }
-              });
+                },
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        swal({
+                            title: "Ativados!",
+                            text: "Os equipamentos selecionados foram ativados com sucesso.",
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Ok"
+                        }).then((result) => {
+                            window.location.reload(true);
+                        });
+                    } else {
+                        swal({
+                            title: "Ativar",
+                            text: data.mensagem,
+                            type: "error"
+                        });
+                    }
+                }
+            });
         });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Ativar Equipamentos',
-            text: 'Você precisa selecionar um ou mais equipamentos para serem ativados!',
-            type: 'warning'
-          });
-     } else {
+            title: "Ativar Equipamentos",
+            text: "Você precisa selecionar um ou mais equipamentos para serem ativados!",
+            type: "warning"
+        });
+    } else {
         swal({
-            title: 'Tem certeza que deseja ativar este equipamento?',
+            title: "Tem certeza que deseja ativar este equipamento?",
             text: "O sistema irá ativar o equipamento selecionado com essa ação.",
-            type: 'info',
+            type: "info",
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim, ativar!'
-          }).then((result) => {
-              $.ajax({
-                  type: 'POST',
-                  dataType: 'JSON',
-                  url: 'equipamento/ativarEquipamento',
-                  data: {
-                    tokenKey: $('#token').attr('name'),
-                    tokenValue: $('#token').attr('value'),
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sim, ativar!"
+        }).then((result) => {
+            var action = actionCorreta(window.location.href.toString(), "equipamento/ativarEquipamento");
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: action,
+                data: {
+                    tokenKey: $("#token").attr("name"),
+                    tokenValue: $("#token").attr("value"),
                     ids: ids
-                    },
-                  beforeSend: function () {
-                  },
-                  complete: function () {
-                  },
-                  error: function (data) {
-                      if (data.status && data.status === 401)
-                      {
-                          swal({
-                              title: "Erro de Permissão",
-                              text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                              type: "warning"
-                          });
-                      }
-                  },
-                  success: function (data) {
-                      if (data.operacao){
-                          swal({
-                              title: 'Ativado!',
-                              text: 'O equipamento selecionado foi ativado com sucesso.',
-                              type: 'success',
-                              showCancelButton: false,
-                              confirmButtonColor: '#3085d6',
-                              cancelButtonColor: '#d33',
-                              confirmButtonText: 'Ok'
-                            }).then((result) => {
-                              window.location.reload(true);
-                            });
-                      } else {
-                          swal({
-                              title: 'Ativar',
-                              text: data.mensagem,
-                              type: 'error'
-                          });
-                      }
-                  }
-              });
+                },
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        swal({
+                            title: "Ativado!",
+                            text: "O equipamento selecionado foi ativado com sucesso.",
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Ok"
+                        }).then((result) => {
+                            window.location.reload(true);
+                        });
+                    } else {
+                        swal({
+                            title: "Ativar",
+                            text: data.mensagem,
+                            type: "error"
+                        });
+                    }
+                }
+            });
         });
     }
 });
@@ -657,121 +666,123 @@ $(".bt_inativo").on("click", function(){
     var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Tem certeza que deseja inativar múltipos equipamentos?',
+            title: "Tem certeza que deseja inativar múltipos equipamentos?",
             text: "O sistema irá inativar um total de " + nm_rows + " equipamentos com essa ação.",
-            type: 'info',
+            type: "info",
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim, inativar!'
-          }).then((result) => {
-              $.ajax({
-                  type: 'POST',
-                  dataType: 'JSON',
-                  url: 'equipamento/inativarEquipamento',
-                  data: {
-                    tokenKey: $('#token').attr('name'),
-                    tokenValue: $('#token').attr('value'),
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sim, inativar!"
+        }).then((result) => {
+            var action = actionCorreta(window.location.href.toString(), "equipamento/inativarEquipamento");
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: action,
+                data: {
+                    tokenKey: $("#token").attr("name"),
+                    tokenValue: $("#token").attr("value"),
                     ids: ids
-                    },
-                  beforeSend: function () {
-                  },
-                  complete: function () {
-                  },
-                  error: function (data) {
-                      if (data.status && data.status === 401)
-                      {
-                          swal({
-                              title: "Erro de Permissão",
-                              text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                              type: "warning"
-                          });
-                      }
-                  },
-                  success: function (data) {
-                      if (data.operacao){
-                          swal({
-                              title: 'Inativadas!',
-                              text: 'As equipamentos selecionados foram inativadas com sucesso.',
-                              type: 'success',
-                              showCancelButton: false,
-                              confirmButtonColor: '#3085d6',
-                              cancelButtonColor: '#d33',
-                              confirmButtonText: 'Ok'
-                            }).then((result) => {
-                              window.location.reload(true);
-                            });
-                      } else {
-                          swal({
-                              title: 'Inativar',
-                              text: data.mensagem,
-                              type: 'error'
-                          });
-                      }
-                  }
-              });
+                },
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        swal({
+                            title: "Inativadas!",
+                            text: "As equipamentos selecionados foram inativadas com sucesso.",
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Ok"
+                        }).then((result) => {
+                            window.location.reload(true);
+                        });
+                    } else {
+                        swal({
+                            title: "Inativar",
+                            text: data.mensagem,
+                            type: "error"
+                        });
+                    }
+                }
+            });
         });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Inativar Equipamento',
-            text: 'Você precisa selecionar um ou mais equipamentos para serem inativados!',
-            type: 'warning'
-          });
-     } else {
+            title: "Inativar Equipamento",
+            text: "Você precisa selecionar um ou mais equipamentos para serem inativados!",
+            type: "warning"
+        });
+    } else {
         swal({
-            title: 'Tem certeza que deseja inativar este equipamento?',
+            title: "Tem certeza que deseja inativar este equipamento?",
             text: "O sistema irá inativar o equipamento selecionado com essa ação.",
-            type: 'info',
+            type: "info",
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim, inativar!'
-          }).then((result) => {
-              $.ajax({
-                  type: 'POST',
-                  dataType: 'JSON',
-                  url: 'equipamento/inativarEquipamento',
-                  data: {
-                    tokenKey: $('#token').attr('name'),
-                    tokenValue: $('#token').attr('value'),
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sim, inativar!"
+        }).then((result) => {
+            var action = actionCorreta(window.location.href.toString(), "equipamento/inativarEquipamento");
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: action,
+                data: {
+                    tokenKey: $("#token").attr("name"),
+                    tokenValue: $("#token").attr("value"),
                     ids: ids
-                    },
-                  beforeSend: function () {
-                  },
-                  complete: function () {
-                  },
-                  error: function (data) {
-                      if (data.status && data.status === 401)
-                      {
-                          swal({
-                              title: "Erro de Permissão",
-                              text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                              type: "warning"
-                          });
-                      }
-                  },
-                  success: function (data) {
-                      if (data.operacao){
-                          swal({
-                              title: 'Inativado!',
-                              text: 'O equipamento selecionado foi inativado com sucesso.',
-                              type: 'success',
-                              showCancelButton: false,
-                              confirmButtonColor: '#3085d6',
-                              cancelButtonColor: '#d33',
-                              confirmButtonText: 'Ok'
-                            }).then((result) => {
-                              window.location.reload(true);
-                            });
-                      } else {
-                          swal({
-                              title: 'Inativar',
-                              text: data.mensagem,
-                              type: 'error'
-                          });
-                      }
-                  }
-              });
+                },
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        swal({
+                            title: "Inativado!",
+                            text: "O equipamento selecionado foi inativado com sucesso.",
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Ok"
+                        }).then((result) => {
+                            window.location.reload(true);
+                        });
+                    } else {
+                        swal({
+                            title: "Inativar",
+                            text: data.mensagem,
+                            type: "error"
+                        });
+                    }
+                }
+            });
         });
     }
 });

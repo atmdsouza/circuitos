@@ -33,6 +33,12 @@ require APP_PATH . '/library/PHPMailer/src/SMTP.php';
 class CoreController extends ControllerBase
 {
 
+    public function initialize()
+    {
+        $this->tag->setTitle("Circuitos");
+        parent::initialize();
+    }
+
     public function ativarPessoaAction($id_pessoa)
     {
         //Desabilita o layout para o ajax

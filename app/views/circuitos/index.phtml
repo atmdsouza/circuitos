@@ -20,59 +20,65 @@ use Util\Util;
     );
     ?>
     <div class="form-row">
+<!--        <div class="form-group col-md-2">-->
+<!--            <label for="fieldIdCliente" class="col-sm-2 control-label">Cliente</label>-->
+<!--            <div class="col-sm-10">-->
+<!--                --><?php //echo $this->tag->select(["id_cliente", $clientes, "class" => "form-control", "id" => "fieldIdCliente",
+//                    "using" => ["id", "nome",],
+//                    "useEmpty" => true,
+//                    "emptyText" => "Selecione um Cliente",
+//                    "emptyValue" => ""])
+//                ?>
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="form-group col-md-2">-->
+<!--            <label for="fieldIdBanda" class="col-sm-2 control-label">Banda</label>-->
+<!--            <div class="col-sm-10">-->
+<!--                --><?php //echo $this->tag->select(["id_banda", $banda, "class" => "form-control", "id" => "fieldIdBanda",
+//                    "using" => ["id", "descricao",],
+//                    "useEmpty" => true,
+//                    "emptyText" => "Selecione a Banda",
+//                    "emptyValue" => ""])
+//                ?>
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="form-group col-md-2">-->
+<!--            <label for="fieldIdFuncao" class="col-sm-2 control-label">Função</label>-->
+<!--            <div class="col-sm-10">-->
+<!--                --><?php //echo $this->tag->select(["id_funcao", $funcao, "class" => "form-control", "id" => "fieldIdFuncao",
+//                    "using" => ["id", "descricao",],
+//                    "useEmpty" => true,
+//                    "emptyText" => "Selecione a Função",
+//                    "emptyValue" => ""])
+//                ?>
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="form-group col-md-2">-->
+<!--            <label for="fieldIdTipolink" class="col-sm-10 control-label">Tipo Link</label>-->
+<!--            <div class="col-sm-10">-->
+<!--                --><?php //echo $this->tag->select(["id_tipolink", $tipolink, "class" => "form-control", "id" => "fieldIdTipolink",
+//                    "using" => ["id", "descricao",],
+//                    "useEmpty" => true,
+//                    "emptyText" => "Selecione o Tipo de Acesso",
+//                    "emptyValue" => ""])
+//                ?>
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="form-group col-md-2">-->
+<!--            <label for="fieldIdStatus" class="col-sm-2 control-label">Status</label>-->
+<!--            <div class="col-sm-10">-->
+<!--                --><?php //echo $this->tag->select(["id_status", $statuscircuito, "class" => "form-control", "id" => "fieldIdStatus",
+//                    "using" => ["id", "descricao",],
+//                    "useEmpty" => true,
+//                    "emptyText" => "Selecione um Status",
+//                    "emptyValue" => ""])
+//                ?>
+<!--            </div>-->
+<!--        </div>-->
         <div class="form-group col-md-2">
-            <label for="fieldIdCliente" class="col-sm-2 control-label">Cliente</label>
+            <label for="fieldPesquisa" class="col-sm-2 control-label">Pesquisa</label>
             <div class="col-sm-10">
-                <?php echo $this->tag->select(["id_cliente", $clientes, "class" => "form-control", "id" => "fieldIdCliente",
-                    "using" => ["id", "nome",],
-                    "useEmpty" => true,
-                    "emptyText" => "Selecione um Cliente",
-                    "emptyValue" => ""])
-                ?>
-            </div>
-        </div>
-        <div class="form-group col-md-2">
-            <label for="fieldIdBanda" class="col-sm-2 control-label">Banda</label>
-            <div class="col-sm-10">
-                <?php echo $this->tag->select(["id_banda", $banda, "class" => "form-control", "id" => "fieldIdBanda",
-                    "using" => ["id", "descricao",],
-                    "useEmpty" => true,
-                    "emptyText" => "Selecione a Banda",
-                    "emptyValue" => ""])
-                ?>
-            </div>
-        </div>
-        <div class="form-group col-md-2">
-            <label for="fieldIdFuncao" class="col-sm-2 control-label">Função</label>
-            <div class="col-sm-10">
-                <?php echo $this->tag->select(["id_funcao", $funcao, "class" => "form-control", "id" => "fieldIdFuncao",
-                    "using" => ["id", "descricao",],
-                    "useEmpty" => true,
-                    "emptyText" => "Selecione a Função",
-                    "emptyValue" => ""])
-                ?>
-            </div>
-        </div>
-        <div class="form-group col-md-2">
-            <label for="fieldIdTipolink" class="col-sm-10 control-label">Tipo Link</label>
-            <div class="col-sm-10">
-                <?php echo $this->tag->select(["id_tipolink", $tipolink, "class" => "form-control", "id" => "fieldIdTipolink",
-                    "using" => ["id", "descricao",],
-                    "useEmpty" => true,
-                    "emptyText" => "Selecione o Tipo de Acesso",
-                    "emptyValue" => ""])
-                ?>
-            </div>
-        </div>
-        <div class="form-group col-md-2">
-            <label for="fieldIdStatus" class="col-sm-2 control-label">Status</label>
-            <div class="col-sm-10">
-                <?php echo $this->tag->select(["id_status", $statuscircuito, "class" => "form-control", "id" => "fieldIdStatus",
-                    "using" => ["id", "descricao",],
-                    "useEmpty" => true,
-                    "emptyText" => "Selecione um Status",
-                    "emptyValue" => ""])
-                ?>
+                <?php echo $this->tag->textField(["pesquisa", "size" => 60, "class" => "form-control", "id" => "fieldPesquisa"]) ?>
             </div>
         </div>
         <div class="form-group col-md-2">
@@ -81,32 +87,32 @@ use Util\Util;
             </div>
         </div>
     </div>
-    <div class="form-row">
-        <div class="form-group col-md-2">
-            <label for="fieldDesignacao" class="col-sm-2 control-label">Designação</label>
-            <div class="col-sm-10">
-                <?php echo $this->tag->textField(["designacao", "size" => 30, "class" => "form-control", "id" => "fieldDesignacao"]) ?>
-            </div>
-        </div>
-        <div class="form-group col-md-2">
-            <label for="fieldDesignacaoAnterior" class="col-sm-10 control-label">Designação Anterior</label>
-            <div class="col-sm-10">
-                <?php echo $this->tag->textField(["designacao_anterior", "size" => 30, "class" => "form-control", "id" => "fieldDesignacaoAnterior"]) ?>
-            </div>
-        </div>
-        <div class="form-group col-md-2">
-            <label for="fieldIpGerencia" class="col-sm-10 control-label">IP de Gerência</label>
-            <div class="col-sm-10">
-                <?php echo $this->tag->textField(["ip_gerencia", "size" => 30, "class" => "form-control ip", "id" => "fieldIpGerencia"]) ?>
-            </div>
-        </div>
-        <div class="form-group col-md-2">
-            <label for="fieldIpRedelocal" class="col-sm-10 control-label">Rede Cliente (IP)</label>
-            <div class="col-sm-10">
-                <?php echo $this->tag->textField(["ip_redelocal", "size" => 30, "class" => "form-control ip2", "id" => "fieldIpRedelocal"]) ?>
-            </div>
-        </div>
-    </div>
+<!--    <div class="form-row">-->
+<!--        <div class="form-group col-md-2">-->
+<!--            <label for="fieldDesignacao" class="col-sm-2 control-label">Designação</label>-->
+<!--            <div class="col-sm-10">-->
+<!--                --><?php //echo $this->tag->textField(["designacao", "size" => 30, "class" => "form-control", "id" => "fieldDesignacao"]) ?>
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="form-group col-md-2">-->
+<!--            <label for="fieldDesignacaoAnterior" class="col-sm-10 control-label">Designação Anterior</label>-->
+<!--            <div class="col-sm-10">-->
+<!--                --><?php //echo $this->tag->textField(["designacao_anterior", "size" => 30, "class" => "form-control", "id" => "fieldDesignacaoAnterior"]) ?>
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="form-group col-md-2">-->
+<!--            <label for="fieldIpGerencia" class="col-sm-10 control-label">IP de Gerência</label>-->
+<!--            <div class="col-sm-10">-->
+<!--                --><?php //echo $this->tag->textField(["ip_gerencia", "size" => 30, "class" => "form-control ip", "id" => "fieldIpGerencia"]) ?>
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="form-group col-md-2">-->
+<!--            <label for="fieldIpRedelocal" class="col-sm-10 control-label">Rede Cliente (IP)</label>-->
+<!--            <div class="col-sm-10">-->
+<!--                --><?php //echo $this->tag->textField(["ip_redelocal", "size" => 30, "class" => "form-control ip2", "id" => "fieldIpRedelocal"]) ?>
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
     <?php echo $this->tag->endForm(); ?>
 </div>
 
@@ -575,6 +581,26 @@ use Util\Util;
                                 <div class="form-group col-md-12">
                                     <label for="observacaov">Observação</label>
                                     <?php echo $this->tag->textArea(["observacaov", "size" => 400, "readonly" => "true", "class" => "form-control", "id" => "observacaov", "placeholder" => "Observação"]) ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <table id="tb_contatos" class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th colspan="7" style="text-align: center;">Contatos para o Circuito</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Principal</th>
+                                            <th>Tipo Contato</th>
+                                            <th>Nome Contato</th>
+                                            <th>Telefone Contato</th>
+                                            <th>E-mail Contato</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                             <div class="form-row">

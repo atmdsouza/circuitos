@@ -69,6 +69,18 @@ $(function () {
 //Fim
 
 /**
+ * Trabalhando com o ajustse da Action Correta em chamadas Ajax
+ * @url string URL que origina a chamada e será modificada
+ * @action string Action que será usada na chamada, semrpe deve estar formatada como 'controller/action'
+ * */
+function actionCorreta(url, action) {
+    var novaAction;
+    var urls = url.split("/");
+    novaAction = urls[0] + "//" + urls[2] + "/" + urls[3] + "/" + action;
+    return novaAction;
+}
+
+/**
  * Trabalhando com Datas e Horas
  * Exibe a Data atual no formato Americano
  * Exemplo:  2016-05-01

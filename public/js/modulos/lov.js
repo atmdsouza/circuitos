@@ -1,85 +1,85 @@
-var table = $('#tb_lov').DataTable({
+var table = $("#tb_lov").DataTable({
     buttons: [
         {//Botão Novo Registro
-            className: 'bt_novo',
-            text: 'Novo',
-            name: 'novo', // do not change name
-            titleAttr: 'Novo registro',
+            className: "bt_novo",
+            text: "Novo",
+            name: "novo", // do not change name
+            titleAttr: "Novo registro",
             action: function (e, dt, node, config) {
             }
 
         },
         {//Botão Editar Registro
-            className: 'bt_edit',
-            text: 'Editar',
-            name: 'edit', // do not change name
-            titleAttr: 'Editar registro',
+            className: "bt_edit",
+            text: "Editar",
+            name: "edit", // do not change name
+            titleAttr: "Editar registro",
             action: function (e, dt, node, config) {
             },
             enabled: false
 
         },
         // {//Botão Ativar Registro
-        //     className: 'bt_ativo',
-        //     text: 'Ativar',
-        //     name: 'ativo', // do not change name
-        //     titleAttr: 'Ativar registro',
+        //     className: "bt_ativo",
+        //     text: "Ativar",
+        //     name: "ativo", // do not change name
+        //     titleAttr: "Ativar registro",
         //     action: function (e, dt, node, config) {
         //     },
         //     enabled: false
 
         // },
         // {//Botão Inativar Registro
-        //     className: 'bt_inativo',
-        //     text: 'Inativar',
-        //     name: 'inativo', // do not change name
-        //     titleAttr: 'Inativar registro',
+        //     className: "bt_inativo",
+        //     text: "Inativar",
+        //     name: "inativo", // do not change name
+        //     titleAttr: "Inativar registro",
         //     action: function (e, dt, node, config) {
         //     },
         //     enabled: false
 
         // },
         {//Botão Deletar Registro
-            className: 'bt_del',
-            text: 'Deletar',
-            name: 'del', // do not change name
-            titleAttr: 'Deletar registro',
+            className: "bt_del",
+            text: "Deletar",
+            name: "del", // do not change name
+            titleAttr: "Deletar registro",
             action: function (e, dt, node, config) {
             },
             enabled: false
 
         },
         // {//Botão Selecionar
-        //     extend: 'selectAll',
-        //     text: 'Selecionar',
-        //     titleAttr: 'Selecionar Todos os Registros'
+        //     extend: "selectAll",
+        //     text: "Selecionar",
+        //     titleAttr: "Selecionar Todos os Registros"
         // },
         // {//Botão Limpar Seleção
-        //     extend: 'selectNone',
-        //     text: 'Limpar',
-        //     titleAttr: 'Limpar Seleção dos Registros'
+        //     extend: "selectNone",
+        //     text: "Limpar",
+        //     titleAttr: "Limpar Seleção dos Registros"
         // },
         // {//Botão imprimir
-        //     extend: 'print',
-        //     text: 'Imprimir',
-        //     titleAttr: 'Imprimir'
+        //     extend: "print",
+        //     text: "Imprimir",
+        //     titleAttr: "Imprimir"
         // },
         // {//Botão exportar excel
-        //     extend: 'excelHtml5',
-        //     text: 'XLSX',
-        //     titleAttr: 'Exportar para Excel'
+        //     extend: "excelHtml5",
+        //     text: "XLSX",
+        //     titleAttr: "Exportar para Excel"
         // },
         // {//Botão exportar pdf
-        //     extend: 'pdfHtml5',
-        //     text: 'PDF',
-        //     titleAttr: 'Exportar para PDF'
+        //     extend: "pdfHtml5",
+        //     text: "PDF",
+        //     titleAttr: "Exportar para PDF"
         // }
     ]
 });
 
-table.buttons().container().appendTo('#tb_lov_wrapper .col-md-6:eq(0)');
+table.buttons().container().appendTo("#tb_lov_wrapper .col-md-6:eq(0)");
 
-table.on( 'select deselect', function () {
+table.on( "select deselect", function () {
     var selectedRows = table.rows( { selected: true } ).count();
 
     table.button( 1 ).enable( selectedRows === 1 );
@@ -114,13 +114,14 @@ $(document).on("click", ".criar_lov", function(){
         },
         submitHandler: function(form) {
             var dados = $("#formLov").serialize();
+            var action = actionCorreta(window.location.href.toString(), "lov/criarLov");
             $.ajax({
-                type: 'POST',
-                dataType: 'JSON',
-                url: 'lov/criarLov',
+                type: "POST",
+                dataType: "JSON",
+                url: action,
                 data: {
-                    tokenKey: $('#token').attr('name'),
-                    tokenValue: $('#token').attr('value'),
+                    tokenKey: $("#token").attr("name"),
+                    tokenValue: $("#token").attr("value"),
                     dados: dados
                 },
                 beforeSend: function () {
@@ -140,21 +141,21 @@ $(document).on("click", ".criar_lov", function(){
                 success: function (data) {
                     if (data.operacao){
                         swal({
-                            title: 'Cadastro de Valores',
-                            text: 'Cadastro dos dados concluído!',
-                            type: 'success',
+                            title: "Cadastro de Valores",
+                            text: "Cadastro dos dados concluído!",
+                            type: "success",
                             showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Ok'
-                          }).then((result) => {
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Ok"
+                        }).then((result) => {
                             window.location.reload(true);
-                          });
+                        });
                     } else {
                         swal({
-                            title: 'Cadastro de Valores',
+                            title: "Cadastro de Valores",
                             text: data.mensagem,
-                            type: 'error'
+                            type: "error"
                         });
                     }
                 }
@@ -164,7 +165,7 @@ $(document).on("click", ".criar_lov", function(){
 });
 
 //Coletando os ids das linhas selecionadas na tabela
-var ids = [];   
+var ids = [];
 $("#tb_lov").on("click", "tr", function () {
     var valr = $(this)[0].cells[0].innerText;
     if (!ids.includes(valr)) {
@@ -176,25 +177,26 @@ $("#tb_lov").on("click", "tr", function () {
 });
 
 $(".bt_edit").on("click", function(){
-    nm_rows = ids.length;
+    var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Edição de Valores',
-            text: 'Você somente pode editar um único valor! Selecione apenas um e tente novamente!',
-            type: 'warning'
-          });
+            title: "Edição de Valores",
+            text: "Você somente pode editar um único valor! Selecione apenas um e tente novamente!",
+            type: "warning"
+        });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Edição de Valores',
-            text: 'Você precisa selecionar um registro para a edição!',
-            type: 'warning'
-          });
-     } else {
+            title: "Edição de Valores",
+            text: "Você precisa selecionar um registro para a edição!",
+            type: "warning"
+        });
+    } else {
         var id_lov = ids[0];
+        var action = actionCorreta(window.location.href.toString(), "lov/formLov");
         $.ajax({
-            type: 'GET',
-            dataType: 'JSON',
-            url: 'lov/formLov',
+            type: "GET",
+            dataType: "JSON",
+            url: action,
             data: {id_lov: id_lov},
             beforeSend: function () {
             },
@@ -246,13 +248,14 @@ $(document).on("click", ".editar_lov", function(){
         },
         submitHandler: function(form) {
             var dados = $("#formLov").serialize();
+            var action = actionCorreta(window.location.href.toString(), "lov/editarLov");
             $.ajax({
-                type: 'POST',
-                dataType: 'JSON',
-                url: 'lov/editarLov',
+                type: "POST",
+                dataType: "JSON",
+                url: action,
                 data: {
-                    tokenKey: $('#token').attr('name'),
-                    tokenValue: $('#token').attr('value'),
+                    tokenKey: $("#token").attr("name"),
+                    tokenValue: $("#token").attr("value"),
                     dados: dados
                 },
                 beforeSend: function () {
@@ -272,21 +275,21 @@ $(document).on("click", ".editar_lov", function(){
                 success: function (data) {
                     if (data.operacao){
                         swal({
-                            title: 'Cadastro de Valores',
-                            text: 'Edição de Valor concluída!',
-                            type: 'success',
+                            title: "Cadastro de Valores",
+                            text: "Edição de Valor concluída!",
+                            type: "success",
                             showCancelButton: false,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Ok'
-                          }).then((result) => {
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Ok"
+                        }).then((result) => {
                             window.location.reload(true);
-                          });
+                        });
                     } else {
                         swal({
-                            title: 'Cadastro de Valores',
+                            title: "Cadastro de Valores",
                             text: data.mensagem,
-                            type: 'error'
+                            type: "error"
                         });
                     }
                 }
@@ -299,113 +302,115 @@ $(".bt_del").on("click", function(){
     var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Tem certeza que deseja deletar múltipos valores?',
+            title: "Tem certeza que deseja deletar múltipos valores?",
             text: "O sistema irá deletar um total de " + nm_rows + " valores com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
-            type: 'info',
+            type: "info",
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim, apagar!'
-          }).then((result) => {
-              $.ajax({
-                  type: 'POST',
-                  dataType: 'JSON',
-                  url: 'lov/deletarLov',
-                  data: {ids: ids},
-                  beforeSend: function () {
-                  },
-                  complete: function () {
-                  },
-                  error: function (data) {
-                      if (data.status && data.status === 401)
-                      {
-                          swal({
-                              title: "Erro de Permissão",
-                              text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                              type: "warning"
-                          });
-                      }
-                  },
-                  success: function (data) {
-                      if (data.operacao){
-                          swal({
-                              title: 'Deletados!',
-                              text: 'Os valores selecionados foram deletados com sucesso.',
-                              type: 'success',
-                              showCancelButton: false,
-                              confirmButtonColor: '#3085d6',
-                              cancelButtonColor: '#d33',
-                              confirmButtonText: 'Ok'
-                            }).then((result) => {
-                              window.location.reload(true);
-                            });
-                      } else {
-                          swal({
-                              title: 'Deletar',
-                              text: data.mensagem,
-                              type: 'error'
-                          });
-                      }
-                  }
-              });
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sim, apagar!"
+        }).then((result) => {
+            var action = actionCorreta(window.location.href.toString(), "lov/deletarLov");
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: action,
+                data: {ids: ids},
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        swal({
+                            title: "Deletados!",
+                            text: "Os valores selecionados foram deletados com sucesso.",
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Ok"
+                        }).then((result) => {
+                            window.location.reload(true);
+                        });
+                    } else {
+                        swal({
+                            title: "Deletar",
+                            text: data.mensagem,
+                            type: "error"
+                        });
+                    }
+                }
+            });
         });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Deletar Valor',
-            text: 'Você precisa selecionar um valor ou mais valores para serem deletados!',
-            type: 'warning'
-          });
-     } else {
+            title: "Deletar Valor",
+            text: "Você precisa selecionar um valor ou mais valores para serem deletados!",
+            type: "warning"
+        });
+    } else {
         swal({
-            title: 'Tem certeza que deseja deletar este valor?',
+            title: "Tem certeza que deseja deletar este valor?",
             text: "O sistema irá deletar o valor selecionado com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
-            type: 'info',
+            type: "info",
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim, apagar!'
-          }).then((result) => {
-              $.ajax({
-                  type: 'POST',
-                  dataType: 'JSON',
-                  url: 'lov/deletarLov',
-                  data: {ids: ids},
-                  beforeSend: function () {
-                  },
-                  complete: function () {
-                  },
-                  error: function (data) {
-                      if (data.status && data.status === 401)
-                      {
-                          swal({
-                              title: "Erro de Permissão",
-                              text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                              type: "warning"
-                          });
-                      }
-                  },
-                  success: function (data) {
-                      if (data.operacao){
-                          swal({
-                              title: 'Deletado!',
-                              text: 'O valor selecionado foi deletado com sucesso.',
-                              type: 'success',
-                              showCancelButton: false,
-                              confirmButtonColor: '#3085d6',
-                              cancelButtonColor: '#d33',
-                              confirmButtonText: 'Ok'
-                            }).then((result) => {
-                              window.location.reload(true);
-                            });
-                      } else {
-                          swal({
-                              title: 'Deletar',
-                              text: data.mensagem,
-                              type: 'error'
-                          });
-                      }
-                  }
-              });
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sim, apagar!"
+        }).then((result) => {
+            var action = actionCorreta(window.location.href.toString(), "lov/deletarLov");
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: action,
+                data: {ids: ids},
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        swal({
+                            title: "Deletado!",
+                            text: "O valor selecionado foi deletado com sucesso.",
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Ok"
+                        }).then((result) => {
+                            window.location.reload(true);
+                        });
+                    } else {
+                        swal({
+                            title: "Deletar",
+                            text: data.mensagem,
+                            type: "error"
+                        });
+                    }
+                }
+            });
         });
     }
 });

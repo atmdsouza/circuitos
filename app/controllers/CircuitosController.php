@@ -20,6 +20,7 @@ use Circuitos\Models\Fabricante;
 use Circuitos\Models\Modelo;
 use Circuitos\Models\Equipamento;
 use Circuitos\Models\Lov;
+use Circuitos\Models\PessoaContato;
 
 use Auth\Autentica;
 use Util\Util;
@@ -57,29 +58,11 @@ class CircuitosController extends ControllerBase
      */
     public function indexAction()
     {
-        $this->persistent->parameters = null;
         $numberPage = 1;
         $dados = filter_input_array(INPUT_POST);
 
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Circuitos\Models\Circuitos", $dados);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
+        $circuitos = Circuitos::pesquisarCircuitos($dados["pesquisa"]);
 
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-            $parameters["order"] = "[designacao] DESC";
-            $parameters["conditions"] = " excluido = :excluido:";
-            $parameters["bind"]["excluido"] = 0;
-        } else {
-            $parameters["order"] = "[designacao] DESC";
-            $parameters["conditions"] .= " AND excluido = :excluido:";
-            $parameters["bind"]["excluido"] = 0;
-        }
-        $circuitos = Circuitos::find($parameters);
         $statuscircuito = Lov::find(array(
             "tipo=6",
             "order" => "descricao"
@@ -205,9 +188,14 @@ class CircuitosController extends ControllerBase
 
         $parameters = [];
         $parameters["order"] = "[data_movimento] DESC";
-        $parameters["conditions"] .= " id_circuitos = :id_circuitos:";
+        $parameters["conditions"] = " id_circuitos = :id_circuitos:";
         $parameters["bind"]["id_circuitos"] = $circuitos->getId();
         $movimentos = Movimentos::find($parameters);
+        $parameters_cont = [];
+        $parameters_cont["order"] = "[id] DESC";
+        $parameters_cont["conditions"] = " id_pessoa = :id_pessoa:";
+        $parameters_cont["bind"]["id_pessoa"] = $circuitos->ClienteUnidade->id_pessoa;
+        $contatos = PessoaContato::find($parameters_cont);
         $dados = array(
             "id" => $circuitos->getId(),
             "id_cliente" => $circuitos->getIdCliente(),
@@ -250,11 +238,26 @@ class CircuitosController extends ControllerBase
                 "observacao" => $movimento->getObservacao()
             ));
         }
+        $cont = array();
+        foreach($contatos as $contato){
+            $principal = ($contato->getPrincipal() == 0) ? "Sim" : "Não";
+            array_push($cont, array(
+                "id" => $contato->getId(),
+                "id_pessoa" => $contato->getIdPessoa(),
+                "id_tipocontato" => $contato->Lov->descricao,
+                "principal" => $principal,
+                "nome" => $contato->getNome(),
+                "telefone" => $contato->getTelefone(),
+                "email" => $contato->getEmail()
+            ));
+        }
+        
         $equip = ($circuitos->getIdEquipamento()) ? Equipamento::findFirst("id={$circuitos->getIdEquipamento()}") : null;
         $response->setContent(json_encode(array(
             "dados" => $dados,
             "equip" => $equip,
-            "mov" => $mov
+            "mov" => $mov,
+            "cont" => $cont
         )));
         return $response;
     }

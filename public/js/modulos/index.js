@@ -23,25 +23,25 @@
         // this function produce the responsive Chart JS
         function generateChart(){
             // make chart width fit with its container
-            var ww = selector.attr('width', $(container).width() );
+            var ww = selector.attr("width", $(container).width() );
             switch(type){
-                case 'Line':
-                    new Chart(ctx, {type: 'line', data: data, options: options});
+                case "Line":
+                    new Chart(ctx, {type: "line", data: data, options: options});
                     break;
-                case 'Doughnut':
-                    new Chart(ctx, {type: 'doughnut', data: data, options: options});
+                case "Doughnut":
+                    new Chart(ctx, {type: "doughnut", data: data, options: options});
                     break;
-                case 'Pie':
-                    new Chart(ctx, {type: 'pie', data: data, options: options});
+                case "Pie":
+                    new Chart(ctx, {type: "pie", data: data, options: options});
                     break;
-                case 'Bar':
-                    new Chart(ctx, {type: 'bar', data: data, options: options});
+                case "Bar":
+                    new Chart(ctx, {type: "bar", data: data, options: options});
                     break;
-                case 'Radar':
-                    new Chart(ctx, {type: 'radar', data: data, options: options});
+                case "Radar":
+                    new Chart(ctx, {type: "radar", data: data, options: options});
                     break;
-                case 'PolarArea':
-                    new Chart(ctx, {data: data, type: 'polarArea', options: options});
+                case "PolarArea":
+                    new Chart(ctx, {data: data, type: "polarArea", options: options});
                     break;
             }
             // Initiate new chart or Redraw
@@ -63,10 +63,10 @@
                         lineTension: 0.05,
                         backgroundColor: "#fff",
                         borderColor: "#3ec396",
-                        borderCapStyle: 'butt',
+                        borderCapStyle: "butt",
                         borderDash: [],
                         borderDashOffset: 0.0,
-                        borderJoinStyle: 'miter',
+                        borderJoinStyle: "miter",
                         pointBorderColor: "#3ec396",
                         pointBackgroundColor: "#fff",
                         pointBorderWidth: 8,
@@ -93,7 +93,7 @@
                 }
             };
 
-            this.respChart($("#lineChart"),'Line',lineChart, lineOpts);
+            this.respChart($("#lineChart"),"Line",lineChart, lineOpts);
 
             //donut chart
             var donutChart = {
@@ -124,7 +124,7 @@
                         hoverBorderColor: "#fff"
                     }]
             };
-            this.respChart($("#doughnut"),'Doughnut',donutChart);
+            this.respChart($("#doughnut"),"Doughnut",donutChart);
 
 
             //Pie chart
@@ -156,7 +156,7 @@
                         hoverBorderColor: "#fff"
                     }]
             };
-            this.respChart($("#pie"),'Pie',pieChart);
+            this.respChart($("#pie"),"Pie",pieChart);
 
 
             //barchart
@@ -192,7 +192,7 @@
                     }
                 ]
             };
-            this.respChart($("#bar"),'Bar',barChart);
+            this.respChart($("#bar"),"Bar",barChart);
 
 
             //radar chart
@@ -221,7 +221,7 @@
                     }
                 ]
             };
-            this.respChart($("#radar"),'Radar',radarChart);
+            this.respChart($("#radar"),"Radar",radarChart);
 
             //Polar area chart
             var polarChart = {
@@ -238,7 +238,7 @@
                         "#ebeff2",
                         "#1ea69a"
                     ],
-                    label: 'My dataset', // for legend
+                    label: "My dataset", // for legend
                     hoverBorderColor: "#fff"
                 }],
                 labels: [
@@ -248,7 +248,7 @@
                     "Series 4"
                 ]
             };
-            this.respChart($("#polarArea"),'PolarArea',polarChart);
+            this.respChart($("#polarArea"),"PolarArea",polarChart);
         },
         $.ChartJs = new ChartJs, $.ChartJs.Constructor = ChartJs
 

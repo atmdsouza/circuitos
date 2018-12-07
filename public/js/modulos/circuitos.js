@@ -1,95 +1,95 @@
 //Load de tela
 $(document).ajaxStop($.unblockUI);
-URLImagensSistema = "public/images";
+var URLImagensSistema = "public/images";
 
 //Datatable
-var table = $('#tb_circuitos').DataTable({
+var table = $("#tb_circuitos").DataTable({
     buttons: [
         {//Botão Novo Registro
-            className: 'bt_novo',
-            text: 'Novo',
-            name: 'novo', // do not change name
-            titleAttr: 'Novo Circuito',
+            className: "bt_novo",
+            text: "Novo",
+            name: "novo", // do not change name
+            titleAttr: "Novo Circuito",
             action: function (e, dt, node, config) {
             }
         },
         {//Botão Visualizar Registro
-            className: 'bt_visual',
-            text: 'Visualizar',
-            name: 'visualizar', // do not change name
-            titleAttr: 'Visualizar Circuito',
+            className: "bt_visual",
+            text: "Visualizar",
+            name: "visualizar", // do not change name
+            titleAttr: "Visualizar Circuito",
             action: function (e, dt, node, config) {
             },
             enabled: false
         },
         {//Botão Editar Registro
-            className: 'bt_edit',
-            text: 'Editar',
-            name: 'edit', // do not change name
-            titleAttr: 'Editar Circuito',
+            className: "bt_edit",
+            text: "Editar",
+            name: "edit", // do not change name
+            titleAttr: "Editar Circuito",
             action: function (e, dt, node, config) {
             },
             enabled: false
         },
         // {//Botão Inativar Registro
-        //     className: 'bt_inativo',
-        //     text: 'Inativar',
-        //     name: 'inativo', // do not change name
-        //     titleAttr: 'Inativar registro',
+        //     className: "bt_inativo",
+        //     text: "Inativar",
+        //     name: "inativo", // do not change name
+        //     titleAttr: "Inativar registro",
         //     action: function (e, dt, node, config) {
         //     },
         //     enabled: false
         // },
         {//Botão Movimentar Registro (Inativo)
-            className: 'bt_mov',
-            text: 'Movimentar',
-            name: 'mov', // do not change name
-            titleAttr: 'Movimentar Circuito',
+            className: "bt_mov",
+            text: "Movimentar",
+            name: "mov", // do not change name
+            titleAttr: "Movimentar Circuito",
             action: function (e, dt, node, config) {
             },
             enabled: false
         },
         {//Botão Deletar Registro (Inativo)
-            className: 'bt_del',
-            text: 'Deletar',
-            name: 'del', // do not change name
-            titleAttr: 'Deletar Circuito',
+            className: "bt_del",
+            text: "Deletar",
+            name: "del", // do not change name
+            titleAttr: "Deletar Circuito",
             action: function (e, dt, node, config) {
             },
             enabled: false
         },
         // {//Botão Selecionar
-        //     extend: 'selectAll',
-        //     text: 'Selecionar',
-        //     titleAttr: 'Selecionar Todos os Registros'
+        //     extend: "selectAll",
+        //     text: "Selecionar",
+        //     titleAttr: "Selecionar Todos os Registros"
         // },
         // {//Botão Limpar Seleção
-        //     extend: 'selectNone',
-        //     text: 'Limpar',
-        //     titleAttr: 'Limpar Seleção dos Registros'
+        //     extend: "selectNone",
+        //     text: "Limpar",
+        //     titleAttr: "Limpar Seleção dos Registros"
         // },
         // {//Botão imprimir
-        //     extend: 'print',
-        //     text: 'Imprimir',
-        //     titleAttr: 'Imprimir'
+        //     extend: "print",
+        //     text: "Imprimir",
+        //     titleAttr: "Imprimir"
         // },
         {//Botão exportar excel
-            extend: 'excelHtml5',
-            text: 'Excel',
-            titleAttr: 'Exportar para Excel'
+            extend: "excelHtml5",
+            text: "Excel",
+            titleAttr: "Exportar para Excel"
         },
         {//Botão exportar pdf
-            extend: 'pdfHtml5',
-            text: 'PDF',
-            titleAttr: 'Exportar para PDF'
+            extend: "pdfHtml5",
+            text: "PDF",
+            titleAttr: "Exportar para PDF"
         }
     ],
     order: [[ 1, "desc" ]]
 });
 
-table.buttons().container().appendTo('#tb_circuitos_wrapper .col-md-6:eq(0)');
+table.buttons().container().appendTo("#tb_circuitos_wrapper .col-md-6:eq(0)");
 
-table.on( 'select deselect', function () {
+table.on( "select deselect", function () {
     var selectedRows = table.rows( { selected: true } ).count();
 
     table.button( 1 ).enable( selectedRows === 1 );
@@ -105,10 +105,11 @@ function limparModal()
 
 $("#id_cliente").on("change", function(){
     var id_cliente = $(this).val();
+    var action = actionCorreta(window.location.href.toString(), "circuitos/unidadeCliente");
     $.ajax({
-        type: 'GET',
-        dataType: 'JSON',
-        url: 'circuitos/unidadeCliente',
+        type: "GET",
+        dataType: "JSON",
+        url: action,
         data: {id_cliente: id_cliente},
         beforeSend: function () {
         },
@@ -143,17 +144,18 @@ $("#id_cliente").on("change", function(){
 });
 
 $(function () {
-    'use strict';
+    "use strict";
     var ac_model = $("#lid_modelo");
     var ac_equip = $("#lid_equipamento");
     var listEquip = [];
     var listModel = [];
     $("#id_fabricante").on("change", function(){
         var id_fabricante = $(this).val();
+        var action = actionCorreta(window.location.href.toString(), "circuitos/modeloFabricante");
         $.ajax({
             type: "GET",
             dataType: "JSON",
-            url: "circuitos/modeloFabricante",
+            url: action,
             data: {id_fabricante: id_fabricante},
             beforeSend: function () {
                 $("#id_modelo").val("");
@@ -203,13 +205,14 @@ $(function () {
         noCache: true,
         minChars: 1,
         showNoSuggestionNotice: true,
-        noSuggestionNotice: 'Não existem resultados para essa consulta!',
+        noSuggestionNotice: "Não existem resultados para essa consulta!",
         onSelect: function (suggestion) {
             $("#id_modelo").val(suggestion.data);
+            var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoModelo");
             $.ajax({
                 type: "GET",
                 dataType: "JSON",
-                url: "circuitos/equipamentoModelo",
+                url: action,
                 data: {id_modelo: suggestion.data},
                 beforeSend: function () {
                     $("#lid_equipamento").val("");
@@ -253,7 +256,7 @@ $(function () {
         noCache: true,
         minChars: 1,
         showNoSuggestionNotice: true,
-        noSuggestionNotice: 'Não existem resultados para essa consulta!',
+        noSuggestionNotice: "Não existem resultados para essa consulta!",
         onSelect: function (suggestion) {
             $("#id_equipamento").val(suggestion.data);
         }
@@ -380,13 +383,14 @@ $(document).on("click", ".criar_circuitos", function(){
             },
             submitHandler: function(form) {
                 var dados = $("#formCircuitos").serialize();
+                var action = actionCorreta(window.location.href.toString(), "circuitos/criarCircuitos");
                 $.ajax({
-                    type: 'POST',
-                    dataType: 'JSON',
-                    url: 'circuitos/criarCircuitos',
+                    type: "POST",
+                    dataType: "JSON",
+                    url: action,
                     data: {
-                        tokenKey: $('#token').attr('name'),
-                        tokenValue: $('#token').attr('value'),
+                        tokenKey: $("#token").attr("name"),
+                        tokenValue: $("#token").attr("value"),
                         dados: dados
                     },
                     beforeSend: function () {
@@ -406,21 +410,21 @@ $(document).on("click", ".criar_circuitos", function(){
                     success: function (data) {
                         if (data.operacao){
                             swal({
-                                title: 'Cadastro de Circuitos',
-                                text: 'Cadastro da Circuitos concluído!',
-                                type: 'success',
+                                title: "Cadastro de Circuitos",
+                                text: "Cadastro da Circuitos concluído!",
+                                type: "success",
                                 showCancelButton: false,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ok'
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Ok"
                               }).then((result) => {
                                 window.location.reload(true);
                               });
                         } else {
                             swal({
-                                title: 'Cadastro de Circuitos',
+                                title: "Cadastro de Circuitos",
                                 text: data.mensagem,
-                                type: 'error'
+                                type: "error"
                             });
                         }
                     }
@@ -533,13 +537,14 @@ $(document).on("click", ".criar_circuitos", function(){
             },
             submitHandler: function(form) {
                 var dados = $("#formCircuitos").serialize();
+                var action = actionCorreta(window.location.href.toString(), "circuitos/criarCircuitos");
                 $.ajax({
-                    type: 'POST',
-                    dataType: 'JSON',
-                    url: 'circuitos/criarCircuitos',
+                    type: "POST",
+                    dataType: "JSON",
+                    url: action,
                     data: {
-                        tokenKey: $('#token').attr('name'),
-                        tokenValue: $('#token').attr('value'),
+                        tokenKey: $("#token").attr("name"),
+                        tokenValue: $("#token").attr("value"),
                         dados: dados
                     },
                     beforeSend: function () {
@@ -559,21 +564,21 @@ $(document).on("click", ".criar_circuitos", function(){
                     success: function (data) {
                         if (data.operacao){
                             swal({
-                                title: 'Cadastro de Circuitos',
-                                text: 'Cadastro da Circuitos concluído!',
-                                type: 'success',
+                                title: "Cadastro de Circuitos",
+                                text: "Cadastro da Circuitos concluído!",
+                                type: "success",
                                 showCancelButton: false,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ok'
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Ok"
                               }).then((result) => {
                                 window.location.reload(true);
                               });
                         } else {
                             swal({
-                                title: 'Cadastro de Circuitos',
+                                title: "Cadastro de Circuitos",
                                 text: data.mensagem,
-                                type: 'error'
+                                type: "error"
                             });
                         }
                     }
@@ -597,25 +602,26 @@ $("#tb_circuitos").on("click", "tr", function () {
 });
 
 $(".bt_edit").on("click", function(){
-    nm_rows = ids.length;
+    var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Edição de Circuitos',
-            text: 'Você somente pode editar um único circuitos! Selecione apenas um e tente novamente!',
-            type: 'warning'
+            title: "Edição de Circuitos",
+            text: "Você somente pode editar um único circuitos! Selecione apenas um e tente novamente!",
+            type: "warning"
           });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Edição de Circuitos',
-            text: 'Você precisa selecionar um circuitos para a edição!',
-            type: 'warning'
+            title: "Edição de Circuitos",
+            text: "Você precisa selecionar um circuitos para a edição!",
+            type: "warning"
           });
      } else {
         var id_circuitos = ids[0];
+        var action = actionCorreta(window.location.href.toString(), "circuitos/formCircuitos");
         $.ajax({
-            type: 'GET',
-            dataType: 'JSON',
-            url: 'circuitos/formCircuitos',
+            type: "GET",
+            dataType: "JSON",
+            url: action,
             data: {id_circuitos: id_circuitos},
             beforeSend: function () {
             },
@@ -687,22 +693,23 @@ $(".bt_visual").on("click", function(){
     nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Visualização de Circuitos',
-            text: 'Você somente pode editar um único circuitos! Selecione apenas um e tente novamente!',
-            type: 'warning'
+            title: "Visualização de Circuitos",
+            text: "Você somente pode editar um único circuitos! Selecione apenas um e tente novamente!",
+            type: "warning"
           });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Visualização de Circuitos',
-            text: 'Você precisa selecionar um circuitos para a edição!',
-            type: 'warning'
+            title: "Visualização de Circuitos",
+            text: "Você precisa selecionar um circuitos para a edição!",
+            type: "warning"
           });
      } else {
         var id_circuitos = ids[0];
+        var action = actionCorreta(window.location.href.toString(), "circuitos/visualizaCircuitos");
         $.ajax({
-            type: 'GET',
-            dataType: 'JSON',
-            url: 'circuitos/visualizaCircuitos',
+            type: "GET",
+            dataType: "JSON",
+            url: action,
             data: {id_circuitos: id_circuitos},
             beforeSend: function () {
             },
@@ -749,14 +756,14 @@ $(".bt_visual").on("click", function(){
                 $("#dtatualizacaov").val(data.dados.data_atualizacao);
                 $("#numpatserv").val(data.dados.numpatrimonio + " / " + data.dados.numserie);
                 var linhas;
-                if(data.mov)
+                if(data.mov.length > 0)
                 {
                     $(".rem_mov").remove();
                     $.each(data.mov, function (key, value) {
-                        var os = value.osocomon ? value.osocomon : '';
-                        var ant = value.valoranterior ? value.valoranterior : '';
-                        var atu = value.valoratualizado ? value.valoratualizado : '';
-                        var obs = value.observacao ? value.observacao : '';
+                        var os = value.osocomon ? value.osocomon : "";
+                        var ant = value.valoranterior ? value.valoranterior : "";
+                        var atu = value.valoratualizado ? value.valoratualizado : "";
+                        var obs = value.observacao ? value.observacao : "";
                         linhas = "<tr class='rem_mov'>";
                         linhas += "<td>" + os + "</td>";
                         linhas += "<td>" + value.data_movimento + "</td>";
@@ -768,13 +775,47 @@ $(".bt_visual").on("click", function(){
                         linhas += "</tr>";
                         $("#tb_movimento").append(linhas);
                     });
-                } 
+                }
                 else
                 {
-                    linhas = "<tr>";
+                    $(".rem_mov").remove();
+                    linhas = "<tr class='rem_mov'>";
                     linhas = "<td colspan='7' style='text-align: center;'>Não existem dados para serem exibidos! Dados Importados!</td>";
                     linhas += "</tr>";
                     $("#tb_movimento").append(linhas);
+                }
+                var linhas_cont;
+                if(data.cont.length > 0)
+                {
+                    $(".rem_cont").remove();
+                    $.each(data.cont, function (key, value) {
+                        var fone;
+                        if (value.telefone || value.telefone.length == 11)
+                        {
+                            fone = value.telefone ? value.telefone.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3') : "";
+                        }
+                        else
+                        {
+                            fone = value.telefone ? value.telefone.replace(/^(\d{2})(\d{4})(\d{4}).*/, '($1) $2-$3') : "";
+                        }
+                        var mail = value.email ? value.email : "";
+                        linhas_cont = "<tr class='rem_cont'>";
+                        linhas_cont += "<td>" + value.principal + "</td>";
+                        linhas_cont += "<td>" + value.id_tipocontato + "</td>";
+                        linhas_cont += "<td>" + value.nome + "</td>";
+                        linhas_cont += "<td>" + fone + "</td>";
+                        linhas_cont += "<td>" + mail + "</td>";
+                        linhas_cont += "</tr>";
+                        $("#tb_contatos").append(linhas_cont);
+                    });
+                }
+                else
+                {
+                    $(".rem_cont").remove();
+                    linhas_cont = "<tr class='rem_cont'>";
+                    linhas_cont += "<td colspan='5' style='text-align: center;'>Não existem contatos para serem exibidos! Favor Cadastrar!</td>";
+                    linhas_cont += "</tr>";
+                    $("#tb_contatos").append(linhas_cont);
                 }
                 $("#modalvisualizar").modal();
             }
@@ -897,13 +938,14 @@ $(document).on("click", ".editar_circuitos", function(){
             },
             submitHandler: function(form) {
                 var dados = $("#formCircuitos").serialize();
+                var action = actionCorreta(window.location.href.toString(), "circuitos/editarCircuitos");
                 $.ajax({
-                    type: 'POST',
-                    dataType: 'JSON',
-                    url: 'circuitos/editarCircuitos',
+                    type: "POST",
+                    dataType: "JSON",
+                    url: action,
                     data: {
-                        tokenKey: $('#token').attr('name'),
-                        tokenValue: $('#token').attr('value'),
+                        tokenKey: $("#token").attr("name"),
+                        tokenValue: $("#token").attr("value"),
                         dados: dados
                     },
                     beforeSend: function () {
@@ -923,21 +965,21 @@ $(document).on("click", ".editar_circuitos", function(){
                     success: function (data) {
                         if (data.operacao){
                             swal({
-                                title: 'Cadastro de Circuitos',
-                                text: 'Cadastro da Circuitos concluído!',
-                                type: 'success',
+                                title: "Cadastro de Circuitos",
+                                text: "Cadastro da Circuitos concluído!",
+                                type: "success",
                                 showCancelButton: false,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ok'
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Ok"
                               }).then((result) => {
                                 window.location.reload(true);
                               });
                         } else {
                             swal({
-                                title: 'Cadastro de Circuitos',
+                                title: "Cadastro de Circuitos",
                                 text: data.mensagem,
-                                type: 'error'
+                                type: "error"
                             });
                         }
                     }
@@ -1050,13 +1092,14 @@ $(document).on("click", ".editar_circuitos", function(){
             },
             submitHandler: function(form) {
                 var dados = $("#formCircuitos").serialize();
+                var action = actionCorreta(window.location.href.toString(), "circuitos/editarCircuitos");
                 $.ajax({
-                    type: 'POST',
-                    dataType: 'JSON',
-                    url: 'circuitos/editarCircuitos',
+                    type: "POST",
+                    dataType: "JSON",
+                    url: action,
                     data: {
-                        tokenKey: $('#token').attr('name'),
-                        tokenValue: $('#token').attr('value'),
+                        tokenKey: $("#token").attr("name"),
+                        tokenValue: $("#token").attr("value"),
                         dados: dados
                     },
                     beforeSend: function () {
@@ -1076,21 +1119,21 @@ $(document).on("click", ".editar_circuitos", function(){
                     success: function (data) {
                         if (data.operacao){
                             swal({
-                                title: 'Cadastro de Circuitos',
-                                text: 'Cadastro da Circuitos concluído!',
-                                type: 'success',
+                                title: "Cadastro de Circuitos",
+                                text: "Cadastro da Circuitos concluído!",
+                                type: "success",
                                 showCancelButton: false,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ok'
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Ok"
                               }).then((result) => {
                                 window.location.reload(true);
                               });
                         } else {
                             swal({
-                                title: 'Cadastro de Circuitos',
+                                title: "Cadastro de Circuitos",
                                 text: data.mensagem,
-                                type: 'error'
+                                type: "error"
                             });
                         }
                     }
@@ -1164,15 +1207,16 @@ $("#id_tipomovimento").on("change", function(){
 
 
 $(function () {
-    'use strict';
+    "use strict";
     var listEquip2 = [];
     var listModel2 = [];
     $("#id_fabricantemov").on("change", function(){
         var id_fabricante = $(this).val();
+        var action = actionCorreta(window.location.href.toString(), "circuitos/modeloFabricante");
         $.ajax({
-            type: 'GET',
-            dataType: 'JSON',
-            url: 'circuitos/modeloFabricante',
+            type: "GET",
+            dataType: "JSON",
+            url: action,
             data: {id_fabricante: id_fabricante},
             beforeSend: function () {
             },
@@ -1216,13 +1260,14 @@ $(function () {
         noCache: true,
         minChars: 1,
         showNoSuggestionNotice: true,
-        noSuggestionNotice: 'Não existem resultados para essa consulta!',
+        noSuggestionNotice: "Não existem resultados para essa consulta!",
         onSelect: function (suggestion) {
             $("#id_modelomov").val(suggestion.data);
+            var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoModelo");
             $.ajax({
                 type: "GET",
                 dataType: "JSON",
-                url: "circuitos/equipamentoModelo",
+                url: action,
                 data: {id_modelo: suggestion.data},
                 beforeSend: function () {
                     $("#lid_equipamentomov").val("");
@@ -1266,7 +1311,7 @@ $(function () {
         noCache: true,
         minChars: 1,
         showNoSuggestionNotice: true,
-        noSuggestionNotice: 'Não existem resultados para essa consulta!',
+        noSuggestionNotice: "Não existem resultados para essa consulta!",
         onSelect: function (suggestion) {
             $("#id_equipamentomov").val(suggestion.data);
         }
@@ -1298,13 +1343,14 @@ $(document).on("click", ".criar_mov", function(){
             },
             submitHandler: function(form) {
                 var dados = $("#formCircuitosmov").serialize();
+                var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
                 $.ajax({
-                    type: 'POST',
-                    dataType: 'JSON',
-                    url: 'circuitos/movCircuitos',
+                    type: "POST",
+                    dataType: "JSON",
+                    url: action,
                     data: {
-                        tokenKey: $('#token').attr('name'),
-                        tokenValue: $('#token').attr('value'),
+                        tokenKey: $("#token").attr("name"),
+                        tokenValue: $("#token").attr("value"),
                         dados: dados
                     },
                     beforeSend: function () {
@@ -1324,21 +1370,21 @@ $(document).on("click", ".criar_mov", function(){
                     success: function (data) {
                         if (data.operacao){
                             swal({
-                                title: 'Movimento de Circuito',
-                                text: 'Movimento de Circuito concluído!',
-                                type: 'success',
+                                title: "Movimento de Circuito",
+                                text: "Movimento de Circuito concluído!",
+                                type: "success",
                                 showCancelButton: false,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ok'
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Ok"
                               }).then((result) => {
                                 window.location.reload(true);
                               });
                         } else {
                             swal({
-                                title: 'Movimento de Circuito',
+                                title: "Movimento de Circuito",
                                 text: data.mensagem,
-                                type: 'error'
+                                type: "error"
                             });
                         }
                     }
@@ -1367,13 +1413,14 @@ $(document).on("click", ".criar_mov", function(){
             },
             submitHandler: function(form) {
                 var dados = $("#formCircuitosmov").serialize();
+                var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
                 $.ajax({
-                    type: 'POST',
-                    dataType: 'JSON',
-                    url: 'circuitos/movCircuitos',
+                    type: "POST",
+                    dataType: "JSON",
+                    url: action,
                     data: {
-                        tokenKey: $('#token').attr('name'),
-                        tokenValue: $('#token').attr('value'),
+                        tokenKey: $("#token").attr("name"),
+                        tokenValue: $("#token").attr("value"),
                         dados: dados
                     },
                     beforeSend: function () {
@@ -1393,21 +1440,21 @@ $(document).on("click", ".criar_mov", function(){
                     success: function (data) {
                         if (data.operacao){
                             swal({
-                                title: 'Movimento de Circuito',
-                                text: 'Movimento de Circuito concluído!',
-                                type: 'success',
+                                title: "Movimento de Circuito",
+                                text: "Movimento de Circuito concluído!",
+                                type: "success",
                                 showCancelButton: false,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ok'
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Ok"
                               }).then((result) => {
                                 window.location.reload(true);
                               });
                         } else {
                             swal({
-                                title: 'Movimento de Circuito',
+                                title: "Movimento de Circuito",
                                 text: data.mensagem,
-                                type: 'error'
+                                type: "error"
                             });
                         }
                     }
@@ -1436,13 +1483,14 @@ $(document).on("click", ".criar_mov", function(){
             },
             submitHandler: function(form) {
                 var dados = $("#formCircuitosmov").serialize();
+                var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
                 $.ajax({
-                    type: 'POST',
-                    dataType: 'JSON',
-                    url: 'circuitos/movCircuitos',
+                    type: "POST",
+                    dataType: "JSON",
+                    url: action,
                     data: {
-                        tokenKey: $('#token').attr('name'),
-                        tokenValue: $('#token').attr('value'),
+                        tokenKey: $("#token").attr("name"),
+                        tokenValue: $("#token").attr("value"),
                         dados: dados
                     },
                     beforeSend: function () {
@@ -1462,21 +1510,21 @@ $(document).on("click", ".criar_mov", function(){
                     success: function (data) {
                         if (data.operacao){
                             swal({
-                                title: 'Movimento de Circuito',
-                                text: 'Movimento de Circuito concluído!',
-                                type: 'success',
+                                title: "Movimento de Circuito",
+                                text: "Movimento de Circuito concluído!",
+                                type: "success",
                                 showCancelButton: false,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ok'
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Ok"
                               }).then((result) => {
                                 window.location.reload(true);
                               });
                         } else {
                             swal({
-                                title: 'Movimento de Circuito',
+                                title: "Movimento de Circuito",
                                 text: data.mensagem,
-                                type: 'error'
+                                type: "error"
                             });
                         }
                     }
@@ -1505,13 +1553,14 @@ $(document).on("click", ".criar_mov", function(){
             },
             submitHandler: function(form) {
                 var dados = $("#formCircuitosmov").serialize();
+                var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
                 $.ajax({
-                    type: 'POST',
-                    dataType: 'JSON',
-                    url: 'circuitos/movCircuitos',
+                    type: "POST",
+                    dataType: "JSON",
+                    url: action,
                     data: {
-                        tokenKey: $('#token').attr('name'),
-                        tokenValue: $('#token').attr('value'),
+                        tokenKey: $("#token").attr("name"),
+                        tokenValue: $("#token").attr("value"),
                         dados: dados
                     },
                     beforeSend: function () {
@@ -1531,21 +1580,21 @@ $(document).on("click", ".criar_mov", function(){
                     success: function (data) {
                         if (data.operacao){
                             swal({
-                                title: 'Movimento de Circuito',
-                                text: 'Movimento de Circuito concluído!',
-                                type: 'success',
+                                title: "Movimento de Circuito",
+                                text: "Movimento de Circuito concluído!",
+                                type: "success",
                                 showCancelButton: false,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ok'
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Ok"
                               }).then((result) => {
                                 window.location.reload(true);
                               });
                         } else {
                             swal({
-                                title: 'Movimento de Circuito',
+                                title: "Movimento de Circuito",
                                 text: data.mensagem,
-                                type: 'error'
+                                type: "error"
                             });
                         }
                     }
@@ -1586,13 +1635,14 @@ $(document).on("click", ".criar_mov", function(){
             },
             submitHandler: function(form) {
                 var dados = $("#formCircuitosmov").serialize();
+                var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
                 $.ajax({
-                    type: 'POST',
-                    dataType: 'JSON',
-                    url: 'circuitos/movCircuitos',
+                    type: "POST",
+                    dataType: "JSON",
+                    url: action,
                     data: {
-                        tokenKey: $('#token').attr('name'),
-                        tokenValue: $('#token').attr('value'),
+                        tokenKey: $("#token").attr("name"),
+                        tokenValue: $("#token").attr("value"),
                         dados: dados
                     },
                     beforeSend: function () {
@@ -1612,21 +1662,21 @@ $(document).on("click", ".criar_mov", function(){
                     success: function (data) {
                         if (data.operacao){
                             swal({
-                                title: 'Movimento de Circuito',
-                                text: 'Movimento de Circuito concluído!',
-                                type: 'success',
+                                title: "Movimento de Circuito",
+                                text: "Movimento de Circuito concluído!",
+                                type: "success",
                                 showCancelButton: false,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Ok'
+                                confirmButtonColor: "#3085d6",
+                                cancelButtonColor: "#d33",
+                                confirmButtonText: "Ok"
                               }).then((result) => {
                                 window.location.reload(true);
                               });
                         } else {
                             swal({
-                                title: 'Movimento de Circuito',
+                                title: "Movimento de Circuito",
                                 text: data.mensagem,
-                                type: 'error'
+                                type: "error"
                             });
                         }
                     }
@@ -1641,18 +1691,19 @@ $(".bt_del").on("click", function(){
     var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
-            title: 'Tem certeza que deseja deletar múltipas unidades?',
+            title: "Tem certeza que deseja deletar múltipas unidades?",
             text: "O sistema irá deletar um total de " + nm_rows + " unidades com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
-            type: 'info',
+            type: "info",
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim, apagar!'
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sim, apagar!"
           }).then((result) => {
+            var action = actionCorreta(window.location.href.toString(), "circuitos/deletarCircuitos");
               $.ajax({
-                  type: 'POST',
-                  dataType: 'JSON',
-                  url: 'circuitos/deletarCircuitos',
+                  type: "POST",
+                  dataType: "JSON",
+                  url: action,
                   data: {ids: ids},
                   beforeSend: function () {
                   },
@@ -1671,21 +1722,21 @@ $(".bt_del").on("click", function(){
                   success: function (data) {
                       if (data.operacao){
                           swal({
-                              title: 'Deletados!',
-                              text: 'As unidades selecionadas foram deletadas com sucesso.',
-                              type: 'success',
+                              title: "Deletados!",
+                              text: "As unidades selecionadas foram deletadas com sucesso.",
+                              type: "success",
                               showCancelButton: false,
-                              confirmButtonColor: '#3085d6',
-                              cancelButtonColor: '#d33',
-                              confirmButtonText: 'Ok'
+                              confirmButtonColor: "#3085d6",
+                              cancelButtonColor: "#d33",
+                              confirmButtonText: "Ok"
                             }).then((result) => {
                                 window.location.reload(true);
                             });
                       } else {
                           swal({
-                              title: 'Deletar',
+                              title: "Deletar",
                               text: data.mensagem,
-                              type: 'error'
+                              type: "error"
                           });
                       }
                   }
@@ -1693,24 +1744,25 @@ $(".bt_del").on("click", function(){
         });
     } else if (nm_rows == 0) {
         swal({
-            title: 'Deletar Circuitos',
-            text: 'Você precisa selecionar uma ou mais unidades para serem deletadas!',
-            type: 'warning'
+            title: "Deletar Circuitos",
+            text: "Você precisa selecionar uma ou mais unidades para serem deletadas!",
+            type: "warning"
           });
      } else {
         swal({
-            title: 'Tem certeza que deseja deletar esta unidade?',
+            title: "Tem certeza que deseja deletar esta unidade?",
             text: "O sistema irá deletar a unidade selecionada com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
-            type: 'info',
+            type: "info",
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sim, apagar!'
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sim, apagar!"
           }).then((result) => {
+            var action = actionCorreta(window.location.href.toString(), "circuitos/deletarCircuitos");
               $.ajax({
-                  type: 'POST',
-                  dataType: 'JSON',
-                  url: 'circuitos/deletarCircuitos',
+                  type: "POST",
+                  dataType: "JSON",
+                  url: action,
                   data: {ids: ids},
                   beforeSend: function () {
                   },
@@ -1729,21 +1781,21 @@ $(".bt_del").on("click", function(){
                   success: function (data) {
                       if (data.operacao){
                           swal({
-                              title: 'Deletado!',
-                              text: 'A unidade selecionada foi deletada com sucesso.',
-                              type: 'success',
+                              title: "Deletado!",
+                              text: "A unidade selecionada foi deletada com sucesso.",
+                              type: "success",
                               showCancelButton: false,
-                              confirmButtonColor: '#3085d6',
-                              cancelButtonColor: '#d33',
-                              confirmButtonText: 'Ok'
+                              confirmButtonColor: "#3085d6",
+                              cancelButtonColor: "#d33",
+                              confirmButtonText: "Ok"
                             }).then((result) => {
                               window.location.reload(true);
                             });
                       } else {
                           swal({
-                              title: 'Deletar',
+                              title: "Deletar",
                               text: data.mensagem,
-                              type: 'error'
+                              type: "error"
                           });
                       }
                   }
@@ -1754,10 +1806,11 @@ $(".bt_del").on("click", function(){
 
 $("#pdfCircuito").on("click", function () {
     var id_circuito = $("#idv").val();
+    var action = actionCorreta(window.location.href.toString(), "circuitos/pdfCircuito");
     $.ajax({
-        type: 'POST',
-        dataType: 'JSON',
-        url: 'circuitos/pdfCircuito',
+        type: "POST",
+        dataType: "JSON",
+        url: action,
         data: {id_circuito: id_circuito},
         beforeSend: function () {
             $.blockUI({ message: "<img src='" + URLImagensSistema + "/loader_gears.gif' width='50' height='50'/>      Aguarde um momento, estamos processando seu pedido...", baseZ: 2000 });
