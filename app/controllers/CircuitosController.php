@@ -12,6 +12,7 @@ use Circuitos\Controllers\ControllerBase;
 
 use Circuitos\Models\Circuitos;
 use Circuitos\Models\CidadeDigital;
+use Circuitos\Models\Conectividade;
 use Circuitos\Models\Movimentos;
 use Circuitos\Models\Cliente;
 use Circuitos\Models\ClienteUnidade;
@@ -144,7 +145,10 @@ class CircuitosController extends ControllerBase
             "id_funcao" => $circuitos->getIdFuncao(),
             "id_tipoacesso" => $circuitos->getIdTipoacesso(),
             "id_tipolink" => $circuitos->getIdTipolink(),
+            "lid_cidadedigital" => ($circuitos->getIdCidadedigital()) ? $circuitos->CidadeDigital->descricao : null,
             "id_cidadedigital" => $circuitos->getIdCidadedigital(),
+            "lid_conectividade" => ($circuitos->getIdConectividade()) ? $circuitos->Conectividade->descricao : null,
+            "id_conectividade" => $circuitos->getIdConectividade(),
             "designacao" => $circuitos->getDesignacao(),
             "designacao_anterior" => $circuitos->getDesignacaoAnterior(),
             "uf" => $circuitos->getUf(),
@@ -207,7 +211,10 @@ class CircuitosController extends ControllerBase
             "id_funcao" => $circuitos->getIdFuncao(),
             "id_tipoacesso" => $circuitos->getIdTipoacesso(),
             "id_tipolink" => $circuitos->getIdTipolink(),
+            "lid_cidadedigital" => ($circuitos->getIdCidadedigital()) ? $circuitos->CidadeDigital->descricao : null,
             "id_cidadedigital" => $circuitos->getIdCidadedigital(),
+            "lid_conectividade" => ($circuitos->getIdConectividade()) ? $circuitos->Conectividade->descricao : null,
+            "id_conectividade" => $circuitos->getIdConectividade(),
             "designacao" => $circuitos->getDesignacao(),
             "designacao_anterior" => $circuitos->getDesignacaoAnterior(),
             "uf" => $circuitos->getUf(),
@@ -298,6 +305,7 @@ class CircuitosController extends ControllerBase
                 $circuitos->setIdTipoacesso($params["id_tipoacesso"]);
                 $circuitos->setIdTipolink($params["id_tipolink"]);
                 $circuitos->setIdCidadedigital($params["id_cidadedigital"]);
+                $circuitos->setIdConectividade($params["id_conectividade"]);
                 $circuitos->setDesignacao($vl_designacao);
                 $circuitos->setDesignacaoAnterior(mb_strtoupper($params["designacao_anterior"], $this->encode));
                 $circuitos->setUf(mb_strtoupper($uf, $this->encode));
@@ -387,6 +395,7 @@ class CircuitosController extends ControllerBase
                 $circuitos->setIdTipoacesso($params["id_tipoacesso"]);
                 $circuitos->setIdTipolink($params["id_tipolink"]);
                 $circuitos->setIdCidadedigital($params["id_cidadedigital"]);
+                $circuitos->setIdConectividade($params["id_conectividade"]);
                 $circuitos->setDesignacaoAnterior(mb_strtoupper($params["designacao_anterior"], $this->encode));
                 $circuitos->setUf(mb_strtoupper($uf, $this->encode));
                 $circuitos->setCidade(mb_strtoupper($cidade, $this->encode));
@@ -798,6 +807,47 @@ class CircuitosController extends ControllerBase
                 $response->setContent(json_encode(array(
                     "operacao" => True,
                     "dados" => $equipamentos
+                )));
+                return $response;
+            } else {
+                $response->setContent(json_encode(array(
+                    "operacao" => False
+                )));
+                return $response;
+            }
+        } else {
+            $response->setContent(json_encode(array(
+                "operacao" => False
+            )));
+            return $response;
+        }
+    }
+
+    public function cidadedigitalAllAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $cidadedigital = CidadeDigital::find("excluido=0 AND ativo=1");
+        $response->setContent(json_encode(array(
+            "operacao" => True,
+            "dados" => $cidadedigital
+        )));
+        return $response;
+    }
+
+    public function cidadedigitalConectividadeAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        if ($dados["id_cidadedigital"]) {
+            $conectividade = Conectividade::find("id_cidade_digital={$dados["id_cidadedigital"]}");
+            if (isset($conectividade[0])) {
+                $response->setContent(json_encode(array(
+                    "operacao" => True,
+                    "dados" => $conectividade
                 )));
                 return $response;
             } else {

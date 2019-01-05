@@ -2,6 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
+
 class CidadeDigital extends \Phalcon\Mvc\Model
 {
 
@@ -15,12 +18,6 @@ class CidadeDigital extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $id_tipo;
-
-    /**
-     *
-     * @var integer
-     */
     protected $id_cidade;
 
     /**
@@ -28,12 +25,6 @@ class CidadeDigital extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $descricao;
-
-    /**
-     *
-     * @var string
-     */
-    protected $endereco;
 
     /**
      *
@@ -61,19 +52,6 @@ class CidadeDigital extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field id_tipo
-     *
-     * @param integer $id_tipo
-     * @return $this
-     */
-    public function setIdTipo($id_tipo)
-    {
-        $this->id_tipo = $id_tipo;
-
-        return $this;
-    }
-
-    /**
      * Method to set the value of field id_cidade
      *
      * @param integer $id_cidade
@@ -95,19 +73,6 @@ class CidadeDigital extends \Phalcon\Mvc\Model
     public function setDescricao($descricao)
     {
         $this->descricao = $descricao;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field endereco
-     *
-     * @param string $endereco
-     * @return $this
-     */
-    public function setEndereco($endereco)
-    {
-        $this->endereco = $endereco;
 
         return $this;
     }
@@ -149,16 +114,6 @@ class CidadeDigital extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id_tipo
-     *
-     * @return integer
-     */
-    public function getIdTipo()
-    {
-        return $this->id_tipo;
-    }
-
-    /**
      * Returns the value of field id_cidade
      *
      * @return integer
@@ -176,16 +131,6 @@ class CidadeDigital extends \Phalcon\Mvc\Model
     public function getDescricao()
     {
         return $this->descricao;
-    }
-
-    /**
-     * Returns the value of field endereco
-     *
-     * @return string
-     */
-    public function getEndereco()
-    {
-        return $this->endereco;
     }
 
     /**
@@ -217,7 +162,6 @@ class CidadeDigital extends \Phalcon\Mvc\Model
         $this->setSource("cidade_digital");
         $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_cidadedigital', ['alias' => 'Circuitos']);
         $this->belongsTo('id_cidade', 'Circuitos\Models\EndCidade', 'id', ['alias' => 'EndCidade']);
-        $this->belongsTo('id_tipo', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
     }
 
     /**
@@ -253,6 +197,54 @@ class CidadeDigital extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Consulta completa de Cidades Digitais, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return Cliente|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarCidadeDigital($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("CidadeDigital" => "Circuitos\Models\CidadeDigital"));
+        $query->columns("CidadeDigital.*");
+
+        $query->leftJoin("Circuitos\Models\Cidade", "CidadeDigital.id_cidadedigital = Cidade.id", "CidadeDigital");
+        $query->leftJoin("Circuitos\Models\Conectividade", "CidadeDigital.id_conectividade = Conectividade.id", "Conectividade");
+        $query->leftJoin("Circuitos\Models\Lov", "CidadeDigital.id_contrato = Lov.id", "Lov");
+
+        $query->where("(CONVERT(Circuitos.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa1.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa2.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica1.razaosocial USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica2.razaosocial USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Equipamento.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Equipamento.numserie USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Equipamento.numpatrimonio USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov1.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov2.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov3.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov4.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov5.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov6.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov7.descricao USING utf8) LIKE '%{$parameters}%'                        
+                        OR CONVERT(CidadeDigital.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Conectividade.descricao USING utf8) LIKE '%{$parameters}%'                        
+                        OR CONVERT(Circuitos.designacao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.designacao_anterior USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.uf USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.cidade USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.ssid USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.ip_gerencia USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.ip_redelocal USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.tag USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.chamado USING utf8) LIKE '%{$parameters}%')");
+        $query->orderBy("Circuitos.id DESC");
+
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
      * Independent Column Mapping.
      * Keys are the real names in the table and the values their names in the application
      *
@@ -262,10 +254,8 @@ class CidadeDigital extends \Phalcon\Mvc\Model
     {
         return [
             'id' => 'id',
-            'id_tipo' => 'id_tipo',
             'id_cidade' => 'id_cidade',
             'descricao' => 'descricao',
-            'endereco' => 'endereco',
             'excluido' => 'excluido',
             'ativo' => 'ativo'
         ];

@@ -48,7 +48,6 @@ class EquipamentoController extends ControllerBase
     public function indexAction()
     {
         $this->persistent->parameters = null;
-        $numberPage = 1;
         $dados = filter_input_array(INPUT_POST);
 
         if ($this->request->isPost()) {

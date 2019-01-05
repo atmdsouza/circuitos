@@ -88,34 +88,89 @@ table.on( 'select deselect', function () {
     table.button( 4 ).enable( selectedRows > 0 );
 });
 
+//Limpar Linhas da Tabela
+(function ($) {
+    RemoveTableRow = function (handler) {
+        var tr = $(handler).closest("tr");
+        tr.fadeOut(400, function () {
+            tr.remove();
+        });
+        return false;
+    };
+})(jQuery);
+
+function limpaConectividade()
+{
+    $("#id_tipo_t").val(null).selected = "true";
+    $("#descricao_t").val(null);
+    $("#endereco_t").val(null);
+    $("#descricao_t").focus();
+}
+
 $(".bt_novo").on("click", function(){
     $("#modalcidadedigital").modal();
     $("#salvarCidadeDigital").removeClass("editar_cidadedigital").addClass("criar_cidadedigital");
 });
 
-$("#id_tipo").on("change", function() {
-    $("#descricao").val("");
-    var tipocidade_desc = document.getElementById("id_tipo").options[document.getElementById("id_tipo").selectedIndex].text;
-    var cidade = null;
-    if ($("#id_cidade").val() != "") {
-        cidade = document.getElementById("id_cidade").options[document.getElementById("id_cidade").selectedIndex].text;
+var valCID = [];
+$("#add_conectividade").on("click", function(){
+    var id_tipo = $("#id_tipo_t").val();
+    var id_tipo_desc = document.getElementById("id_tipo_t").options[document.getElementById("id_tipo_t").selectedIndex].text;
+    var conectividade = $("#descricao_t").val();
+    var endereco = $("#endereco_t").val();
+
+    if ($.inArray(conectividade, valCID) == -1) {
+        valCID.push(conectividade);
+        if (id_tipo && conectividade) {
+            var linhas = null;
+            linhas += "<tr class='tr_remove'>";
+            linhas += "<td>"+ id_tipo_desc +"<input name='tipo_conectividade[]' type='hidden' value='"+ id_tipo +"' /></td>";
+            linhas += "<td>"+ conectividade +"<input name='conectividade[]' type='hidden' value='"+ conectividade +"' /></td>";
+            linhas += "<td>"+ endereco +"<input name='endereco[]' type='hidden' value='"+ endereco +"' /></td>";
+            linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
+            linhas += "</tr>";
+            $("#tb_conectividade").append(linhas);
+            $('#tb_conectividade').show();
+            limpaConectividade();
+        } else {
+            swal({
+                title: "Conectividade",
+                text: "Você precisa preencher corretamente os campos obrigatórios!",
+                type: "warning"
+            });
+        }
     } else {
-        cidade = "";
+        swal({
+            title: "Conectividade",
+            text: "Essa conectividade já existe na tabela abaixo!",
+            type: "warning"
+        });
     }
-    $("#descricao").val(tipocidade_desc + " " + cidade);
 });
 
-$("#id_cidade").on("change", function(){
-    $("#descricao").val("");
-    var tipocidade_desc = null;
-    var cidade = document.getElementById("id_cidade").options[document.getElementById("id_cidade").selectedIndex].text;
-    if ($("#id_cidade").val() != "") {
-        tipocidade_desc = document.getElementById("id_tipo").options[document.getElementById("id_tipo").selectedIndex].text;
-    } else {
-        tipocidade_desc = "";
-    }
-    $("#descricao").val(tipocidade_desc + " " + cidade);
-});
+// $("#id_tipo").on("change", function() {
+//     $("#descricao").val("");
+//     var tipocidade_desc = document.getElementById("id_tipo").options[document.getElementById("id_tipo").selectedIndex].text;
+//     var cidade = null;
+//     if ($("#id_cidade").val() != "") {
+//         cidade = document.getElementById("id_cidade").options[document.getElementById("id_cidade").selectedIndex].text;
+//     } else {
+//         cidade = "";
+//     }
+//     $("#descricao").val(tipocidade_desc + " " + cidade);
+// });
+//
+// $("#id_cidade").on("change", function(){
+//     $("#descricao").val("");
+//     var tipocidade_desc = null;
+//     var cidade = document.getElementById("id_cidade").options[document.getElementById("id_cidade").selectedIndex].text;
+//     if ($("#id_cidade").val() != "") {
+//         tipocidade_desc = document.getElementById("id_tipo").options[document.getElementById("id_tipo").selectedIndex].text;
+//     } else {
+//         tipocidade_desc = "";
+//     }
+//     $("#descricao").val(tipocidade_desc + " " + cidade);
+// });
 
 $(document).on("click", ".criar_cidadedigital", function(){
     //Validação de formulário
@@ -243,11 +298,23 @@ $(".bt_edit").on("click", function(){
                 }
             },
             success: function (data) {
+                console.log(data);
                 $("#id").val(data.dados.id);
-                $("#id_tipo").val(data.dados.id_tipo).selected = "true";
                 $("#id_cidade").val(data.dados.id_cidade).selected = "true";
                 $("#descricao").val(data.dados.descricao);
-                $("#endereco").val(data.dados.endereco);
+                if (data.conectividades) {
+                    $.each(data.conectividades, function (key, value) {
+                        var linhas;
+                        linhas += "<tr class='tr_remove' id='trcn" + value.Conectividade.id + "'>";
+                        linhas += "<td>"+ value.descricao +"<input name='res_tipo_conectividade[]' type='hidden' value='"+ value.Conectividade.id_tipo +"' /></td>";
+                        linhas += "<td>"+ value.Conectividade.descricao +"<input name='res_conectividade[]' type='hidden' value='"+ value.Conectividade.descricao +"' /></td>";
+                        linhas += "<td>"+ value.Conectividade.endereco +"<input name='res_endereco[]' type='hidden' value='"+ value.Conectividade.endereco +"' /></td>";
+                        linhas += "<td><a href='#' id='" + value.Conectividade.id + "' class='del_conec'><i class='fi-circle-cross'></i></a></td>";
+                        linhas += "</tr class='remove'>";
+                        $("#tb_conectividade").append(linhas);
+                        $("#tb_conectividade").show();
+                    });
+                }
                 $("#modalcidadedigital").modal();
             }
         });
@@ -718,4 +785,60 @@ $(".bt_inativo").on("click", function(){
             });
         });
     }
+});
+
+$("#tb_conectividade").on("click", ".del_conec", function(){
+    var id = $(this).attr("id");
+    swal({
+        title: "Tem certeza que deseja deletar esta conectividade?",
+        text: "O sistema irá deletar a conectividade selecionada com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
+        type: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, apagar!"
+    }).then((result) => {
+        var action = actionCorreta(window.location.href.toString(), "cidade_digital/deletarConectividade");
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: action,
+            data: {id: id},
+            beforeSend: function () {
+            },
+            complete: function () {
+            },
+            error: function (data) {
+                if (data.status && data.status === 401)
+                {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            },
+            success: function (data) {
+                if (data.operacao){
+                    swal({
+                        title: "Deletado!",
+                        text: "O contato selecionado foi deletado com sucesso.",
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Ok"
+                    }).then((result) => {
+                        $("#trcn" + id).remove();
+                    });
+                } else {
+                    swal({
+                        title: "Deletar",
+                        text: data.mensagem,
+                        type: "error"
+                    });
+                }
+            }
+        });
+    });
 });

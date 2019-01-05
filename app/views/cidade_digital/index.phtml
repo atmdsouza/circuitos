@@ -25,17 +25,17 @@ use Phalcon\Tag;
                 <?php echo $this->tag->textField(["descricao", "size" => 30, "class" => "form-control", "id" => "fieldDescricao"]) ?>
             </div>
         </div>
-        <div class="form-group col-md-3">
-            <label for="fieldIdTipo" class="col-sm-2 control-label">Tipo</label>
-            <div class="col-sm-10">
-                <?php echo $this->tag->select(["id_tipo", $tipocd, "class" => "form-control", "id" => "fieldIdTipo",
-                    "using" => ["id", "descricao",],
-                    "useEmpty" => true,
-                    "emptyText" => "Selecione um tipo",
-                    "emptyValue" => ""])
-                ?>
-            </div>
-        </div>
+<!--        <div class="form-group col-md-3">-->
+<!--            <label for="fieldIdTipo" class="col-sm-2 control-label">Tipo</label>-->
+<!--            <div class="col-sm-10">-->
+<!--                --><?php //echo $this->tag->select(["id_tipo", $tipocd, "class" => "form-control", "id" => "fieldIdTipo",
+//                    "using" => ["id", "descricao",],
+//                    "useEmpty" => true,
+//                    "emptyText" => "Selecione um tipo",
+//                    "emptyValue" => ""])
+//                ?>
+<!--            </div>-->
+<!--        </div>-->
         <div class="form-group col-md-3">
             <label for="fieldIdCidade" class="col-sm-2 control-label">Cidade</label>
             <div class="col-sm-10">
@@ -62,9 +62,8 @@ use Phalcon\Tag;
             <thead>
                 <tr>
                     <th>Código</th>
-                    <th>Cidade</th>
-                    <th>Tipo</th>
                     <th>Cidade Digital</th>
+                    <th>Cidade</th>
                     <th>Ativo</th>
                 </tr>
             </thead>
@@ -82,9 +81,8 @@ use Phalcon\Tag;
             ?>
                     <tr>
                         <td><?php echo $cidadedigital->id ?></td>
-                        <td><?php echo $cidadedigital->EndCidade->cidade ?></td>
-                        <td><?php echo $cidadedigital->Lov->descricao ?></td>
                         <td><?php echo $cidadedigital->descricao ?></td>
+                        <td><?php echo $cidadedigital->EndCidade->cidade ?></td>
                         <td><?php echo $ativo ?></td>
                     </tr>
             <?php endforeach; ?>
@@ -98,22 +96,18 @@ use Phalcon\Tag;
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h5 class="modal-title" id="modalcidadedigital">Dados de Cidades Digitais</h5>
+                <h5 class="modal-title" id="modalcidadedigital">Dados da Cidade Digital</h5>
             </div>
             <form id="formCidadeDigital">
                 <input type="hidden" id="token" name="<?php echo $token['tokenKey'] ?>" value="<?php echo $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
                 <div class="modal-body">
                     <div class="form-row">
                         <div class="col-12">
+<!--                            <h6>Dados da Cidade Digital</h6>-->
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="id_tipo">Tipo Cidade Digital <span class="required">*</span></label>
-                                    <?php echo $this->tag->select(["id_tipo", $tipocd, "class" => "form-control concat", "id" => "id_tipo",
-                                        "using" => ["id", "descricao",],
-                                        "useEmpty" => true,
-                                        "emptyText" => "Selecione um tipo",
-                                        "emptyValue" => ""])
-                                    ?>
+                                    <label for="descricao">Cidade Digital <span class="required">*</span></label>
+                                    <?php echo $this->tag->textField(["descricao", "size" => 200, "class" => "form-control result", "id" => "descricao", "placeholder" => "Descrição da Cidade Digital"]) ?>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="id_cidade">Cidade <span class="required">*</span></label>
@@ -125,17 +119,42 @@ use Phalcon\Tag;
                                     ?>
                                 </div>
                             </div>
+                            <h6>Conectividades da Cidade Digital</h6>
                             <div class="form-row">
-                                <div class="form-group col-md-12">
-                                    <label for="descricao">Cidade Digital <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["descricao", "size" => 200, "class" => "form-control result", "id" => "descricao", "placeholder" => "Descrição da Cidade Digital"]) ?>
+                                <div class="form-group col-md-6">
+                                    <label for="id_tipo">Tipo Conectividade <span class="required">*</span></label>
+                                    <?php echo $this->tag->select(["id_tipo_t", $tipocd, "class" => "form-control concat", "id" => "id_tipo_t",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione um tipo",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="descricao">Conectividade <span class="required">*</span></label>
+                                    <?php echo $this->tag->textField(["descricao_t", "size" => 200, "class" => "form-control result", "id" => "descricao_t", "placeholder" => "Descrição da Conectividade"]) ?>
+                                </div>
+                                <div class="form-group col-md-10">
+                                    <label for="endereco">Endereço da Conectividade</label>
+                                    <?php echo $this->tag->textField(["endereco_t", "size" => 200, "class" => "form-control", "id" => "endereco_t", "placeholder" => "Endereço da Conectividade"]) ?>
+                                </div>
+                                <div class="form-group col-md-1">
+                                    <button id="add_conectividade" name="add_conectividade" type="button" class="btn btn-sucess btn-rounded waves-light waves-effect bt_inserir">Inserir</button>
                                 </div>
                             </div>
                             <div class="form-row">
-                                <div class="form-group col-md-12">
-                                    <label for="endereco">Endereço</label>
-                                    <?php echo $this->tag->textField(["endereco", "size" => 200, "class" => "form-control", "id" => "endereco", "placeholder" => "Endereço"]) ?>
-                                </div>
+                                <table id="tb_conectividade" class="table table-hover" style="display: none;">
+                                    <thead>
+                                        <tr>
+                                            <th>Tipo</th>
+                                            <th>Conectividade</th>
+                                            <th>Endereço</th>
+                                            <th>Excluir?</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

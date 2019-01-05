@@ -88,6 +88,12 @@ class Circuitos extends \Phalcon\Mvc\Model
 
     /**
      *
+     * @var integer
+     */
+    protected $id_conectividade;
+
+    /**
+     *
      * @var string
      */
     protected $chamado;
@@ -501,6 +507,24 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @param int $id_conectividade
+     */
+    public function setIdConectividade($id_conectividade)
+    {
+        $this->id_conectividade = $id_conectividade;
+    }
+
+    /**
+     * Returns the value of field id_conectividade
+     *
+     * @return int
+     */
+    public function getIdConectividade()
+    {
+        return $this->id_conectividade;
+    }
+
+    /**
      * Returns the value of field id
      *
      * @return integer
@@ -777,6 +801,7 @@ class Circuitos extends \Phalcon\Mvc\Model
         $this->belongsTo("id_funcao", "Circuitos\Models\Lov", "id", ["alias" => "Lov5"]);
         $this->belongsTo("id_tipolink", "Circuitos\Models\Lov", "id", ["alias" => "Lov6"]);
         $this->belongsTo("id_cidadedigital", "Circuitos\Models\CidadeDigital", "id", ["alias" => "CidadeDigital"]);
+        $this->belongsTo("id_conectividade", "Circuitos\Models\Conectividade", "id", ["alias" => "Conectividade"]);
     }
 
     /**
@@ -830,6 +855,8 @@ class Circuitos extends \Phalcon\Mvc\Model
         $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa2.id = ClienteUnidade.id_pessoa", "Pessoa2");
         $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa2.id = PessoaJuridica2.id", "PessoaJuridica2");
         $query->leftJoin("Circuitos\Models\Equipamento", "Circuitos.id_equipamento = Equipamento.id", "Equipamento");
+        $query->leftJoin("Circuitos\Models\CidadeDigital", "Circuitos.id_cidadedigital = CidadeDigital.id", "CidadeDigital");
+        $query->leftJoin("Circuitos\Models\Conectividade", "Circuitos.id_conectividade = Conectividade.id", "Conectividade");
         $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_contrato = Lov1.id", "Lov1");
         $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_status = Lov2.id", "Lov2");
         $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_cluster = Lov3.id", "Lov3");
@@ -852,8 +879,9 @@ class Circuitos extends \Phalcon\Mvc\Model
                         OR CONVERT(Lov4.descricao USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Lov5.descricao USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Lov6.descricao USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(Lov7.descricao USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(Circuitos.id_cidadedigital USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov7.descricao USING utf8) LIKE '%{$parameters}%'                        
+                        OR CONVERT(CidadeDigital.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Conectividade.descricao USING utf8) LIKE '%{$parameters}%'                        
                         OR CONVERT(Circuitos.designacao USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Circuitos.designacao_anterior USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Circuitos.uf USING utf8) LIKE '%{$parameters}%'
@@ -888,6 +916,7 @@ class Circuitos extends \Phalcon\Mvc\Model
             'id_tipoacesso' => 'id_tipoacesso',
             'id_tipolink' => 'id_tipolink',
             'id_cidadedigital' => 'id_cidadedigital',
+            'id_conectividade' => 'id_conectividade',
             'id_funcao' => 'id_funcao',
             'id_banda' => 'id_banda',
             'designacao' => 'designacao',

@@ -63,8 +63,8 @@ class SecurityPlugin extends Plugin
 
             // Resources para Administrador
             $superResources = [
-                "cidade_digital"    => ["index", "formCidadeDigital", "criarCidadeDigital", "editarCidadeDigital", "ativarCidadeDigital", "inativarCidadeDigital", "deletarCidadeDigital"],
-                "circuitos"         => ["index", "formCircuitos", "visualizaCircuitos", "criarCircuitos", "editarCircuitos", "movCircuitos", "deletarCircuitos", "unidadeCliente", "modeloFabricante", "equipamentoModelo", "pdfCircuito"],
+                "cidade_digital"    => ["index", "formCidadeDigital", "criarCidadeDigital", "editarCidadeDigital", "ativarCidadeDigital", "inativarCidadeDigital", "deletarCidadeDigital", "deletarConectividade"],
+                "circuitos"         => ["index", "formCircuitos", "visualizaCircuitos", "criarCircuitos", "editarCircuitos", "movCircuitos", "deletarCircuitos", "unidadeCliente", "modeloFabricante", "equipamentoModelo", "pdfCircuito", "cidadedigitalConectividade", "cidadedigitalAll"],
                 "cliente"           => ["index", "formCliente", "criarCliente", "editarCliente", "ativarCliente", "inativarCliente", "deletarCliente"],
                 "cliente_unidade"   => ["index", "formClienteUnidade", "criarClienteUnidade", "editarClienteUnidade", "ativarClienteUnidade", "inativarClienteUnidade", "deletarClienteUnidade"],
                 "core"              => ["ativarPessoa", "inativarPessoa", "deletarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail"],
@@ -88,7 +88,7 @@ class SecurityPlugin extends Plugin
             // Resources para Operacional
             $operacionalResources = [
                 "cidade_digital"    => ["index", "formCidadeDigital", "criarCidadeDigital", "editarCidadeDigital", "ativarCidadeDigital", "inativarCidadeDigital"],
-                "circuitos"         => ["index", "formCircuitos", "visualizaCircuitos", "criarCircuitos", "editarCircuitos", "movCircuitos", "unidadeCliente", "modeloFabricante", "equipamentoModelo", "pdfCircuito"],
+                "circuitos"         => ["index", "formCircuitos", "visualizaCircuitos", "criarCircuitos", "editarCircuitos", "movCircuitos", "unidadeCliente", "modeloFabricante", "equipamentoModelo", "pdfCircuito", "cidadedigitalConectividade", "cidadedigitalAll"],
                 "cliente"           => ["index", "formCliente", "criarCliente", "editarCliente", "ativarCliente", "inativarCliente"],
                 "cliente_unidade"   => ["index", "formClienteUnidade", "criarClienteUnidade", "editarClienteUnidade", "ativarClienteUnidade", "inativarClienteUnidade"],
                 "core"              => ["ativarPessoa", "inativarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail"],

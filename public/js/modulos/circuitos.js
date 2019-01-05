@@ -6,7 +6,7 @@ var URLImagensSistema = "public/images";
 var table = $("#tb_circuitos").DataTable({
     buttons: [
         {//Botão Novo Registro
-            className: "bt_novo",
+            className: "bt_novo auto_cidadedigital",
             text: "Novo",
             name: "novo", // do not change name
             titleAttr: "Novo Circuito",
@@ -23,7 +23,7 @@ var table = $("#tb_circuitos").DataTable({
             enabled: false
         },
         {//Botão Editar Registro
-            className: "bt_edit",
+            className: "bt_edit auto_cidadedigital",
             text: "Editar",
             name: "edit", // do not change name
             titleAttr: "Editar Circuito",
@@ -139,6 +139,119 @@ $("#id_cliente").on("change", function(){
                 $("#id_cliente_unidade").val(null).selected = "true";
                 $("#id_cliente_unidade").attr("disabled", "true");
             }
+        }
+    });
+});
+
+$(".auto_cidadedigital").on("click", function(){
+    //Autocomplete de Cidade Digital
+    var ac_cidadedigital = $("#lid_cidadedigital");
+    var listCidadeDigital = [];
+    var action = actionCorreta(window.location.href.toString(), "circuitos/cidadedigitalAll");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        beforeSend: function () {
+            $("#id_cidadedigital").val("");
+            $("#lid_cidadedigital").val("");
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao){
+                $.each(data.dados, function (key, value) {
+                    listCidadeDigital.push({value: value.descricao, data: value.id});
+                });
+            } else {
+                $("#id_cidadedigital").val("");
+                $("#lid_cidadedigital").val("");
+            }
+        }
+    });
+    //Autocomplete de Equipamento
+    ac_cidadedigital.autocomplete({
+        lookup: listCidadeDigital,
+        noCache: true,
+        minChars: 1,
+        showNoSuggestionNotice: true,
+        noSuggestionNotice: "Não existem resultados para essa consulta!",
+        onSelect: function (suggestion) {
+            $("#id_cidadedigital").val(suggestion.data);
+        }
+    });
+});
+
+$(function () {
+    "use strict";
+    var ac_conectividade = $("#lid_conectividade");
+    var listConectividade = [];
+    $("#lid_cidadedigital").on("change", function(){
+        var vl_cidadedigital = $("#lid_cidadedigital").val();
+        if (vl_cidadedigital) {
+            var id_cidadedigital = $("#id_cidadedigital").val();
+            var action = actionCorreta(window.location.href.toString(), "circuitos/cidadedigitalConectividade");
+            $.ajax({
+                type: "GET",
+                dataType: "JSON",
+                url: action,
+                data: {id_cidadedigital: id_cidadedigital},
+                beforeSend: function () {
+                    $("#id_conectividade").val("");
+                    $("#lid_conectividade").val("");
+                    $("#lid_conectividade").attr("disabled", "true");
+                },
+                complete: function () {
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        $.each(data.dados, function (key, value) {
+                            listConectividade.push({value: value.descricao, data: value.id});
+                        });
+                        $("#lid_conectividade").removeAttr("disabled");
+                    } else {
+                        $("#id_conectividade").val("");
+                        $("#lid_conectividade").val("");
+                        $("#lid_conectividade").attr("disabled", "true");
+                        swal("Atenção","Não existem modelos para esse fabricante!","info");
+                    }
+                }
+            });
+        } else {
+            $("#id_conectividade").val("");
+            $("#lid_conectividade").val("");
+            $("#lid_conectividade").attr("disabled", "true");
+        }
+    });
+    //Autocomplete de Equipamento
+    ac_conectividade.autocomplete({
+        lookup: listConectividade,
+        noCache: true,
+        minChars: 1,
+        showNoSuggestionNotice: true,
+        noSuggestionNotice: "Não existem resultados para essa consulta!",
+        onSelect: function (suggestion) {
+            $("#id_conectividade").val(suggestion.data);
         }
     });
 });
@@ -665,7 +778,10 @@ $(".bt_edit").on("click", function(){
                 $("#id_contrato").val(data.dados.id_contrato).selected = "true";
                 $("#id_cluster").val(data.dados.id_cluster).selected = "true";
                 $("#id_tipolink").val(data.dados.id_tipolink).selected = "true";
-                $("#id_cidadedigital").val(data.dados.id_cidadedigital).selected = "true";
+                $("#id_cidadedigital").val(data.dados.id_cidadedigital);
+                $("#lid_cidadedigital").val(data.dados.lid_cidadedigital);
+                $("#id_conectividade").val(data.dados.id_conectividade);
+                $("#lid_conectividade").val(data.dados.lid_conectividade);
                 $("#id_funcao").val(data.dados.id_funcao).selected = "true";
                 $("#id_tipoacesso").val(data.dados.id_tipoacesso).selected = "true";
                 $("#banda").attr("disabled", "true");
@@ -738,7 +854,10 @@ $(".bt_visual").on("click", function(){
                 $("#id_statusv").val(data.dados.id_status).selected = "true";
                 $("#id_clusterv").val(data.dados.id_cluster).selected = "true";
                 $("#id_tipolinkv").val(data.dados.id_tipolink).selected = "true";
-                $("#id_cidadedigitalv").val(data.dados.id_cidadedigital).selected = "true";
+                $("#id_cidadedigitalv").val(data.dados.id_cidadedigital);
+                $("#lid_cidadedigitalv").val(data.dados.lid_cidadedigital);
+                $("#id_conectividadev").val(data.dados.id_conectividade);
+                $("#lid_conectividadev").val(data.dados.lid_conectividade);
                 $("#id_funcaov").val(data.dados.id_funcao).selected = "true";
                 $("#id_tipoacessov").val(data.dados.id_tipoacesso).selected = "true";
                 $("#bandav").val(data.dados.id_banda).selected = "true";

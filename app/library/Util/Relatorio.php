@@ -22,8 +22,6 @@ class Relatorio
         $util = new Util();
         //Coleta de Dados
         $empresa = Empresa::findFirst();
-        // var_dump($empresa->Pessoa->PessoaEndereco[0]->numero);
-        // exit;
         $circuito = Circuitos::findFirst("id={$id_circuito}");$parameters = [];
         $parameters["order"] = "[data_movimento] DESC";
         $parameters["conditions"] = " id_circuitos = :id_circuitos:";
@@ -161,10 +159,10 @@ class Relatorio
         $corpo_html .= "<strong>Chamado</strong> <br/>{$circuito->getChamado()}";
         $corpo_html .= "</td>";
         $corpo_html .= "<td style='text-align: left; width: 25%;'>";
-        $corpo_html .= "<strong>Cluster</strong> <br/>{$circuito->Lov3->descricao}";
+        $corpo_html .= "<strong>Cidade Digital</strong> <br/>{$circuito->CidadeDigital->descricao}";
         $corpo_html .= "</td>";
         $corpo_html .= "<td style='text-align: left; width: 25%;'>";
-        $corpo_html .= "<strong>Cidade Digital</strong> <br/>{$circuito->CidadeDigital->descricao}";
+        $corpo_html .= "<strong>Conectividade</strong> <br/>{$circuito->Conectividade->descricao}";
         $corpo_html .= "</td>";
         $corpo_html .= "</tr>";
         $corpo_html .= "<tr>";
