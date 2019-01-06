@@ -65,6 +65,7 @@ class SecurityPlugin extends Plugin
             $superResources = [
                 "cidade_digital"    => ["index", "formCidadeDigital", "criarCidadeDigital", "editarCidadeDigital", "ativarCidadeDigital", "inativarCidadeDigital", "deletarCidadeDigital", "deletarConectividade"],
                 "circuitos"         => ["index", "formCircuitos", "visualizaCircuitos", "criarCircuitos", "editarCircuitos", "movCircuitos", "deletarCircuitos", "unidadeCliente", "modeloFabricante", "equipamentoModelo", "pdfCircuito", "cidadedigitalConectividade", "cidadedigitalAll"],
+                "relatorios_gestao" => ["index", "relatorioCustomizado"],
                 "cliente"           => ["index", "formCliente", "criarCliente", "editarCliente", "ativarCliente", "inativarCliente", "deletarCliente"],
                 "cliente_unidade"   => ["index", "formClienteUnidade", "criarClienteUnidade", "editarClienteUnidade", "ativarClienteUnidade", "inativarClienteUnidade", "deletarClienteUnidade"],
                 "core"              => ["ativarPessoa", "inativarPessoa", "deletarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail"],
@@ -89,6 +90,7 @@ class SecurityPlugin extends Plugin
             $operacionalResources = [
                 "cidade_digital"    => ["index", "formCidadeDigital", "criarCidadeDigital", "editarCidadeDigital", "ativarCidadeDigital", "inativarCidadeDigital"],
                 "circuitos"         => ["index", "formCircuitos", "visualizaCircuitos", "criarCircuitos", "editarCircuitos", "movCircuitos", "unidadeCliente", "modeloFabricante", "equipamentoModelo", "pdfCircuito", "cidadedigitalConectividade", "cidadedigitalAll"],
+                "relatorios_gestao" => ["index", "relatorioCustomizado"],
                 "cliente"           => ["index", "formCliente", "criarCliente", "editarCliente", "ativarCliente", "inativarCliente"],
                 "cliente_unidade"   => ["index", "formClienteUnidade", "criarClienteUnidade", "editarClienteUnidade", "ativarClienteUnidade", "inativarClienteUnidade"],
                 "core"              => ["ativarPessoa", "inativarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail"],
@@ -113,6 +115,7 @@ class SecurityPlugin extends Plugin
             $analistaResources = [
                 "cidade_digital"    => ["index", "formCidadeDigital"],
                 "circuitos"         => ["index", "formCircuitos", "visualizaCircuitos", "pdfCircuito"],
+                "relatorios_gestao" => ["index", "relatorioCustomizado"],
                 "cliente"           => ["index", "formCliente"],
                 "cliente_unidade"   => ["index", "formClienteUnidade"],
                 "core"              => ["enviarEmail"],

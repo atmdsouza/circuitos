@@ -1,3 +1,8 @@
+// Select2
+$(".select2").select2({
+    language: "pt-BR"
+});
+
 //Configuração padrão de datatables
 $.extend( $.fn.dataTable.defaults, {
     language: {

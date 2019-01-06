@@ -56,6 +56,11 @@ $router->add("/modelo", [
     "action" => "index"
 ]);
 
+$router->add("/relatorios_gestao", [
+    "controller" => "relatorios_gestao",
+    "action" => "index"
+]);
+
 $router->add("/usuario", [
     "controller" => "usuario",
     "action" => "index"

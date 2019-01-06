@@ -77,10 +77,6 @@ class CircuitosController extends ControllerBase
             "tipo = 7",
             "order" => "descricao"
         ));
-        $cluster = Lov::find(array(
-            "tipo = 14",
-            "order" => "descricao"
-        ));
         $banda = Lov::find(array(
             "tipo = 17"
         ));
@@ -114,7 +110,6 @@ class CircuitosController extends ControllerBase
         $this->view->usacontrato = $usacontrato;
         $this->view->funcao = $funcao;
         $this->view->tipoacesso = $tipoacesso;
-        $this->view->cluster = $cluster;
         $this->view->banda = $banda;
         $this->view->tipomovimento = $tipomovimento;
         $this->view->tipolink = $tipolink;

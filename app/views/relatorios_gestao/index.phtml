@@ -1,0 +1,115 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+
+use Phalcon\Tag;
+
+?>
+
+<?php echo $this->getContent(); ?>
+
+<div class="col-12">
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="eixo_x" class="col-sm-12 control-label">Campos de Exibição no Relatório (Eixo X)</label>
+            <div class="col-sm-12">
+                <select id="eixo_x" class="select2 form-control select2-multiple" multiple="multiple" multiple data-placeholder="Escolher os Campos para o Eixo X...">
+                    <option value="Pessoa1.nome AS cliente">Cliente</option>
+                    <option value="Pessoa2.nome AS cliente_unidade">Unidade do Cliente</option>
+                    <option value="Circuitos.designacao">Designação</option>
+                    <option value="Circuitos.designacao_anterior">Designação Anterior</option>
+                    <option value="CidadeDigital.descricao AS cidade_digital">Cidade Digital</option>
+                    <option value="Conectividade.descricao AS conectividade">Conectividade</option>
+                    <option value="Lov1.descricao AS contrato">Contrato</option>
+                    <option value="Lov7.descricao AS tipo_link">Tipo Link</option>
+                    <option value="Lov4.descricao AS funcao">Função</option>
+                    <option value="Lov5.descricao AS tipo_acesso">Tipo Acesso</option>
+                    <option value="Pessoa3.nome AS fabricante">Fabricante</option>
+                    <option value="Modelo.modelo">Modelo</option>
+                    <option value="Equipamento.nome AS equipamento">Equipamento</option>
+                    <option value="Circuitos.ip_redelocal">Rede Cliente</option>
+                    <option value="Circuitos.ip_gerencia">IP de Gerência</option>
+                    <option value="Lov6.descricao AS banda">Banda</option>
+                    <option value="Circuitos.tag">TAG</option>
+                    <option value="Circuitos.ssid">SSID</option>
+                    <option value="Circuitos.chamado">Chamado</option>
+                    <option value="Circuitos.data_ativacao">Data Atualização</option>
+                    <option value="Circuitos.data_atualizacao">Data Ativação</option>
+                    <option value="Lov2.descricao AS status">Status</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="eixo_y" class="col-sm-12 control-label">Campos para filtros (Eixo Y)</label>
+            <div class="col-sm-12">
+                <select id="eixo_y" class="select2 form-control select2-multiple" multiple="multiple" multiple data-placeholder="Escolher os Campos para o Eixo Y...">
+                    <option value="Pessoa1.nome">Cliente</option>
+                    <option value="Pessoa2.nome">Unidade do Cliente</option>
+                    <option value="Circuitos.designacao">Designação</option>
+                    <option value="Circuitos.designacao_anterior">Designação Anterior</option>
+                    <option value="CidadeDigital.descricao">Cidade Digital</option>
+                    <option value="Conectividade.descricao">Conectividade</option>
+                    <option value="Lov1.descricao">Contrato</option>
+                    <option value="Lov7.descricao">Tipo Link</option>
+                    <option value="Lov4.descricao">Função</option>
+                    <option value="Lov5.descricao">Tipo Acesso</option>
+                    <option value="Pessoa3.nome">Fabricante</option>
+                    <option value="Modelo.modelo">Modelo</option>
+                    <option value="Equipamento.nome">Equipamento</option>
+                    <option value="Circuitos.ip_redelocal">Rede Cliente</option>
+                    <option value="Circuitos.ip_gerencia">IP de Gerência</option>
+                    <option value="Lov6.descricao">Banda</option>
+                    <option value="Circuitos.tag">TAG</option>
+                    <option value="Circuitos.ssid">SSID</option>
+                    <option value="Circuitos.chamado">Chamado</option>
+                    <option value="Circuitos.data_ativacao">Data Atualização</option>
+                    <option value="Circuitos.data_atualizacao">Data Ativação</option>
+                    <option value="Lov2.descricao">Status</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            <label for="ordenar_campo" class="col-sm-12 control-label">Campo para ordenar</label>
+            <div class="col-sm-12">
+                <select id="ordenar_campo" class="form-control data-placeholder="Escolher os Campos para ordenar...">
+                <option value="Circuitos.designacao">Designação</option>
+                    <option value="Pessoa1.nome">Cliente</option>
+                    <option value="Pessoa2.nome">Unidade do Cliente</option>
+                    <option value="Circuitos.designacao_anterior">Designação Anterior</option>
+                    <option value="CidadeDigital.descricao">Cidade Digital</option>
+                    <option value="Conectividade.descricao">Conectividade</option>
+                    <option value="Lov7.descricao">Tipo Link</option>
+                    <option value="Lov4.descricao">Função</option>
+                    <option value="Lov5.descricao">Tipo Acesso</option>
+                    <option value="Pessoa3.nome">Fabricante</option>
+                    <option value="Modelo.modelo">Modelo</option>
+                    <option value="Equipamento.nome">Equipamento</option>
+                    <option value="Lov6.descricao">Banda</option>
+                    <option value="Circuitos.tag">TAG</option>
+                    <option value="Circuitos.ssid">SSID</option>
+                    <option value="Circuitos.chamado">Chamado</option>
+                    <option value="Circuitos.data_ativacao">Data Atualização</option>
+                    <option value="Circuitos.data_atualizacao">Data Ativação</option>
+                    <option value="Lov2.descricao">Status</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="ordenar_sentido" class="col-sm-12 control-label">Sentido</label>
+            <div class="col-sm-12">
+                <select id="ordenar_sentido" class="form-control data-placeholder="Escolher o sentido para ordenar...">
+                <option value="ASC">Ascendente</option>
+                <option value="DESC">Descendente</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-md-2">
+            <div class="bt_menu_tabela">
+                <button id="gerar_relatorio" type="button" class="btn btn-success waves-effect waves-light"> <i class="fa fa-rocket m-r-5"></i> <span>Gerar</span> </button>
+            </div>
+        </div>
+    </div>
+</div>
