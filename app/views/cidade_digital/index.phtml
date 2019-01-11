@@ -106,10 +106,6 @@ use Phalcon\Tag;
 <!--                            <h6>Dados da Cidade Digital</h6>-->
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    <label for="descricao">Cidade Digital <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["descricao", "size" => 200, "class" => "form-control result", "id" => "descricao", "placeholder" => "Descrição da Cidade Digital"]) ?>
-                                </div>
-                                <div class="form-group col-md-6">
                                     <label for="id_cidade">Cidade <span class="required">*</span></label>
                                     <?php echo $this->tag->select(["id_cidade", $cidades, "class" => "form-control concat", "id" => "id_cidade",
                                         "using" => ["id", "cidade",],
@@ -117,6 +113,10 @@ use Phalcon\Tag;
                                         "emptyText" => "Selecione uma Cidade",
                                         "emptyValue" => ""])
                                     ?>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="descricao">Cidade Digital <span class="required">*</span></label>
+                                    <?php echo $this->tag->textField(["descricao", "size" => 200, "class" => "form-control result", "id" => "descricao", "placeholder" => "Descrição da Cidade Digital"]) ?>
                                 </div>
                             </div>
                             <h6>Conectividades da Cidade Digital</h6>

@@ -82,9 +82,9 @@ function actionCorreta(url, action) {
     var novaAction;
     var urls = url.split("/");
     //Pasta raiz sendo "/circuitos"
-    novaAction = urls[0] + "//" + urls[2] + "/" + urls[3] + "/" + action;
+    // novaAction = urls[0] + "//" + urls[2] + "/" + urls[3] + "/" + action;
     //Pasta raiz sendo "/"
-    // novaAction = urls[0] + "//" + urls[2] + "/" + action;
+    novaAction = urls[0] + "//" + urls[2] + "/" + action;
     return novaAction;
 }
 

@@ -54,6 +54,7 @@ use Util\Util;
                     <th>Código</th>
                     <th>Nome Cliente</th>
                     <th>Nome Unidade</th>
+                    <th>Cidade</th>
                     <th>Data Cadastro</th>
                     <th>Data Alteração</th>
                     <th>Ativo</th>
@@ -84,6 +85,9 @@ use Util\Util;
                     </td>
                     <td>
                         <?php echo $clienteunidades->Pessoa->nome ?>
+                    </td>
+                    <td>
+                        <?php echo $clienteunidades->Pessoa->PessoaEndereco[0]->cidade ?>
                     </td>
                     <td>
                         <?php echo $data_cadastro ?>

@@ -149,11 +149,6 @@ $("#cep_t").on("change", function(){
             url: action,
             data: {cep: cep},
             beforeSend: function () {
-                $("#bairro_t").val(null);
-                $("#cidade_t").val(null);
-                $("#endereco_t").val(null);
-                $("#sigla_uf_t").val(null);
-                $("#estado_t").val(null);
             },
             complete: function () {
             },
@@ -169,12 +164,38 @@ $("#cep_t").on("change", function(){
             },
             success: function (data) {
                 if (data.operacao){
-                    $("#bairro_t").val(data.endereco["bairro"]);
-                    $("#cidade_t").val(data.endereco["cidade"]);
-                    $("#endereco_t").val(data.endereco["logradouro"]);
-                    $("#sigla_uf_t").val(data.endereco["sigla_uf"]);
-                    $("#estado_t").val(data.endereco["uf"]);
-                    $("#numero_t").focus();
+                    var logradouro = $("#endereco_t").val();
+                    if (logradouro){
+                        swal({
+                            title: "Deseja substituir o endereço existente?",
+                            text: "O sistema pode substituir o endereço atual pelo resultando que ele encontrou com base no CEP. O endereço é: " + data.endereco["logradouro"] + ", " + data.endereco["bairro"] + ", " + data.endereco["cidade"] + ".",
+                            type: "info",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Sim, vou substituir!",
+                            cancelButtonText: "Cancelar"
+                        }).then((result) => {
+                            $("#bairro_t").val(null);
+                            $("#cidade_t").val(null);
+                            $("#endereco_t").val(null);
+                            $("#sigla_uf_t").val(null);
+                            $("#estado_t").val(null);
+                            $("#bairro_t").val(data.endereco["bairro"]);
+                            $("#cidade_t").val(data.endereco["cidade"]);
+                            $("#endereco_t").val(data.endereco["logradouro"]);
+                            $("#sigla_uf_t").val(data.endereco["sigla_uf"]);
+                            $("#estado_t").val(data.endereco["uf"]);
+                            $("#numero_t").focus();
+                        });
+                    }else{
+                        $("#bairro_t").val(data.endereco["bairro"]);
+                        $("#cidade_t").val(data.endereco["cidade"]);
+                        $("#endereco_t").val(data.endereco["logradouro"]);
+                        $("#sigla_uf_t").val(data.endereco["sigla_uf"]);
+                        $("#estado_t").val(data.endereco["uf"]);
+                        $("#numero_t").focus();
+                    }
                 } else {
                     swal({
                         title: "Atenção",

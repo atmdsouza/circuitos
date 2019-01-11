@@ -226,7 +226,7 @@ $(function () {
                 success: function (data) {
                     if (data.operacao){
                         $.each(data.dados, function (key, value) {
-                            listConectividade.push({value: value.descricao, data: value.id});
+                            listConectividade.push({value: value.tipo + " " + value.descricao, data: value.id});
                         });
                         $("#lid_conectividade").removeAttr("disabled");
                     } else {

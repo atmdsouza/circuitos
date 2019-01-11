@@ -112,6 +112,12 @@ $(".bt_novo").on("click", function(){
     $("#salvarCidadeDigital").removeClass("editar_cidadedigital").addClass("criar_cidadedigital");
 });
 
+$("#id_cidade").on("change", function(){
+    var cidade_desc = document.getElementById("id_cidade").options[document.getElementById("id_cidade").selectedIndex].text;
+    $("#descricao").val(null);
+    $("#descricao").val("CIDADE DIGITAL " + cidade_desc);
+});
+
 var valCID = [];
 $("#add_conectividade").on("click", function(){
     var id_tipo = $("#id_tipo_t").val();

@@ -142,7 +142,7 @@ class CircuitosController extends ControllerBase
             "id_tipolink" => $circuitos->getIdTipolink(),
             "lid_cidadedigital" => ($circuitos->getIdCidadedigital()) ? $circuitos->CidadeDigital->descricao : null,
             "id_cidadedigital" => $circuitos->getIdCidadedigital(),
-            "lid_conectividade" => ($circuitos->getIdConectividade()) ? $circuitos->Conectividade->descricao : null,
+            "lid_conectividade" => ($circuitos->getIdConectividade()) ? $circuitos->Conectividade->Lov->descricao . " " . $circuitos->Conectividade->descricao : null,
             "id_conectividade" => $circuitos->getIdConectividade(),
             "designacao" => $circuitos->getDesignacao(),
             "designacao_anterior" => $circuitos->getDesignacaoAnterior(),
@@ -208,7 +208,7 @@ class CircuitosController extends ControllerBase
             "id_tipolink" => $circuitos->getIdTipolink(),
             "lid_cidadedigital" => ($circuitos->getIdCidadedigital()) ? $circuitos->CidadeDigital->descricao : null,
             "id_cidadedigital" => $circuitos->getIdCidadedigital(),
-            "lid_conectividade" => ($circuitos->getIdConectividade()) ? $circuitos->Conectividade->descricao : null,
+            "lid_conectividade" => ($circuitos->getIdConectividade()) ? $circuitos->Conectividade->Lov->descricao . " " . $circuitos->Conectividade->descricao : null,
             "id_conectividade" => $circuitos->getIdConectividade(),
             "designacao" => $circuitos->getDesignacao(),
             "designacao_anterior" => $circuitos->getDesignacaoAnterior(),
@@ -838,7 +838,16 @@ class CircuitosController extends ControllerBase
         $response = new Response();
         $dados = filter_input_array(INPUT_GET);
         if ($dados["id_cidadedigital"]) {
-            $conectividade = Conectividade::find("id_cidade_digital={$dados["id_cidadedigital"]}");
+            $conec = Conectividade::find("id_cidade_digital={$dados["id_cidadedigital"]}");
+            $conectividade = array();
+            foreach ($conec as $c){
+                $conectividades = array(
+                    "id" => $c->getId(),
+                    "descricao" => $c->getDescricao(),
+                    "tipo" => $c->Lov->descricao
+                );
+                array_push($conectividade,$conectividades);
+            }
             if (isset($conectividade[0])) {
                 $response->setContent(json_encode(array(
                     "operacao" => True,
