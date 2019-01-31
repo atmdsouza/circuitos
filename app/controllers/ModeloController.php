@@ -48,22 +48,7 @@ class ModeloController extends ControllerBase
         $this->persistent->parameters = null;
         $numberPage = 1;
         $dados = filter_input_array(INPUT_POST);
-
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Circuitos\Models\Modelo", $dados);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-            $parameters["order"] = "[id] DESC";
-        } else {
-            $parameters["order"] = "[id] DESC";
-        }
-        $modelo = Modelo::find($parameters);
+        $modelo = Modelo::pesquisarModelos($dados["pesquisa"]);
         $fabricante = Fabricante::buscaCompletaFabricante();
         $paginator = new Paginator([
             'data' => $modelo,

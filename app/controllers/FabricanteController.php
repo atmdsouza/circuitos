@@ -56,24 +56,7 @@ class FabricanteController extends ControllerBase
         $this->persistent->parameters = null;
         $numberPage = 1;
         $dados = filter_input_array(INPUT_POST);
-
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Circuitos\Models\Fabricante", $dados);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-            $parameters["order"] = "[id] DESC";
-        } else {
-            $parameters["order"] = "[id] DESC";
-        }
-        $fabricantes = Fabricante::find(array(
-            "order" => "[id] DESC"
-        ));
+        $fabricantes = Fabricante::pesquisarFabricantes($dados["pesquisa"]);
         $tipocontato = Lov::find("tipo=13");
         $paginator = new Paginator([
             'data' => $fabricantes,

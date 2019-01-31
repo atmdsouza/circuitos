@@ -2,6 +2,8 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
 
@@ -255,6 +257,32 @@ class Usuario extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de usuarios, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return Usuario|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarUsuarios($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("Usuario" => "Circuitos\Models\Usuario"));
+        $query->columns("Usuario.*");
+
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa2.id = Usuario.id_pessoa", "Pessoa2");
+        $query->leftJoin("Circuitos\Models\PessoaEmail", "PessoaEmail.id_pessoa = Pessoa2.id", "PessoaEmail");
+
+        $query->where("(CONVERT(Usuario.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa2.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Usuario.roles_name USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaEmail.email USING utf8) LIKE '%{$parameters}%')");
+
+        $query->orderBy("Usuario.id DESC");
+
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
     /**

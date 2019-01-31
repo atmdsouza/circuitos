@@ -111,6 +111,35 @@ class Fabricante extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Consulta completa de fabricantes, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return Fabricante|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarFabricantes($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("Fabricante" => "Circuitos\Models\Fabricante"));
+        $query->columns("Fabricante.*");
+
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa2.id = Fabricante.id_pessoa", "Pessoa2");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa2.id = PessoaJuridica2.id", "PessoaJuridica2");
+        $query->leftJoin("Circuitos\Models\PessoaEndereco", "Pessoa2.id = PessoaEndereco2.id_pessoa", "PessoaEndereco2");
+
+        $query->where("(CONVERT(Fabricante.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa2.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica2.cnpj USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica2.razaosocial USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica2.sigla USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaEndereco2.cidade USING utf8) LIKE '%{$parameters}%')");
+
+        $query->orderBy("Fabricante.id DESC");
+
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
      * Consulta com o join na tabela com o nome do fabricante 
      *
      * @param int $tipopessoa

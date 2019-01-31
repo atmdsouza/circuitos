@@ -56,22 +56,7 @@ class ClienteController extends ControllerBase
         $this->persistent->parameters = null;
         $numberPage = 1;
         $dados = filter_input_array(INPUT_POST);
-
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Circuitos\Models\Cliente", $dados);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-            $parameters["order"] = "[id] DESC";
-        } else {
-            $parameters["order"] = "[id] DESC";
-        }
-        $clientes = Cliente::find($parameters);
+        $clientes = Cliente::pesquisarClientes($dados["pesquisa"]);
         $tipocliente = Lov::find("tipo=9");
         $tipoendereco = Lov::find("tipo=11");
         $tipotelefone = Lov::find("tipo=12");

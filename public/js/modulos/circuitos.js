@@ -6,7 +6,7 @@ var URLImagensSistema = "public/images";
 var table = $("#tb_circuitos").DataTable({
     buttons: [
         {//Botão Novo Registro
-            className: "bt_novo auto_cidadedigital",
+            className: "bt_novo",
             text: "Novo",
             name: "novo", // do not change name
             titleAttr: "Novo Circuito",
@@ -23,7 +23,7 @@ var table = $("#tb_circuitos").DataTable({
             enabled: false
         },
         {//Botão Editar Registro
-            className: "bt_edit auto_cidadedigital",
+            className: "bt_edit",
             text: "Editar",
             name: "edit", // do not change name
             titleAttr: "Editar Circuito",
@@ -102,7 +102,7 @@ function limparModal()
 {
     $("#id").val(null);
 }
-
+//Cliente e suas unidades
 $("#id_cliente").on("change", function(){
     var id_cliente = $(this).val();
     var action = actionCorreta(window.location.href.toString(), "circuitos/unidadeCliente");
@@ -138,6 +138,46 @@ $("#id_cliente").on("change", function(){
                 $(".remove_cliente_unidade").remove();
                 $("#id_cliente_unidade").val(null).selected = "true";
                 $("#id_cliente_unidade").attr("disabled", "true");
+            }
+        }
+    });
+});
+//Cidade Digital e suas conectividades
+$("#id_cidadedigital").on("change", function(){
+    var id_cidadedigital = $(this).val();
+    var action = actionCorreta(window.location.href.toString(), "circuitos/cidadedigitalConectividade");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_cidadedigital: id_cidadedigital},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao){
+                $(".remove_conectividade").remove();
+                $.each(data.dados, function (key, value) {
+                    var linhas = "<option class='remove_conectividade' value='" + value.id + "'>" + value.tipo + " " + value.descricao + "</option>";
+                    $("#id_conectividade").append(linhas);
+                });
+                $("#id_conectividade").removeAttr("disabled");
+            } else {
+                $(".remove_conectividade").remove();
+                $("#id_conectividade").val(null).selected = "true";
+                $("#id_conectividade").attr("disabled", "true");
+                swal("Atenção","Não existem conectividades para esse cidade digital!","info");
             }
         }
     });
@@ -233,7 +273,7 @@ $(function () {
                         $("#id_conectividade").val("");
                         $("#lid_conectividade").val("");
                         $("#lid_conectividade").attr("disabled", "true");
-                        swal("Atenção","Não existem modelos para esse fabricante!","info");
+                        swal("Atenção","Não existem conectividades para essa cidade digital!","info");
                     }
                 }
             });
@@ -753,12 +793,21 @@ $(".bt_edit").on("click", function(){
             success: function (data) {
                 var id_fabricante = (data.equip) ? data.equip.id_fabricante : null;
                 var id_modelo = (data.equip) ? data.equip.id_modelo : null;
+                //Conectividade
+                $(".remove_conectividade").remove();
+                $.each(data.conectividade, function (key, value) {
+                    var linhas = "<option class='remove_conectividade' value='" + value.id + "'>" + value.tipo + " " + value.descricao + "</option>";
+                    $("#id_conectividade").append(linhas);
+                });
+                $("#id_conectividade").removeAttr("disabled");
+                //Cliente Unidades
                 $(".remove_cliente_unidade").remove();
                 $.each(data.unidadescli, function (key, value) {
                     var linhas = "<option class='remove_cliente_unidade' value='" + value.id + "'>" + value.nome + "</option>";
                     $("#id_cliente_unidade").append(linhas);
-                    $("#id_cliente_unidade").removeAttr("disabled");
                 });
+                $("#id_cliente_unidade").removeAttr("disabled");
+                //Modelos
                 $(".remove_modelo").remove();
                 $.each(data.modelos, function (key, value) {
                     var linhas = "<option class='remove_modelo' value='" + value.id + "'>" + value.modelo + "</option>";
@@ -772,16 +821,15 @@ $(".bt_edit").on("click", function(){
                 $("#id_fabricante").val(id_fabricante).selected = "true";
                 $("#lid_modelo").val(data.dados.desc_modelo);
                 $("#id_modelo").attr("disabled", "true");
+                $("#id_modelo").val(id_modelo);
                 $("#id_equipamento").attr("disabled", "true");
                 $("#lid_equipamento").val(data.dados.desc_equip + " ("+ data.dados.nums_equip +" / "+ data.dados.patr_equip +")");
                 $("#id_equipamento").val(data.dados.id_equipamento);
                 $("#id_contrato").val(data.dados.id_contrato).selected = "true";
                 $("#id_cluster").val(data.dados.id_cluster).selected = "true";
                 $("#id_tipolink").val(data.dados.id_tipolink).selected = "true";
-                $("#id_cidadedigital").val(data.dados.id_cidadedigital);
-                $("#lid_cidadedigital").val(data.dados.lid_cidadedigital);
-                $("#id_conectividade").val(data.dados.id_conectividade);
-                $("#lid_conectividade").val(data.dados.lid_conectividade);
+                $("#id_cidadedigital").val(data.dados.id_cidadedigital).selected = "true";
+                $("#id_conectividade").val(data.dados.id_conectividade).selected = "true";
                 $("#id_funcao").val(data.dados.id_funcao).selected = "true";
                 $("#id_tipoacesso").val(data.dados.id_tipoacesso).selected = "true";
                 $("#banda").attr("disabled", "true");
@@ -844,6 +892,12 @@ $(".bt_visual").on("click", function(){
             success: function (data) {
                 var id_fabricante = (data.equip) ? data.equip.id_fabricante : null;
                 var id_modelo = (data.equip) ? data.equip.id_modelo : null;
+                //Conectividade
+                $(".remove_conectividade").remove();
+                $.each(data.conectividade, function (key, value) {
+                    var linhas = "<option class='remove_conectividade' value='" + value.id + "'>" + value.tipo + " " + value.descricao + "</option>";
+                    $("#id_conectividadev").append(linhas);
+                });
                 $("#idv").val(data.dados.id);
                 $("#id_clientev").val(data.dados.id_cliente).selected = "true";
                 $("#id_cliente_unidadev").val(data.dados.id_cliente_unidade).selected = "true";
@@ -854,10 +908,8 @@ $(".bt_visual").on("click", function(){
                 $("#id_statusv").val(data.dados.id_status).selected = "true";
                 $("#id_clusterv").val(data.dados.id_cluster).selected = "true";
                 $("#id_tipolinkv").val(data.dados.id_tipolink).selected = "true";
-                $("#id_cidadedigitalv").val(data.dados.id_cidadedigital);
-                $("#lid_cidadedigitalv").val(data.dados.lid_cidadedigital);
-                $("#id_conectividadev").val(data.dados.id_conectividade);
-                $("#lid_conectividadev").val(data.dados.lid_conectividade);
+                $("#id_cidadedigitalv").val(data.dados.id_cidadedigital).selected = "true";
+                $("#id_conectividadev").val(data.dados.id_conectividade).selected = "true";
                 $("#id_funcaov").val(data.dados.id_funcao).selected = "true";
                 $("#id_tipoacessov").val(data.dados.id_tipoacesso).selected = "true";
                 $("#bandav").val(data.dados.id_banda).selected = "true";

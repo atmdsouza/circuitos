@@ -54,22 +54,7 @@ class UsuarioController extends ControllerBase
         $this->persistent->parameters = null;
         $numberPage = 1;
         $dados = filter_input_array(INPUT_POST);
-
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Circuitos\Models\Usuario", $dados);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-            $parameters["order"] = "[id] DESC";
-        } else {
-            $parameters["order"] = "[id] DESC";
-        }
-        $usuarios = Usuario::find($parameters);
+        $usuarios = Usuario::pesquisarUsuarios($dados["pesquisa"]);
         $roles = PhalconRoles::find();
         $paginator = new Paginator([
             'data' => $usuarios,

@@ -140,9 +140,7 @@ class CircuitosController extends ControllerBase
             "id_funcao" => $circuitos->getIdFuncao(),
             "id_tipoacesso" => $circuitos->getIdTipoacesso(),
             "id_tipolink" => $circuitos->getIdTipolink(),
-            "lid_cidadedigital" => ($circuitos->getIdCidadedigital()) ? $circuitos->CidadeDigital->descricao : null,
             "id_cidadedigital" => $circuitos->getIdCidadedigital(),
-            "lid_conectividade" => ($circuitos->getIdConectividade()) ? $circuitos->Conectividade->Lov->descricao . " " . $circuitos->Conectividade->descricao : null,
             "id_conectividade" => $circuitos->getIdConectividade(),
             "designacao" => $circuitos->getDesignacao(),
             "designacao_anterior" => $circuitos->getDesignacaoAnterior(),
@@ -160,18 +158,30 @@ class CircuitosController extends ControllerBase
         $cliente = Cliente::findFirst("id={$circuitos->getIdCliente()}");
         $unidades = ClienteUnidade::buscaClienteUnidade($circuitos->getIdCliente());
         $equipamentos = Equipamento::find();
-        $modelos = Modelo::find();
         $equip = ($circuitos->getIdEquipamento()) ? Equipamento::findFirst("id={$circuitos->getIdEquipamento()}") : null;
         $banda = Lov::find(array(
             "tipo = 17"
         ));
+
+        $conec = Conectividade::find("id_cidade_digital={$circuitos->getIdCidadedigital()}");
+        $conectividade = array();
+        foreach ($conec as $c){
+            $conectividades = array(
+                "id" => $c->getId(),
+                "descricao" => $c->getDescricao(),
+                "tipo" => $c->Lov->descricao
+            );
+            array_push($conectividade,$conectividades);
+        }
+
         $response->setContent(json_encode(array(
             "dados" => $dados,
             "cliente" => $cliente,
             "equipamentos" => $equipamentos,
             "equip" => $equip,
             "unidadescli" => $unidades,
-            "banda" => $banda
+            "banda" => $banda,
+            "conectividade" => $conectividade
         )));
         return $response;
     }
@@ -206,9 +216,7 @@ class CircuitosController extends ControllerBase
             "id_funcao" => $circuitos->getIdFuncao(),
             "id_tipoacesso" => $circuitos->getIdTipoacesso(),
             "id_tipolink" => $circuitos->getIdTipolink(),
-            "lid_cidadedigital" => ($circuitos->getIdCidadedigital()) ? $circuitos->CidadeDigital->descricao : null,
             "id_cidadedigital" => $circuitos->getIdCidadedigital(),
-            "lid_conectividade" => ($circuitos->getIdConectividade()) ? $circuitos->Conectividade->Lov->descricao . " " . $circuitos->Conectividade->descricao : null,
             "id_conectividade" => $circuitos->getIdConectividade(),
             "designacao" => $circuitos->getDesignacao(),
             "designacao_anterior" => $circuitos->getDesignacaoAnterior(),
@@ -253,13 +261,25 @@ class CircuitosController extends ControllerBase
                 "email" => $contato->getEmail()
             ));
         }
+
+        $conec = Conectividade::find("id_cidade_digital={$circuitos->getIdCidadedigital()}");
+        $conectividade = array();
+        foreach ($conec as $c){
+            $conectividades = array(
+                "id" => $c->getId(),
+                "descricao" => $c->getDescricao(),
+                "tipo" => $c->Lov->descricao
+            );
+            array_push($conectividade,$conectividades);
+        }
         
         $equip = ($circuitos->getIdEquipamento()) ? Equipamento::findFirst("id={$circuitos->getIdEquipamento()}") : null;
         $response->setContent(json_encode(array(
             "dados" => $dados,
             "equip" => $equip,
             "mov" => $mov,
-            "cont" => $cont
+            "cont" => $cont,
+            "conectividade" => $conectividade
         )));
         return $response;
     }

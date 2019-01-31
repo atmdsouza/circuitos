@@ -47,30 +47,11 @@ class CidadeDigitalController extends ControllerBase
      */
     public function indexAction()
     {
-        $this->persistent->parameters = null;
         $numberPage = 1;
         $dados = filter_input_array(INPUT_POST);
 
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Circuitos\Models\CidadeDigital", $dados);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
+        $cidadedigital = CidadeDigital::pesquisarCidadeDigital($dados["pesquisa"]);
 
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-            $parameters["order"] = "[id] DESC";
-            $parameters['conditions'] = ' excluido = :excluido:';
-            $parameters['bind']['excluido'] = 0;
-        } else {
-            $parameters["order"] = "[id] DESC";
-            $parameters['conditions'] .= ' AND excluido = :excluido:';
-            $parameters['bind']['excluido'] = 0;
-        }
-
-        $cidadedigital = CidadeDigital::find($parameters);
         $cidades = EndCidade::find(array(
             "uf='PA'",
             "order" => "cidade"

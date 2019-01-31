@@ -103,7 +103,7 @@ class Cliente extends \Phalcon\Mvc\Model
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("cliente");
         $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_cliente', ['alias' => 'Circuitos']);
-        $this->hasMany('id', 'Circuitos\Models\ClienteUnidade', 'id_cliente', ['alias' => 'ClienteUnidade']);
+        $this->hasMany('id', 'Circuitos\Models\Cliente', 'id_cliente', ['alias' => 'Cliente']);
         $this->belongsTo('id_tipocliente', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
         $this->hasOne('id_pessoa', 'Circuitos\Models\Pessoa', 'id', ['alias' => 'Pessoa']);
     }
@@ -138,6 +138,38 @@ class Cliente extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de clientes, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return Cliente|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarClientes($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("Cliente" => "Circuitos\Models\Cliente"));
+        $query->columns("Cliente.*");
+
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa2.id = Cliente.id_pessoa", "Pessoa2");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa2.id = PessoaJuridica2.id", "PessoaJuridica2");
+        $query->leftJoin("Circuitos\Models\PessoaFisica", "Pessoa2.id = PessoaFisica2.id", "PessoaFisica2");
+        $query->leftJoin("Circuitos\Models\PessoaEndereco", "Pessoa2.id = PessoaEndereco2.id_pessoa", "PessoaEndereco2");
+
+        $query->where("(CONVERT(Cliente.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa2.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica2.cnpj USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica2.razaosocial USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica2.sigla USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaFisica2.cpf USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaFisica2.rg USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaEndereco2.cidade USING utf8) LIKE '%{$parameters}%')");
+
+        $query->orderBy("Cliente.id DESC");
+
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
     /**

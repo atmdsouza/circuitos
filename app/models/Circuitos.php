@@ -869,7 +869,7 @@ class Circuitos extends \Phalcon\Mvc\Model
         $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_banda = Lov6.id", "Lov6");
         $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_tipolink = Lov7.id", "Lov7");
 
-        $query->where("(CONVERT(Circuitos.id USING utf8) LIKE '%{$parameters}%'
+        $query->where("Circuitos.excluido = 0 AND (CONVERT(Circuitos.id USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Pessoa1.nome USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Pessoa2.nome USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(PessoaJuridica1.razaosocial USING utf8) LIKE '%{$parameters}%'
@@ -897,6 +897,7 @@ class Circuitos extends \Phalcon\Mvc\Model
                         OR CONVERT(Circuitos.ip_redelocal USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Circuitos.tag USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Circuitos.chamado USING utf8) LIKE '%{$parameters}%')");
+
         $query->orderBy("Circuitos.id DESC");
 
         $resultado = $query->getQuery()->execute();
