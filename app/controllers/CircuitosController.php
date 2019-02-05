@@ -16,7 +16,6 @@ use Circuitos\Models\Conectividade;
 use Circuitos\Models\Movimentos;
 use Circuitos\Models\Cliente;
 use Circuitos\Models\ClienteUnidade;
-use Circuitos\Models\Usuario;
 use Circuitos\Models\Fabricante;
 use Circuitos\Models\Modelo;
 use Circuitos\Models\Equipamento;

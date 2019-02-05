@@ -19,6 +19,8 @@ use Circuitos\Models\PessoaTelefone;
 use Circuitos\Models\PessoaContato;
 use Circuitos\Models\Empresa;
 use Circuitos\Models\EndEndereco;
+use Circuitos\Models\EndEstado;
+use Circuitos\Models\EndCidade;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
@@ -297,6 +299,50 @@ class CoreController extends ControllerBase
         if ($endereco) {
             $response->setContent(json_encode(array(
                 "endereco" => $end,
+                "operacao" => True
+            )));
+            return $response;
+        } else {
+            $response->setContent(json_encode(array(
+                "operacao" => False
+            )));
+            return $response;
+        }
+    }
+
+    public function listaEstadosAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $estados = EndEstado::find();
+        $est = [
+            "uf" => $estados->getUf()
+        ];
+        $response->setContent(json_encode(array(
+            "estados" => $est,
+            "operacao" => True
+        )));
+        return $response;
+    }
+
+    public function listaCidadesAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        $cidade = EndCidade::find("uf='{$dados["uf"]}'");
+//
+//        var_dump($cidade->getCidade());
+//        exit;
+//
+//        $cid = [
+//            "cidade" => $cidade->getCidade()
+//        ];
+        if ($cidade) {
+            $response->setContent(json_encode(array(
+                "cidade" => $cidade,
                 "operacao" => True
             )));
             return $response;

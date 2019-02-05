@@ -183,118 +183,118 @@ $("#id_cidadedigital").on("change", function(){
     });
 });
 
-$(".auto_cidadedigital").on("click", function(){
-    //Autocomplete de Cidade Digital
-    var ac_cidadedigital = $("#lid_cidadedigital");
-    var listCidadeDigital = [];
-    var action = actionCorreta(window.location.href.toString(), "circuitos/cidadedigitalAll");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        beforeSend: function () {
-            $("#id_cidadedigital").val("");
-            $("#lid_cidadedigital").val("");
-        },
-        complete: function () {
-        },
-        error: function (data) {
-            if (data.status && data.status === 401)
-            {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function (data) {
-            if (data.operacao){
-                $.each(data.dados, function (key, value) {
-                    listCidadeDigital.push({value: value.descricao, data: value.id});
-                });
-            } else {
-                $("#id_cidadedigital").val("");
-                $("#lid_cidadedigital").val("");
-            }
-        }
-    });
-    //Autocomplete de Equipamento
-    ac_cidadedigital.autocomplete({
-        lookup: listCidadeDigital,
-        noCache: true,
-        minChars: 1,
-        showNoSuggestionNotice: true,
-        noSuggestionNotice: "Não existem resultados para essa consulta!",
-        onSelect: function (suggestion) {
-            $("#id_cidadedigital").val(suggestion.data);
-        }
-    });
-});
+// $(".auto_cidadedigital").on("click", function(){
+//     //Autocomplete de Cidade Digital
+//     var ac_cidadedigital = $("#lid_cidadedigital");
+//     var listCidadeDigital = [];
+//     var action = actionCorreta(window.location.href.toString(), "circuitos/cidadedigitalAll");
+//     $.ajax({
+//         type: "GET",
+//         dataType: "JSON",
+//         url: action,
+//         beforeSend: function () {
+//             $("#id_cidadedigital").val("");
+//             $("#lid_cidadedigital").val("");
+//         },
+//         complete: function () {
+//         },
+//         error: function (data) {
+//             if (data.status && data.status === 401)
+//             {
+//                 swal({
+//                     title: "Erro de Permissão",
+//                     text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+//                     type: "warning"
+//                 });
+//             }
+//         },
+//         success: function (data) {
+//             if (data.operacao){
+//                 $.each(data.dados, function (key, value) {
+//                     listCidadeDigital.push({value: value.descricao, data: value.id});
+//                 });
+//             } else {
+//                 $("#id_cidadedigital").val("");
+//                 $("#lid_cidadedigital").val("");
+//             }
+//         }
+//     });
+//     //Autocomplete de Equipamento
+//     ac_cidadedigital.autocomplete({
+//         lookup: listCidadeDigital,
+//         noCache: true,
+//         minChars: 1,
+//         showNoSuggestionNotice: true,
+//         noSuggestionNotice: "Não existem resultados para essa consulta!",
+//         onSelect: function (suggestion) {
+//             $("#id_cidadedigital").val(suggestion.data);
+//         }
+//     });
+// });
 
-$(function () {
-    "use strict";
-    var ac_conectividade = $("#lid_conectividade");
-    var listConectividade = [];
-    $("#lid_cidadedigital").on("change", function(){
-        var vl_cidadedigital = $("#lid_cidadedigital").val();
-        if (vl_cidadedigital) {
-            var id_cidadedigital = $("#id_cidadedigital").val();
-            var action = actionCorreta(window.location.href.toString(), "circuitos/cidadedigitalConectividade");
-            $.ajax({
-                type: "GET",
-                dataType: "JSON",
-                url: action,
-                data: {id_cidadedigital: id_cidadedigital},
-                beforeSend: function () {
-                    $("#id_conectividade").val("");
-                    $("#lid_conectividade").val("");
-                    $("#lid_conectividade").attr("disabled", "true");
-                },
-                complete: function () {
-                },
-                error: function (data) {
-                    if (data.status && data.status === 401)
-                    {
-                        swal({
-                            title: "Erro de Permissão",
-                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                            type: "warning"
-                        });
-                    }
-                },
-                success: function (data) {
-                    if (data.operacao){
-                        $.each(data.dados, function (key, value) {
-                            listConectividade.push({value: value.tipo + " " + value.descricao, data: value.id});
-                        });
-                        $("#lid_conectividade").removeAttr("disabled");
-                    } else {
-                        $("#id_conectividade").val("");
-                        $("#lid_conectividade").val("");
-                        $("#lid_conectividade").attr("disabled", "true");
-                        swal("Atenção","Não existem conectividades para essa cidade digital!","info");
-                    }
-                }
-            });
-        } else {
-            $("#id_conectividade").val("");
-            $("#lid_conectividade").val("");
-            $("#lid_conectividade").attr("disabled", "true");
-        }
-    });
-    //Autocomplete de Equipamento
-    ac_conectividade.autocomplete({
-        lookup: listConectividade,
-        noCache: true,
-        minChars: 1,
-        showNoSuggestionNotice: true,
-        noSuggestionNotice: "Não existem resultados para essa consulta!",
-        onSelect: function (suggestion) {
-            $("#id_conectividade").val(suggestion.data);
-        }
-    });
-});
+// $(function () {
+//     "use strict";
+//     var ac_conectividade = $("#lid_conectividade");
+//     var listConectividade = [];
+//     $("#lid_cidadedigital").on("change", function(){
+//         var vl_cidadedigital = $("#lid_cidadedigital").val();
+//         if (vl_cidadedigital) {
+//             var id_cidadedigital = $("#id_cidadedigital").val();
+//             var action = actionCorreta(window.location.href.toString(), "circuitos/cidadedigitalConectividade");
+//             $.ajax({
+//                 type: "GET",
+//                 dataType: "JSON",
+//                 url: action,
+//                 data: {id_cidadedigital: id_cidadedigital},
+//                 beforeSend: function () {
+//                     $("#id_conectividade").val("");
+//                     $("#lid_conectividade").val("");
+//                     $("#lid_conectividade").attr("disabled", "true");
+//                 },
+//                 complete: function () {
+//                 },
+//                 error: function (data) {
+//                     if (data.status && data.status === 401)
+//                     {
+//                         swal({
+//                             title: "Erro de Permissão",
+//                             text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+//                             type: "warning"
+//                         });
+//                     }
+//                 },
+//                 success: function (data) {
+//                     if (data.operacao){
+//                         $.each(data.dados, function (key, value) {
+//                             listConectividade.push({value: value.tipo + " " + value.descricao, data: value.id});
+//                         });
+//                         $("#lid_conectividade").removeAttr("disabled");
+//                     } else {
+//                         $("#id_conectividade").val("");
+//                         $("#lid_conectividade").val("");
+//                         $("#lid_conectividade").attr("disabled", "true");
+//                         swal("Atenção","Não existem conectividades para essa cidade digital!","info");
+//                     }
+//                 }
+//             });
+//         } else {
+//             $("#id_conectividade").val("");
+//             $("#lid_conectividade").val("");
+//             $("#lid_conectividade").attr("disabled", "true");
+//         }
+//     });
+//     //Autocomplete de Equipamento
+//     ac_conectividade.autocomplete({
+//         lookup: listConectividade,
+//         noCache: true,
+//         minChars: 1,
+//         showNoSuggestionNotice: true,
+//         noSuggestionNotice: "Não existem resultados para essa consulta!",
+//         onSelect: function (suggestion) {
+//             $("#id_conectividade").val(suggestion.data);
+//         }
+//     });
+// });
 
 $(function () {
     "use strict";
