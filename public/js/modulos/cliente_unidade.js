@@ -9,6 +9,15 @@ var table = $("#tb_clienteunidades").DataTable({
             }
 
         },
+        {//Botão Visualizar Registro
+            className: "bt_visual",
+            text: "Visualizar",
+            name: "visualizar", // do not change name
+            titleAttr: "Visualizar Circuito",
+            action: function (e, dt, node, config) {
+            },
+            enabled: false
+        },
         {//Botão Editar Registro
             className: "bt_edit",
             text: "Editar",
@@ -83,9 +92,10 @@ table.on( "select deselect", function () {
     var selectedRows = table.rows( { selected: true } ).count();
 
     table.button( 1 ).enable( selectedRows === 1 );
-    table.button( 2 ).enable( selectedRows > 0 );
+    table.button( 2 ).enable( selectedRows === 1 );
     table.button( 3 ).enable( selectedRows > 0 );
     table.button( 4 ).enable( selectedRows > 0 );
+    table.button( 5 ).enable( selectedRows > 0 );
 });
 
 function limpaContato()
@@ -511,106 +521,185 @@ $("#tb_clienteunidades").on("click", "tr", function () {
 });
 
 $(".bt_edit").on("click", function(){
-    var nm_rows = ids.length;
-    if(nm_rows > 1){
-        swal({
-            title: "Edição de Cliente",
-            text: "Você somente pode editar um único cliente! Selecione apenas um e tente novamente!",
-            type: "warning"
-        });
-    } else if (nm_rows == 0) {
-        swal({
-            title: "Edição de Cliente",
-            text: "Você precisa selecionar um cliente para a edição!",
-            type: "warning"
-        });
-    } else {
-        var id_clienteunidade = ids[0];
-        var action = actionCorreta(window.location.href.toString(), "cliente_unidade/formClienteUnidade");
-        $.ajax({
-            type: "GET",
-            dataType: "JSON",
-            url: action,
-            data: {id_clienteunidade: id_clienteunidade},
-            beforeSend: function () {
-            },
-            complete: function () {
-            },
-            error: function (data) {
-                if (data.status && data.status === 401)
-                {
-                    swal({
-                        title: "Erro de Permissão",
-                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                        type: "warning"
-                    });
-                }
-            },
-            success: function (data) {
-                $("#id").val(data.dados.id);
-                $("#cliente").val(data.dados.id_cliente).selected = "true";
-                $("#nome_pessoa").val(data.dados.nome);
-                $("#sigla").val(data.dados.sigla);
-                $("#rzsocial").val(data.dados.razaosocial);
-                $("#cnpj").val(data.dados.cnpj);
-                $("#inscricaoestadual").val(data.dados.inscricaoestadual);
-                $("#inscricaomunicipal").val(data.dados.inscricaomunicipal);
-                $("#sigla_uf").val(data.dados.pessoaendereco.sigla_uf);
-                $("#cep").val(data.dados.pessoaendereco.cep);
-                $("#endereco").val(data.dados.pessoaendereco.endereco);
-                $("#numero").val(data.dados.pessoaendereco.numero);
-                $("#bairro").val(data.dados.pessoaendereco.bairro);
-                $("#cidade").val(data.dados.pessoaendereco.cidade);
-                $("#estado").val(data.dados.pessoaendereco.estado);
-                $("#complemento").val(data.dados.pessoaendereco.complemento);
-                if (data.dados.pessoacontato) {
-                    $.each(data.dados.pessoacontato, function (key, value) {
-                        var principal_desc = (value.PessoaContato.principal == "1") ? "Sim" : "Não";
-                        var linhas;
-                        linhas += "<tr class='tr_remove' id='trct" + value.PessoaContato.id + "'>";
-                        linhas += "<td>"+ principal_desc +"<input name='res_principal_contato[]' type='hidden' value='"+ value.PessoaContato.principal +"' /></td>";
-                        linhas += "<td>"+ value.descricao +"<input name='res_tipo_contato[]' type='hidden' value='"+ value.PessoaContato.id_tipocontato +"' /></td>";
-                        linhas += "<td>"+ value.PessoaContato.nome +"<input name='res_nome_contato[]' type='hidden' value='"+ value.PessoaContato.nome +"' /></td>";
-                        linhas += "<td>"+ value.PessoaContato.telefone +"<input name='res_telefone_contato[]' type='hidden' value='"+ value.PessoaContato.telefone +"' /></td>";
-                        linhas += "<td>"+ value.PessoaContato.email +"<input name='res_email_contato[]' type='hidden' value='"+ value.PessoaContato.email +"' /></td>";
-                        linhas += "<td><a href='#' id='" + value.PessoaContato.id + "' class='del_cto'><i class='fi-circle-cross'></i></a></td>";
-                        linhas += "</tr class='remove'>";
-                        $("#tb_contato").append(linhas);
-                        $("#tb_contato").show();
-                    });
-                }
-                if (data.dados.pessoatelefone) {
-                    $.each(data.dados.pessoatelefone, function (key, value) {
-                        var principal_desc = (value.PessoaTelefone.principal == "1") ? "Sim" : "Não";
-                        var linhas;
-                        linhas += "<tr class='tr_remove' id='trte" + value.PessoaTelefone.id + "'>";
-                        linhas += "<td>"+ principal_desc +"<input name='res_principal_tel[]' type='hidden' value='"+ value.PessoaTelefone.principal +"' /></td>";
-                        linhas += "<td>"+ "(" + value.PessoaTelefone.ddd +") " + value.PessoaTelefone.telefone +"<input name='res_telefone[]' type='hidden' value='"+ value.PessoaTelefone.ddd + value.PessoaTelefone.telefone +"' /></td>";
-                        linhas += "<td><a href='#' id='" + value.PessoaTelefone.id + "' class='del_tel'><i class='fi-circle-cross'></i></a></td>";
-                        linhas += "</tr>";
-                        $("#tb_telefone").append(linhas);
-                        $("#tb_telefone").show();
-                    });
-                }
-                if (data.dados.pessoaemail) {
-                    $.each(data.dados.pessoaemail, function (key, value) {
-                        var principal_desc = (value.PessoaEmail.principal == "1") ? "Sim" : "Não";
-                        var linhas;
-                        linhas += "<tr class='tr_remove' id='trem" + value.PessoaEmail.id + "'>";
-                        linhas += "<td>"+ principal_desc +"<input name='res_principal_email[]' type='hidden' value='"+ value.PessoaEmail.principal +"' /></td>";
-                        linhas += "<td>"+ value.PessoaEmail.email +"<input name='res_email_pf[]' type='hidden' value='"+ value.PessoaEmail.email +"' /></td>";
-                        linhas += "<td><a href='#' id='" + value.PessoaEmail.id + "' class='del_eml'><i class='fi-circle-cross'></i></a></td>";
-                        linhas += "</tr>";
-                        $("#tb_email").append(linhas);
-                        $("#tb_email").show();
-                    });
-                }
-                $("#cliente").attr("disabled", "true");
-                $("#modalclienteunidades").modal();
+    var id_clienteunidade = ids[0];
+    var action = actionCorreta(window.location.href.toString(), "cliente_unidade/formClienteUnidade");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_clienteunidade: id_clienteunidade},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
             }
-        });
-        $("#salvaClienteUnidade").removeClass("criar_clienteunidades").addClass("editar_clienteunidades");
-    }
+        },
+        success: function (data) {
+            $("#formClienteUnidade input").removeAttr('readonly', 'readonly');
+            $("#formClienteUnidade select").removeAttr('readonly', 'readonly');
+            $("#formClienteUnidade textarea").removeAttr('readonly', 'readonly');
+            $("#id").val(data.dados.id);
+            $("#cliente").val(data.dados.id_cliente).selected = "true";
+            $("#nome_pessoa").val(data.dados.nome);
+            $("#sigla").val(data.dados.sigla);
+            $("#rzsocial").val(data.dados.razaosocial);
+            $("#cnpj").val(data.dados.cnpj);
+            $("#inscricaoestadual").val(data.dados.inscricaoestadual);
+            $("#inscricaomunicipal").val(data.dados.inscricaomunicipal);
+            $("#sigla_uf").val(data.dados.pessoaendereco.sigla_uf);
+            $("#cep").val(data.dados.pessoaendereco.cep);
+            $("#endereco").val(data.dados.pessoaendereco.endereco);
+            $("#numero").val(data.dados.pessoaendereco.numero);
+            $("#bairro").val(data.dados.pessoaendereco.bairro);
+            $("#cidade").val(data.dados.pessoaendereco.cidade);
+            $("#estado").val(data.dados.pessoaendereco.estado);
+            $("#complemento").val(data.dados.pessoaendereco.complemento);
+            if (data.dados.pessoacontato) {
+                $.each(data.dados.pessoacontato, function (key, value) {
+                    var principal_desc = (value.PessoaContato.principal == "1") ? "Sim" : "Não";
+                    var linhas;
+                    linhas += "<tr class='tr_remove' id='trct" + value.PessoaContato.id + "'>";
+                    linhas += "<td>"+ principal_desc +"<input name='res_principal_contato[]' type='hidden' value='"+ value.PessoaContato.principal +"' /></td>";
+                    linhas += "<td>"+ value.descricao +"<input name='res_tipo_contato[]' type='hidden' value='"+ value.PessoaContato.id_tipocontato +"' /></td>";
+                    linhas += "<td>"+ value.PessoaContato.nome +"<input name='res_nome_contato[]' type='hidden' value='"+ value.PessoaContato.nome +"' /></td>";
+                    linhas += "<td>"+ value.PessoaContato.telefone +"<input name='res_telefone_contato[]' type='hidden' value='"+ value.PessoaContato.telefone +"' /></td>";
+                    linhas += "<td>"+ value.PessoaContato.email +"<input name='res_email_contato[]' type='hidden' value='"+ value.PessoaContato.email +"' /></td>";
+                    linhas += "<td><a href='#' id='" + value.PessoaContato.id + "' class='del_cto'><i class='fi-circle-cross'></i></a></td>";
+                    linhas += "</tr class='remove'>";
+                    $("#tb_contato").append(linhas);
+                    $("#tb_contato").show();
+                });
+            }
+            if (data.dados.pessoatelefone) {
+                $.each(data.dados.pessoatelefone, function (key, value) {
+                    var principal_desc = (value.PessoaTelefone.principal == "1") ? "Sim" : "Não";
+                    var linhas;
+                    linhas += "<tr class='tr_remove' id='trte" + value.PessoaTelefone.id + "'>";
+                    linhas += "<td>"+ principal_desc +"<input name='res_principal_tel[]' type='hidden' value='"+ value.PessoaTelefone.principal +"' /></td>";
+                    linhas += "<td>"+ "(" + value.PessoaTelefone.ddd +") " + value.PessoaTelefone.telefone +"<input name='res_telefone[]' type='hidden' value='"+ value.PessoaTelefone.ddd + value.PessoaTelefone.telefone +"' /></td>";
+                    linhas += "<td><a href='#' id='" + value.PessoaTelefone.id + "' class='del_tel'><i class='fi-circle-cross'></i></a></td>";
+                    linhas += "</tr>";
+                    $("#tb_telefone").append(linhas);
+                    $("#tb_telefone").show();
+                });
+            }
+            if (data.dados.pessoaemail) {
+                $.each(data.dados.pessoaemail, function (key, value) {
+                    var principal_desc = (value.PessoaEmail.principal == "1") ? "Sim" : "Não";
+                    var linhas;
+                    linhas += "<tr class='tr_remove' id='trem" + value.PessoaEmail.id + "'>";
+                    linhas += "<td>"+ principal_desc +"<input name='res_principal_email[]' type='hidden' value='"+ value.PessoaEmail.principal +"' /></td>";
+                    linhas += "<td>"+ value.PessoaEmail.email +"<input name='res_email_pf[]' type='hidden' value='"+ value.PessoaEmail.email +"' /></td>";
+                    linhas += "<td><a href='#' id='" + value.PessoaEmail.id + "' class='del_eml'><i class='fi-circle-cross'></i></a></td>";
+                    linhas += "</tr>";
+                    $("#tb_email").append(linhas);
+                    $("#tb_email").show();
+                });
+            }
+            $("#cliente").attr("disabled", "true");
+            $("#modalclienteunidades").modal();
+        }
+    });
+    $("#salvaClienteUnidade").removeClass("criar_clienteunidades").addClass("editar_clienteunidades");
+});
+
+$(".bt_visual").on("click", function(){
+    var id_clienteunidade = ids[0];
+    var action = actionCorreta(window.location.href.toString(), "cliente_unidade/formClienteUnidade");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_clienteunidade: id_clienteunidade},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            $("#formClienteUnidade input").attr('readonly', 'readonly');
+            $("#formClienteUnidade select").attr('readonly', 'readonly');
+            $("#formClienteUnidade textarea").attr('readonly', 'readonly');
+            $("#id").val(data.dados.id);
+            $("#cliente").val(data.dados.id_cliente).selected = "true";
+            $("#nome_pessoa").val(data.dados.nome);
+            $("#sigla").val(data.dados.sigla);
+            $("#rzsocial").val(data.dados.razaosocial);
+            $("#cnpj").val(data.dados.cnpj);
+            $("#inscricaoestadual").val(data.dados.inscricaoestadual);
+            $("#inscricaomunicipal").val(data.dados.inscricaomunicipal);
+            $("#sigla_uf").val(data.dados.pessoaendereco.sigla_uf);
+            $("#cep").val(data.dados.pessoaendereco.cep);
+            $("#endereco").val(data.dados.pessoaendereco.endereco);
+            $("#numero").val(data.dados.pessoaendereco.numero);
+            $("#bairro").val(data.dados.pessoaendereco.bairro);
+            $("#cidade").val(data.dados.pessoaendereco.cidade);
+            $("#estado").val(data.dados.pessoaendereco.estado);
+            $("#complemento").val(data.dados.pessoaendereco.complemento);
+            if (data.dados.pessoacontato) {
+                $.each(data.dados.pessoacontato, function (key, value) {
+                    var principal_desc = (value.PessoaContato.principal == "1") ? "Sim" : "Não";
+                    var linhas;
+                    linhas += "<tr class='tr_remove' id='trct" + value.PessoaContato.id + "'>";
+                    linhas += "<td>"+ principal_desc +"<input name='res_principal_contato[]' type='hidden' value='"+ value.PessoaContato.principal +"' /></td>";
+                    linhas += "<td>"+ value.descricao +"<input name='res_tipo_contato[]' type='hidden' value='"+ value.PessoaContato.id_tipocontato +"' /></td>";
+                    linhas += "<td>"+ value.PessoaContato.nome +"<input name='res_nome_contato[]' type='hidden' value='"+ value.PessoaContato.nome +"' /></td>";
+                    linhas += "<td>"+ value.PessoaContato.telefone +"<input name='res_telefone_contato[]' type='hidden' value='"+ value.PessoaContato.telefone +"' /></td>";
+                    linhas += "<td>"+ value.PessoaContato.email +"<input name='res_email_contato[]' type='hidden' value='"+ value.PessoaContato.email +"' /></td>";
+                    linhas += "<td><a href='#' id='" + value.PessoaContato.id + "' class='del_cto'><i class='fi-circle-cross'></i></a></td>";
+                    linhas += "</tr class='remove'>";
+                    $("#tb_contato").append(linhas);
+                    $("#tb_contato").show();
+                });
+            }
+            if (data.dados.pessoatelefone) {
+                $.each(data.dados.pessoatelefone, function (key, value) {
+                    var principal_desc = (value.PessoaTelefone.principal == "1") ? "Sim" : "Não";
+                    var linhas;
+                    linhas += "<tr class='tr_remove' id='trte" + value.PessoaTelefone.id + "'>";
+                    linhas += "<td>"+ principal_desc +"<input name='res_principal_tel[]' type='hidden' value='"+ value.PessoaTelefone.principal +"' /></td>";
+                    linhas += "<td>"+ "(" + value.PessoaTelefone.ddd +") " + value.PessoaTelefone.telefone +"<input name='res_telefone[]' type='hidden' value='"+ value.PessoaTelefone.ddd + value.PessoaTelefone.telefone +"' /></td>";
+                    linhas += "<td><a href='#' id='" + value.PessoaTelefone.id + "' class='del_tel'><i class='fi-circle-cross'></i></a></td>";
+                    linhas += "</tr>";
+                    $("#tb_telefone").append(linhas);
+                    $("#tb_telefone").show();
+                });
+            }
+            if (data.dados.pessoaemail) {
+                $.each(data.dados.pessoaemail, function (key, value) {
+                    var principal_desc = (value.PessoaEmail.principal == "1") ? "Sim" : "Não";
+                    var linhas;
+                    linhas += "<tr class='tr_remove' id='trem" + value.PessoaEmail.id + "'>";
+                    linhas += "<td>"+ principal_desc +"<input name='res_principal_email[]' type='hidden' value='"+ value.PessoaEmail.principal +"' /></td>";
+                    linhas += "<td>"+ value.PessoaEmail.email +"<input name='res_email_pf[]' type='hidden' value='"+ value.PessoaEmail.email +"' /></td>";
+                    linhas += "<td><a href='#' id='" + value.PessoaEmail.id + "' class='del_eml'><i class='fi-circle-cross'></i></a></td>";
+                    linhas += "</tr>";
+                    $("#tb_email").append(linhas);
+                    $("#tb_email").show();
+                });
+            }
+            $("#cliente").attr("disabled", "true");
+            $("#modalclienteunidades").modal();
+        }
+    });
+    $("#salvaClienteUnidade").removeClass("criar_clienteunidades").addClass("editar_clienteunidades");
 });
 
 $(document).on("click", ".editar_clienteunidades", function(){

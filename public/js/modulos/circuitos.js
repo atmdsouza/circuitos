@@ -450,6 +450,9 @@ $(document).on("click", ".criar_circuitos", function(){
                 id_cidadedigital:{
                     required: true
                 },
+                id_conectividade:{
+                    required: true
+                },
                 id_contrato:{
                     required: true
                 },
@@ -502,6 +505,9 @@ $(document).on("click", ".criar_circuitos", function(){
                 },
                 id_cidadedigital:{
                     required: "É necessário informar a Cidade Digital"
+                },
+                id_conectividade:{
+                    required: "É necessário informar a Conectividade"
                 },
                 id_contrato:{
                     required: "É necessário informar o tipo de Contrato"
@@ -601,6 +607,9 @@ $(document).on("click", ".criar_circuitos", function(){
                 id_cidadedigital:{
                     required: true
                 },
+                id_conectividade:{
+                    required: true
+                },
                 banda:{
                     required: true
                 },
@@ -656,6 +665,9 @@ $(document).on("click", ".criar_circuitos", function(){
                 },
                 id_cidadedigital:{
                     required: "É necessário informar a Cidade Digital"
+                },
+                id_conectividade:{
+                    required: "É necessário informar a Conectividade"
                 },
                 id_contrato:{
                     required: "É necessário informar o tipo de Contrato"
@@ -1023,6 +1035,9 @@ $(document).on("click", ".editar_circuitos", function(){
                 id_cidadedigital:{
                     required: true
                 },
+                id_conectividade:{
+                    required: true
+                },
                 id_contrato:{
                     required: true
                 },
@@ -1075,6 +1090,9 @@ $(document).on("click", ".editar_circuitos", function(){
                 },
                 id_cidadedigital:{
                     required: "É necessário informar a Cidade Digital"
+                },
+                id_conectividade:{
+                    required: "É necessário informar a Conectividade"
                 },
                 id_contrato:{
                     required: "É necessário informar o tipo de Contrato"
@@ -1174,6 +1192,9 @@ $(document).on("click", ".editar_circuitos", function(){
                 id_cidadedigital:{
                     required: true
                 },
+                id_conectividade:{
+                    required: true
+                },
                 banda:{
                     required: true
                 },
@@ -1229,6 +1250,9 @@ $(document).on("click", ".editar_circuitos", function(){
                 },
                 id_cidadedigital:{
                     required: "É necessário informar a Cidade Digital"
+                },
+                id_conectividade:{
+                    required: "É necessário informar a Conectividade"
                 },
                 id_contrato:{
                     required: "É necessário informar o tipo de Contrato"

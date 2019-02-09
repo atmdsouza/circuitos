@@ -434,404 +434,477 @@ function getRandomColor() {
             });
 
             //pie_ativacao_link_mes
-            var pieChart = {
-                labels: [
-                    "Desktops",
-                    "Tablets",
-                    "Mobiles",
-                    "Mobiles",
-                    "Tablets"
-                ],
-                datasets: [
+            var action_circuitos_link_mes = actionCorreta(window.location.href.toString(), "index/circuitoLinkMes");
+            $.ajax({
+                type: "GET",
+                dataType: "JSON",
+                url: action_circuitos_link_mes,
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
                     {
-                        data: [80, 50, 100,121,77],
-                        backgroundColor: [
-                            "#5d6dc3",
-                            "#3ec396",
-                            "#f9bc0b",
-                            "#4fbde9",
-                            "#313a46"
-                        ],
-                        hoverBackgroundColor: [
-                            "#5d6dc3",
-                            "#3ec396",
-                            "#f9bc0b",
-                            "#4fbde9",
-                            "#313a46"
-                        ],
-                        hoverBorderColor: "#fff"
-                    }]
-            };
-            this.respChart($("#pie_ativacao_link_mes"),"Pie",pieChart);
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    var labels = [];
+                    var values = [];
+                    var colour = [];
+                    $.each(data.dados, function (key, value) {
+                        labels.push(value.link);
+                        values.push(value.total);
+                        colour.push(getRandomColor());
+                    });
+                    var pieChart = {
+                        labels: labels,
+                        datasets: [
+                            {
+                                data: values,
+                                backgroundColor: colour,
+                                hoverBackgroundColor: colour,
+                                hoverBorderColor: "#fff"
+                            }]
+                    };
+                    ChartJs.prototype.respChart($("#pie_ativacao_link_mes"),"Pie",pieChart);
+                }
+            });
 
             //pie_ativacoes_desativacoes_mes
-            var pieChart = {
-                labels: [
-                    "Desktops",
-                    "Tablets",
-                    "Mobiles",
-                    "Mobiles",
-                    "Tablets"
-                ],
-                datasets: [
+            var action_circuito_status_mes = actionCorreta(window.location.href.toString(), "index/circuitoStatusMes");
+            $.ajax({
+                type: "GET",
+                dataType: "JSON",
+                url: action_circuito_status_mes,
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
                     {
-                        data: [80, 50, 100,121,77],
-                        backgroundColor: [
-                            "#5d6dc3",
-                            "#3ec396",
-                            "#f9bc0b",
-                            "#4fbde9",
-                            "#313a46"
-                        ],
-                        hoverBackgroundColor: [
-                            "#5d6dc3",
-                            "#3ec396",
-                            "#f9bc0b",
-                            "#4fbde9",
-                            "#313a46"
-                        ],
-                        hoverBorderColor: "#fff"
-                    }]
-            };
-            this.respChart($("#pie_ativacoes_desativacoes_mes"),"Pie",pieChart);
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    var labels = [];
+                    var values = [];
+                    var colour = [];
+                    $.each(data.dados, function (key, value) {
+                        labels.push(value.status);
+                        values.push(value.total);
+                        colour.push(getRandomColor());
+                    });
+                    var pieChart = {
+                        labels: labels,
+                        datasets: [
+                            {
+                                data: values,
+                                backgroundColor: colour,
+                                hoverBackgroundColor: colour,
+                                hoverBorderColor: "#fff"
+                            }]
+                    };
+                    ChartJs.prototype.respChart($("#pie_ativacoes_desativacoes_mes"),"Pie",pieChart);
+                }
+            });
 
             //pie_circuitos_funcao
-            var pieChart = {
-                labels: [
-                    "Desktops",
-                    "Tablets",
-                    "Mobiles",
-                    "Mobiles",
-                    "Tablets"
-                ],
-                datasets: [
+            var action_circuito_funcao = actionCorreta(window.location.href.toString(), "index/circuitoFuncao");
+            $.ajax({
+                type: "GET",
+                dataType: "JSON",
+                url: action_circuito_funcao,
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
                     {
-                        data: [80, 50, 100,121,77],
-                        backgroundColor: [
-                            "#5d6dc3",
-                            "#3ec396",
-                            "#f9bc0b",
-                            "#4fbde9",
-                            "#313a46"
-                        ],
-                        hoverBackgroundColor: [
-                            "#5d6dc3",
-                            "#3ec396",
-                            "#f9bc0b",
-                            "#4fbde9",
-                            "#313a46"
-                        ],
-                        hoverBorderColor: "#fff"
-                    }]
-            };
-            this.respChart($("#pie_circuitos_funcao"),"Pie",pieChart);
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    var labels = [];
+                    var values = [];
+                    var colour = [];
+                    $.each(data.dados, function (key, value) {
+                        labels.push(value.funcao);
+                        values.push(value.total);
+                        colour.push(getRandomColor());
+                    });
+                    var pieChart = {
+                        labels: labels,
+                        datasets: [
+                            {
+                                data: values,
+                                backgroundColor: colour,
+                                hoverBackgroundColor: colour,
+                                hoverBorderColor: "#fff"
+                            }]
+                    };
+                    ChartJs.prototype.respChart($("#pie_circuitos_funcao"),"Pie",pieChart);
+                }
+            });
 
             //pie_circuitos_conectividade
-            var pieChart = {
-                labels: [
-                    "Desktops",
-                    "Tablets",
-                    "Mobiles",
-                    "Mobiles",
-                    "Tablets"
-                ],
-                datasets: [
+            var action_circuitos_conectividade = actionCorreta(window.location.href.toString(), "index/circuitoConectividade");
+            $.ajax({
+                type: "GET",
+                dataType: "JSON",
+                url: action_circuitos_conectividade,
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
                     {
-                        data: [80, 50, 100,121,77],
-                        backgroundColor: [
-                            "#5d6dc3",
-                            "#3ec396",
-                            "#f9bc0b",
-                            "#4fbde9",
-                            "#313a46"
-                        ],
-                        hoverBackgroundColor: [
-                            "#5d6dc3",
-                            "#3ec396",
-                            "#f9bc0b",
-                            "#4fbde9",
-                            "#313a46"
-                        ],
-                        hoverBorderColor: "#fff"
-                    }]
-            };
-            this.respChart($("#pie_circuitos_conectividade"),"Pie",pieChart);
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    var labels = [];
+                    var values = [];
+                    var colour = [];
+                    $.each(data.dados, function (key, value) {
+                        labels.push(value.conectividade);
+                        values.push(value.total);
+                        colour.push(getRandomColor());
+                    });
+                    var pieChart = {
+                        labels: labels,
+                        datasets: [
+                            {
+                                data: values,
+                                backgroundColor: colour,
+                                hoverBackgroundColor: colour,
+                                hoverBorderColor: "#fff"
+                            }]
+                    };
+                    ChartJs.prototype.respChart($("#pie_circuitos_conectividade"),"Pie",pieChart);
+                }
+            });
 
             //pie_circuitos_acesso
-            var pieChart = {
-                labels: [
-                    "Desktops",
-                    "Tablets",
-                    "Mobiles",
-                    "Mobiles",
-                    "Tablets"
-                ],
-                datasets: [
+            var action_circuito_acesso = actionCorreta(window.location.href.toString(), "index/circuitoAcesso");
+            $.ajax({
+                type: "GET",
+                dataType: "JSON",
+                url: action_circuito_acesso,
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
                     {
-                        data: [80, 50, 100,121,77],
-                        backgroundColor: [
-                            "#5d6dc3",
-                            "#3ec396",
-                            "#f9bc0b",
-                            "#4fbde9",
-                            "#313a46"
-                        ],
-                        hoverBackgroundColor: [
-                            "#5d6dc3",
-                            "#3ec396",
-                            "#f9bc0b",
-                            "#4fbde9",
-                            "#313a46"
-                        ],
-                        hoverBorderColor: "#fff"
-                    }]
-            };
-            this.respChart($("#pie_circuitos_acesso"),"Pie",pieChart);
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    var labels = [];
+                    var values = [];
+                    var colour = [];
+                    $.each(data.dados, function (key, value) {
+                        labels.push(value.acesso);
+                        values.push(value.total);
+                        colour.push(getRandomColor());
+                    });
+                    var pieChart = {
+                        labels: labels,
+                        datasets: [
+                            {
+                                data: values,
+                                backgroundColor: colour,
+                                hoverBackgroundColor: colour,
+                                hoverBorderColor: "#fff"
+                            }]
+                    };
+                    ChartJs.prototype.respChart($("#pie_circuitos_acesso"),"Pie",pieChart);
+                }
+            });
 
             //bar_hotzones_cidade
-            var barChart = {
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
-                datasets: [
-                    {
-                        label: "Sales Analytics",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [65, 59, 80, 81, 56, 55, 40,20]
-                    },
-                    {
-                        label: "Outros Dados",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [31, 60, 12, 45, 80, 20, 84,1]
-                    },
-                    {
-                        label: "Mais dados",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [84, 41, 79, 80, 12, 46, 13,90]
-                    }
-                ]
-            };
-            this.respChart($("#bar_hotzones_cidade"),"Bar",barChart);
-
-            //bar_cluster_cidade
-            var barChart = {
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
-                datasets: [
-                    {
-                        label: "Sales Analytics",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [65, 59, 80, 81, 56, 55, 40,20]
-                    },
-                    {
-                        label: "Outros Dados",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [31, 60, 12, 45, 80, 20, 84,1]
-                    },
-                    {
-                        label: "Mais dados",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [84, 41, 79, 80, 12, 46, 13,90]
-                    }
-                ]
-            };
-            this.respChart($("#bar_cluster_cidade"),"Bar",barChart);
-
-            //bar_equipamentos_fabricante
-            var barChart = {
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
-                datasets: [
-                    {
-                        label: "Sales Analytics",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [65, 59, 80, 81, 56, 55, 40,20]
-                    },
-                    {
-                        label: "Outros Dados",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [31, 60, 12, 45, 80, 20, 84,1]
-                    },
-                    {
-                        label: "Mais dados",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [84, 41, 79, 80, 12, 46, 13,90]
-                    }
-                ]
-            };
-            this.respChart($("#bar_equipamentos_fabricante"),"Bar",barChart);
-
-            //bar_equipamentos_tipo
-            var barChart = {
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
-                datasets: [
-                    {
-                        label: "Sales Analytics",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [65, 59, 80, 81, 56, 55, 40,20]
-                    },
-                    {
-                        label: "Outros Dados",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [31, 60, 12, 45, 80, 20, 84,1]
-                    },
-                    {
-                        label: "Mais dados",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [84, 41, 79, 80, 12, 46, 13,90]
-                    }
-                ]
-            };
-            this.respChart($("#bar_equipamentos_tipo"),"Bar",barChart);
-
-            //bar_circuitos_cidade_digital
-            var barChart = {
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
-                datasets: [
-                    {
-                        label: "Sales Analytics",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [65, 59, 80, 81, 56, 55, 40,20]
-                    },
-                    {
-                        label: "Outros Dados",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [31, 60, 12, 45, 80, 20, 84,1]
-                    },
-                    {
-                        label: "Mais dados",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [84, 41, 79, 80, 12, 46, 13,90]
-                    }
-                ]
-            };
-            this.respChart($("#bar_circuitos_cidade_digital"),"Bar",barChart);
-
-            //bar_top20_clientes
-            var barChart = {
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
-                datasets: [
-                    {
-                        label: "Sales Analytics",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [65, 59, 80, 81, 56, 55, 40,20]
-                    },
-                    {
-                        label: "Outros Dados",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [31, 60, 12, 45, 80, 20, 84,1]
-                    },
-                    {
-                        label: "Mais dados",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [84, 41, 79, 80, 12, 46, 13,90]
-                    }
-                ]
-            };
-            this.respChart($("#bar_top20_clientes"),"Bar",barChart);
-
-            //bar_circuitos_conectividade
-            var barChart = {
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
-                datasets: [
-                    {
-                        label: "Sales Analytics",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [65, 59, 80, 81, 56, 55, 40,20]
-                    },
-                    {
-                        label: "Outros Dados",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [31, 60, 12, 45, 80, 20, 84,1]
-                    },
-                    {
-                        label: "Mais dados",
-                        backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
-                        borderColor: "#3c86d8",
-                        borderWidth: 2,
-                        hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
-                        hoverBorderColor: "#3c86d8",
-                        data: [84, 41, 79, 80, 12, 46, 13,90]
-                    }
-                ]
-            };
-            this.respChart($("#bar_circuitos_conectividade"),"Bar",barChart);
+            // var action_circuito_hotzone_cidade = actionCorreta(window.location.href.toString(), "index/circuitoHotzoneCidade");
+            // $.ajax({
+            //     type: "GET",
+            //     dataType: "JSON",
+            //     url: action_circuito_hotzone_cidade,
+            //     beforeSend: function () {
+            //     },
+            //     complete: function () {
+            //     },
+            //     error: function (data) {
+            //         if (data.status && data.status === 401)
+            //         {
+            //             swal({
+            //                 title: "Erro de Permissão",
+            //                 text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+            //                 type: "warning"
+            //             });
+            //         }
+            //     },
+            //     success: function (data) {
+            //         var labels = [];
+            //         labels.push("Quantidade");
+            //         var values = [];
+            //         var colour;
+            //         $.each(data.dados, function (key, value) {
+            //             colour = getRandomColor();
+            //             values.push({
+            //                 label: value.descricao,
+            //                 backgroundColor: colour,
+            //                 borderColor: colour,
+            //                 borderWidth: 2,
+            //                 hoverBackgroundColor: colour,
+            //                 hoverBorderColor: colour,
+            //                 data: value.total
+            //             });
+            //         });
+            //         var barChart = {
+            //             labels: labels,
+            //             datasets: values
+            //         };
+            //         var Options = {
+            //
+            //         }
+            //         ChartJs.prototype.respChart($("#bar_hotzones_cidade"),"Bar",barChart, Options);
+            //     }
+            // });
+            //
+            // //bar_cluster_cidade
+            // var barChart = {
+            //     labels: ["January", "February", "March", "April", "May", "June", "July", "August"],
+            //     datasets: [
+            //         {
+            //             label: "Sales Analytics",
+            //             backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
+            //             borderColor: "#3c86d8",
+            //             borderWidth: 2,
+            //             hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
+            //             hoverBorderColor: "#3c86d8",
+            //             data: [65, 59, 80, 81, 56, 55, 40,20]
+            //         },
+            //         {
+            //             label: "Outros Dados",
+            //             backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
+            //             borderColor: "#3c86d8",
+            //             borderWidth: 2,
+            //             hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
+            //             hoverBorderColor: "#3c86d8",
+            //             data: [31, 60, 12, 45, 80, 20, 84,1]
+            //         },
+            //         {
+            //             label: "Mais dados",
+            //             backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
+            //             borderColor: "#3c86d8",
+            //             borderWidth: 2,
+            //             hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
+            //             hoverBorderColor: "#3c86d8",
+            //             data: [84, 41, 79, 80, 12, 46, 13,90]
+            //         }
+            //     ]
+            // };
+            // this.respChart($("#bar_cluster_cidade"),"Bar",barChart);
+            //
+            // //bar_equipamentos_fabricante
+            // var barChart = {
+            //     labels: ["January", "February", "March", "April", "May", "June", "July"],
+            //     datasets: [
+            //         {
+            //             label: "Sales Analytics",
+            //             backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
+            //             borderColor: "#3c86d8",
+            //             borderWidth: 2,
+            //             hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
+            //             hoverBorderColor: "#3c86d8",
+            //             data: [65, 59, 80, 81, 56, 55, 40,20]
+            //         },
+            //         {
+            //             label: "Outros Dados",
+            //             backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
+            //             borderColor: "#3c86d8",
+            //             borderWidth: 2,
+            //             hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
+            //             hoverBorderColor: "#3c86d8",
+            //             data: [31, 60, 12, 45, 80, 20, 84,1]
+            //         },
+            //         {
+            //             label: "Mais dados",
+            //             backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
+            //             borderColor: "#3c86d8",
+            //             borderWidth: 2,
+            //             hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
+            //             hoverBorderColor: "#3c86d8",
+            //             data: [84, 41, 79, 80, 12, 46, 13,90]
+            //         }
+            //     ]
+            // };
+            // this.respChart($("#bar_equipamentos_fabricante"),"Bar",barChart);
+            //
+            // //bar_equipamentos_tipo
+            // var barChart = {
+            //     labels: ["January", "February", "March", "April", "May", "June", "July"],
+            //     datasets: [
+            //         {
+            //             label: "Sales Analytics",
+            //             backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
+            //             borderColor: "#3c86d8",
+            //             borderWidth: 2,
+            //             hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
+            //             hoverBorderColor: "#3c86d8",
+            //             data: [65, 59, 80, 81, 56, 55, 40,20]
+            //         },
+            //         {
+            //             label: "Outros Dados",
+            //             backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
+            //             borderColor: "#3c86d8",
+            //             borderWidth: 2,
+            //             hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
+            //             hoverBorderColor: "#3c86d8",
+            //             data: [31, 60, 12, 45, 80, 20, 84,1]
+            //         },
+            //         {
+            //             label: "Mais dados",
+            //             backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
+            //             borderColor: "#3c86d8",
+            //             borderWidth: 2,
+            //             hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
+            //             hoverBorderColor: "#3c86d8",
+            //             data: [84, 41, 79, 80, 12, 46, 13,90]
+            //         }
+            //     ]
+            // };
+            // this.respChart($("#bar_equipamentos_tipo"),"Bar",barChart);
+            //
+            // //bar_circuitos_cidade_digital
+            // var barChart = {
+            //     labels: ["January", "February", "March", "April", "May", "June", "July"],
+            //     datasets: [
+            //         {
+            //             label: "Sales Analytics",
+            //             backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
+            //             borderColor: "#3c86d8",
+            //             borderWidth: 2,
+            //             hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
+            //             hoverBorderColor: "#3c86d8",
+            //             data: [65, 59, 80, 81, 56, 55, 40,20]
+            //         },
+            //         {
+            //             label: "Outros Dados",
+            //             backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
+            //             borderColor: "#3c86d8",
+            //             borderWidth: 2,
+            //             hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
+            //             hoverBorderColor: "#3c86d8",
+            //             data: [31, 60, 12, 45, 80, 20, 84,1]
+            //         },
+            //         {
+            //             label: "Mais dados",
+            //             backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
+            //             borderColor: "#3c86d8",
+            //             borderWidth: 2,
+            //             hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
+            //             hoverBorderColor: "#3c86d8",
+            //             data: [84, 41, 79, 80, 12, 46, 13,90]
+            //         }
+            //     ]
+            // };
+            // this.respChart($("#bar_circuitos_cidade_digital"),"Bar",barChart);
+            //
+            // //bar_top20_clientes
+            // var barChart = {
+            //     labels: ["January", "February", "March", "April", "May", "June", "July"],
+            //     datasets: [
+            //         {
+            //             label: "Sales Analytics",
+            //             backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
+            //             borderColor: "#3c86d8",
+            //             borderWidth: 2,
+            //             hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
+            //             hoverBorderColor: "#3c86d8",
+            //             data: [65, 59, 80, 81, 56, 55, 40,20]
+            //         },
+            //         {
+            //             label: "Outros Dados",
+            //             backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
+            //             borderColor: "#3c86d8",
+            //             borderWidth: 2,
+            //             hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
+            //             hoverBorderColor: "#3c86d8",
+            //             data: [31, 60, 12, 45, 80, 20, 84,1]
+            //         },
+            //         {
+            //             label: "Mais dados",
+            //             backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
+            //             borderColor: "#3c86d8",
+            //             borderWidth: 2,
+            //             hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
+            //             hoverBorderColor: "#3c86d8",
+            //             data: [84, 41, 79, 80, 12, 46, 13,90]
+            //         }
+            //     ]
+            // };
+            // this.respChart($("#bar_top20_clientes"),"Bar",barChart);
+            //
+            // //bar_circuitos_conectividade
+            // var barChart = {
+            //     labels: ["January", "February", "March", "April", "May", "June", "July"],
+            //     datasets: [
+            //         {
+            //             label: "Sales Analytics",
+            //             backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
+            //             borderColor: "#3c86d8",
+            //             borderWidth: 2,
+            //             hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
+            //             hoverBorderColor: "#3c86d8",
+            //             data: [65, 59, 80, 81, 56, 55, 40,20]
+            //         },
+            //         {
+            //             label: "Outros Dados",
+            //             backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
+            //             borderColor: "#3c86d8",
+            //             borderWidth: 2,
+            //             hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
+            //             hoverBorderColor: "#3c86d8",
+            //             data: [31, 60, 12, 45, 80, 20, 84,1]
+            //         },
+            //         {
+            //             label: "Mais dados",
+            //             backgroundColor: "rgba(" + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) + "," + (Math.floor(Math.random() * 256)) +  ", 0.3)",
+            //             borderColor: "#3c86d8",
+            //             borderWidth: 2,
+            //             hoverBackgroundColor: "rgba(60, 134, 216, 0.7)",
+            //             hoverBorderColor: "#3c86d8",
+            //             data: [84, 41, 79, 80, 12, 46, 13,90]
+            //         }
+            //     ]
+            // };
+            // this.respChart($("#bar_circuitos_conectividade"),"Bar",barChart);
         },
         $.ChartJs = new ChartJs, $.ChartJs.Constructor = ChartJs
 

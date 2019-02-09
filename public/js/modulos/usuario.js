@@ -13,6 +13,15 @@ var table = $("#tb_usuario").DataTable({
             }
 
         },
+        {//Botão Visualizar Registro
+            className: "bt_visual",
+            text: "Visualizar",
+            name: "visualizar", // do not change name
+            titleAttr: "Visualizar Circuito",
+            action: function (e, dt, node, config) {
+            },
+            enabled: false
+        },
         {//Botão Editar Registro
             className: "bt_edit",
             text: "Editar",
@@ -87,9 +96,10 @@ table.on( "select deselect", function () {
     var selectedRows = table.rows( { selected: true } ).count();
 
     table.button( 1 ).enable( selectedRows === 1 );
-    table.button( 2 ).enable( selectedRows > 0 );
+    table.button( 2 ).enable( selectedRows === 1 );
     table.button( 3 ).enable( selectedRows > 0 );
     table.button( 4 ).enable( selectedRows > 0 );
+    table.button( 5 ).enable( selectedRows > 0 );
 });
 
 $("#login").on("change", function(){
@@ -272,55 +282,81 @@ $("#tb_usuario").on("click", "tr", function () {
 });
 
 $(".bt_edit").on("click", function(){
-    var nm_rows = ids.length;
-    if(nm_rows > 1){
-        swal({
-            title: "Edição de Usuários",
-            text: "Você somente pode editar um único usuário! Selecione apenas um e tente novamente!",
-            type: "warning"
-        });
-    } else if (nm_rows == 0) {
-        swal({
-            title: "Edição de Usuários",
-            text: "Você precisa selecionar um usuário para a edição!",
-            type: "warning"
-        });
-    } else {
-        var id_usuario = ids[0];
-        var action = actionCorreta(window.location.href.toString(), "usuario/formUsuario");
-        $.ajax({
-            type: "GET",
-            dataType: "JSON",
-            url: action,
-            data: {id_usuario: id_usuario},
-            beforeSend: function () {
-            },
-            complete: function () {
-            },
-            error: function (data) {
-                if (data.status && data.status === 401)
-                {
-                    swal({
-                        title: "Erro de Permissão",
-                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                        type: "warning"
-                    });
-                }
-            },
-            success: function (data) {
-                $("#id").val(data.dados.id);
-                $("#nome_pessoa").val(data.dados.nome);
-                $("#email").val(data.dados.email);
-                $("#login").val(data.dados.login);
-                $("#roles_name").val(data.dados.perfil).selected = "true";
-                $("#senhas").hide();
-                $("#reset_senha").show();
-                $("#modalusuario").modal();
+    var id_usuario = ids[0];
+    var action = actionCorreta(window.location.href.toString(), "usuario/formUsuario");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_usuario: id_usuario},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
             }
-        });
-        $("#salvaUser").removeClass("criar_usuario").addClass("editar_usuario");
-    }
+        },
+        success: function (data) {
+            $("#formUser input").removeAttr('readonly', 'readonly');
+            $("#formUser select").removeAttr('readonly', 'readonly');
+            $("#formUser textarea").removeAttr('readonly', 'readonly');
+            $("#id").val(data.dados.id);
+            $("#nome_pessoa").val(data.dados.nome);
+            $("#email").val(data.dados.email);
+            $("#login").val(data.dados.login);
+            $("#roles_name").val(data.dados.perfil).selected = "true";
+            $("#senhas").hide();
+            $("#reset_senha").show();
+            $("#modalusuario").modal();
+        }
+    });
+    $("#salvaUser").removeClass("criar_usuario").addClass("editar_usuario");
+});
 
+$(".bt_visual").on("click", function(){
+    var id_usuario = ids[0];
+    var action = actionCorreta(window.location.href.toString(), "usuario/formUsuario");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_usuario: id_usuario},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            $("#formUser input").attr('readonly', 'readonly');
+            $("#formUser select").attr('readonly', 'readonly');
+            $("#formUser textarea").attr('readonly', 'readonly');
+            $("#id").val(data.dados.id);
+            $("#nome_pessoa").val(data.dados.nome);
+            $("#email").val(data.dados.email);
+            $("#login").val(data.dados.login);
+            $("#roles_name").val(data.dados.perfil).selected = "true";
+            $("#senhas").hide();
+            $("#reset_senha").show();
+            $("#modalusuario").modal();
+        }
+    });
+    $("#salvaUser").removeClass("criar_usuario").addClass("editar_usuario");
 });
 
 $(document).on("click", ".editar_usuario", function(){

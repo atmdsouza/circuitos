@@ -9,6 +9,15 @@ var table = $("#tb_equipamento").DataTable({
             }
 
         },
+        {//Botão Visualizar Registro
+            className: "bt_visual",
+            text: "Visualizar",
+            name: "visualizar", // do not change name
+            titleAttr: "Visualizar Circuito",
+            action: function (e, dt, node, config) {
+            },
+            enabled: false
+        },
         {//Botão Editar Registro
             className: "bt_edit",
             text: "Editar",
@@ -83,9 +92,10 @@ table.on( "select deselect", function () {
     var selectedRows = table.rows( { selected: true } ).count();
 
     table.button( 1 ).enable( selectedRows === 1 );
-    table.button( 2 ).enable( selectedRows > 0 );
+    table.button( 2 ).enable( selectedRows === 1 );
     table.button( 3 ).enable( selectedRows > 0 );
     table.button( 4 ).enable( selectedRows > 0 );
+    table.button( 5 ).enable( selectedRows > 0 );
 });
 
 $(".bt_novo").on("click", function(){
@@ -239,96 +249,163 @@ $("#tb_equipamento").on("click", "tr", function () {
 });
 
 $(".bt_edit").on("click", function(){
-    var nm_rows = ids.length;
-    if(nm_rows > 1){
-        swal({
-            title: "Edição de Equipamentos",
-            text: "Você somente pode editar um único valor! Selecione apenas um e tente novamente!",
-            type: "warning"
-        });
-    } else if (nm_rows == 0) {
-        swal({
-            title: "Edição de Equipamentos",
-            text: "Você precisa selecionar um registro para a edição!",
-            type: "warning"
-        });
-    } else {
-        var id_equipamento = ids[0];
-        var action = actionCorreta(window.location.href.toString(), "equipamento/formEquipamento");
-        $.ajax({
-            type: "GET",
-            dataType: "JSON",
-            url: action,
-            data: {id_equipamento: id_equipamento},
-            beforeSend: function () {
-            },
-            complete: function () {
-            },
-            error: function (data) {
-                if (data.status && data.status === 401)
-                {
-                    swal({
-                        title: "Erro de Permissão",
-                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                        type: "warning"
-                    });
-                }
-            },
-            success: function (data) {
-                var action = actionCorreta(window.location.href.toString(), "equipamento/carregaModelos");
-                $.ajax({
-                    type: "GET",
-                    dataType: "JSON",
-                    url: action,
-                    data: {id_fabricante: data.dados.id_fabricante},
-                    beforeSend: function () {
-                    },
-                    complete: function () {
-                    },
-                    error: function (data) {
-                        if (data.status && data.status === 401)
-                        {
-                            swal({
-                                title: "Erro de Permissão",
-                                text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                                type: "warning"
-                            });
-                        }
-                    },
-                    success: function (data) {
-                        if (data.operacao){
-                            $(".remove").remove();
-                            $.each(data.dados, function (key, value) {
-                                var selected = (value.id_modelo == data.dados.id_modelo) ? "selected" : null;
-                                var linhas = "<option " + selected + " class='remove' value='" + value.id + "'>" + value.modelo + "</option>";
-                                $("#id_modelo").append(linhas);
-                                $("#id_modelo").removeAttr("disabled");
-                            });
-                        } else {
-                            $(".remove").remove();
-                            $("#id_modelo").val(null).selected = "true";
-                            $("#id_modelo").attr("disabled", "true");
-                            swal({
-                                title: "Cadastro de Equipamentos",
-                                text: data.mensagem,
-                                type: "error"
-                            });
-                        }
-                    }
+    var id_equipamento = ids[0];
+    var action = actionCorreta(window.location.href.toString(), "equipamento/formEquipamento");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_equipamento: id_equipamento},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
                 });
-                $("#id").val(data.dados.id);
-                $("#id_fabricante").val(data.dados.id_fabricante).selected = "true";
-                $("#id_tipoequipamento").val(data.dados.id_tipoequipamento).selected = "true";
-                $("#nome").val(data.dados.nome);
-                $("#numserie").val(data.dados.numserie);
-                $("#numpatrimonio").val(data.dados.numpatrimonio);
-                $("#descricao").val(data.dados.descricao);
-                $("#modalequipamento").modal();
             }
-        });
-        $("#salvarEquipamento").removeClass("criar_equipamento").addClass("editar_equipamento");
-    }
+        },
+        success: function (data) {
+            $("#formEquipamento input").removeAttr('readonly', 'readonly');
+            $("#formEquipamento select").removeAttr('readonly', 'readonly');
+            $("#formEquipamento textarea").removeAttr('readonly', 'readonly');
+            var action = actionCorreta(window.location.href.toString(), "equipamento/carregaModelos");
+            $.ajax({
+                type: "GET",
+                dataType: "JSON",
+                url: action,
+                data: {id_fabricante: data.dados.id_fabricante},
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        $(".remove").remove();
+                        $.each(data.dados, function (key, value) {
+                            var selected = (value.id_modelo == data.dados.id_modelo) ? "selected" : null;
+                            var linhas = "<option " + selected + " class='remove' value='" + value.id + "'>" + value.modelo + "</option>";
+                            $("#id_modelo").append(linhas);
+                            $("#id_modelo").removeAttr("disabled");
+                        });
+                    } else {
+                        $(".remove").remove();
+                        $("#id_modelo").val(null).selected = "true";
+                        $("#id_modelo").attr("disabled", "true");
+                        swal({
+                            title: "Cadastro de Equipamentos",
+                            text: data.mensagem,
+                            type: "error"
+                        });
+                    }
+                }
+            });
+            $("#id").val(data.dados.id);
+            $("#id_fabricante").val(data.dados.id_fabricante).selected = "true";
+            $("#id_tipoequipamento").val(data.dados.id_tipoequipamento).selected = "true";
+            $("#nome").val(data.dados.nome);
+            $("#numserie").val(data.dados.numserie);
+            $("#numpatrimonio").val(data.dados.numpatrimonio);
+            $("#descricao").val(data.dados.descricao);
+            $("#modalequipamento").modal();
+        }
+    });
+    $("#salvarEquipamento").removeClass("criar_equipamento").addClass("editar_equipamento");
+});
 
+$(".bt_visual").on("click", function(){
+    var id_equipamento = ids[0];
+    var action = actionCorreta(window.location.href.toString(), "equipamento/formEquipamento");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_equipamento: id_equipamento},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            $("#formEquipamento input").attr('readonly', 'readonly');
+            $("#formEquipamento select").attr('readonly', 'readonly');
+            $("#formEquipamento textarea").attr('readonly', 'readonly');
+            var action = actionCorreta(window.location.href.toString(), "equipamento/carregaModelos");
+            $.ajax({
+                type: "GET",
+                dataType: "JSON",
+                url: action,
+                data: {id_fabricante: data.dados.id_fabricante},
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        $(".remove").remove();
+                        $.each(data.dados, function (key, value) {
+                            var selected = (value.id_modelo == data.dados.id_modelo) ? "selected" : null;
+                            var linhas = "<option " + selected + " class='remove' value='" + value.id + "'>" + value.modelo + "</option>";
+                            $("#id_modelo").append(linhas);
+                            $("#id_modelo").removeAttr("disabled");
+                        });
+                    } else {
+                        $(".remove").remove();
+                        $("#id_modelo").val(null).selected = "true";
+                        $("#id_modelo").attr("disabled", "true");
+                        swal({
+                            title: "Cadastro de Equipamentos",
+                            text: data.mensagem,
+                            type: "error"
+                        });
+                    }
+                }
+            });
+            $("#id").val(data.dados.id);
+            $("#id_fabricante").val(data.dados.id_fabricante).selected = "true";
+            $("#id_tipoequipamento").val(data.dados.id_tipoequipamento).selected = "true";
+            $("#nome").val(data.dados.nome);
+            $("#numserie").val(data.dados.numserie);
+            $("#numpatrimonio").val(data.dados.numpatrimonio);
+            $("#descricao").val(data.dados.descricao);
+            $("#modalequipamento").modal();
+        }
+    });
+    $("#salvarEquipamento").removeClass("criar_equipamento").addClass("editar_equipamento");
 });
 
 $(document).on("click", ".editar_equipamento", function(){

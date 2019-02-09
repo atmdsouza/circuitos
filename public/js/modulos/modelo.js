@@ -9,6 +9,15 @@ var table = $("#tb_modelo").DataTable({
             }
 
         },
+        {//Botão Visualizar Registro
+            className: "bt_visual",
+            text: "Visualizar",
+            name: "visualizar", // do not change name
+            titleAttr: "Visualizar Circuito",
+            action: function (e, dt, node, config) {
+            },
+            enabled: false
+        },
         {//Botão Editar Registro
             className: "bt_edit",
             text: "Editar",
@@ -83,9 +92,10 @@ table.on( "select deselect", function () {
     var selectedRows = table.rows( { selected: true } ).count();
 
     table.button( 1 ).enable( selectedRows === 1 );
-    table.button( 2 ).enable( selectedRows > 0 );
+    table.button( 2 ).enable( selectedRows === 1 );
     table.button( 3 ).enable( selectedRows > 0 );
     table.button( 4 ).enable( selectedRows > 0 );
+    table.button( 5 ).enable( selectedRows > 0 );
 });
 
 $(".bt_novo").on("click", function(){
@@ -177,52 +187,75 @@ $("#tb_modelo").on("click", "tr", function () {
 });
 
 $(".bt_edit").on("click", function(){
-    var nm_rows = ids.length;
-    if(nm_rows > 1){
-        swal({
-            title: "Edição de Modelos",
-            text: "Você somente pode editar um único valor! Selecione apenas um e tente novamente!",
-            type: "warning"
-        });
-    } else if (nm_rows == 0) {
-        swal({
-            title: "Edição de Modelos",
-            text: "Você precisa selecionar um registro para a edição!",
-            type: "warning"
-        });
-    } else {
-        var id_modelo = ids[0];
-        var action = actionCorreta(window.location.href.toString(), "modelo/formModelo");
-        $.ajax({
-            type: "GET",
-            dataType: "JSON",
-            url: action,
-            data: {id_modelo: id_modelo},
-            beforeSend: function () {
-            },
-            complete: function () {
-            },
-            error: function (data) {
-                if (data.status && data.status === 401)
-                {
-                    swal({
-                        title: "Erro de Permissão",
-                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                        type: "warning"
-                    });
-                }
-            },
-            success: function (data) {
-                $("#id").val(data.dados.id);
-                $("#id_fabricante").val(data.dados.id_fabricante).selected = "true";
-                $("#modelo").val(data.dados.modelo);
-                $("#descricao").val(data.dados.descricao);
-                $("#modalmodelo").modal();
+    var id_modelo = ids[0];
+    var action = actionCorreta(window.location.href.toString(), "modelo/formModelo");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_modelo: id_modelo},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
             }
-        });
-        $("#salvarModelo").removeClass("criar_modelo").addClass("editar_modelo");
-    }
+        },
+        success: function (data) {
+            $("#formModelo input").removeAttr('readonly', 'readonly');
+            $("#formModelo select").removeAttr('readonly', 'readonly');
+            $("#formModelo textarea").removeAttr('readonly', 'readonly');
+            $("#id").val(data.dados.id);
+            $("#id_fabricante").val(data.dados.id_fabricante).selected = "true";
+            $("#modelo").val(data.dados.modelo);
+            $("#descricao").val(data.dados.descricao);
+            $("#modalmodelo").modal();
+        }
+    });
+    $("#salvarModelo").removeClass("criar_modelo").addClass("editar_modelo");
+});
 
+$(".bt_visual").on("click", function(){
+    var id_modelo = ids[0];
+    var action = actionCorreta(window.location.href.toString(), "modelo/formModelo");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_modelo: id_modelo},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            $("#formModelo input").attr('readonly', 'readonly');
+            $("#formModelo select").attr('readonly', 'readonly');
+            $("#formModelo textarea").attr('readonly', 'readonly');
+            $("#id").val(data.dados.id);
+            $("#id_fabricante").val(data.dados.id_fabricante).selected = "true";
+            $("#modelo").val(data.dados.modelo);
+            $("#descricao").val(data.dados.descricao);
+            $("#modalmodelo").modal();
+        }
+    });
+    $("#salvarModelo").removeClass("criar_modelo").addClass("editar_modelo");
 });
 
 $(document).on("click", ".editar_modelo", function(){

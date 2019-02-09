@@ -26,6 +26,16 @@ $router->add("/cliente_unidade", [
     "action" => "index"
 ]);
 
+$router->add("/central_mensagens", [
+    "controller" => "central_mensagens",
+    "action" => "index"
+]);
+
+$router->add("/controle_acesso", [
+    "controller" => "controle_acesso",
+    "action" => "index"
+]);
+
 $router->add("/empresa", [
     "controller" => "empresa",
     "action" => "index"
@@ -70,4 +80,3 @@ $router->add("/session", [
     "controller" => "session",
     "action" => "login"
 ]);
-

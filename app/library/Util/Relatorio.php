@@ -6,10 +6,10 @@ use Circuitos\Models\Circuitos;
 use Circuitos\Models\Movimentos;
 use Circuitos\Models\Empresa;
 
-use Util\Util;
 use Spipu\Html2Pdf\Html2Pdf;
 
 require APP_PATH . '/library/HTML2PDF/autoload.php';
+require APP_PATH . '/config/constantes.php';
 
 class Relatorio
 {
@@ -286,9 +286,9 @@ class Relatorio
             $html2pdf->pdf->SetDisplayMode('fullpage');
             $html2pdf->writeHTML($corpo_html);
             $nome_arquivo = "Circuito_" . date("HisYmd") . ".pdf";
-            $nome_caminho = "/circuitos/public/relatorios/" . $nome_arquivo;
+            $nome_caminho = CAMINHO_PADRAO_RELATORIOS . $nome_arquivo;
             $html2pdf->Output($nome_caminho, 'F');
-            return "/circuitos/public/relatorios/" . $nome_arquivo;
+            return $nome_caminho;
         } catch (HTML2PDF_exception $e) {
             echo $e;
             var_dump($e);
@@ -446,9 +446,9 @@ class Relatorio
             $html2pdf->pdf->SetDisplayMode('fullpage');
             $html2pdf->writeHTML($corpo_html);
             $nome_arquivo = "RelatorioCircuito_" . date("HisYmd") . ".pdf";
-            $nome_caminho = "/circuitos/public/relatorios/" . $nome_arquivo;
+            $nome_caminho = CAMINHO_PADRAO_RELATORIOS . $nome_arquivo;
             $html2pdf->Output($nome_caminho, 'F');
-            return "/circuitos/public/relatorios/" . $nome_arquivo;
+            return $nome_caminho;
         } catch (HTML2PDF_exception $e) {
             echo $e;
             var_dump($e);

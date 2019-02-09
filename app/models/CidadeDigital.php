@@ -226,6 +226,22 @@ class CidadeDigital extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Consulta retornar a cidade e o estado do circuito
+     *
+     * @return CidadeDigital|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function CidadeUfporCidadeDigital($id_cidadedigital)
+    {
+        $query = new Builder();
+        $query->from(array("CidadeDigital" => "Circuitos\Models\CidadeDigital"));
+        $query->columns("EndCidade.cidade, EndCidade.uf");
+        $query->innerJoin("Circuitos\Models\EndCidade", "CidadeDigital.id_cidade = EndCidade.id", "EndCidade");
+        $query->where("CidadeDigital.id = {$id_cidadedigital}");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
      * Consulta para gráfico de cidades digitais por status
      *
      * @return CidadeDigital|\Phalcon\Mvc\Model\Resultset
@@ -234,7 +250,7 @@ class CidadeDigital extends \Phalcon\Mvc\Model
     {
         $query = new Builder();
         $query->from(array("CidadeDigital" => "Circuitos\Models\CidadeDigital"));
-        $query->columns("CASE CidadeDigital.ativo WHEN 1 THEN 'Ativo' ELSE 'Inativo' END AS status, count(CidadeDigital.ativo) AS total");
+        $query->columns("CASE CidadeDigital.ativo WHEN 1 THEN 'ATIVO' ELSE 'INATIVO' END AS status, count(CidadeDigital.ativo) AS total");
         $query->groupBy("CidadeDigital.ativo");
         $resultado = $query->getQuery()->execute();
         return $resultado;

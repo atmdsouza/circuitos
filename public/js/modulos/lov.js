@@ -9,6 +9,15 @@ var table = $("#tb_lov").DataTable({
             }
 
         },
+        {//Botão Visualizar Registro
+            className: "bt_visual",
+            text: "Visualizar",
+            name: "visualizar", // do not change name
+            titleAttr: "Visualizar Circuito",
+            action: function (e, dt, node, config) {
+            },
+            enabled: false
+        },
         {//Botão Editar Registro
             className: "bt_edit",
             text: "Editar",
@@ -83,9 +92,10 @@ table.on( "select deselect", function () {
     var selectedRows = table.rows( { selected: true } ).count();
 
     table.button( 1 ).enable( selectedRows === 1 );
-    table.button( 2 ).enable( selectedRows > 0 );
+    table.button( 2 ).enable( selectedRows === 1 );
     table.button( 3 ).enable( selectedRows > 0 );
     table.button( 4 ).enable( selectedRows > 0 );
+    table.button( 5 ).enable( selectedRows > 0 );
 });
 
 $(".bt_novo").on("click", function(){
@@ -177,54 +187,79 @@ $("#tb_lov").on("click", "tr", function () {
 });
 
 $(".bt_edit").on("click", function(){
-    var nm_rows = ids.length;
-    if(nm_rows > 1){
-        swal({
-            title: "Edição de Valores",
-            text: "Você somente pode editar um único valor! Selecione apenas um e tente novamente!",
-            type: "warning"
-        });
-    } else if (nm_rows == 0) {
-        swal({
-            title: "Edição de Valores",
-            text: "Você precisa selecionar um registro para a edição!",
-            type: "warning"
-        });
-    } else {
-        var id_lov = ids[0];
-        var action = actionCorreta(window.location.href.toString(), "lov/formLov");
-        $.ajax({
-            type: "GET",
-            dataType: "JSON",
-            url: action,
-            data: {id_lov: id_lov},
-            beforeSend: function () {
-            },
-            complete: function () {
-            },
-            error: function (data) {
-                if (data.status && data.status === 401)
-                {
-                    swal({
-                        title: "Erro de Permissão",
-                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                        type: "warning"
-                    });
-                }
-            },
-            success: function (data) {
-                $("#id").val(data.dados.id);
-                $("#tipo").val(data.dados.tipo).selected = "true";
-                $("#descricao").val(data.dados.descricao);
-                $("#codigoespecifico").val(data.dados.codigoespecifico);
-                $("#duracao").val(data.dados.duracao);
-                $("#valor").val(data.dados.valor);
-                $("#modallov").modal();
+    var id_lov = ids[0];
+    var action = actionCorreta(window.location.href.toString(), "lov/formLov");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_lov: id_lov},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
             }
-        });
-        $("#salvarLov").removeClass("criar_lov").addClass("editar_lov");
-    }
+        },
+        success: function (data) {
+            $("#formLov input").removeAttr('readonly', 'readonly');
+            $("#formLov select").removeAttr('readonly', 'readonly');
+            $("#formLov textarea").removeAttr('readonly', 'readonly');
+            $("#id").val(data.dados.id);
+            $("#tipo").val(data.dados.tipo).selected = "true";
+            $("#descricao").val(data.dados.descricao);
+            $("#codigoespecifico").val(data.dados.codigoespecifico);
+            $("#duracao").val(data.dados.duracao);
+            $("#valor").val(data.dados.valor);
+            $("#modallov").modal();
+        }
+    });
+    $("#salvarLov").removeClass("criar_lov").addClass("editar_lov");
+});
 
+$(".bt_visual").on("click", function(){
+    var id_lov = ids[0];
+    var action = actionCorreta(window.location.href.toString(), "lov/formLov");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_lov: id_lov},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            $("#formLov input").attr('readonly', 'readonly');
+            $("#formLov select").attr('readonly', 'readonly');
+            $("#formLov textarea").attr('readonly', 'readonly');
+            $("#id").val(data.dados.id);
+            $("#tipo").val(data.dados.tipo).selected = "true";
+            $("#descricao").val(data.dados.descricao);
+            $("#codigoespecifico").val(data.dados.codigoespecifico);
+            $("#duracao").val(data.dados.duracao);
+            $("#valor").val(data.dados.valor);
+            $("#modallov").modal();
+        }
+    });
+    $("#salvarLov").removeClass("criar_lov").addClass("editar_lov");
 });
 
 $(document).on("click", ".editar_lov", function(){

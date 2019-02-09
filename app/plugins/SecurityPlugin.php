@@ -13,12 +13,9 @@ use Phalcon\Events\Event;
 use Phalcon\Mvc\User\Plugin;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Acl\Adapter\Memory as AclList;
-use Phalcon\Http\Response as Response;
 
 use Circuitos\Models\PhalconRoles;
-use Circuitos\Models\PhalconResources;
 use Circuitos\Models\PhalconAccessList;
-use Circuitos\Models\PhalconResourcesAccesses;
 
 use Auth\Autentica;
 

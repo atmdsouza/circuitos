@@ -43,6 +43,30 @@ class IndexController extends ControllerBase
         return $response;
     }
 
+    public function circuitoFuncaoAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = Circuitos::circuitoFuncao();
+        $response->setContent(json_encode(array(
+            "dados" => $dados
+        )));
+        return $response;
+    }
+
+    public function circuitoAcessoAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = Circuitos::circuitoAcesso();
+        $response->setContent(json_encode(array(
+            "dados" => $dados
+        )));
+        return $response;
+    }
+
     public function circuitoEsferaAction()
     {
         //Desabilita o layout para o ajax
@@ -67,12 +91,64 @@ class IndexController extends ControllerBase
         return $response;
     }
 
+    public function circuitoLinkMesAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $primeiro_dia = date("Y") . "-" . date("m") . "-01";
+        $hoje = date("Y-m-d");
+        $dados = Circuitos::circuitoLinkMes($primeiro_dia, $hoje);
+        $response->setContent(json_encode(array(
+            "dados" => $dados
+        )));
+        return $response;
+    }
+
+    public function circuitoStatusMesAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $primeiro_dia = date("Y") . "-" . date("m") . "-01";
+        $hoje = date("Y-m-d");
+        $dados = Circuitos::circuitoStatusMes($primeiro_dia, $hoje);
+        $response->setContent(json_encode(array(
+            "dados" => $dados
+        )));
+        return $response;
+    }
+
+    public function circuitoConectividadeAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = Circuitos::circuitoConectividade();
+        $response->setContent(json_encode(array(
+            "dados" => $dados
+        )));
+        return $response;
+    }
+
     public function cidadedigitalStatusAction()
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
         $response = new Response();
         $dados = CidadeDigital::cidadedigitalStatus();
+        $response->setContent(json_encode(array(
+            "dados" => $dados
+        )));
+        return $response;
+    }
+
+    public function circuitoHotzoneCidadeAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = Circuitos::circuitoHotzoneCidade();
         $response->setContent(json_encode(array(
             "dados" => $dados
         )));

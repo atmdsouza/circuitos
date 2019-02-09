@@ -9,6 +9,15 @@ var table = $("#tb_cidadedigital").DataTable({
             }
 
         },
+        {//Botão Visualizar Registro
+            className: "bt_visual",
+            text: "Visualizar",
+            name: "visualizar", // do not change name
+            titleAttr: "Visualizar Circuito",
+            action: function (e, dt, node, config) {
+            },
+            enabled: false
+        },
         {//Botão Editar Registro
             className: "bt_edit",
             text: "Editar",
@@ -83,9 +92,10 @@ table.on( 'select deselect', function () {
     var selectedRows = table.rows( { selected: true } ).count();
 
     table.button( 1 ).enable( selectedRows === 1 );
-    table.button( 2 ).enable( selectedRows > 0 );
+    table.button( 2 ).enable( selectedRows === 1 );
     table.button( 3 ).enable( selectedRows > 0 );
     table.button( 4 ).enable( selectedRows > 0 );
+    table.button( 5 ).enable( selectedRows > 0 );
 });
 
 //Limpar Linhas da Tabela
@@ -268,65 +278,101 @@ $("#tb_cidadedigital").on("click", "tr", function () {
 });
 
 $(".bt_edit").on("click", function(){
-    var nm_rows = ids.length;
-    if(nm_rows > 1){
-        swal({
-            title: "Edição de Cidade Digital",
-            text: "Você somente pode editar um único valor! Selecione apenas um e tente novamente!",
-            type: "warning"
-        });
-    } else if (nm_rows == 0) {
-        swal({
-            title: "Edição de Cidade Digital",
-            text: "Você precisa selecionar um registro para a edição!",
-            type: "warning"
-        });
-    } else {
-        var id_cidadedigital = ids[0];
-        var action = actionCorreta(window.location.href.toString(), "cidade_digital/formCidadeDigital");
-        $.ajax({
-            type: "GET",
-            dataType: "JSON",
-            url: action,
-            data: {id_cidadedigital: id_cidadedigital},
-            beforeSend: function () {
-            },
-            complete: function () {
-            },
-            error: function (data) {
-                if (data.status && data.status === 401)
-                {
-                    swal({
-                        title: "Erro de Permissão",
-                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                        type: "warning"
-                    });
-                }
-            },
-            success: function (data) {
-                $(".tr_remove").remove();
-                $("#id").val(data.dados.id);
-                $("#id_cidade").val(data.dados.id_cidade).selected = "true";
-                $("#descricao").val(data.dados.descricao);
-                if (data.conectividades) {
-                    $.each(data.conectividades, function (key, value) {
-                        var linhas;
-                        linhas += "<tr class='tr_remove' id='trcn" + value.Conectividade.id + "'>";
-                        linhas += "<td>"+ value.descricao +"<input name='res_tipo_conectividade[]' type='hidden' value='"+ value.Conectividade.id_tipo +"' /></td>";
-                        linhas += "<td>"+ value.Conectividade.descricao +"<input name='res_conectividade[]' type='hidden' value='"+ value.Conectividade.descricao +"' /></td>";
-                        linhas += "<td>"+ value.Conectividade.endereco +"<input name='res_endereco[]' type='hidden' value='"+ value.Conectividade.endereco +"' /></td>";
-                        linhas += "<td><a href='#' id='" + value.Conectividade.id + "' class='del_conec'><i class='fi-circle-cross'></i></a></td>";
-                        linhas += "</tr class='remove'>";
-                        $("#tb_conectividade").append(linhas);
-                        $("#tb_conectividade").show();
-                    });
-                }
-                $("#modalcidadedigital").modal();
+    var id_cidadedigital = ids[0];
+    var action = actionCorreta(window.location.href.toString(), "cidade_digital/formCidadeDigital");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_cidadedigital: id_cidadedigital},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
             }
-        });
-        $("#salvarCidadeDigital").removeClass("criar_cidadedigital").addClass("editar_cidadedigital");
-    }
+        },
+        success: function (data) {
+            $("#formCidadeDigital input").removeAttr('readonly', 'readonly');
+            $("#formCidadeDigital select").removeAttr('readonly', 'readonly');
+            $("#formCidadeDigital textarea").removeAttr('readonly', 'readonly');
+            $(".tr_remove").remove();
+            $("#id").val(data.dados.id);
+            $("#id_cidade").val(data.dados.id_cidade).selected = "true";
+            $("#descricao").val(data.dados.descricao);
+            if (data.conectividades) {
+                $.each(data.conectividades, function (key, value) {
+                    var linhas;
+                    linhas += "<tr class='tr_remove' id='trcn" + value.Conectividade.id + "'>";
+                    linhas += "<td>"+ value.descricao +"<input name='res_tipo_conectividade[]' type='hidden' value='"+ value.Conectividade.id_tipo +"' /></td>";
+                    linhas += "<td>"+ value.Conectividade.descricao +"<input name='res_conectividade[]' type='hidden' value='"+ value.Conectividade.descricao +"' /></td>";
+                    linhas += "<td>"+ value.Conectividade.endereco +"<input name='res_endereco[]' type='hidden' value='"+ value.Conectividade.endereco +"' /></td>";
+                    linhas += "<td><a href='#' id='" + value.Conectividade.id + "' class='del_conec'><i class='fi-circle-cross'></i></a></td>";
+                    linhas += "</tr class='remove'>";
+                    $("#tb_conectividade").append(linhas);
+                    $("#tb_conectividade").show();
+                });
+            }
+            $("#modalcidadedigital").modal();
+        }
+    });
+    $("#salvarCidadeDigital").removeClass("criar_cidadedigital").addClass("editar_cidadedigital");
+});
 
+$(".bt_visual").on("click", function(){
+    var id_cidadedigital = ids[0];
+    var action = actionCorreta(window.location.href.toString(), "cidade_digital/formCidadeDigital");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_cidadedigital: id_cidadedigital},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            $("#formCidadeDigital input").attr('readonly', 'readonly');
+            $("#formCidadeDigital select").attr('readonly', 'readonly');
+            $("#formCidadeDigital textarea").attr('readonly', 'readonly');
+            $(".tr_remove").remove();
+            $("#id").val(data.dados.id);
+            $("#id_cidade").val(data.dados.id_cidade).selected = "true";
+            $("#descricao").val(data.dados.descricao);
+            if (data.conectividades) {
+                $.each(data.conectividades, function (key, value) {
+                    var linhas;
+                    linhas += "<tr class='tr_remove' id='trcn" + value.Conectividade.id + "'>";
+                    linhas += "<td>"+ value.descricao +"<input name='res_tipo_conectividade[]' type='hidden' value='"+ value.Conectividade.id_tipo +"' /></td>";
+                    linhas += "<td>"+ value.Conectividade.descricao +"<input name='res_conectividade[]' type='hidden' value='"+ value.Conectividade.descricao +"' /></td>";
+                    linhas += "<td>"+ value.Conectividade.endereco +"<input name='res_endereco[]' type='hidden' value='"+ value.Conectividade.endereco +"' /></td>";
+                    linhas += "<td><a href='#' id='" + value.Conectividade.id + "' class='del_conec'><i class='fi-circle-cross'></i></a></td>";
+                    linhas += "</tr class='remove'>";
+                    $("#tb_conectividade").append(linhas);
+                    $("#tb_conectividade").show();
+                });
+            }
+            $("#modalcidadedigital").modal();
+        }
+    });
+    $("#salvarCidadeDigital").removeClass("criar_cidadedigital").addClass("editar_cidadedigital");
 });
 
 $(document).on("click", ".editar_cidadedigital", function(){

@@ -9,6 +9,15 @@ var table = $("#tb_empresa").DataTable({
             }
 
         },
+        {//Botão Visualizar Registro
+            className: "bt_visual",
+            text: "Visualizar",
+            name: "visualizar", // do not change name
+            titleAttr: "Visualizar Circuito",
+            action: function (e, dt, node, config) {
+            },
+            enabled: false
+        },
         {//Botão Editar Registro
             className: "bt_edit",
             text: "Editar",
@@ -81,10 +90,12 @@ table.buttons().container().appendTo("#tb_empresa_wrapper .col-md-6:eq(0)");
 
 table.on( "select deselect", function () {
     var selectedRows = table.rows( { selected: true } ).count();
+
     table.button( 1 ).enable( selectedRows === 1 );
-    table.button( 2 ).enable( selectedRows > 0 );
+    table.button( 2 ).enable( selectedRows === 1 );
     table.button( 3 ).enable( selectedRows > 0 );
     table.button( 4 ).enable( selectedRows > 0 );
+    table.button( 5 ).enable( selectedRows > 0 );
 });
 
 $("#cnpj").on("change", function(){
@@ -389,71 +400,113 @@ $("#tb_empresa").on("click", "tr", function () {
 });
 
 $(".bt_edit").on("click", function(){
-    var nm_rows = ids.length;
-    if(nm_rows > 1){
-        swal({
-            title: "Edição de Empresas",
-            text: "Você somente pode editar uma única empresa! Selecione apenas uma e tente novamente!",
-            type: "warning"
-        });
-    } else if (nm_rows == 0) {
-        swal({
-            title: "Edição de Empresas",
-            text: "Você precisa selecionar uma empresa para a edição!",
-            type: "warning"
-        });
-    } else {
-        var id_empresa = ids[0];
-        var action = actionCorreta(window.location.href.toString(), "empresa/formEmpresa");
-        $.ajax({
-            type: "GET",
-            dataType: "JSON",
-            url: action,
-            data: {id_empresa: id_empresa},
-            beforeSend: function () {
-            },
-            complete: function () {
-            },
-            error: function (data) {
-                if (data.status && data.status === 401)
-                {
-                    swal({
-                        title: "Erro de Permissão",
-                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                        type: "warning"
-                    });
-                }
-            },
-            success: function (data) {
-                $("#id").val(data.dados.id);
-                $("#setor").val(data.dados.setor).selected = "true";
-                $("#esfera").val(data.dados.esfera).selected = "true";
-                $("#nome_pessoa").val(data.dados.nome_pessoa);
-                $("#razaosocial").val(data.dados.razaosocial);
-                $("#cnpj").val(data.dados.cnpj);
-                $("#inscestadual").val(data.dados.inscestadual);
-                $("#inscmunicipal").val(data.dados.inscmunicipal);
-                $("#fundacao").val(data.dados.fundacao);
-                $("#email").val(data.dados.email);
-                $("#mail_host").val(data.dados.mail_host);
-                $("#mail_port").val(data.dados.mail_port);
-                $("#mail_smtpssl").val(data.dados.mail_smtpssl);
-                $("#mail_user").val(data.dados.mail_user);
-                $("#mail_passwrd").val(data.dados.mail_passwrd);
-                $("#sigla_uf").val(data.dados.pessoaendereco.sigla_uf);
-                $("#cep").val(data.dados.pessoaendereco.cep);
-                $("#endereco").val(data.dados.pessoaendereco.endereco);
-                $("#numero").val(data.dados.pessoaendereco.numero);
-                $("#bairro").val(data.dados.pessoaendereco.bairro);
-                $("#cidade").val(data.dados.pessoaendereco.cidade);
-                $("#estado").val(data.dados.pessoaendereco.estado);
-                $("#complemento").val(data.dados.pessoaendereco.complemento);
-                $("#modalempresa").modal();
+    var id_empresa = ids[0];
+    var action = actionCorreta(window.location.href.toString(), "empresa/formEmpresa");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_empresa: id_empresa},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
             }
-        });
-        $("#salvaEmpresa").removeClass("criar_empresa").addClass("editar_empresa");
-    }
+        },
+        success: function (data) {
+            $("#formEmpresa input").removeAttr('readonly', 'readonly');
+            $("#formEmpresa select").removeAttr('readonly', 'readonly');
+            $("#formEmpresa textarea").removeAttr('readonly', 'readonly');
+            $("#id").val(data.dados.id);
+            $("#setor").val(data.dados.setor).selected = "true";
+            $("#esfera").val(data.dados.esfera).selected = "true";
+            $("#nome_pessoa").val(data.dados.nome_pessoa);
+            $("#razaosocial").val(data.dados.razaosocial);
+            $("#cnpj").val(data.dados.cnpj);
+            $("#inscestadual").val(data.dados.inscestadual);
+            $("#inscmunicipal").val(data.dados.inscmunicipal);
+            $("#fundacao").val(data.dados.fundacao);
+            $("#email").val(data.dados.email);
+            $("#mail_host").val(data.dados.mail_host);
+            $("#mail_port").val(data.dados.mail_port);
+            $("#mail_smtpssl").val(data.dados.mail_smtpssl);
+            $("#mail_user").val(data.dados.mail_user);
+            $("#mail_passwrd").val(data.dados.mail_passwrd);
+            $("#sigla_uf").val(data.dados.pessoaendereco.sigla_uf);
+            $("#cep").val(data.dados.pessoaendereco.cep);
+            $("#endereco").val(data.dados.pessoaendereco.endereco);
+            $("#numero").val(data.dados.pessoaendereco.numero);
+            $("#bairro").val(data.dados.pessoaendereco.bairro);
+            $("#cidade").val(data.dados.pessoaendereco.cidade);
+            $("#estado").val(data.dados.pessoaendereco.estado);
+            $("#complemento").val(data.dados.pessoaendereco.complemento);
+            $("#modalempresa").modal();
+        }
+    });
+    $("#salvaEmpresa").removeClass("criar_empresa").addClass("editar_empresa");
+});
 
+$(".bt_visual").on("click", function(){
+    var id_empresa = ids[0];
+    var action = actionCorreta(window.location.href.toString(), "empresa/formEmpresa");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_empresa: id_empresa},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            $("#formEmpresa input").attr('readonly', 'readonly');
+            $("#formEmpresa select").attr('readonly', 'readonly');
+            $("#formEmpresa textarea").attr('readonly', 'readonly');
+            $("#id").val(data.dados.id);
+            $("#setor").val(data.dados.setor).selected = "true";
+            $("#esfera").val(data.dados.esfera).selected = "true";
+            $("#nome_pessoa").val(data.dados.nome_pessoa);
+            $("#razaosocial").val(data.dados.razaosocial);
+            $("#cnpj").val(data.dados.cnpj);
+            $("#inscestadual").val(data.dados.inscestadual);
+            $("#inscmunicipal").val(data.dados.inscmunicipal);
+            $("#fundacao").val(data.dados.fundacao);
+            $("#email").val(data.dados.email);
+            $("#mail_host").val(data.dados.mail_host);
+            $("#mail_port").val(data.dados.mail_port);
+            $("#mail_smtpssl").val(data.dados.mail_smtpssl);
+            $("#mail_user").val(data.dados.mail_user);
+            $("#mail_passwrd").val(data.dados.mail_passwrd);
+            $("#sigla_uf").val(data.dados.pessoaendereco.sigla_uf);
+            $("#cep").val(data.dados.pessoaendereco.cep);
+            $("#endereco").val(data.dados.pessoaendereco.endereco);
+            $("#numero").val(data.dados.pessoaendereco.numero);
+            $("#bairro").val(data.dados.pessoaendereco.bairro);
+            $("#cidade").val(data.dados.pessoaendereco.cidade);
+            $("#estado").val(data.dados.pessoaendereco.estado);
+            $("#complemento").val(data.dados.pessoaendereco.complemento);
+            $("#modalempresa").modal();
+        }
+    });
+    $("#salvaEmpresa").removeClass("criar_empresa").addClass("editar_empresa");
 });
 
 $(document).on("click", ".editar_empresa", function(){

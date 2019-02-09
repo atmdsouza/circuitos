@@ -8,8 +8,6 @@ use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Phalcon\Http\Response as Response;
 
-use Circuitos\Controllers\ControllerBase;
-
 use Circuitos\Models\Circuitos;
 use Circuitos\Models\CidadeDigital;
 use Circuitos\Models\Conectividade;
@@ -300,13 +298,13 @@ class CircuitosController extends ControllerBase
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             try {
-                $cliente = Cliente::findFirst("id={$params["id_cliente"]}");
-                $pessoaendereco = PessoaEndereco::findFirst("id_pessoa={$cliente->getIdPessoa()}");
                 $unidade = (isset($params["id_cliente_unidade"])) ? $params["id_cliente_unidade"] : null ;
-                $uf = (!empty($pessoaendereco)) ? $pessoaendereco->getSiglaEstado() : null;
-                $cidade = (!empty($pessoaendereco)) ? $pessoaendereco->getCidade() : null;
+                //Coletando a cidade e estado com base na cidade digital escolhida
+                $cidade_estado = CidadeDigital::CidadeUfporCidadeDigital($params["id_cidadedigital"]);
+                //Coletando a última designação
                 $circuito = Circuitos::findFirst("designacao = (SELECT MAX(designacao) FROM Circuitos\Models\Circuitos)");
                 $vl_designacao = $circuito->getDesignacao() + 1;
+                //Criando o Circuito
                 $circuitos = new Circuitos();
                 $circuitos->setTransaction($transaction);
                 $circuitos->setIdCliente($params["id_cliente"]);
@@ -322,8 +320,8 @@ class CircuitosController extends ControllerBase
                 $circuitos->setIdConectividade($params["id_conectividade"]);
                 $circuitos->setDesignacao($vl_designacao);
                 $circuitos->setDesignacaoAnterior(mb_strtoupper($params["designacao_anterior"], $this->encode));
-                $circuitos->setUf(mb_strtoupper($uf, $this->encode));
-                $circuitos->setCidade(mb_strtoupper($cidade, $this->encode));
+                $circuitos->setUf(mb_strtoupper($cidade_estado[0]["uf"], $this->encode));
+                $circuitos->setCidade(mb_strtoupper($cidade_estado[0]["cidade"], $this->encode));
                 $circuitos->setSsid($params["ssid"]);
                 $circuitos->setChamado($params["chamado"]);
                 $circuitos->setIpRedelocal($params["ip_redelocal"]);
@@ -395,11 +393,10 @@ class CircuitosController extends ControllerBase
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             try {
-                $cliente = Cliente::findFirst("id={$params["id_cliente"]}");
-                $pessoaendereco = PessoaEndereco::findFirst("id_pessoa={$cliente->getIdPessoa()}");
+                //Coletando a cidade e estado com base na cidade digital escolhida
+                $cidade_estado = CidadeDigital::CidadeUfporCidadeDigital($params["id_cidadedigital"]);
                 $unidade = (isset($params["id_cliente_unidade"])) ? $params["id_cliente_unidade"] : null ;
-                $uf = (!empty($pessoaendereco)) ? $pessoaendereco->getSiglaEstado() : null;
-                $cidade = (!empty($pessoaendereco)) ? $pessoaendereco->getCidade() : null;
+                //Editando Circuitos
                 $circuitos->setTransaction($transaction);
                 $circuitos->setIdCliente($params["id_cliente"]);
                 $circuitos->setIdClienteUnidade($unidade);
@@ -411,8 +408,8 @@ class CircuitosController extends ControllerBase
                 $circuitos->setIdCidadedigital($params["id_cidadedigital"]);
                 $circuitos->setIdConectividade($params["id_conectividade"]);
                 $circuitos->setDesignacaoAnterior(mb_strtoupper($params["designacao_anterior"], $this->encode));
-                $circuitos->setUf(mb_strtoupper($uf, $this->encode));
-                $circuitos->setCidade(mb_strtoupper($cidade, $this->encode));
+                $circuitos->setUf(mb_strtoupper($cidade_estado[0]["uf"], $this->encode));
+                $circuitos->setCidade(mb_strtoupper($cidade_estado[0]["cidade"], $this->encode));
                 $circuitos->setSsid($params["ssid"]);
                 $circuitos->setChamado($params["chamado"]);
                 $circuitos->setTag($params["tag"]);
