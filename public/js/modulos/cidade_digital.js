@@ -304,7 +304,7 @@ $(".bt_edit").on("click", function(){
                 }
             },
             success: function (data) {
-                console.log(data);
+                $(".tr_remove").remove();
                 $("#id").val(data.dados.id);
                 $("#id_cidade").val(data.dados.id_cidade).selected = "true";
                 $("#descricao").val(data.dados.descricao);

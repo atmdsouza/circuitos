@@ -150,7 +150,10 @@ $(document).on("click", ".criar_equipamento", function(){
             id_tipoequipamento:{
                 required: true
             },
-            nome:{
+            numserie:{
+                required: true
+            },
+            numpatrimonio:{
                 required: true
             }
         },
@@ -164,8 +167,11 @@ $(document).on("click", ".criar_equipamento", function(){
             id_tipoequipamento:{
                 required:"É necessário informar um tipo de equipamento"
             },
-            nome:{
-                required:"É necessário informar um nome para o equipamento"
+            numserie:{
+                required:"É necessário informar um número de série"
+            },
+            numpatrimonio:{
+                required:"É necessário informar um número de patrimônio"
             }
         },
         submitHandler: function(form) {
@@ -338,7 +344,10 @@ $(document).on("click", ".editar_equipamento", function(){
             id_tipoequipamento:{
                 required: true
             },
-            equipamento:{
+            numserie:{
+                required: true
+            },
+            numpatrimonio:{
                 required: true
             }
         },
@@ -352,8 +361,11 @@ $(document).on("click", ".editar_equipamento", function(){
             id_tipoequipamento:{
                 required:"É necessário informar um tipo de equipamento"
             },
-            equipamento:{
-                required:"É necessário informar um equipamento"
+            numserie:{
+                required:"É necessário informar um número de série"
+            },
+            numpatrimonio:{
+                required:"É necessário informar um número de patrimônio"
             }
         },
         submitHandler: function(form) {

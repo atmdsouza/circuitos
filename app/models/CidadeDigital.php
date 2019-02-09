@@ -217,8 +217,25 @@ class CidadeDigital extends \Phalcon\Mvc\Model
                         OR CONVERT(EndCidade.cidade USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Conectividade.descricao USING utf8) LIKE '%{$parameters}%')");
 
+        $query->groupBy("CidadeDigital.id");
+
         $query->orderBy("CidadeDigital.id DESC");
 
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta para gráfico de cidades digitais por status
+     *
+     * @return CidadeDigital|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function cidadedigitalStatus()
+    {
+        $query = new Builder();
+        $query->from(array("CidadeDigital" => "Circuitos\Models\CidadeDigital"));
+        $query->columns("CASE CidadeDigital.ativo WHEN 1 THEN 'Ativo' ELSE 'Inativo' END AS status, count(CidadeDigital.ativo) AS total");
+        $query->groupBy("CidadeDigital.ativo");
         $resultado = $query->getQuery()->execute();
         return $resultado;
     }

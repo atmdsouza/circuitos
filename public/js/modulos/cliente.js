@@ -496,9 +496,6 @@ $(document).on("click", ".criar_cliente", function(){
                         nome_pessoa2:{
                             required: true
                         },
-                        sexo:{
-                            required: true
-                        },
                         cpf:{
                             required: true
                         }
@@ -506,9 +503,6 @@ $(document).on("click", ".criar_cliente", function(){
                     messages:{
                         nome_pessoa2:{
                             required:"É necessário informar o nome do cliente"
-                        },
-                        sexo:{
-                            required:"É necessário informar o sexo do cliente"
                         },
                         cpf:{
                             required:"É necessário informar o CPF do cliente"

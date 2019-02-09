@@ -92,6 +92,8 @@ function limparFiltros() {
     $("#fieldDataAtualizacao").val(null);
     $("#uf").val(null).selected = "true";
     $("#cidade").val(null).selected = "true";
+    $("#id_tipoesfera").val(null).selected = "true";
+    $("#id_setor").val(null).selected = "true";
     //Inabilitando campos
     $("#id_cliente_unidade").attr("disabled", "true");
     $("#id_conectividade").attr("disabled", "true");

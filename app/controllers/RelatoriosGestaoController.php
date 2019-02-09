@@ -78,6 +78,16 @@ class RelatoriosGestaoController extends ControllerBase
             "excluido = 0 AND ativo = 1",
             "order" => "descricao"
         ));
+        $esfera = Lov::find(array(
+            "tipo=4",
+            "order" => "descricao"
+        ));
+
+        $setor = Lov::find(array(
+            "tipo=5",
+            "order" => "descricao"
+        ));
+
         $clientes = Cliente::buscaClienteAtivo();
         $unidades = ClienteUnidade::buscaUnidadeAtiva();
         $fabricantes = Fabricante::buscaFabricanteAtivo();
@@ -99,6 +109,8 @@ class RelatoriosGestaoController extends ControllerBase
         $this->view->unidades = $unidades;
         $this->view->cidadedigital = $cidadedigital;
         $this->view->estados = $estados;
+        $this->view->esfera = $esfera;
+        $this->view->setor = $setor;
 
     }
 
@@ -194,6 +206,14 @@ class RelatoriosGestaoController extends ControllerBase
         if (!empty($params["id_status"]))
         {
             $where .= " AND Circuitos.id_status = {$params["id_status"]}";
+        }
+        if (!empty($params["id_tipoesfera"]))
+        {
+            $where .= " AND PessoaJuridica1.id_tipoesfera = {$params["id_tipoesfera"]}";
+        }
+        if (!empty($params["id_setor"]))
+        {
+            $where .= " AND PessoaJuridica1.id_setor = {$params["id_setor"]}";
         }
         if (!empty($params["fieldDataAtivacao"]))
         {

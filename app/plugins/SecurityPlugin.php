@@ -15,6 +15,11 @@ use Phalcon\Mvc\Dispatcher;
 use Phalcon\Acl\Adapter\Memory as AclList;
 use Phalcon\Http\Response as Response;
 
+use Circuitos\Models\PhalconRoles;
+use Circuitos\Models\PhalconResources;
+use Circuitos\Models\PhalconAccessList;
+use Circuitos\Models\PhalconResourcesAccesses;
+
 use Auth\Autentica;
 
 /**
@@ -31,131 +36,43 @@ class SecurityPlugin extends Plugin
      */
     public function getAcl()
     {
-        if (!isset($this->persistent->acl)) {
+        $acl = new AclList();
 
-            $acl = new AclList();
+        $acl->setDefaultAction(Acl::DENY);
 
-            $acl->setDefaultAction(Acl::DENY);
+        // Cadastro de Perfis
+        $resultadoPerfil = PhalconRoles::find();
 
-            // Register roles
-            $roles = [
-                "Administrador"  => new Role(
-                    "Administrador",
-                    "Privilégios de Super Administrador. Usuário ROOT!"
-                ),
-                "Operacional" => new Role(
-                    "Operacional",
-                    "Privilégios de leitura e escrita para alguns casos. Usuário Operador!"
-                ),
-                "Analista" => new Role(
-                    "Analista",
-                    "Privilégios de Usuário de leitura. Usuário de acompanhamento!"
-                ),
-                "Convidado" => new Role(
-                    "Convidado",
-                    "Pode logar e ver erros!"
-                )
-            ];
-
-            foreach ($roles as $role) {
-                $acl->addRole($role);
-            }
-
-            // Resources para Administrador
-            $superResources = [
-                "cidade_digital"    => ["index", "formCidadeDigital", "criarCidadeDigital", "editarCidadeDigital", "ativarCidadeDigital", "inativarCidadeDigital", "deletarCidadeDigital", "deletarConectividade"],
-                "circuitos"         => ["index", "formCircuitos", "visualizaCircuitos", "criarCircuitos", "editarCircuitos", "movCircuitos", "deletarCircuitos", "unidadeCliente", "modeloFabricante", "equipamentoModelo", "pdfCircuito", "cidadedigitalConectividade", "cidadedigitalAll"],
-                "relatorios_gestao" => ["index", "relatorioCustomizado"],
-                "cliente"           => ["index", "formCliente", "criarCliente", "editarCliente", "ativarCliente", "inativarCliente", "deletarCliente"],
-                "cliente_unidade"   => ["index", "formClienteUnidade", "criarClienteUnidade", "editarClienteUnidade", "ativarClienteUnidade", "inativarClienteUnidade", "deletarClienteUnidade"],
-                "core"              => ["ativarPessoa", "inativarPessoa", "deletarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail", "listaCidades"],
-                "empresa"           => ["index", "formEmpresa", "criarEmpresa", "editarEmpresa", "deletarEmpresa"],
-                "equipamento"       => ["index", "formEquipamento", "criarEquipamento", "editarEquipamento", "ativarEquipamento", "inativarEquipamento", "deletarEquipamento", "carregaModelos"],
-                "error"             => ["show401", "show404"],
-                "fabricante"        => ["index", "formFabricante", "criarFabricante", "editarFabricante", "ativarFabricante", "inativarFabricante", "deletarFabricante"],
-                "index"             => ["index"],
-                "lov"               => ["index", "formLov", "criarLov", "editarLov", "deletarLov"],
-                "modelo"            => ["index", "formModelo", "criarModelo", "editarModelo", "ativarModelo", "inativarModelo", "deletarModelo"],
-                "session"           => ["login", "logout", "sair", "recuperar", "inativo"],
-                "usuario"           => ["index", "formUsuario", "validarLogin", "criarUsuario", "editarUsuario", "gerarSenha", "resetarSenha", "ativarUsuario", "inativarUsuario", "deletarUsuario", "alterarSenha", "primeiro", "redirecionaUsuario", "recuperarSenha", "trocar"],
-            ];
-            foreach ($superResources as $resource => $actions) {
-                $acl->addResource(new Resource($resource), $actions);
-                foreach ($actions as $action){
-                    $acl->allow("Administrador", $resource, $action);
-                }
-            }
-
-            // Resources para Operacional
-            $operacionalResources = [
-                "cidade_digital"    => ["index", "formCidadeDigital", "criarCidadeDigital", "editarCidadeDigital", "ativarCidadeDigital", "inativarCidadeDigital"],
-                "circuitos"         => ["index", "formCircuitos", "visualizaCircuitos", "criarCircuitos", "editarCircuitos", "movCircuitos", "unidadeCliente", "modeloFabricante", "equipamentoModelo", "pdfCircuito", "cidadedigitalConectividade", "cidadedigitalAll"],
-                "relatorios_gestao" => ["index", "relatorioCustomizado"],
-                "cliente"           => ["index", "formCliente", "criarCliente", "editarCliente", "ativarCliente", "inativarCliente"],
-                "cliente_unidade"   => ["index", "formClienteUnidade", "criarClienteUnidade", "editarClienteUnidade", "ativarClienteUnidade", "inativarClienteUnidade"],
-                "core"              => ["ativarPessoa", "inativarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail", "listaCidades"],
-//                "empresa"           => ["index", "formEmpresa", "criarEmpresa", "editarEmpresa", "deletarEmpresa"],
-                "equipamento"       => ["index", "formEquipamento", "criarEquipamento", "editarEquipamento", "ativarEquipamento", "inativarEquipamento", "carregaModelos"],
-                "error"             => ["show401", "show404"],
-                "fabricante"        => ["index", "formFabricante", "criarFabricante", "editarFabricante", "ativarFabricante", "inativarFabricante"],
-                "index"             => ["index"],
-                "lov"               => ["index", "formLov", "criarLov", "editarLov"],
-                "modelo"            => ["index", "formModelo", "criarModelo", "editarModelo", "ativarModelo", "inativarModelo"],
-                "session"           => ["login", "logout", "sair", "recuperar", "inativo"],
-                "usuario"           => ["gerarSenha", "resetarSenha", "alterarSenha", "primeiro", "redirecionaUsuario", "recuperarSenha", "trocar"],
-            ];
-            foreach ($operacionalResources as $resource => $actions) {
-                $acl->addResource(new Resource($resource), $actions);
-                foreach ($actions as $action){
-                    $acl->allow("Operacional", $resource, $action);
-                }
-            }
-
-            // Resources para Analista
-            $analistaResources = [
-                "cidade_digital"    => ["index", "formCidadeDigital"],
-                "circuitos"         => ["index", "formCircuitos", "visualizaCircuitos", "pdfCircuito"],
-                "relatorios_gestao" => ["index", "relatorioCustomizado", "listaCidades"],
-                "cliente"           => ["index", "formCliente"],
-                "cliente_unidade"   => ["index", "formClienteUnidade"],
-                "core"              => ["enviarEmail", "listaCidades"],
-//                "empresa"           => ["index", "formEmpresa", "criarEmpresa", "editarEmpresa", "deletarEmpresa"],
-                "equipamento"       => ["index", "formEquipamento"],
-                "error"             => ["show401", "show404"],
-                "fabricante"        => ["index", "formFabricante"],
-                "index"             => ["index"],
-//                "lov"               => ["index", "formLov", "criarLov", "editarLov", "deletarLov"],
-                "modelo"            => ["index", "formModelo"],
-                "session"           => ["login", "logout", "sair", "recuperar", "inativo"],
-                "usuario"           => ["gerarSenha", "resetarSenha", "alterarSenha", "primeiro", "redirecionaUsuario", "recuperarSenha", "trocar"],
-            ];
-            foreach ($analistaResources as $resource => $actions) {
-                $acl->addResource(new Resource($resource), $actions);
-                foreach ($actions as $action){
-                    $acl->allow("Analista", $resource, $action);
-                }
-            }
-
-            // Resources para Convidado
-            $convidadoResources = [
-                "session"   => ["login", "logout", "sair", "recuperar", "inativo"],
-                "usuario"   => ["gerarSenha", "resetarSenha", "alterarSenha", "primeiro", "redirecionaUsuario", "recuperarSenha", "trocar"],
-                "error"     => ["show401", "show404"]
-            ];
-            foreach ($convidadoResources as $resource => $actions) {
-                $acl->addResource(new Resource($resource), $actions);
-                foreach ($actions as $action){
-                    $acl->allow("Convidado", $resource, $action);
-                }
-            }
-
-            //The acl is stored in session, APC would be useful here too
-            $this->persistent->acl = $acl;
+        foreach ($resultadoPerfil as $res) {
+            $r = new Role($res->getName(), $res->getDescription());
+            // nome => new role
+            $acl->addRole($r);
         }
-//		else {
-//			unset($this->persistent->acl);
-//		}
+        // End Cadastro de Perfis
 
+        // Cadastro de Modulos e Ações
+        foreach ($resultadoPerfil as $perfil) {
+            $resultadoModulo = PhalconAccessList::find("roles_name='{$perfil->getName()}'");
+            $modulos = array();
+            foreach ($resultadoModulo as $modulo) {
+                $resultadoAction = PhalconAccessList::find("roles_name='{$perfil->getName()}' AND resources_name='{$modulo->getResourcesName()}'");
+                $actions = array();
+                foreach ($resultadoAction as $action) {
+                    array_push($actions, $action->getAccessName());
+                }
+                array_push($modulos, array('nome' => $perfil->getName(), 'resource' => $modulo->getResourcesName(), 'actions' => $actions));
+            }
+
+            foreach ($modulos as $mod){
+                $acl->addResource(new resource($mod['resource']), $mod['actions']);
+                foreach ($mod['actions'] as $acao){
+//                        echo $mod['nome'].'-'.$mod['resource'].'-'.$acao.'<br/>';
+                    $acl->allow($mod['nome'], $mod['resource'], $acao);
+                }
+            }
+        }
+
+        $this->persistent->acl = $acl;
         return $this->persistent->acl;
     }
 

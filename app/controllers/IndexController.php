@@ -3,9 +3,11 @@
 namespace Circuitos\Controllers;
 
 use Phalcon\Logger;
-use Phalcon\Logger\Adapter\File as FileAdapter;
+use Phalcon\Http\Response as Response;
 
-use Circuitos\Controllers\ControllerBase;
+use Circuitos\Models\Circuitos;
+use Circuitos\Models\CidadeDigital;
+
 use Auth\Autentica;
 
 class IndexController extends ControllerBase
@@ -27,6 +29,54 @@ class IndexController extends ControllerBase
     public function indexAction()
     {
 
+    }
+
+    public function circuitoStatusAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = Circuitos::circuitoStatus();
+        $response->setContent(json_encode(array(
+            "dados" => $dados
+        )));
+        return $response;
+    }
+
+    public function circuitoEsferaAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = Circuitos::circuitoEsfera();
+        $response->setContent(json_encode(array(
+            "dados" => $dados
+        )));
+        return $response;
+    }
+
+    public function circuitoLinkAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = Circuitos::circuitoLink();
+        $response->setContent(json_encode(array(
+            "dados" => $dados
+        )));
+        return $response;
+    }
+
+    public function cidadedigitalStatusAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = CidadeDigital::cidadedigitalStatus();
+        $response->setContent(json_encode(array(
+            "dados" => $dados
+        )));
+        return $response;
     }
 
 }

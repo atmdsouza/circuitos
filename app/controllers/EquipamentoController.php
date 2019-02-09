@@ -14,7 +14,6 @@ use Circuitos\Models\Fabricante;
 use Circuitos\Models\Lov;
 
 use Auth\Autentica;
-use Util\Util;
 use Util\TokenManager;
 
 class EquipamentoController extends ControllerBase

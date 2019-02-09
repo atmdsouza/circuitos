@@ -1,350 +1,376 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title><?= Phalcon\Tag::getTitle(false); ?></title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-        <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
-        <meta content="Coderthemes" name="author" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<head>
+    <meta charset="utf-8" />
+    <title><?= Phalcon\Tag::getTitle(false); ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
+    <meta content="Coderthemes" name="author" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-        <!-- App favicon -->
-        <link rel="shortcut icon" href="<?= DIR_STATICS ?>public/images/favicon.png">
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="<?= DIR_STATICS ?>public/images/favicon.png">
 
-        <!-- Custom box css -->
-        <link href="<?= DIR_STATICS ?>public/plugins/custombox/css/custombox.min.css" rel="stylesheet">
+    <!-- Custom box css -->
+    <link href="<?= DIR_STATICS ?>public/plugins/custombox/css/custombox.min.css" rel="stylesheet">
 
-        <!-- App css -->
-        <link href="<?= DIR_STATICS ?>public/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
-        <link href="<?= DIR_STATICS ?>public/css/icons.css" rel="stylesheet" type="text/css" />
-        <link href="<?= DIR_STATICS ?>public/css/metismenu.min.css" rel="stylesheet" type="text/css" />
-        <link href="<?= DIR_STATICS ?>public/css/style.css" rel="stylesheet" type="text/css" />
-        <link href="<?= DIR_STATICS ?>public/css/custom.css" rel="stylesheet" type="text/css" />
+    <!-- App css -->
+    <link href="<?= DIR_STATICS ?>public/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?= DIR_STATICS ?>public/css/icons.css" rel="stylesheet" type="text/css" />
+    <link href="<?= DIR_STATICS ?>public/css/metismenu.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?= DIR_STATICS ?>public/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="<?= DIR_STATICS ?>public/css/custom.css" rel="stylesheet" type="text/css" />
 
-        <script src="<?= DIR_STATICS ?>public/js/modernizr.min.js"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modernizr.min.js"></script>
 
-        <!-- Select2 -->
-        <link href="<?= DIR_STATICS ?>public/plugins/select2/css/select2.css" rel="stylesheet" type="text/css" />
+    <!-- Select2 -->
+    <link href="<?= DIR_STATICS ?>public/plugins/select2/css/select2.css" rel="stylesheet" type="text/css" />
 
-        <!-- DataTables -->
-        <link href="<?= DIR_STATICS ?>public/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-        <link href="<?= DIR_STATICS ?>public/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-        <link href="<?= DIR_STATICS ?>public/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <!-- DataTables -->
+    <link href="<?= DIR_STATICS ?>public/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?= DIR_STATICS ?>public/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?= DIR_STATICS ?>public/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 
-        <!-- Select -->
-        <link href="<?= DIR_STATICS ?>public/plugins/datatables/select/css/select.bootstrap.min.css" rel="stylesheet" type="text/css" />
-        <link href="<?= DIR_STATICS ?>public/plugins/datatables/select/css/select.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <!-- Select -->
+    <link href="<?= DIR_STATICS ?>public/plugins/datatables/select/css/select.bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?= DIR_STATICS ?>public/plugins/datatables/select/css/select.dataTables.min.css" rel="stylesheet" type="text/css" />
 
-        <!-- Sweet Alert css -->
-        <link href="<?= DIR_STATICS ?>public/plugins/sweet-alert/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+    <!-- Sweet Alert css -->
+    <link href="<?= DIR_STATICS ?>public/plugins/sweet-alert/sweetalert2.min.css" rel="stylesheet" type="text/css" />
 
-        <!-- Pickers -->
-        <link href="<?= DIR_STATICS ?>public/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    <!-- Pickers -->
+    <link href="<?= DIR_STATICS ?>public/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
 
-        <link rel="stylesheet" href="<?= DIR_STATICS ?>public/plugins/switchery/switchery.min.css" />
+    <link rel="stylesheet" href="<?= DIR_STATICS ?>public/plugins/switchery/switchery.min.css" />
 
 
 
-    </head>
+</head>
 
-    <body>
+<body>
 
-        <!-- Begin page -->
-        <div id="wrapper">
+<!-- Begin page -->
+<div id="wrapper">
 
-            <!-- Top Bar Start -->
-            <div class="topbar">
+    <!-- Top Bar Start -->
+    <div class="topbar">
 
-                <!-- LOGO -->
-                <div class="topbar-left">
-                    <a href="#" class="logo">
-                        <span>
-                            <img src="<?= DIR_STATICS ?>public/images/logo.png" alt="" height="50">
-                        </span>
-                        <i>
-                            <img src="<?= DIR_STATICS ?>public/images/logo_sm.png" alt="" height="28">
-                        </i>
+        <!-- LOGO -->
+        <div class="topbar-left">
+            <a href="#" class="logo">
+                <span>
+                    <img src="<?= DIR_STATICS ?>public/images/logo.png" alt="" height="50">
+                </span>
+                <i>
+                    <img src="<?= DIR_STATICS ?>public/images/logo_sm.png" alt="" height="28">
+                </i>
+            </a>
+        </div>
+
+        <nav class="navbar-custom">
+
+            <ul class="list-unstyled topbar-right-menu float-right mb-0">
+
+                <li class="dropdown notification-list">
+                    <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" data-toggle="dropdown" href="#" role="button"
+                       aria-haspopup="false" aria-expanded="false">
+                        <img src="<?= DIR_STATICS ?>public/images/users/avatar-1.jpg" alt="user" class="rounded-circle"> <span class="ml-1"><?php echo $user ?><i class="mdi mdi-chevron-down"></i> </span>
                     </a>
-                </div>
+                    <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+                        <!-- item-->
+                        <div class="dropdown-item noti-title">
+                            <h6 class="text-overflow m-0">Bem vindo!</h6>
+                        </div>
 
-                <nav class="navbar-custom">
-
-                    <ul class="list-unstyled topbar-right-menu float-right mb-0">
-
-                        <li class="dropdown notification-list">
-                            <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" data-toggle="dropdown" href="#" role="button"
-                               aria-haspopup="false" aria-expanded="false">
-                                <img src="<?= DIR_STATICS ?>public/images/users/avatar-1.jpg" alt="user" class="rounded-circle"> <span class="ml-1"><?php echo $user ?><i class="mdi mdi-chevron-down"></i> </span>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
-                                <!-- item-->
-                                <div class="dropdown-item noti-title">
-                                    <h6 class="text-overflow m-0">Bem vindo!</h6>
-                                </div>
-
-                                <!-- item-->
-                                <!--<a href="javascript:void(0);" class="dropdown-item notify-item">
+                        <!-- item-->
+                        <!--<a href="javascript:void(0);" class="dropdown-item notify-item">
                                     <i class="fi-head"></i> <span>Meus dados</span>
                                 </a>-->
-                                <?php echo $this->tag->linkTo(["usuario/trocar", "<i class='fi-shuffle'></i> <span> Trocar Senha </span>", "class" => "dropdown-item notify-item"]) ?>
-                                <!-- item-->
-                                <?php echo $this->tag->linkTo(["session/logout", "<i class='fi-power'></i> <span> Sair </span>", "class" => "dropdown-item notify-item"]) ?>
-
-                            </div>
-                        </li>
-
-                    </ul>
-
-                    <ul class="list-inline menu-left mb-0">
-                        <li class="float-left">
-                            <button class="button-menu-mobile open-left waves-light waves-effect">
-                                <i class="dripicons-menu"></i>
-                            </button>
-                        </li>
-                    </ul>
-
-                </nav>
-
-            </div>
-            <!-- Top Bar End -->
-
-            <!-- ========== Left Sidebar Start ========== -->
-            <div class="left side-menu">
-                <div class="slimscroll-menu" id="remove-scroll">
-
-                    <?php
-                        use Auth\Autentica;
-                        $auth = new Autentica();
-                        $role = $auth->getRoles();
-                    ?>
-
-                    <!--- Sidemenu -->
-                    <div id="sidebar-menu">
-                        <!-- Left Menu Start -->
-                        <ul class="metismenu" id="side-menu">
-
-                            <li><?php echo $this->tag->linkTo(["index", "<i class='fi-air-play'></i> <span> Dashboard </span>"]) ?></li>
-
-                            <?php switch ($role)
-                            {
-                                case "Administrador":
-                                    ?>
-                                    <li>
-                                        <a href="javascript: void(0);"><i class="fi-layers"></i> <span> Cadastros </span> <span class="menu-arrow"></span></a>
-                                        <ul class="nav-second-level" aria-expanded="false">
-                                            <li><?php echo $this->tag->linkTo(["cidade_digital", "Cidade Digital"]) ?></li>
-                                            <li><?php echo $this->tag->linkTo(["cliente", "Clientes"]) ?></li>
-                                            <li><?php echo $this->tag->linkTo(["cliente_unidade", "Unidades de Clientes"]) ?></li>
-                                            <li><?php echo $this->tag->linkTo(["fabricante", "Fabricantes"]) ?></li>
-                                            <li><?php echo $this->tag->linkTo(["modelo", "Modelos"]) ?></li>
-                                            <li><?php echo $this->tag->linkTo(["equipamento", "Equipamentos"]) ?></li>
-                                        </ul>
-                                    </li>
-
-                                    <li><?php echo $this->tag->linkTo(["circuitos", "<i class='fi-link'></i> <span> Circuitos Navega Pará </span>"]) ?></li>
-
-                                    <li><?php echo $this->tag->linkTo(["relatorios_gestao", "<i class='fi-printer'></i> <span> Relatórios </span>"]) ?></li>
-
-                                    <li>
-                                        <a href="javascript: void(0);"><i class="fi-lock"></i> <span> Segurança </span> <span class="menu-arrow"></span></a>
-                                        <ul class="nav-second-level" aria-expanded="false">
-                                            <li><?php echo $this->tag->linkTo(["usuario", "Usuários"]) ?></li>
-                                        </ul>
-                                    </li>
-
-                                    <li>
-                                        <a href="javascript: void(0);"><i class="fi-cog"></i> <span> Configuração </span> <span class="menu-arrow"></span></a>
-                                        <ul class="nav-second-level" aria-expanded="false">
-                                            <li><?php echo $this->tag->linkTo(["empresa", "Configuração da Empresa"]) ?></li>
-                                            <li><?php echo $this->tag->linkTo(["lov", "Lista de Valores"]) ?></li>
-                                        </ul>
-                                    </li>
-                                    <?php
-                                    break;
-                                case "Operacional":
-                                    ?>
-                                    <li>
-                                        <a href="javascript: void(0);"><i class="fi-layers"></i> <span> Cadastros </span> <span class="menu-arrow"></span></a>
-                                        <ul class="nav-second-level" aria-expanded="false">
-                                            <li><?php echo $this->tag->linkTo(["cidade_digital", "Cidade Digital"]) ?></li>
-                                            <li><?php echo $this->tag->linkTo(["cliente", "Clientes"]) ?></li>
-                                            <li><?php echo $this->tag->linkTo(["cliente_unidade", "Unidades de Clientes"]) ?></li>
-                                            <li><?php echo $this->tag->linkTo(["fabricante", "Fabricantes"]) ?></li>
-                                            <li><?php echo $this->tag->linkTo(["modelo", "Modelos"]) ?></li>
-                                            <li><?php echo $this->tag->linkTo(["equipamento", "Equipamentos"]) ?></li>
-                                        </ul>
-                                    </li>
-
-                                    <li><?php echo $this->tag->linkTo(["circuitos", "<i class='fi-link'></i> <span> Circuitos Navega Pará </span>"]) ?></li>
-
-                                    <li><?php echo $this->tag->linkTo(["relatorios_gestao", "<i class='fi-printer'></i> <span> Relatórios </span>"]) ?></li>
-
-                                    <li>
-                                        <a href="javascript: void(0);"><i class="fi-cog"></i> <span> Configuração </span> <span class="menu-arrow"></span></a>
-                                        <ul class="nav-second-level" aria-expanded="false">
-                                            <li><?php echo $this->tag->linkTo(["lov", "Lista de Valores"]) ?></li>
-                                        </ul>
-                                    </li>
-                                    <?php
-                                    break;
-                                case "Analista":
-                                    ?>
-                                    <li>
-                                        <a href="javascript: void(0);"><i class="fi-layers"></i> <span> Cadastros </span> <span class="menu-arrow"></span></a>
-                                        <ul class="nav-second-level" aria-expanded="false">
-                                            <li><?php echo $this->tag->linkTo(["cidade_digital", "Cidade Digital"]) ?></li>
-                                            <li><?php echo $this->tag->linkTo(["cliente", "Clientes"]) ?></li>
-                                            <li><?php echo $this->tag->linkTo(["cliente_unidade", "Unidades de Clientes"]) ?></li>
-                                            <li><?php echo $this->tag->linkTo(["fabricante", "Fabricantes"]) ?></li>
-                                            <li><?php echo $this->tag->linkTo(["modelo", "Modelos"]) ?></li>
-                                            <li><?php echo $this->tag->linkTo(["equipamento", "Equipamentos"]) ?></li>
-                                        </ul>
-                                    </li>
-
-                                    <li><?php echo $this->tag->linkTo(["circuitos", "<i class='fi-link'></i> <span> Circuitos Navega Pará </span>"]) ?></li>
-
-                                    <li><?php echo $this->tag->linkTo(["relatorios_gestao", "<i class='fi-printer'></i> <span> Relatórios </span>"]) ?></li>
-                                    <?php
-                                    break;
-                            }?>
-                        </ul>
+                        <?php echo $this->tag->linkTo(["usuario/trocar", "<i class='fi-shuffle'></i> <span> Trocar Senha </span>", "class" => "dropdown-item notify-item"]) ?>
+                        <!-- item-->
+                        <?php echo $this->tag->linkTo(["session/logout", "<i class='fi-power'></i> <span> Sair </span>", "class" => "dropdown-item notify-item"]) ?>
 
                     </div>
-                    <!-- Sidebar -->
-                    <div class="clearfix"></div>
+                </li>
 
-                </div>
-                <!-- Sidebar -left -->
+            </ul>
+
+            <ul class="list-inline menu-left mb-0">
+                <li class="float-left">
+                    <button class="button-menu-mobile open-left waves-light waves-effect">
+                        <i class="dripicons-menu"></i>
+                    </button>
+                </li>
+            </ul>
+
+        </nav>
+
+    </div>
+    <!-- Top Bar End -->
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div class="left side-menu">
+        <div class="slimscroll-menu" id="remove-scroll">
+
+            <?php
+            use Auth\Autentica;
+            $auth = new Autentica();
+            $security_plugin = new SecurityPlugin();
+            $acl = $security_plugin->getAcl();
+            $role = $auth->getRoles();
+            ?>
+            <!--- Sidemenu -->
+            <div id="sidebar-menu">
+                <!-- Left Menu Start -->
+                <ul class="metismenu" id="side-menu">
+
+                    <li><?php echo $this->tag->linkTo(["index", "<i class='fi-air-play'></i> <span> Dashboard </span>"]) ?></li>
+
+                    <?php
+                    if ($acl->isAllowed($role, 'cidade_digital', 'index') || $acl->isAllowed($role, 'cliente', 'index') || $acl->isAllowed($role, 'cliente_unidade', 'index') || $acl->isAllowed($role, 'fabricante', 'index') || $acl->isAllowed($role, 'modelo', 'index') || $acl->isAllowed($role, 'equipamento', 'index'))
+                    {
+                        ?>
+                        <li>
+                            <a href="javascript: void(0);"><i class="fi-layers"></i> <span> Cadastros </span> <span class="menu-arrow"></span></a>
+                            <ul class="nav-second-level" aria-expanded="false">
+                                <?php
+                                if ($acl->isAllowed($role, 'cidade_digital', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["cidade_digital", "Cidade Digital"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'cliente', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["cliente", "Clientes"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'cliente_unidade', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["cliente_unidade", "Unidades de Clientes"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'fabricante', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["fabricante", "Fabricantes"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'modelo', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["modelo", "Modelos"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'equipamento', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["equipamento", "Equipamentos"]) ?></li>
+                                    <?php
+                                }
+                                ?>
+                            </ul>
+                        </li>
+                        <?php
+                    }
+                    ?>
+
+                    <?php
+                    if ($acl->isAllowed($role, 'circuitos', 'index'))
+                    {
+                        ?>
+                        <li><?php echo $this->tag->linkTo(["circuitos", "<i class='fi-link'></i> <span> Circuitos Navega Pará </span>"]) ?></li>
+                    <?php }
+                    if ($acl->isAllowed($role, 'relatorios_gestao', 'index'))
+                    {
+                        ?>
+                        <li><?php echo $this->tag->linkTo(["relatorios_gestao", "<i class='fi-printer'></i> <span> Relatórios </span>"]) ?></li>
+                    <?php }
+                    if ($acl->isAllowed($role, 'usuario', 'index'))
+                    {
+                        ?>
+                        <li>
+                            <a href="javascript: void(0);"><i class="fi-lock"></i> <span> Segurança </span> <span class="menu-arrow"></span></a>
+                            <ul class="nav-second-level" aria-expanded="false">
+                                <?php
+                                if ($acl->isAllowed($role, 'usuario', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["usuario", "Usuários"]) ?></li>
+                                <?php }
+                                if ($acl->isAllowed($role, 'controle_acesso', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["controle_acesso", "Perfis e Acessos"]) ?></li>
+                                <?php } ?>
+                            </ul>
+                        </li>
+                    <?php }
+                    if ($acl->isAllowed($role, 'empresa', 'index') || $acl->isAllowed($role, 'lov', 'index'))
+                    {
+                        ?>
+                        <li>
+                            <a href="javascript: void(0);"><i class="fi-cog"></i> <span> Configuração </span> <span class="menu-arrow"></span></a>
+                            <ul class="nav-second-level" aria-expanded="false">
+                                <?php
+                                if ($acl->isAllowed($role, 'central_mensagens', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["central_mensagens", "Central de Mensagens"]) ?></li>
+                                <?php }
+                                if ($acl->isAllowed($role, 'empresa', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["empresa", "Configuração da Empresa"]) ?></li>
+                                <?php }
+                                if ($acl->isAllowed($role, 'lov', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["lov", "Lista de Valores"]) ?></li>
+                                <?php } ?>
+                            </ul>
+                        </li>
+                    <?php } ?>
+                </ul>
 
             </div>
-            <!-- Left Sidebar End -->
+            <!-- Sidebar -->
+            <div class="clearfix"></div>
 
-
-
-            <!-- ============================================================== -->
-            <!-- Start right Content here -->
-            <!-- ============================================================== -->
-            <div class="content-page">
-                <!-- Start content -->
-                <div class="content">
-                    <div class="container-fluid">
-                        <?php echo $this->getContent(); ?>
-                    </div> 
-                    <!-- container -->
-                </div> <!-- content -->
-                <footer class="footer text-right">
-                    2018 - 2019 © Empresa de Tecnologia da Informação e Comunicação do Estado do Pará - PRODEPA
-                </footer>
-            </div>
-            <!-- ============================================================== -->
-            <!-- End Right content here -->
-            <!-- ============================================================== -->
         </div>
-        <!-- END wrapper -->
+        <!-- Sidebar -left -->
 
-        <!-- jQuery  -->
-        <script src="<?= DIR_STATICS ?>public/js/jquery.min.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/plugins/jquery-validate/jquery.validate.min.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/js/popper.min.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/js/bootstrap.min.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/js/metisMenu.min.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/js/waves.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/js/jquery.slimscroll.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/plugins/waypoints/lib/jquery.waypoints.min.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/plugins/counterup/jquery.counterup.min.js" type="text/javascript"></script>
+    </div>
+    <!-- Left Sidebar End -->
 
-        <!-- Moment -->
-        <script src="<?= DIR_STATICS ?>public/plugins/moment/moment.js" type="text/javascript"></script>
 
-        <!-- Required datatable js -->
-        <script src="<?= DIR_STATICS ?>public/plugins/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/plugins/datatables/dataTables.bootstrap4.min.js" type="text/javascript"></script>
-        <!-- Buttons examples -->
-        <script src="<?= DIR_STATICS ?>public/plugins/datatables/dataTables.buttons.min.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/plugins/datatables/buttons.bootstrap4.min.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/plugins/datatables/jszip.min.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/plugins/datatables/pdfmake.min.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/plugins/datatables/vfs_fonts.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/plugins/datatables/buttons.html5.min.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/plugins/datatables/buttons.print.min.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/plugins/datatables/select/js/dataTables.select.min.js" type="text/javascript"></script>
-        <!-- Responsive examples -->
-        <script src="<?= DIR_STATICS ?>public/plugins/datatables/dataTables.responsive.min.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/plugins/datatables/responsive.bootstrap4.min.js" type="text/javascript"></script>
+
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="content-page">
+        <!-- Start content -->
+        <div class="content">
+            <div class="container-fluid">
+                <?php echo $this->getContent(); ?>
+            </div>
+            <!-- container -->
+        </div> <!-- content -->
+        <footer class="footer text-right">
+            2018 - 2019 © Empresa de Tecnologia da Informação e Comunicação do Estado do Pará - PRODEPA - Versão 1.00
+        </footer>
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Right content here -->
+    <!-- ============================================================== -->
+</div>
+<!-- END wrapper -->
+
+<!-- jQuery  -->
+<script src="<?= DIR_STATICS ?>public/js/jquery.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/jquery-validate/jquery.validate.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/popper.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/metisMenu.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/waves.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/jquery.slimscroll.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/waypoints/lib/jquery.waypoints.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/counterup/jquery.counterup.min.js" type="text/javascript"></script>
+
+<!-- Moment -->
+<script src="<?= DIR_STATICS ?>public/plugins/moment/moment.js" type="text/javascript"></script>
+
+<!-- Required datatable js -->
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/dataTables.bootstrap4.min.js" type="text/javascript"></script>
+<!-- Buttons examples -->
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/dataTables.buttons.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/buttons.bootstrap4.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/jszip.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/pdfmake.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/vfs_fonts.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/buttons.html5.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/buttons.print.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/select/js/dataTables.select.min.js" type="text/javascript"></script>
+<!-- Responsive examples -->
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/dataTables.responsive.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/responsive.bootstrap4.min.js" type="text/javascript"></script>
         
-        <!-- Modal-Effect -->
-        <script src="<?= DIR_STATICS ?>public/plugins/custombox/js/custombox.min.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/plugins/custombox/js/legacy.min.js" type="text/javascript"></script>
+<!-- Modal-Effect -->
+<script src="<?= DIR_STATICS ?>public/plugins/custombox/js/custombox.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/custombox/js/legacy.min.js" type="text/javascript"></script>
         
-        <!-- Autocomplete -->
-        <script type="text/javascript" src="<?= DIR_STATICS ?>public/plugins/autocomplete/jquery.autocomplete.js" type="text/javascript"></script>
+<!-- Autocomplete -->
+<script type="text/javascript" src="<?= DIR_STATICS ?>public/plugins/autocomplete/jquery.autocomplete.js" type="text/javascript"></script>
 
-        <!-- Sweet Alert Js  -->
-        <script src="<?= DIR_STATICS ?>public/plugins/sweet-alert/sweetalert2.min.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/plugins/switchery/switchery.min.js" type="text/javascript"></script>
+<!-- Sweet Alert Js  -->
+<script src="<?= DIR_STATICS ?>public/plugins/sweet-alert/sweetalert2.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/switchery/switchery.min.js" type="text/javascript"></script>
 
-        <!-- Select2 -->
-        <script src="<?= DIR_STATICS ?>public/plugins/select2/js/select2.full.js" type="text/javascript"></script>
+<!-- Select2 -->
+<script src="<?= DIR_STATICS ?>public/plugins/select2/js/select2.full.js" type="text/javascript"></script>
 
-        <!-- DateRangePicker -->
-        <script src="<?= DIR_STATICS ?>public/plugins/bootstrap-daterangepicker/daterangepicker.js" type="text/javascript"></script>
+<!-- DateRangePicker -->
+<script src="<?= DIR_STATICS ?>public/plugins/bootstrap-daterangepicker/daterangepicker.js" type="text/javascript"></script>
 
-        <!-- Charts.js -->
-        <script src="<?= DIR_STATICS ?>public/plugins/chart.js/chart.bundle.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/plugins/chart.js/chart.min.js" type="text/javascript"></script>
+<!-- Charts.js -->
+<script src="<?= DIR_STATICS ?>public/plugins/chart.js/chart.bundle.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/chart.js/chart.min.js" type="text/javascript"></script>
 
-        <!-- Plugins -->
-        <script src="<?= DIR_STATICS ?>public/js/uteis/accounting.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/js/uteis/jquery.mask.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/js/uteis/maskMoney.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/js/uteis/multiselect.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/js/uteis/uteis.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/js/uteis/jquery-blockui.js" type="text/javascript"></script>
+<!-- Plugins -->
+<script src="<?= DIR_STATICS ?>public/js/uteis/accounting.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/uteis/jquery.mask.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/uteis/maskMoney.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/uteis/multiselect.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/uteis/uteis.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/uteis/jquery-blockui.js" type="text/javascript"></script>
 
-        <!-- Módulos -->
-        <?php $module = $this->router->getControllerName(); ?>
-        <?php switch($module){
-            case "index":?>
-                <script src="<?= DIR_STATICS ?>public/js/modulos/index.js" type="text/javascript"></script>
-            <?php break;
-            case "cliente":?>
-                <script src="<?= DIR_STATICS ?>public/js/modulos/cliente.js" type="text/javascript"></script>
-            <?php break;
-            case "cidade_digital":?>
-                <script src="<?= DIR_STATICS ?>public/js/modulos/cidade_digital.js" type="text/javascript"></script>
-            <?php break;
-            case "cliente_unidade":?>
-                <script src="<?= DIR_STATICS ?>public/js/modulos/cliente_unidade.js" type="text/javascript"></script>
-            <?php break;
-            case "usuario":?>
-                <script src="<?= DIR_STATICS ?>public/js/modulos/usuario.js" type="text/javascript"></script>
-            <?php break;
-            case "lov":?>
-                <script src="<?= DIR_STATICS ?>public/js/modulos/lov.js" type="text/javascript"></script>
-            <?php break;
-            case "empresa":?>
-                <script src="<?= DIR_STATICS ?>public/js/modulos/empresa.js" type="text/javascript"></script>
-            <?php break;
-            case "fabricante":?>
-                <script src="<?= DIR_STATICS ?>public/js/modulos/fabricante.js" type="text/javascript"></script>
-            <?php break;
-            case "equipamento":?>
-                <script src="<?= DIR_STATICS ?>public/js/modulos/equipamento.js" type="text/javascript"></script>
-            <?php break;
-            case "modelo":?>
-                <script src="<?= DIR_STATICS ?>public/js/modulos/modelo.js" type="text/javascript"></script>
-            <?php break;
-            case "relatorios_gestao":?>
-            <script src="<?= DIR_STATICS ?>public/js/modulos/relatorios_gestao.js" type="text/javascript"></script>
-            <?php break;
-            case "circuitos":?>
-                <script src="<?= DIR_STATICS ?>public/js/modulos/circuitos.js" type="text/javascript"></script>
-            <?php break;
-        } ?>
+<!-- Módulos -->
+<?php $module = $this->router->getControllerName(); ?>
+<?php switch($module){
+case "index":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/index.js" type="text/javascript"></script>
+<?php break;
+case "cliente":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/cliente.js" type="text/javascript"></script>
+<?php break;
+case "cidade_digital":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/cidade_digital.js" type="text/javascript"></script>
+<?php break;
+case "cliente_unidade":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/cliente_unidade.js" type="text/javascript"></script>
+<?php break;
+case "usuario":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/usuario.js" type="text/javascript"></script>
+<?php break;
+case "lov":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/lov.js" type="text/javascript"></script>
+<?php break;
+case "empresa":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/empresa.js" type="text/javascript"></script>
+<?php break;
+case "fabricante":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/fabricante.js" type="text/javascript"></script>
+<?php break;
+case "equipamento":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/equipamento.js" type="text/javascript"></script>
+<?php break;
+case "modelo":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/modelo.js" type="text/javascript"></script>
+<?php break;
+case "relatorios_gestao":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/relatorios_gestao.js" type="text/javascript"></script>
+<?php break;
+case "circuitos":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/circuitos.js" type="text/javascript"></script>
+    <?php break;
+} ?>
 
-        <!-- App js -->
-        <script src="<?= DIR_STATICS ?>public/js/jquery.core.js" type="text/javascript"></script>
-        <script src="<?= DIR_STATICS ?>public/js/jquery.app.js" type="text/javascript"></script>
+<!-- App js -->
+<script src="<?= DIR_STATICS ?>public/js/jquery.core.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/jquery.app.js" type="text/javascript"></script>
 
-    </body>
+</body>
 </html>

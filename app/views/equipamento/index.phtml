@@ -151,15 +151,15 @@ use Phalcon\Tag;
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-4">
-                                    <label for="nome">Nome do Equipamento <span class="required">*</span></label>
+                                    <label for="nome">Nome do Equipamento</label>
                                     <?php echo $this->tag->textField(["nome", "size" => 200, "class" => "form-control", "id" => "nome", "placeholder" => "Nome do Equipamento"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="numserie">Número de Série</label>
+                                    <label for="numserie">Número de Série <span class="required">*</span></label>
                                     <?php echo $this->tag->textField(["numserie", "size" => 60, "class" => "form-control", "id" => "numserie", "placeholder" => "Número de Série"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="numpatrimonio">Número de Patrimônio</label>
+                                    <label for="numpatrimonio">Número de Patrimônio <span class="required">*</span></label>
                                     <?php echo $this->tag->textField(["numpatrimonio", "size" => 60, "class" => "form-control", "id" => "numpatrimonio", "placeholder" => "Número de Patrimônio"]) ?>
                                 </div>
                             </div>

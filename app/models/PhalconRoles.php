@@ -18,6 +18,12 @@ class PhalconRoles extends \Phalcon\Mvc\Model
     protected $description;
 
     /**
+     *
+     * @var int
+     */
+    protected $excluido;
+
+    /**
      * Method to set the value of field name
      *
      * @param string $name
@@ -44,6 +50,14 @@ class PhalconRoles extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @param int $excluido
+     */
+    public function setExcluido($excluido)
+    {
+        $this->excluido = $excluido;
+    }
+
+    /**
      * Returns the value of field name
      *
      * @return string
@@ -61,6 +75,14 @@ class PhalconRoles extends \Phalcon\Mvc\Model
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExcluido()
+    {
+        return $this->excluido;
     }
 
     /**
@@ -117,7 +139,8 @@ class PhalconRoles extends \Phalcon\Mvc\Model
     {
         return [
             'name' => 'name',
-            'description' => 'description'
+            'description' => 'description',
+            'excluido' => 'excluido'
         ];
     }
 

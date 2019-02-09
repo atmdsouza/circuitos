@@ -919,6 +919,8 @@ class Circuitos extends \Phalcon\Mvc\Model
         $query->leftJoin("Circuitos\Models\Cliente", "Cliente.id = Circuitos.id_cliente", "Cliente");
         $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa1.id = Cliente.id_pessoa", "Pessoa1");
         $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa1.id = PessoaJuridica1.id", "PessoaJuridica1");
+        $query->leftJoin("Circuitos\Models\Lov", "PessoaJuridica1.id_tipoesfera = Love.id", "Love");
+        $query->leftJoin("Circuitos\Models\Lov", "PessoaJuridica1.id_setor = Lovs.id", "Lovs");
         $query->leftJoin("Circuitos\Models\ClienteUnidade", "ClienteUnidade.id = Circuitos.id_cliente_unidade", "ClienteUnidade");
         $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa2.id = ClienteUnidade.id_pessoa", "Pessoa2");
         $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa2.id = PessoaJuridica2.id", "PessoaJuridica2");
@@ -977,6 +979,57 @@ class Circuitos extends \Phalcon\Mvc\Model
 
         $query->orderBy($orderby);
 
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta para gráfico de circuitos por status
+     *
+     * @return Circuitos|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function circuitoStatus()
+    {
+        $query = new Builder();
+        $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
+        $query->columns("Lov.descricao AS status, COUNT(Circuitos.id_status) AS total");
+        $query->innerJoin("Circuitos\Models\Lov", "Lov.id = Circuitos.id_status", "Lov");
+        $query->groupBy("Lov.descricao");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta para gráfico de circuitos por link
+     *
+     * @return Circuitos|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function circuitoLink()
+    {
+        $query = new Builder();
+        $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
+        $query->columns("Lov.descricao AS link, COUNT(Circuitos.id_tipolink) AS total");
+        $query->innerJoin("Circuitos\Models\Lov", "Lov.id = Circuitos.id_tipolink", "Lov");
+        $query->groupBy("Lov.descricao");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta para gráfico de circuitos por link
+     *
+     * @return Circuitos|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function circuitoEsfera()
+    {
+        $query = new Builder();
+        $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
+        $query->columns("Lov.descricao AS cliente_esfera, count(PessoaJuridica.id_tipoesfera) AS total");
+        $query->innerJoin("Circuitos\Models\Cliente", "Cliente.id = Circuitos.id_cliente", "Cliente");
+        $query->innerJoin("Circuitos\Models\Pessoa", "Pessoa.id = Cliente.id_pessoa", "Pessoa");
+        $query->innerJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Pessoa.id", "PessoaJuridica");
+        $query->innerJoin("Circuitos\Models\Lov", "Lov.id = PessoaJuridica.id_tipoesfera", "Lov");
+        $query->groupBy("Lov.descricao");
         $resultado = $query->getQuery()->execute();
         return $resultado;
     }

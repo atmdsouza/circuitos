@@ -45,11 +45,13 @@ use Phalcon\Tag;
                     <option value="Circuitos.tag AS TAG">TAG</option>
                     <option value="Circuitos.ssid AS SSID">SSID</option>
                     <option value="Circuitos.chamado AS Chamado">Chamado</option>
-                    <option value="Circuitos.data_ativacao AS DataAtivacao">Data Ativação</option>
-                    <option value="Circuitos.data_atualizacao AS DataAtualizacao">Data Atualização</option>
                     <option value="Lov2.descricao AS Status">Status</option>
+                    <option value="Love.descricao AS Esfera">Esfera</option>
+                    <option value="Lovs.descricao AS Setor">Setor</option>
                     <option value="Circuitos.cidade AS Cidade">Cidade</option>
                     <option value="Circuitos.uf AS Estado">Estado</option>
+                    <option value="Circuitos.data_ativacao AS DataAtivacao">Data Ativação</option>
+                    <option value="Circuitos.data_atualizacao AS DataAtualizacao">Data Atualização</option>
                 </select>
             </div>
         </div>
@@ -250,6 +252,28 @@ use Phalcon\Tag;
                 <select disabled name="cidade" id="cidade" class="form-control">
                     <option value="">Selecione uma Cidade</option>
                 </select>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="id_tipoesfera" class="col-sm-12 control-label">Esfera</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->select(["id_tipoesfera", $esfera, "class" => "form-control", "id" => "id_tipoesfera",
+                    "using" => ["id", "descricao",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione uma esfera",
+                    "emptyValue" => ""])
+                ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="id_setor" class="col-sm-12 control-label">Setor</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->select(["id_setor", $setor, "class" => "form-control", "id" => "id_setor",
+                    "using" => ["id", "descricao",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione um setor",
+                    "emptyValue" => ""])
+                ?>
             </div>
         </div>
         <div class="form-group col-md-3">
