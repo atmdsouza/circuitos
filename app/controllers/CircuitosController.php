@@ -834,6 +834,55 @@ class CircuitosController extends ControllerBase
         }
     }
 
+    public function equipamentoNumeroSerieAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        if ($dados["numero_serie"]) {
+            $equipamentos = Equipamento::findFirst("numserie={$dados["numero_serie"]}");
+            if ($equipamentos) {
+                $response->setContent(json_encode(array(
+                    "operacao" => True,
+                    "id_equipamento" => $equipamentos->getId(),
+                    "nome_equipamento" => $equipamentos->getNome(),
+                    "numero_patrimonio" => $equipamentos->getNumpatrimonio(),
+                    "id_fabricante" => $equipamentos->getIdFabricante(),
+                    "id_modelo" => $equipamentos->getIdModelo(),
+                    "nome_modelo" => $equipamentos->Modelo->modelo
+                )));
+                return $response;
+            } else {
+                $response->setContent(json_encode(array(
+                    "operacao" => False
+                )));
+                return $response;
+            }
+        } else {
+            $response->setContent(json_encode(array(
+                "operacao" => False
+            )));
+            return $response;
+        }
+    }
+
+    public function validarEquipamentoCircuitoAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        $equipamentos = Circuitos::findFirst("id_equipamento={$dados["id_equipamento"]}");
+        if ($equipamentos) {
+            $response->setContent(json_encode(True));
+            return $response;
+        } else {
+            $response->setContent(json_encode(False));
+            return $response;
+        }
+    }
+
     public function cidadedigitalAllAction()
     {
         //Desabilita o layout para o ajax

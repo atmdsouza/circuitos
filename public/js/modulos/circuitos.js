@@ -142,6 +142,7 @@ $("#id_cliente").on("change", function(){
         }
     });
 });
+
 //Cidade Digital e suas conectividades
 $("#id_cidadedigital").on("change", function(){
     var id_cidadedigital = $(this).val();
@@ -296,30 +297,236 @@ $("#id_cidadedigital").on("change", function(){
 //     });
 // });
 
-$(function () {
-    "use strict";
-    var ac_model = $("#lid_modelo");
-    var ac_equip = $("#lid_equipamento");
-    var listEquip = [];
-    var listModel = [];
-    $("#id_fabricante").on("change", function(){
-        var id_fabricante = $(this).val();
-        var action = actionCorreta(window.location.href.toString(), "circuitos/modeloFabricante");
+// $(function () {
+//     "use strict";
+//     var ac_model = $("#lid_modelo");
+//     var ac_equip = $("#lid_equipamento");
+//     var listEquip = [];
+//     var listModel = [];
+//     $("#id_fabricante").on("change", function(){
+//         var id_fabricante = $(this).val();
+//         var action = actionCorreta(window.location.href.toString(), "circuitos/modeloFabricante");
+//         $.ajax({
+//             type: "GET",
+//             dataType: "JSON",
+//             url: action,
+//             data: {id_fabricante: id_fabricante},
+//             beforeSend: function () {
+//                 $("#id_modelo").val("");
+//                 $("#lid_modelo").val("");
+//                 $("#lid_modelo").attr("disabled", "true");
+//                 $("#lid_equipamento").val("");
+//                 $("#id_equipamento").val("");
+//                 $("#lid_equipamento").attr("disabled", "true");
+//             },
+//             complete: function () {
+//             },
+//             error: function (data) {
+//                 if (data.status && data.status === 401)
+//                 {
+//                     swal({
+//                         title: "Erro de Permissão",
+//                         text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+//                         type: "warning"
+//                     });
+//                 }
+//             },
+//             success: function (data) {
+//                 if (data.operacao){
+//                     $.each(data.dados, function (key, value) {
+//                         listModel.push({value: value.modelo, data: value.id});
+//                     });
+//                     $("#lid_modelo").removeAttr("disabled");
+//                     $("#id_equipamento").val("");
+//                     $("#lid_equipamento").val("");
+//                     $("#lid_equipamento").attr("disabled", "true");
+//                 } else {
+//                     $("#id_modelo").val("");
+//                     $("#lid_modelo").val("");
+//                     $("#lid_modelo").attr("disabled", "true");
+//                     $("#id_equipamento").val("");
+//                     $("#lid_equipamento").val("");
+//                     $("#lid_equipamento").attr("disabled", "true");
+//                     swal("Atenção","Não existem modelos para esse fabricante!","info");
+//                 }
+//             }
+//         });
+//     });
+//
+//     //Autocomplete de Modelo
+//     ac_model.autocomplete({
+//         lookup: listModel,
+//         noCache: true,
+//         minChars: 1,
+//         showNoSuggestionNotice: true,
+//         noSuggestionNotice: "Não existem resultados para essa consulta!",
+//         onSelect: function (suggestion) {
+//             $("#id_modelo").val(suggestion.data);
+//             var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoModelo");
+//             $.ajax({
+//                 type: "GET",
+//                 dataType: "JSON",
+//                 url: action,
+//                 data: {id_modelo: suggestion.data},
+//                 beforeSend: function () {
+//                     $("#lid_equipamento").val("");
+//                     $("#id_equipamento").val("");
+//                     $("#lid_equipamento").attr("disabled", "true");
+//                 },
+//                 complete: function () {
+//                 },
+//                 error: function (data) {
+//                     if (data.status && data.status === 401)
+//                     {
+//                         swal({
+//                             title: "Erro de Permissão",
+//                             text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+//                             type: "warning"
+//                         });
+//                     }
+//                 },
+//                 success: function (data) {
+//                     if (data.operacao){
+//                         $.each(data.dados, function (key, value) {
+//                             var numserie = (value.numserie) ? value.numserie : "Sem Nº Série";
+//                             var numpatrimonio = (value.numpatrimonio) ? value.numpatrimonio : "Sem Nº Patrimônio";
+//                             listEquip.push({value: value.nome + " (" + numserie + " / " + numpatrimonio + ")", data: value.id});
+//                         });
+//                         $("#lid_equipamento").removeAttr("disabled");
+//                     } else {
+//                         $("#lid_equipamento").val("");
+//                         $("#id_equipamento").val("");
+//                         $("#lid_equipamento").attr("disabled", "true");
+//                         swal("Atenção","Não existem equipamentos para este modelo!","info");
+//                     }
+//                 }
+//             });
+//         }
+//     });
+//
+//     //Autocomplete de Equipamento
+//     ac_equip.autocomplete({
+//         lookup: listEquip,
+//         noCache: true,
+//         minChars: 1,
+//         showNoSuggestionNotice: true,
+//         noSuggestionNotice: "Não existem resultados para essa consulta!",
+//         onSelect: function (suggestion) {
+//             $("#id_equipamento").val(suggestion.data);
+//         }
+//     });
+// });
+//Fabricante, seus modelos e equipamentos
+$("#id_fabricante").on("change", function(){
+    var id_fabricante = $(this).val();
+    var action = actionCorreta(window.location.href.toString(), "circuitos/modeloFabricante");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_fabricante: id_fabricante},
+        beforeSend: function () {
+            $(".remove_equipamento").remove();
+            $("#id_equipamento").val(null).selected = "true";
+            $("#id_equipamento").attr("disabled", "true");
+            $(".remove_modelo").remove();
+            $("#id_modelo").val(null).selected = "true";
+            $("#id_modelo").attr("disabled", "true");
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao){
+                $(".remove_modelo").remove();
+                $.each(data.dados, function (key, value) {
+                    var linhas = "<option class='remove_modelo' value='" + value.id + "'>" + value.modelo + "</option>";
+                    $("#id_modelo").append(linhas);
+                });
+                $("#id_modelo").removeAttr("disabled");
+            } else {
+                $(".remove_modelo").remove();
+                $("#id_modelo").val(null).selected = "true";
+                $("#id_modelo").attr("disabled", "true");
+                swal("Atenção","Não existem modelos para esse fabricante!","info");
+            }
+        }
+    });
+});
+$("#id_modelo").on("change", function(){
+    var id_modelo = $(this).val();
+    var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoModelo");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_modelo: id_modelo},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao){
+                $(".remove_equipamento").remove();
+                $.each(data.dados, function (key, value) {
+                    var numserie = (value.numserie) ? value.numserie : "Sem Nº Série";
+                    var numpatrimonio = (value.numpatrimonio) ? value.numpatrimonio : "Sem Nº Patrimônio";
+                    var linhas = "<option class='remove_equipamento' value='" + value.id + "'>" + value.nome + " (" + numserie + " / " + numpatrimonio + ") </option>";
+                    $("#id_equipamento").append(linhas);
+                });
+                $("#id_equipamento").removeAttr("disabled");
+            } else {
+                $(".remove_equipamento").remove();
+                $("#id_equipamento").val(null).selected = "true";
+                $("#id_equipamento").attr("disabled", "true");
+                swal("Atenção","Não existem equipamentos para esse modelo!","info");
+            }
+        }
+    });
+});
+//Validando o equipamento selecionados
+$("#id_equipamento").on("change", function(){
+    var id_equipamento = $(this).val();
+    validaEquipamentoCircuito(id_equipamento).done(function(valida){
+        if (valida) {
+            $("#id_fabricante").val(null).selected = "true";
+            $("#id_modelo").val(null).selected = "true";
+            $("#id_equipamento").val(null).selected = "true";
+            $("#id_modelo").attr("disabled", "true");
+            $("#id_equipamento").attr("disabled", "true");
+            swal("Atenção","Esse equipamento já foi cadastrado para outro circuito!","info");
+        }
+    });
+});
+//Campo Número de Série
+$("#numero_serie").on("change", function () {
+    var numero_serie = $(this).val();
+    if (numero_serie !== ""){
+        var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoNumeroSerie");
         $.ajax({
             type: "GET",
             dataType: "JSON",
             url: action,
-            data: {id_fabricante: id_fabricante},
-            beforeSend: function () {
-                $("#id_modelo").val("");
-                $("#lid_modelo").val("");
-                $("#lid_modelo").attr("disabled", "true");
-                $("#lid_equipamento").val("");
-                $("#id_equipamento").val("");
-                $("#lid_equipamento").attr("disabled", "true");
-            },
-            complete: function () {
-            },
+            data: {numero_serie: numero_serie},
             error: function (data) {
                 if (data.status && data.status === 401)
                 {
@@ -332,90 +539,60 @@ $(function () {
             },
             success: function (data) {
                 if (data.operacao){
-                    $.each(data.dados, function (key, value) {
-                        listModel.push({value: value.modelo, data: value.id});
+                    validaEquipamentoCircuito(data.id_equipamento).done(function(valida){
+                        if (valida) {
+                            $("#id_fabricante").val(null).selected = "true";
+                            $("#id_modelo").val(null).selected = "true";
+                            $("#id_equipamento").val(null).selected = "true";
+                            $("#id_modelo").attr("disabled", "true");
+                            $("#id_equipamento").attr("disabled", "true");
+                            swal("Atenção","Esse equipamento já foi cadastrado para outro circuito!","info");
+                        } else {
+                            $("#id_fabricante").val(data.id_fabricante).selected = "true";
+                            var linhas_modelo = "<option class='remove_modelo' value='" + data.id_modelo + "'>" + data.nome_modelo + "</option>";
+                            $("#id_modelo").append(linhas_modelo);
+                            $("#id_modelo").removeAttr("disabled");
+                            $("#id_modelo").val(data.id_modelo).selected = "true";
+                            var linhas_equipamento = "<option class='remove_equipamento' value='" + data.id_equipamento + "'>" + data.nome_equipamento + " (" + numero_serie + " / " + data.numero_patrimonio + ") </option>";
+                            $("#id_equipamento").append(linhas_equipamento);
+                            $("#id_equipamento").removeAttr("disabled");
+                            $("#id_equipamento").val(data.id_equipamento).selected = "true";
+                        }
                     });
-                    $("#lid_modelo").removeAttr("disabled");
-                    $("#id_equipamento").val("");
-                    $("#lid_equipamento").val("");
-                    $("#lid_equipamento").attr("disabled", "true");
                 } else {
-                    $("#id_modelo").val("");
-                    $("#lid_modelo").val("");
-                    $("#lid_modelo").attr("disabled", "true");
-                    $("#id_equipamento").val("");
-                    $("#lid_equipamento").val("");
-                    $("#lid_equipamento").attr("disabled", "true");
-                    swal("Atenção","Não existem modelos para esse fabricante!","info");
+                    $("#id_fabricante").val(null).selected = "true";
+                    $("#id_modelo").val(null).selected = "true";
+                    $("#id_equipamento").val(null).selected = "true";
+                    $("#id_modelo").attr("disabled", "true");
+                    $("#id_equipamento").attr("disabled", "true");
+                    swal("Atenção","Não existem equipamentos para esse número de série!","info");
                 }
             }
         });
-    });
-
-    //Autocomplete de Modelo
-    ac_model.autocomplete({
-        lookup: listModel,
-        noCache: true,
-        minChars: 1,
-        showNoSuggestionNotice: true,
-        noSuggestionNotice: "Não existem resultados para essa consulta!",
-        onSelect: function (suggestion) {
-            $("#id_modelo").val(suggestion.data);
-            var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoModelo");
-            $.ajax({
-                type: "GET",
-                dataType: "JSON",
-                url: action,
-                data: {id_modelo: suggestion.data},
-                beforeSend: function () {
-                    $("#lid_equipamento").val("");
-                    $("#id_equipamento").val("");
-                    $("#lid_equipamento").attr("disabled", "true");
-                },
-                complete: function () {
-                },
-                error: function (data) {
-                    if (data.status && data.status === 401)
-                    {
-                        swal({
-                            title: "Erro de Permissão",
-                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                            type: "warning"
-                        });
-                    }
-                },
-                success: function (data) {
-                    if (data.operacao){
-                        $.each(data.dados, function (key, value) {
-                            var numserie = (value.numserie) ? value.numserie : "Sem Nº Série";
-                            var numpatrimonio = (value.numpatrimonio) ? value.numpatrimonio : "Sem Nº Patrimônio";
-                            listEquip.push({value: value.nome + " (" + numserie + " / " + numpatrimonio + ")", data: value.id});
-                        });
-                        $("#lid_equipamento").removeAttr("disabled");
-                    } else {
-                        $("#lid_equipamento").val("");
-                        $("#id_equipamento").val("");
-                        $("#lid_equipamento").attr("disabled", "true");
-                        swal("Atenção","Não existem equipamentos para este modelo!","info");
-                    }
-                }
-            });
-        }
-    });
-
-    //Autocomplete de Equipamento
-    ac_equip.autocomplete({
-        lookup: listEquip,
-        noCache: true,
-        minChars: 1,
-        showNoSuggestionNotice: true,
-        noSuggestionNotice: "Não existem resultados para essa consulta!",
-        onSelect: function (suggestion) {
-            $("#id_equipamento").val(suggestion.data);
-        }
-    });
+    }
 });
-
+//Validar vinculo de equipamento e circuito
+function validaEquipamentoCircuito(id_equipamento)
+{
+    var action = actionCorreta(window.location.href.toString(), "circuitos/validarEquipamentoCircuito");
+    return $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_equipamento: id_equipamento},
+        async: false,
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        }
+    });
+}
 $(".bt_novo").on("click", function(){
     $("#modalcircuitos").modal();
     $("#salvaCircuitos").removeClass("editar_circuitos").addClass("criar_circuitos");
@@ -426,336 +603,336 @@ $(document).on("click", ".criar_circuitos", function(){
     switch (tipocliente)
     {
         case "43"://Pessoa Jurídica
-        //Validação de formulário
-        $("#formCircuitos").validate({
-            rules : {
-                id_cliente:{
-                    required: true
-                },
-                id_circuitos:{
-                    required: true
-                },
-                designacao:{
-                    required: true
-                },
-                chamado:{
-                    required: true
-                },
-                banda:{
-                    required: true
-                },
-                tag:{
-                    required: true
-                },
-                id_cidadedigital:{
-                    required: true
-                },
-                id_conectividade:{
-                    required: true
-                },
-                id_contrato:{
-                    required: true
-                },
-                id_cluster:{
-                    required: true
-                },
-                id_tipolink:{
-                    required: true
-                },
-                id_funcao:{
-                    required: true
-                },
-                id_tipoacesso:{
-                    required: true
-                },
-                id_fabricante:{
-                    required: true
-                },
-                id_modelo:{
-                    required: true
-                },
-                id_equipamento:{
-                    required: true
-                },
-                ip_redelocal:{
-                    required: true
-                },
-                ip_gerencia:{
-                    required: true
-                }
-            },
-            messages:{
-                id_cliente:{
-                    required:"É necessário informar um Circuitos"
-                },
-                id_circuitos:{
-                    required:"É necessário selecionar uma Circuitos"
-                },
-                designacao:{
-                    required:"É necessário informar a Designação"
-                },
-                chamado:{
-                    required: "É necessário informar um códido de Chamado"
-                },
-                banda:{
-                    required: "É necessário informar uma Banda"
-                },
-                tag:{
-                    required: "É necessário informar uma TAG"
-                },
-                id_cidadedigital:{
-                    required: "É necessário informar a Cidade Digital"
-                },
-                id_conectividade:{
-                    required: "É necessário informar a Conectividade"
-                },
-                id_contrato:{
-                    required: "É necessário informar o tipo de Contrato"
-                },
-                id_cluster:{
-                    required: "É necessário informar um Cluster"
-                },
-                id_tipolink:{
-                    required: "É necessário informar um tipo de Link"
-                },
-                id_funcao:{
-                    required: "É necessário informar uma Função"
-                },
-                id_tipoacesso:{
-                    required: "É necessário informar um Enlce"
-                },
-                id_fabricante:{
-                    required: "É necessário informar um Fabricante"
-                },
-                id_modelo:{
-                    required: "É necessário informar um Modelo"
-                },
-                id_equipamento:{
-                    required: "É necessário informar um Equipamento"
-                },
-                ip_redelocal:{
-                    required: "É necessário informar um IP de Rede Local"
-                },
-                ip_gerencia:{
-                    required: "É necessário informar um IP de Rede Gerencial"
-                }
-            },
-            submitHandler: function(form) {
-                var dados = $("#formCircuitos").serialize();
-                var action = actionCorreta(window.location.href.toString(), "circuitos/criarCircuitos");
-                $.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: action,
-                    data: {
-                        tokenKey: $("#token").attr("name"),
-                        tokenValue: $("#token").attr("value"),
-                        dados: dados
+            //Validação de formulário
+            $("#formCircuitos").validate({
+                rules : {
+                    id_cliente:{
+                        required: true
                     },
-                    beforeSend: function () {
+                    id_circuitos:{
+                        required: true
                     },
-                    complete: function () {
+                    designacao:{
+                        required: true
                     },
-                    error: function (data) {
-                        if (data.status && data.status === 401)
-                        {
-                            swal({
-                                title: "Erro de Permissão",
-                                text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                                type: "warning"
-                            });
-                        }
+                    chamado:{
+                        required: true
                     },
-                    success: function (data) {
-                        if (data.operacao){
-                            swal({
-                                title: "Cadastro de Circuitos",
-                                text: "Cadastro da Circuitos concluído!",
-                                type: "success",
-                                showCancelButton: false,
-                                confirmButtonColor: "#3085d6",
-                                cancelButtonColor: "#d33",
-                                confirmButtonText: "Ok"
-                              }).then((result) => {
-                                window.location.reload(true);
-                              });
-                        } else {
-                            swal({
-                                title: "Cadastro de Circuitos",
-                                text: data.mensagem,
-                                type: "error"
-                            });
-                        }
+                    banda:{
+                        required: true
+                    },
+                    tag:{
+                        required: true
+                    },
+                    id_cidadedigital:{
+                        required: true
+                    },
+                    id_conectividade:{
+                        required: true
+                    },
+                    id_contrato:{
+                        required: true
+                    },
+                    id_cluster:{
+                        required: true
+                    },
+                    id_tipolink:{
+                        required: true
+                    },
+                    id_funcao:{
+                        required: true
+                    },
+                    id_tipoacesso:{
+                        required: true
+                    },
+                    id_fabricante:{
+                        required: true
+                    },
+                    id_modelo:{
+                        required: true
+                    },
+                    id_equipamento:{
+                        required: true
+                    },
+                    ip_redelocal:{
+                        required: true
+                    },
+                    ip_gerencia:{
+                        required: true
                     }
-                });
-            }
-        });
-        break;
+                },
+                messages:{
+                    id_cliente:{
+                        required:"É necessário informar um Circuitos"
+                    },
+                    id_circuitos:{
+                        required:"É necessário selecionar uma Circuitos"
+                    },
+                    designacao:{
+                        required:"É necessário informar a Designação"
+                    },
+                    chamado:{
+                        required: "É necessário informar um códido de Chamado"
+                    },
+                    banda:{
+                        required: "É necessário informar uma Banda"
+                    },
+                    tag:{
+                        required: "É necessário informar uma TAG"
+                    },
+                    id_cidadedigital:{
+                        required: "É necessário informar a Cidade Digital"
+                    },
+                    id_conectividade:{
+                        required: "É necessário informar a Conectividade"
+                    },
+                    id_contrato:{
+                        required: "É necessário informar o tipo de Contrato"
+                    },
+                    id_cluster:{
+                        required: "É necessário informar um Cluster"
+                    },
+                    id_tipolink:{
+                        required: "É necessário informar um tipo de Link"
+                    },
+                    id_funcao:{
+                        required: "É necessário informar uma Função"
+                    },
+                    id_tipoacesso:{
+                        required: "É necessário informar um Enlce"
+                    },
+                    id_fabricante:{
+                        required: "É necessário informar um Fabricante"
+                    },
+                    id_modelo:{
+                        required: "É necessário informar um Modelo"
+                    },
+                    id_equipamento:{
+                        required: "É necessário informar um Equipamento"
+                    },
+                    ip_redelocal:{
+                        required: "É necessário informar um IP de Rede Local"
+                    },
+                    ip_gerencia:{
+                        required: "É necessário informar um IP de Rede Gerencial"
+                    }
+                },
+                submitHandler: function(form) {
+                    var dados = $("#formCircuitos").serialize();
+                    var action = actionCorreta(window.location.href.toString(), "circuitos/criarCircuitos");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: action,
+                        data: {
+                            tokenKey: $("#token").attr("name"),
+                            tokenValue: $("#token").attr("value"),
+                            dados: dados
+                        },
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        error: function (data) {
+                            if (data.status && data.status === 401)
+                            {
+                                swal({
+                                    title: "Erro de Permissão",
+                                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                    type: "warning"
+                                });
+                            }
+                        },
+                        success: function (data) {
+                            if (data.operacao){
+                                swal({
+                                    title: "Cadastro de Circuitos",
+                                    text: "Cadastro da Circuitos concluído!",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Ok"
+                                }).then((result) => {
+                                    window.location.reload(true);
+                                });
+                            } else {
+                                swal({
+                                    title: "Cadastro de Circuitos",
+                                    text: data.mensagem,
+                                    type: "error"
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            break;
         default://Pessoa Física
-        //Validação de formulário
-        $("#formCircuitos").validate({
-            rules : {
-                id_cliente:{
-                    required: true
-                },
-                designacao:{
-                    required: true
-                },
-                chamado:{
-                    required: true
-                },
-                id_cidadedigital:{
-                    required: true
-                },
-                id_conectividade:{
-                    required: true
-                },
-                banda:{
-                    required: true
-                },
-                tag:{
-                    required: true
-                },
-                id_contrato:{
-                    required: true
-                },
-                id_cluster:{
-                    required: true
-                },
-                id_tipolink:{
-                    required: true
-                },
-                id_funcao:{
-                    required: true
-                },
-                id_tipoacesso:{
-                    required: true
-                },
-                id_fabricante:{
-                    required: true
-                },
-                id_modelo:{
-                    required: true
-                },
-                id_equipamento:{
-                    required: true
-                },
-                ip_redelocal:{
-                    required: true
-                },
-                ip_gerencia:{
-                    required: true
-                }
-            },
-            messages:{
-                id_cliente:{
-                    required:"É necessário informar um Circuitos"
-                },
-                designacao:{
-                    required:"É necessário informar a Designação"
-                },
-                chamado:{
-                    required: "É necessário informar um código de Chamado"
-                },
-                banda:{
-                    required: "É necessário informar uma Banda"
-                },
-                tag:{
-                    required: "É necessário informar uma TAG"
-                },
-                id_cidadedigital:{
-                    required: "É necessário informar a Cidade Digital"
-                },
-                id_conectividade:{
-                    required: "É necessário informar a Conectividade"
-                },
-                id_contrato:{
-                    required: "É necessário informar o tipo de Contrato"
-                },
-                id_cluster:{
-                    required: "É necessário informar um Cluster"
-                },
-                id_tipolink:{
-                    required: "É necessário informar um tipo de Link"
-                },
-                id_funcao:{
-                    required: "É necessário informar uma Função"
-                },
-                id_tipoacesso:{
-                    required: "É necessário informar um Enlce"
-                },
-                id_fabricante:{
-                    required: "É necessário informar um Fabricante"
-                },
-                id_modelo:{
-                    required: "É necessário informar um Modelo"
-                },
-                id_equipamento:{
-                    required: "É necessário informar um Equipamento"
-                },
-                ip_redelocal:{
-                    required: "É necessário informar um IP de Rede Local"
-                },
-                ip_gerencia:{
-                    required: "É necessário informar um IP de Rede Gerencial"
-                }
-            },
-            submitHandler: function(form) {
-                var dados = $("#formCircuitos").serialize();
-                var action = actionCorreta(window.location.href.toString(), "circuitos/criarCircuitos");
-                $.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: action,
-                    data: {
-                        tokenKey: $("#token").attr("name"),
-                        tokenValue: $("#token").attr("value"),
-                        dados: dados
+                //Validação de formulário
+            $("#formCircuitos").validate({
+                rules : {
+                    id_cliente:{
+                        required: true
                     },
-                    beforeSend: function () {
+                    designacao:{
+                        required: true
                     },
-                    complete: function () {
+                    chamado:{
+                        required: true
                     },
-                    error: function (data) {
-                        if (data.status && data.status === 401)
-                        {
-                            swal({
-                                title: "Erro de Permissão",
-                                text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                                type: "warning"
-                            });
-                        }
+                    id_cidadedigital:{
+                        required: true
                     },
-                    success: function (data) {
-                        if (data.operacao){
-                            swal({
-                                title: "Cadastro de Circuitos",
-                                text: "Cadastro da Circuitos concluído!",
-                                type: "success",
-                                showCancelButton: false,
-                                confirmButtonColor: "#3085d6",
-                                cancelButtonColor: "#d33",
-                                confirmButtonText: "Ok"
-                              }).then((result) => {
-                                window.location.reload(true);
-                              });
-                        } else {
-                            swal({
-                                title: "Cadastro de Circuitos",
-                                text: data.mensagem,
-                                type: "error"
-                            });
-                        }
+                    id_conectividade:{
+                        required: true
+                    },
+                    banda:{
+                        required: true
+                    },
+                    tag:{
+                        required: true
+                    },
+                    id_contrato:{
+                        required: true
+                    },
+                    id_cluster:{
+                        required: true
+                    },
+                    id_tipolink:{
+                        required: true
+                    },
+                    id_funcao:{
+                        required: true
+                    },
+                    id_tipoacesso:{
+                        required: true
+                    },
+                    id_fabricante:{
+                        required: true
+                    },
+                    id_modelo:{
+                        required: true
+                    },
+                    id_equipamento:{
+                        required: true
+                    },
+                    ip_redelocal:{
+                        required: true
+                    },
+                    ip_gerencia:{
+                        required: true
                     }
-                });
-            }
-        });
-        break;
+                },
+                messages:{
+                    id_cliente:{
+                        required:"É necessário informar um Circuitos"
+                    },
+                    designacao:{
+                        required:"É necessário informar a Designação"
+                    },
+                    chamado:{
+                        required: "É necessário informar um código de Chamado"
+                    },
+                    banda:{
+                        required: "É necessário informar uma Banda"
+                    },
+                    tag:{
+                        required: "É necessário informar uma TAG"
+                    },
+                    id_cidadedigital:{
+                        required: "É necessário informar a Cidade Digital"
+                    },
+                    id_conectividade:{
+                        required: "É necessário informar a Conectividade"
+                    },
+                    id_contrato:{
+                        required: "É necessário informar o tipo de Contrato"
+                    },
+                    id_cluster:{
+                        required: "É necessário informar um Cluster"
+                    },
+                    id_tipolink:{
+                        required: "É necessário informar um tipo de Link"
+                    },
+                    id_funcao:{
+                        required: "É necessário informar uma Função"
+                    },
+                    id_tipoacesso:{
+                        required: "É necessário informar um Enlce"
+                    },
+                    id_fabricante:{
+                        required: "É necessário informar um Fabricante"
+                    },
+                    id_modelo:{
+                        required: "É necessário informar um Modelo"
+                    },
+                    id_equipamento:{
+                        required: "É necessário informar um Equipamento"
+                    },
+                    ip_redelocal:{
+                        required: "É necessário informar um IP de Rede Local"
+                    },
+                    ip_gerencia:{
+                        required: "É necessário informar um IP de Rede Gerencial"
+                    }
+                },
+                submitHandler: function(form) {
+                    var dados = $("#formCircuitos").serialize();
+                    var action = actionCorreta(window.location.href.toString(), "circuitos/criarCircuitos");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: action,
+                        data: {
+                            tokenKey: $("#token").attr("name"),
+                            tokenValue: $("#token").attr("value"),
+                            dados: dados
+                        },
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        error: function (data) {
+                            if (data.status && data.status === 401)
+                            {
+                                swal({
+                                    title: "Erro de Permissão",
+                                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                    type: "warning"
+                                });
+                            }
+                        },
+                        success: function (data) {
+                            if (data.operacao){
+                                swal({
+                                    title: "Cadastro de Circuitos",
+                                    text: "Cadastro da Circuitos concluído!",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Ok"
+                                }).then((result) => {
+                                    window.location.reload(true);
+                                });
+                            } else {
+                                swal({
+                                    title: "Cadastro de Circuitos",
+                                    text: data.mensagem,
+                                    type: "error"
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            break;
     }
 });
 
 //Coletando os ids das linhas selecionadas na tabela
-var ids = [];   
+var ids = [];
 $("#tb_circuitos").on("click", "tr", function () {
     var valr = $(this)[0].cells[0].innerText;
     if (!ids.includes(valr)) {
@@ -773,14 +950,14 @@ $(".bt_edit").on("click", function(){
             title: "Edição de Circuitos",
             text: "Você somente pode editar um único circuitos! Selecione apenas um e tente novamente!",
             type: "warning"
-          });
+        });
     } else if (nm_rows == 0) {
         swal({
             title: "Edição de Circuitos",
             text: "Você precisa selecionar um circuitos para a edição!",
             type: "warning"
-          });
-     } else {
+        });
+    } else {
         var id_circuitos = ids[0];
         var action = actionCorreta(window.location.href.toString(), "circuitos/formCircuitos");
         $.ajax({
@@ -872,14 +1049,14 @@ $(".bt_visual").on("click", function(){
             title: "Visualização de Circuitos",
             text: "Você somente pode editar um único circuitos! Selecione apenas um e tente novamente!",
             type: "warning"
-          });
+        });
     } else if (nm_rows == 0) {
         swal({
             title: "Visualização de Circuitos",
             text: "Você precisa selecionar um circuitos para a edição!",
             type: "warning"
-          });
-     } else {
+        });
+    } else {
         var id_circuitos = ids[0];
         var action = actionCorreta(window.location.href.toString(), "circuitos/visualizaCircuitos");
         $.ajax({
@@ -1011,331 +1188,331 @@ $(document).on("click", ".editar_circuitos", function(){
     switch (tipocliente)
     {
         case "43"://Pessoa Jurídica
-        //Validação de formulário
-        $("#formCircuitos").validate({
-            rules : {
-                id_cliente:{
-                    required: true
-                },
-                id_circuitos:{
-                    required: true
-                },
-                designacao:{
-                    required: true
-                },
-                chamado:{
-                    required: true
-                },
-                banda:{
-                    required: true
-                },
-                tag:{
-                    required: true
-                },
-                id_cidadedigital:{
-                    required: true
-                },
-                id_conectividade:{
-                    required: true
-                },
-                id_contrato:{
-                    required: true
-                },
-                id_cluster:{
-                    required: true
-                },
-                id_tipolink:{
-                    required: true
-                },
-                id_funcao:{
-                    required: true
-                },
-                id_tipoacesso:{
-                    required: true
-                },
-                id_fabricante:{
-                    required: true
-                },
-                id_modelo:{
-                    required: true
-                },
-                id_equipamento:{
-                    required: true
-                },
-                ip_redelocal:{
-                    required: true
-                },
-                ip_gerencia:{
-                    required: true
-                }
-            },
-            messages:{
-                id_cliente:{
-                    required:"É necessário informar um Circuitos"
-                },
-                id_circuitos:{
-                    required:"É necessário selecionar uma Circuitos"
-                },
-                designacao:{
-                    required:"É necessário informar a Designação"
-                },
-                chamado:{
-                    required: "É necessário informar um códido de Chamado"
-                },
-                banda:{
-                    required: "É necessário informar uma Banda"
-                },
-                tag:{
-                    required: "É necessário informar uma TAG"
-                },
-                id_cidadedigital:{
-                    required: "É necessário informar a Cidade Digital"
-                },
-                id_conectividade:{
-                    required: "É necessário informar a Conectividade"
-                },
-                id_contrato:{
-                    required: "É necessário informar o tipo de Contrato"
-                },
-                id_cluster:{
-                    required: "É necessário informar um Cluster"
-                },
-                id_tipolink:{
-                    required: "É necessário informar um tipo de Link"
-                },
-                id_funcao:{
-                    required: "É necessário informar uma Função"
-                },
-                id_tipoacesso:{
-                    required: "É necessário informar um Enlce"
-                },
-                id_fabricante:{
-                    required: "É necessário informar um Fabricante"
-                },
-                id_modelo:{
-                    required: "É necessário informar um Modelo"
-                },
-                id_equipamento:{
-                    required: "É necessário informar um Equipamento"
-                },
-                ip_redelocal:{
-                    required: "É necessário informar um IP de Rede Local"
-                },
-                ip_gerencia:{
-                    required: "É necessário informar um IP de Rede Gerencial"
-                }
-            },
-            submitHandler: function(form) {
-                var dados = $("#formCircuitos").serialize();
-                var action = actionCorreta(window.location.href.toString(), "circuitos/editarCircuitos");
-                $.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: action,
-                    data: {
-                        tokenKey: $("#token").attr("name"),
-                        tokenValue: $("#token").attr("value"),
-                        dados: dados
+            //Validação de formulário
+            $("#formCircuitos").validate({
+                rules : {
+                    id_cliente:{
+                        required: true
                     },
-                    beforeSend: function () {
+                    id_circuitos:{
+                        required: true
                     },
-                    complete: function () {
+                    designacao:{
+                        required: true
                     },
-                    error: function (data) {
-                        if (data.status && data.status === 401)
-                        {
-                            swal({
-                                title: "Erro de Permissão",
-                                text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                                type: "warning"
-                            });
-                        }
+                    chamado:{
+                        required: true
                     },
-                    success: function (data) {
-                        if (data.operacao){
-                            swal({
-                                title: "Cadastro de Circuitos",
-                                text: "Cadastro da Circuitos concluído!",
-                                type: "success",
-                                showCancelButton: false,
-                                confirmButtonColor: "#3085d6",
-                                cancelButtonColor: "#d33",
-                                confirmButtonText: "Ok"
-                              }).then((result) => {
-                                window.location.reload(true);
-                              });
-                        } else {
-                            swal({
-                                title: "Cadastro de Circuitos",
-                                text: data.mensagem,
-                                type: "error"
-                            });
-                        }
+                    banda:{
+                        required: true
+                    },
+                    tag:{
+                        required: true
+                    },
+                    id_cidadedigital:{
+                        required: true
+                    },
+                    id_conectividade:{
+                        required: true
+                    },
+                    id_contrato:{
+                        required: true
+                    },
+                    id_cluster:{
+                        required: true
+                    },
+                    id_tipolink:{
+                        required: true
+                    },
+                    id_funcao:{
+                        required: true
+                    },
+                    id_tipoacesso:{
+                        required: true
+                    },
+                    id_fabricante:{
+                        required: true
+                    },
+                    id_modelo:{
+                        required: true
+                    },
+                    id_equipamento:{
+                        required: true
+                    },
+                    ip_redelocal:{
+                        required: true
+                    },
+                    ip_gerencia:{
+                        required: true
                     }
-                });
-            }
-        });
-        break;
+                },
+                messages:{
+                    id_cliente:{
+                        required:"É necessário informar um Circuitos"
+                    },
+                    id_circuitos:{
+                        required:"É necessário selecionar uma Circuitos"
+                    },
+                    designacao:{
+                        required:"É necessário informar a Designação"
+                    },
+                    chamado:{
+                        required: "É necessário informar um códido de Chamado"
+                    },
+                    banda:{
+                        required: "É necessário informar uma Banda"
+                    },
+                    tag:{
+                        required: "É necessário informar uma TAG"
+                    },
+                    id_cidadedigital:{
+                        required: "É necessário informar a Cidade Digital"
+                    },
+                    id_conectividade:{
+                        required: "É necessário informar a Conectividade"
+                    },
+                    id_contrato:{
+                        required: "É necessário informar o tipo de Contrato"
+                    },
+                    id_cluster:{
+                        required: "É necessário informar um Cluster"
+                    },
+                    id_tipolink:{
+                        required: "É necessário informar um tipo de Link"
+                    },
+                    id_funcao:{
+                        required: "É necessário informar uma Função"
+                    },
+                    id_tipoacesso:{
+                        required: "É necessário informar um Enlce"
+                    },
+                    id_fabricante:{
+                        required: "É necessário informar um Fabricante"
+                    },
+                    id_modelo:{
+                        required: "É necessário informar um Modelo"
+                    },
+                    id_equipamento:{
+                        required: "É necessário informar um Equipamento"
+                    },
+                    ip_redelocal:{
+                        required: "É necessário informar um IP de Rede Local"
+                    },
+                    ip_gerencia:{
+                        required: "É necessário informar um IP de Rede Gerencial"
+                    }
+                },
+                submitHandler: function(form) {
+                    var dados = $("#formCircuitos").serialize();
+                    var action = actionCorreta(window.location.href.toString(), "circuitos/editarCircuitos");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: action,
+                        data: {
+                            tokenKey: $("#token").attr("name"),
+                            tokenValue: $("#token").attr("value"),
+                            dados: dados
+                        },
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        error: function (data) {
+                            if (data.status && data.status === 401)
+                            {
+                                swal({
+                                    title: "Erro de Permissão",
+                                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                    type: "warning"
+                                });
+                            }
+                        },
+                        success: function (data) {
+                            if (data.operacao){
+                                swal({
+                                    title: "Cadastro de Circuitos",
+                                    text: "Cadastro da Circuitos concluído!",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Ok"
+                                }).then((result) => {
+                                    window.location.reload(true);
+                                });
+                            } else {
+                                swal({
+                                    title: "Cadastro de Circuitos",
+                                    text: data.mensagem,
+                                    type: "error"
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            break;
         default://Pessoa Física
-        //Validação de formulário
-        $("#formCircuitos").validate({
-            rules : {
-                id_cliente:{
-                    required: true
-                },
-                designacao:{
-                    required: true
-                },
-                chamado:{
-                    required: true
-                },
-                id_cidadedigital:{
-                    required: true
-                },
-                id_conectividade:{
-                    required: true
-                },
-                banda:{
-                    required: true
-                },
-                tag:{
-                    required: true
-                },
-                id_contrato:{
-                    required: true
-                },
-                id_cluster:{
-                    required: true
-                },
-                id_tipolink:{
-                    required: true
-                },
-                id_funcao:{
-                    required: true
-                },
-                id_tipoacesso:{
-                    required: true
-                },
-                id_fabricante:{
-                    required: true
-                },
-                id_modelo:{
-                    required: true
-                },
-                id_equipamento:{
-                    required: true
-                },
-                ip_redelocal:{
-                    required: true
-                },
-                ip_gerencia:{
-                    required: true
-                }
-            },
-            messages:{
-                id_cliente:{
-                    required:"É necessário informar um Circuitos"
-                },
-                designacao:{
-                    required:"É necessário informar a Designação"
-                },
-                chamado:{
-                    required: "É necessário informar um código de Chamado"
-                },
-                banda:{
-                    required: "É necessário informar uma Banda"
-                },
-                tag:{
-                    required: "É necessário informar uma TAG"
-                },
-                id_cidadedigital:{
-                    required: "É necessário informar a Cidade Digital"
-                },
-                id_conectividade:{
-                    required: "É necessário informar a Conectividade"
-                },
-                id_contrato:{
-                    required: "É necessário informar o tipo de Contrato"
-                },
-                id_cluster:{
-                    required: "É necessário informar um Cluster"
-                },
-                id_tipolink:{
-                    required: "É necessário informar um tipo de Link"
-                },
-                id_funcao:{
-                    required: "É necessário informar uma Função"
-                },
-                id_tipoacesso:{
-                    required: "É necessário informar um Enlce"
-                },
-                id_fabricante:{
-                    required: "É necessário informar um Fabricante"
-                },
-                id_modelo:{
-                    required: "É necessário informar um Modelo"
-                },
-                id_equipamento:{
-                    required: "É necessário informar um Equipamento"
-                },
-                ip_redelocal:{
-                    required: "É necessário informar um IP de Rede Local"
-                },
-                ip_gerencia:{
-                    required: "É necessário informar um IP de Rede Gerencial"
-                }
-            },
-            submitHandler: function(form) {
-                var dados = $("#formCircuitos").serialize();
-                var action = actionCorreta(window.location.href.toString(), "circuitos/editarCircuitos");
-                $.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: action,
-                    data: {
-                        tokenKey: $("#token").attr("name"),
-                        tokenValue: $("#token").attr("value"),
-                        dados: dados
+                //Validação de formulário
+            $("#formCircuitos").validate({
+                rules : {
+                    id_cliente:{
+                        required: true
                     },
-                    beforeSend: function () {
+                    designacao:{
+                        required: true
                     },
-                    complete: function () {
+                    chamado:{
+                        required: true
                     },
-                    error: function (data) {
-                        if (data.status && data.status === 401)
-                        {
-                            swal({
-                                title: "Erro de Permissão",
-                                text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                                type: "warning"
-                            });
-                        }
+                    id_cidadedigital:{
+                        required: true
                     },
-                    success: function (data) {
-                        if (data.operacao){
-                            swal({
-                                title: "Cadastro de Circuitos",
-                                text: "Cadastro da Circuitos concluído!",
-                                type: "success",
-                                showCancelButton: false,
-                                confirmButtonColor: "#3085d6",
-                                cancelButtonColor: "#d33",
-                                confirmButtonText: "Ok"
-                              }).then((result) => {
-                                window.location.reload(true);
-                              });
-                        } else {
-                            swal({
-                                title: "Cadastro de Circuitos",
-                                text: data.mensagem,
-                                type: "error"
-                            });
-                        }
+                    id_conectividade:{
+                        required: true
+                    },
+                    banda:{
+                        required: true
+                    },
+                    tag:{
+                        required: true
+                    },
+                    id_contrato:{
+                        required: true
+                    },
+                    id_cluster:{
+                        required: true
+                    },
+                    id_tipolink:{
+                        required: true
+                    },
+                    id_funcao:{
+                        required: true
+                    },
+                    id_tipoacesso:{
+                        required: true
+                    },
+                    id_fabricante:{
+                        required: true
+                    },
+                    id_modelo:{
+                        required: true
+                    },
+                    id_equipamento:{
+                        required: true
+                    },
+                    ip_redelocal:{
+                        required: true
+                    },
+                    ip_gerencia:{
+                        required: true
                     }
-                });
-            }
-        });
-        break;
+                },
+                messages:{
+                    id_cliente:{
+                        required:"É necessário informar um Circuitos"
+                    },
+                    designacao:{
+                        required:"É necessário informar a Designação"
+                    },
+                    chamado:{
+                        required: "É necessário informar um código de Chamado"
+                    },
+                    banda:{
+                        required: "É necessário informar uma Banda"
+                    },
+                    tag:{
+                        required: "É necessário informar uma TAG"
+                    },
+                    id_cidadedigital:{
+                        required: "É necessário informar a Cidade Digital"
+                    },
+                    id_conectividade:{
+                        required: "É necessário informar a Conectividade"
+                    },
+                    id_contrato:{
+                        required: "É necessário informar o tipo de Contrato"
+                    },
+                    id_cluster:{
+                        required: "É necessário informar um Cluster"
+                    },
+                    id_tipolink:{
+                        required: "É necessário informar um tipo de Link"
+                    },
+                    id_funcao:{
+                        required: "É necessário informar uma Função"
+                    },
+                    id_tipoacesso:{
+                        required: "É necessário informar um Enlce"
+                    },
+                    id_fabricante:{
+                        required: "É necessário informar um Fabricante"
+                    },
+                    id_modelo:{
+                        required: "É necessário informar um Modelo"
+                    },
+                    id_equipamento:{
+                        required: "É necessário informar um Equipamento"
+                    },
+                    ip_redelocal:{
+                        required: "É necessário informar um IP de Rede Local"
+                    },
+                    ip_gerencia:{
+                        required: "É necessário informar um IP de Rede Gerencial"
+                    }
+                },
+                submitHandler: function(form) {
+                    var dados = $("#formCircuitos").serialize();
+                    var action = actionCorreta(window.location.href.toString(), "circuitos/editarCircuitos");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: action,
+                        data: {
+                            tokenKey: $("#token").attr("name"),
+                            tokenValue: $("#token").attr("value"),
+                            dados: dados
+                        },
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        error: function (data) {
+                            if (data.status && data.status === 401)
+                            {
+                                swal({
+                                    title: "Erro de Permissão",
+                                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                    type: "warning"
+                                });
+                            }
+                        },
+                        success: function (data) {
+                            if (data.operacao){
+                                swal({
+                                    title: "Cadastro de Circuitos",
+                                    text: "Cadastro da Circuitos concluído!",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Ok"
+                                }).then((result) => {
+                                    window.location.reload(true);
+                                });
+                            } else {
+                                swal({
+                                    title: "Cadastro de Circuitos",
+                                    text: data.mensagem,
+                                    type: "error"
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            break;
     }
 });
 
@@ -1356,7 +1533,7 @@ $("#id_tipomovimento").on("change", function(){
             $("#statusmovdiv").hide();
             $(".equip").hide();
             $("#salvaCircuitosmov").removeAttr("disabled");
-        break;
+            break;
         case "64"://Mudança de Status do Circuito
             $("#statusmovdiv").show();
             $("#gerenciamovdiv").hide();
@@ -1364,7 +1541,7 @@ $("#id_tipomovimento").on("change", function(){
             $("#bandamovdiv").hide();
             $(".equip").hide();
             $("#salvaCircuitosmov").removeAttr("disabled");
-        break;
+            break;
         case "65"://Alteração de IP Gerencial
             $("#gerenciamovdiv").show();
             $("#bandamovdiv").hide();
@@ -1372,7 +1549,7 @@ $("#id_tipomovimento").on("change", function(){
             $("#statusmovdiv").hide();
             $(".equip").hide();
             $("#salvaCircuitosmov").removeAttr("disabled");
-        break;
+            break;
         case "66"://Alteração de IP Local
             $("#redelocalmovdiv").show();
             $("#statusmovdiv").hide();
@@ -1380,7 +1557,7 @@ $("#id_tipomovimento").on("change", function(){
             $("#gerenciamovdiv").hide();
             $(".equip").hide();
             $("#salvaCircuitosmov").removeAttr("disabled");
-        break;
+            break;
         case "67"://Alteração de Equipamento
             $(".equip").show();
             $("#redelocalmovdiv").hide();
@@ -1388,7 +1565,7 @@ $("#id_tipomovimento").on("change", function(){
             $("#bandamovdiv").hide();
             $("#gerenciamovdiv").hide();
             $("#salvaCircuitosmov").removeAttr("disabled");
-        break;
+            break;
         default:
             $(".equip").hide();
             $("#redelocalmovdiv").hide();
@@ -1396,7 +1573,7 @@ $("#id_tipomovimento").on("change", function(){
             $("#bandamovdiv").hide();
             $("#gerenciamovdiv").hide();
             $("#salvaCircuitosmov").attr("disabled", "true");
-        break;
+            break;
     }
 });
 
@@ -1518,367 +1695,367 @@ $(document).on("click", ".criar_mov", function(){
     switch (id_tipomovimento)
     {
         case "63"://Alteração de Banda
-        //Validação de formulário
-        $("#formCircuitosmov").validate({
-            rules : {
-                id_tipomovimento:{
-                    required: true
-                },
-                bandamov:{
-                    required: true
-                }
-            },
-            messages:{
-                id_tipomovimento:{
-                    required:"É necessário informar um tipo de movimento"
-                },
-                bandamov:{
-                    required:"É necessário informar a banda"
-                }
-            },
-            submitHandler: function(form) {
-                var dados = $("#formCircuitosmov").serialize();
-                var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
-                $.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: action,
-                    data: {
-                        tokenKey: $("#token").attr("name"),
-                        tokenValue: $("#token").attr("value"),
-                        dados: dados
+            //Validação de formulário
+            $("#formCircuitosmov").validate({
+                rules : {
+                    id_tipomovimento:{
+                        required: true
                     },
-                    beforeSend: function () {
-                    },
-                    complete: function () {
-                    },
-                    error: function (data) {
-                        if (data.status && data.status === 401)
-                        {
-                            swal({
-                                title: "Erro de Permissão",
-                                text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                                type: "warning"
-                            });
-                        }
-                    },
-                    success: function (data) {
-                        if (data.operacao){
-                            swal({
-                                title: "Movimento de Circuito",
-                                text: "Movimento de Circuito concluído!",
-                                type: "success",
-                                showCancelButton: false,
-                                confirmButtonColor: "#3085d6",
-                                cancelButtonColor: "#d33",
-                                confirmButtonText: "Ok"
-                              }).then((result) => {
-                                window.location.reload(true);
-                              });
-                        } else {
-                            swal({
-                                title: "Movimento de Circuito",
-                                text: data.mensagem,
-                                type: "error"
-                            });
-                        }
+                    bandamov:{
+                        required: true
                     }
-                });
-            }
-        });
-        break;
+                },
+                messages:{
+                    id_tipomovimento:{
+                        required:"É necessário informar um tipo de movimento"
+                    },
+                    bandamov:{
+                        required:"É necessário informar a banda"
+                    }
+                },
+                submitHandler: function(form) {
+                    var dados = $("#formCircuitosmov").serialize();
+                    var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: action,
+                        data: {
+                            tokenKey: $("#token").attr("name"),
+                            tokenValue: $("#token").attr("value"),
+                            dados: dados
+                        },
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        error: function (data) {
+                            if (data.status && data.status === 401)
+                            {
+                                swal({
+                                    title: "Erro de Permissão",
+                                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                    type: "warning"
+                                });
+                            }
+                        },
+                        success: function (data) {
+                            if (data.operacao){
+                                swal({
+                                    title: "Movimento de Circuito",
+                                    text: "Movimento de Circuito concluído!",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Ok"
+                                }).then((result) => {
+                                    window.location.reload(true);
+                                });
+                            } else {
+                                swal({
+                                    title: "Movimento de Circuito",
+                                    text: data.mensagem,
+                                    type: "error"
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            break;
         case "64"://Mudança de Status do Circuito
-        //Validação de formulário
-        $("#formCircuitosmov").validate({
-            rules : {
-                id_tipomovimento:{
-                    required: true
-                },
-                id_statusmov:{
-                    required: true
-                }
-            },
-            messages:{
-                id_tipomovimento:{
-                    required:"É necessário informar um tipo de movimento"
-                },
-                id_statusmov:{
-                    required:"É necessário informar um status"
-                }
-            },
-            submitHandler: function(form) {
-                var dados = $("#formCircuitosmov").serialize();
-                var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
-                $.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: action,
-                    data: {
-                        tokenKey: $("#token").attr("name"),
-                        tokenValue: $("#token").attr("value"),
-                        dados: dados
+            //Validação de formulário
+            $("#formCircuitosmov").validate({
+                rules : {
+                    id_tipomovimento:{
+                        required: true
                     },
-                    beforeSend: function () {
-                    },
-                    complete: function () {
-                    },
-                    error: function (data) {
-                        if (data.status && data.status === 401)
-                        {
-                            swal({
-                                title: "Erro de Permissão",
-                                text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                                type: "warning"
-                            });
-                        }
-                    },
-                    success: function (data) {
-                        if (data.operacao){
-                            swal({
-                                title: "Movimento de Circuito",
-                                text: "Movimento de Circuito concluído!",
-                                type: "success",
-                                showCancelButton: false,
-                                confirmButtonColor: "#3085d6",
-                                cancelButtonColor: "#d33",
-                                confirmButtonText: "Ok"
-                              }).then((result) => {
-                                window.location.reload(true);
-                              });
-                        } else {
-                            swal({
-                                title: "Movimento de Circuito",
-                                text: data.mensagem,
-                                type: "error"
-                            });
-                        }
+                    id_statusmov:{
+                        required: true
                     }
-                });
-            }
-        });
-        break;
+                },
+                messages:{
+                    id_tipomovimento:{
+                        required:"É necessário informar um tipo de movimento"
+                    },
+                    id_statusmov:{
+                        required:"É necessário informar um status"
+                    }
+                },
+                submitHandler: function(form) {
+                    var dados = $("#formCircuitosmov").serialize();
+                    var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: action,
+                        data: {
+                            tokenKey: $("#token").attr("name"),
+                            tokenValue: $("#token").attr("value"),
+                            dados: dados
+                        },
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        error: function (data) {
+                            if (data.status && data.status === 401)
+                            {
+                                swal({
+                                    title: "Erro de Permissão",
+                                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                    type: "warning"
+                                });
+                            }
+                        },
+                        success: function (data) {
+                            if (data.operacao){
+                                swal({
+                                    title: "Movimento de Circuito",
+                                    text: "Movimento de Circuito concluído!",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Ok"
+                                }).then((result) => {
+                                    window.location.reload(true);
+                                });
+                            } else {
+                                swal({
+                                    title: "Movimento de Circuito",
+                                    text: data.mensagem,
+                                    type: "error"
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            break;
         case "65"://Alteração de IP Gerencial
-        //Validação de formulário
-        $("#formCircuitosmov").validate({
-            rules : {
-                id_tipomovimento:{
-                    required: true
-                },
-                ip_gerenciamov:{
-                    required: true
-                }
-            },
-            messages:{
-                id_tipomovimento:{
-                    required:"É necessário informar um tipo de movimento"
-                },
-                ip_gerenciamov:{
-                    required:"É necessário informar um IP Gerencial"
-                }
-            },
-            submitHandler: function(form) {
-                var dados = $("#formCircuitosmov").serialize();
-                var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
-                $.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: action,
-                    data: {
-                        tokenKey: $("#token").attr("name"),
-                        tokenValue: $("#token").attr("value"),
-                        dados: dados
+            //Validação de formulário
+            $("#formCircuitosmov").validate({
+                rules : {
+                    id_tipomovimento:{
+                        required: true
                     },
-                    beforeSend: function () {
-                    },
-                    complete: function () {
-                    },
-                    error: function (data) {
-                        if (data.status && data.status === 401)
-                        {
-                            swal({
-                                title: "Erro de Permissão",
-                                text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                                type: "warning"
-                            });
-                        }
-                    },
-                    success: function (data) {
-                        if (data.operacao){
-                            swal({
-                                title: "Movimento de Circuito",
-                                text: "Movimento de Circuito concluído!",
-                                type: "success",
-                                showCancelButton: false,
-                                confirmButtonColor: "#3085d6",
-                                cancelButtonColor: "#d33",
-                                confirmButtonText: "Ok"
-                              }).then((result) => {
-                                window.location.reload(true);
-                              });
-                        } else {
-                            swal({
-                                title: "Movimento de Circuito",
-                                text: data.mensagem,
-                                type: "error"
-                            });
-                        }
+                    ip_gerenciamov:{
+                        required: true
                     }
-                });
-            }
-        });
-        break;
+                },
+                messages:{
+                    id_tipomovimento:{
+                        required:"É necessário informar um tipo de movimento"
+                    },
+                    ip_gerenciamov:{
+                        required:"É necessário informar um IP Gerencial"
+                    }
+                },
+                submitHandler: function(form) {
+                    var dados = $("#formCircuitosmov").serialize();
+                    var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: action,
+                        data: {
+                            tokenKey: $("#token").attr("name"),
+                            tokenValue: $("#token").attr("value"),
+                            dados: dados
+                        },
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        error: function (data) {
+                            if (data.status && data.status === 401)
+                            {
+                                swal({
+                                    title: "Erro de Permissão",
+                                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                    type: "warning"
+                                });
+                            }
+                        },
+                        success: function (data) {
+                            if (data.operacao){
+                                swal({
+                                    title: "Movimento de Circuito",
+                                    text: "Movimento de Circuito concluído!",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Ok"
+                                }).then((result) => {
+                                    window.location.reload(true);
+                                });
+                            } else {
+                                swal({
+                                    title: "Movimento de Circuito",
+                                    text: data.mensagem,
+                                    type: "error"
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            break;
         case "66"://Alteração de IP Local
-        //Validação de formulário
-        $("#formCircuitosmov").validate({
-            rules : {
-                id_tipomovimento:{
-                    required: true
-                },
-                ip_redelocalmov:{
-                    required: true
-                }
-            },
-            messages:{
-                id_tipomovimento:{
-                    required:"É necessário informar um tipo de movimento"
-                },
-                ip_redelocalmov:{
-                    required:"É necessário informar um IP Local"
-                }
-            },
-            submitHandler: function(form) {
-                var dados = $("#formCircuitosmov").serialize();
-                var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
-                $.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: action,
-                    data: {
-                        tokenKey: $("#token").attr("name"),
-                        tokenValue: $("#token").attr("value"),
-                        dados: dados
+            //Validação de formulário
+            $("#formCircuitosmov").validate({
+                rules : {
+                    id_tipomovimento:{
+                        required: true
                     },
-                    beforeSend: function () {
-                    },
-                    complete: function () {
-                    },
-                    error: function (data) {
-                        if (data.status && data.status === 401)
-                        {
-                            swal({
-                                title: "Erro de Permissão",
-                                text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                                type: "warning"
-                            });
-                        }
-                    },
-                    success: function (data) {
-                        if (data.operacao){
-                            swal({
-                                title: "Movimento de Circuito",
-                                text: "Movimento de Circuito concluído!",
-                                type: "success",
-                                showCancelButton: false,
-                                confirmButtonColor: "#3085d6",
-                                cancelButtonColor: "#d33",
-                                confirmButtonText: "Ok"
-                              }).then((result) => {
-                                window.location.reload(true);
-                              });
-                        } else {
-                            swal({
-                                title: "Movimento de Circuito",
-                                text: data.mensagem,
-                                type: "error"
-                            });
-                        }
+                    ip_redelocalmov:{
+                        required: true
                     }
-                });
-            }
-        });
-        break;
+                },
+                messages:{
+                    id_tipomovimento:{
+                        required:"É necessário informar um tipo de movimento"
+                    },
+                    ip_redelocalmov:{
+                        required:"É necessário informar um IP Local"
+                    }
+                },
+                submitHandler: function(form) {
+                    var dados = $("#formCircuitosmov").serialize();
+                    var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: action,
+                        data: {
+                            tokenKey: $("#token").attr("name"),
+                            tokenValue: $("#token").attr("value"),
+                            dados: dados
+                        },
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        error: function (data) {
+                            if (data.status && data.status === 401)
+                            {
+                                swal({
+                                    title: "Erro de Permissão",
+                                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                    type: "warning"
+                                });
+                            }
+                        },
+                        success: function (data) {
+                            if (data.operacao){
+                                swal({
+                                    title: "Movimento de Circuito",
+                                    text: "Movimento de Circuito concluído!",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Ok"
+                                }).then((result) => {
+                                    window.location.reload(true);
+                                });
+                            } else {
+                                swal({
+                                    title: "Movimento de Circuito",
+                                    text: data.mensagem,
+                                    type: "error"
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            break;
         case "67"://Alteração de Equipamento
-        //Validação de formulário
-        $("#formCircuitosmov").validate({
-            rules : {
-                id_tipomovimento:{
-                    required: true
-                },
-                id_fabricantemov:{
-                    required: true
-                },
-                id_modelomov:{
-                    required: true
-                },
-                id_equipamentomov:{
-                    required: true
-                }
-            },
-            messages:{
-                id_tipomovimento:{
-                    required:"É necessário informar um tipo de movimento"
-                },
-                id_fabricantemov:{
-                    required:"É necessário informar um fabricante"
-                },
-                id_modelomov:{
-                    required:"É necessário informar um modelo"
-                },
-                id_equipamentomov:{
-                    required:"É necessário informar um equipamento"
-                }
-            },
-            submitHandler: function(form) {
-                var dados = $("#formCircuitosmov").serialize();
-                var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
-                $.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: action,
-                    data: {
-                        tokenKey: $("#token").attr("name"),
-                        tokenValue: $("#token").attr("value"),
-                        dados: dados
+            //Validação de formulário
+            $("#formCircuitosmov").validate({
+                rules : {
+                    id_tipomovimento:{
+                        required: true
                     },
-                    beforeSend: function () {
+                    id_fabricantemov:{
+                        required: true
                     },
-                    complete: function () {
+                    id_modelomov:{
+                        required: true
                     },
-                    error: function (data) {
-                        if (data.status && data.status === 401)
-                        {
-                            swal({
-                                title: "Erro de Permissão",
-                                text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                                type: "warning"
-                            });
-                        }
-                    },
-                    success: function (data) {
-                        if (data.operacao){
-                            swal({
-                                title: "Movimento de Circuito",
-                                text: "Movimento de Circuito concluído!",
-                                type: "success",
-                                showCancelButton: false,
-                                confirmButtonColor: "#3085d6",
-                                cancelButtonColor: "#d33",
-                                confirmButtonText: "Ok"
-                              }).then((result) => {
-                                window.location.reload(true);
-                              });
-                        } else {
-                            swal({
-                                title: "Movimento de Circuito",
-                                text: data.mensagem,
-                                type: "error"
-                            });
-                        }
+                    id_equipamentomov:{
+                        required: true
                     }
-                });
-            }
-        });
-        break;
+                },
+                messages:{
+                    id_tipomovimento:{
+                        required:"É necessário informar um tipo de movimento"
+                    },
+                    id_fabricantemov:{
+                        required:"É necessário informar um fabricante"
+                    },
+                    id_modelomov:{
+                        required:"É necessário informar um modelo"
+                    },
+                    id_equipamentomov:{
+                        required:"É necessário informar um equipamento"
+                    }
+                },
+                submitHandler: function(form) {
+                    var dados = $("#formCircuitosmov").serialize();
+                    var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: action,
+                        data: {
+                            tokenKey: $("#token").attr("name"),
+                            tokenValue: $("#token").attr("value"),
+                            dados: dados
+                        },
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        error: function (data) {
+                            if (data.status && data.status === 401)
+                            {
+                                swal({
+                                    title: "Erro de Permissão",
+                                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                    type: "warning"
+                                });
+                            }
+                        },
+                        success: function (data) {
+                            if (data.operacao){
+                                swal({
+                                    title: "Movimento de Circuito",
+                                    text: "Movimento de Circuito concluído!",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Ok"
+                                }).then((result) => {
+                                    window.location.reload(true);
+                                });
+                            } else {
+                                swal({
+                                    title: "Movimento de Circuito",
+                                    text: data.mensagem,
+                                    type: "error"
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            break;
     }
 });
 
@@ -1893,57 +2070,57 @@ $(".bt_del").on("click", function(){
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Sim, apagar!"
-          }).then((result) => {
+        }).then((result) => {
             var action = actionCorreta(window.location.href.toString(), "circuitos/deletarCircuitos");
-              $.ajax({
-                  type: "POST",
-                  dataType: "JSON",
-                  url: action,
-                  data: {ids: ids},
-                  beforeSend: function () {
-                  },
-                  complete: function () {
-                  },
-                  error: function (data) {
-                      if (data.status && data.status === 401)
-                      {
-                          swal({
-                              title: "Erro de Permissão",
-                              text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                              type: "warning"
-                          });
-                      }
-                  },
-                  success: function (data) {
-                      if (data.operacao){
-                          swal({
-                              title: "Deletados!",
-                              text: "As unidades selecionadas foram deletadas com sucesso.",
-                              type: "success",
-                              showCancelButton: false,
-                              confirmButtonColor: "#3085d6",
-                              cancelButtonColor: "#d33",
-                              confirmButtonText: "Ok"
-                            }).then((result) => {
-                                window.location.reload(true);
-                            });
-                      } else {
-                          swal({
-                              title: "Deletar",
-                              text: data.mensagem,
-                              type: "error"
-                          });
-                      }
-                  }
-              });
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: action,
+                data: {ids: ids},
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        swal({
+                            title: "Deletados!",
+                            text: "As unidades selecionadas foram deletadas com sucesso.",
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Ok"
+                        }).then((result) => {
+                            window.location.reload(true);
+                        });
+                    } else {
+                        swal({
+                            title: "Deletar",
+                            text: data.mensagem,
+                            type: "error"
+                        });
+                    }
+                }
+            });
         });
     } else if (nm_rows == 0) {
         swal({
             title: "Deletar Circuitos",
             text: "Você precisa selecionar uma ou mais unidades para serem deletadas!",
             type: "warning"
-          });
-     } else {
+        });
+    } else {
         swal({
             title: "Tem certeza que deseja deletar esta unidade?",
             text: "O sistema irá deletar a unidade selecionada com essa ação. ATENÇÃO: Esta é uma ação irreversível!",
@@ -1952,49 +2129,49 @@ $(".bt_del").on("click", function(){
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Sim, apagar!"
-          }).then((result) => {
+        }).then((result) => {
             var action = actionCorreta(window.location.href.toString(), "circuitos/deletarCircuitos");
-              $.ajax({
-                  type: "POST",
-                  dataType: "JSON",
-                  url: action,
-                  data: {ids: ids},
-                  beforeSend: function () {
-                  },
-                  complete: function () {
-                  },
-                  error: function (data) {
-                      if (data.status && data.status === 401)
-                      {
-                          swal({
-                              title: "Erro de Permissão",
-                              text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                              type: "warning"
-                          });
-                      }
-                  },
-                  success: function (data) {
-                      if (data.operacao){
-                          swal({
-                              title: "Deletado!",
-                              text: "A unidade selecionada foi deletada com sucesso.",
-                              type: "success",
-                              showCancelButton: false,
-                              confirmButtonColor: "#3085d6",
-                              cancelButtonColor: "#d33",
-                              confirmButtonText: "Ok"
-                            }).then((result) => {
-                              window.location.reload(true);
-                            });
-                      } else {
-                          swal({
-                              title: "Deletar",
-                              text: data.mensagem,
-                              type: "error"
-                          });
-                      }
-                  }
-              });
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: action,
+                data: {ids: ids},
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        swal({
+                            title: "Deletado!",
+                            text: "A unidade selecionada foi deletada com sucesso.",
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Ok"
+                        }).then((result) => {
+                            window.location.reload(true);
+                        });
+                    } else {
+                        swal({
+                            title: "Deletar",
+                            text: data.mensagem,
+                            type: "error"
+                        });
+                    }
+                }
+            });
         });
     }
 });
