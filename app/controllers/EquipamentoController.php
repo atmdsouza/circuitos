@@ -317,4 +317,36 @@ class EquipamentoController extends ControllerBase
             return $response;
         }
     }
+
+    public function validaNumeroSerieAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        $equipamento = Equipamento::findFirst("numserie={$dados["numserie"]}");
+        if ($equipamento) {
+            $response->setContent(json_encode(True));
+            return $response;
+        } else {
+            $response->setContent(json_encode(False));
+            return $response;
+        }
+    }
+
+    public function validaNumeroPatrimonioAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        $equipamento = Equipamento::findFirst("numpatrimonio={$dados["numpatrimonio"]}");
+        if ($equipamento) {
+            $response->setContent(json_encode(True));
+            return $response;
+        } else {
+            $response->setContent(json_encode(False));
+            return $response;
+        }
+    }
 }

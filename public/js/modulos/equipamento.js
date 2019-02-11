@@ -875,3 +875,56 @@ $(".bt_inativo").on("click", function(){
         });
     }
 });
+//Validações de Números de Série e Patrimônio
+$("#numserie").on("change", function(){
+    var numserie = $(this).val();
+    var action = actionCorreta(window.location.href.toString(), "equipamento/validaNumeroSerie");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {numserie: numserie},
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data){
+                $("#numserie").val(null).focus();
+                swal("Atenção","Esse número de série já existe no cadastro de equipamentos!","info");
+            }
+        }
+    });
+});
+$("#numpatrimonio").on("change", function(){
+    var numpatrimonio = $(this).val();
+    var action = actionCorreta(window.location.href.toString(), "equipamento/validaNumeroPatrimonio");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {numpatrimonio: numpatrimonio},
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data){
+                $("#numpatrimonio").val(null).focus();
+                swal("Atenção","Esse número de patrimônio já existe no cadastro de equipamentos!","info");
+            }
+        }
+    });
+});
