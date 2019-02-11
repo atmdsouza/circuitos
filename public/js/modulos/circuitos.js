@@ -1115,6 +1115,7 @@ $(".bt_visual").on("click", function(){
                 $("#dtativacaov").val(data.dados.data_ativacao);
                 $("#dtatualizacaov").val(data.dados.data_atualizacao);
                 $("#numpatserv").val(data.dados.numpatrimonio + " / " + data.dados.numserie);
+                //Bloco de movimmentos
                 var linhas;
                 if(data.mov.length > 0)
                 {
@@ -1144,6 +1145,31 @@ $(".bt_visual").on("click", function(){
                     linhas += "</tr>";
                     $("#tb_movimento").append(linhas);
                 }
+                //Bloco de endereço
+                var linhas_end;
+                if(data.endereco.length > 0)
+                {
+                    $(".rem_end").remove();
+                    $.each(data.endereco, function (key, value) {
+                        var numero = value.numero ? " Nº "+ value.numero : "";
+                        linhas_end = "<tr class='rem_end'>";
+                        linhas_end += "<td>" + value.endereco + numero + "</td>";
+                        linhas_end += "<td>" + value.complemento + "</td>";
+                        linhas_end += "<td>" + value.bairro + "</td>";
+                        linhas_end += "<td>" + value.cep + "</td>";
+                        linhas_end += "</tr>";
+                        $("#tb_endereco").append(linhas_end);
+                    });
+                }
+                else
+                {
+                    $(".rem_end").remove();
+                    linhas_end = "<tr class='rem_end'>";
+                    linhas_end += "<td colspan='4' style='text-align: center;'>Não existe endereço para ser exibido! Favor Cadastrar!</td>";
+                    linhas_end += "</tr>";
+                    $("#tb_endereco").append(linhas_end);
+                }
+                //Bloco de contatos
                 var linhas_cont;
                 if(data.cont.length > 0)
                 {
@@ -1577,23 +1603,117 @@ $("#id_tipomovimento").on("change", function(){
     }
 });
 
-
-$(function () {
-    "use strict";
-    var listEquip2 = [];
-    var listModel2 = [];
-    $("#id_fabricantemov").on("change", function(){
-        var id_fabricante = $(this).val();
-        var action = actionCorreta(window.location.href.toString(), "circuitos/modeloFabricante");
+//Fabricante, Modelo e equipamento para o movimento de circuitos
+$("#id_fabricantemov").on("change", function(){
+    var id_fabricante = $(this).val();
+    var action = actionCorreta(window.location.href.toString(), "circuitos/modeloFabricante");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_fabricante: id_fabricante},
+        beforeSend: function () {
+            $(".remove_equipamentomov").remove();
+            $("#id_equipamentomov").val(null).selected = "true";
+            $("#id_equipamentomov").attr("disabled", "true");
+            $(".remove_modelomov").remove();
+            $("#id_modelomov").val(null).selected = "true";
+            $("#id_modelomov").attr("disabled", "true");
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao){
+                $(".remove_modelomov").remove();
+                $.each(data.dados, function (key, value) {
+                    var linhas = "<option class='remove_modelomov' value='" + value.id + "'>" + value.modelo + "</option>";
+                    $("#id_modelomov").append(linhas);
+                });
+                $("#id_modelomov").removeAttr("disabled");
+            } else {
+                $(".remove_modelomov").remove();
+                $("#id_modelomov").val(null).selected = "true";
+                $("#id_modelomov").attr("disabled", "true");
+                swal("Atenção","Não existem modelos para esse fabricante!","info");
+            }
+        }
+    });
+});
+$("#id_modelomov").on("change", function(){
+    var id_modelo = $(this).val();
+    var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoModelo");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_modelo: id_modelo},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao){
+                $(".remove_equipamentomov").remove();
+                $.each(data.dados, function (key, value) {
+                    var numserie = (value.numserie) ? value.numserie : "Sem Nº Série";
+                    var numpatrimonio = (value.numpatrimonio) ? value.numpatrimonio : "Sem Nº Patrimônio";
+                    var linhas = "<option class='remove_equipamento' value='" + value.id + "'>" + value.nome + " (" + numserie + " / " + numpatrimonio + ") </option>";
+                    $("#id_equipamentomov").append(linhas);
+                });
+                $("#id_equipamentomov").removeAttr("disabled");
+            } else {
+                $(".remove_equipamentomov").remove();
+                $("#id_equipamentomov").val(null).selected = "true";
+                $("#id_equipamentomov").attr("disabled", "true");
+                swal("Atenção","Não existem equipamentos para esse modelo!","info");
+            }
+        }
+    });
+});
+//Validando o equipamento selecionados
+$("#id_equipamentomov").on("change", function(){
+    var id_equipamento = $(this).val();
+    validaEquipamentoCircuito(id_equipamento).done(function(valida){
+        if (valida) {
+            $("#id_fabricantemov").val(null).selected = "true";
+            $("#id_modelomov").val(null).selected = "true";
+            $("#id_equipamentomov").val(null).selected = "true";
+            $("#id_modelomov").attr("disabled", "true");
+            $("#id_equipamentomov").attr("disabled", "true");
+            swal("Atenção","Esse equipamento já foi cadastrado para outro circuito!","info");
+        }
+    });
+});
+//Campo Número de Série
+$("#numero_seriemov").on("change", function () {
+    var numero_serie = $(this).val();
+    if (numero_serie !== ""){
+        var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoNumeroSerie");
         $.ajax({
             type: "GET",
             dataType: "JSON",
             url: action,
-            data: {id_fabricante: id_fabricante},
-            beforeSend: function () {
-            },
-            complete: function () {
-            },
+            data: {numero_serie: numero_serie},
             error: function (data) {
                 if (data.status && data.status === 401)
                 {
@@ -1606,89 +1726,149 @@ $(function () {
             },
             success: function (data) {
                 if (data.operacao){
-                    $(".remove_modelo").remove();
-                    $.each(data.dados, function (key, value) {
-                        listModel2.push({ value: value.modelo, data: value.id });
+                    validaEquipamentoCircuito(data.id_equipamento).done(function(valida){
+                        if (valida) {
+                            $("#id_fabricantemov").val(null).selected = "true";
+                            $("#id_modelomov").val(null).selected = "true";
+                            $("#id_equipamentomov").val(null).selected = "true";
+                            $("#id_modelomov").attr("disabled", "true");
+                            $("#id_equipamentomov").attr("disabled", "true");
+                            swal("Atenção","Esse equipamento já foi cadastrado para outro circuito!","info");
+                        } else {
+                            $("#id_fabricantemov").val(data.id_fabricante).selected = "true";
+                            var linhas_modelo = "<option class='remove_modelomov' value='" + data.id_modelo + "'>" + data.nome_modelo + "</option>";
+                            $("#id_modelomov").append(linhas_modelo);
+                            $("#id_modelomov").removeAttr("disabled");
+                            $("#id_modelomov").val(data.id_modelo).selected = "true";
+                            var linhas_equipamento = "<option class='remove_equipamentomov' value='" + data.id_equipamento + "'>" + data.nome_equipamento + " (" + numero_serie + " / " + data.numero_patrimonio + ") </option>";
+                            $("#id_equipamentomov").append(linhas_equipamento);
+                            $("#id_equipamentomov").removeAttr("disabled");
+                            $("#id_equipamentomov").val(data.id_equipamento).selected = "true";
+                        }
                     });
-                    $("#lid_modelomov").removeAttr("disabled");
-                    $("#lid_equipamentomov").val("");
-                    $("#id_equipamentomov").val("");
-                    $("#lid_equipamentomov").attr("disabled", "true");
                 } else {
-                    $("#lid_modelomov").val("");
-                    $("#id_modelomov").val("");
-                    $("#lid_modelomov").attr("disabled", "true");
-                    $("#lid_equipamentomov").val("");
-                    $("#id_equipamentomov").val("");
-                    $("#lid_equipamentomov").attr("disabled", "true");
+                    $("#id_fabricantemov").val(null).selected = "true";
+                    $("#id_modelomov").val(null).selected = "true";
+                    $("#id_equipamentomov").val(null).selected = "true";
+                    $("#id_modelomov").attr("disabled", "true");
+                    $("#id_equipamentomov").attr("disabled", "true");
+                    swal("Atenção","Não existem equipamentos para esse número de série!","info");
                 }
             }
         });
-    });
-
-    //Autocomplete de Modelo
-    $("#lid_modelomov").autocomplete({
-        lookup: listModel2,
-        noCache: true,
-        minChars: 1,
-        showNoSuggestionNotice: true,
-        noSuggestionNotice: "Não existem resultados para essa consulta!",
-        onSelect: function (suggestion) {
-            $("#id_modelomov").val(suggestion.data);
-            var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoModelo");
-            $.ajax({
-                type: "GET",
-                dataType: "JSON",
-                url: action,
-                data: {id_modelo: suggestion.data},
-                beforeSend: function () {
-                    $("#lid_equipamentomov").val("");
-                    $("#id_equipamentomov").val("");
-                    $("#lid_equipamentomov").attr("disabled", "true");
-                },
-                complete: function () {
-                },
-                error: function (data) {
-                    if (data.status && data.status === 401)
-                    {
-                        swal({
-                            title: "Erro de Permissão",
-                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                            type: "warning"
-                        });
-                    }
-                },
-                success: function (data) {
-                    if (data.operacao){
-                        $.each(data.dados, function (key, value) {
-                            var numserie = (value.numserie) ? value.numserie : "Sem Nº Série";
-                            var numpatrimonio = (value.numpatrimonio) ? value.numpatrimonio : "Sem Nº Patrimônio";
-                            listEquip2.push({value: value.nome + " (" + numserie + " / " + numpatrimonio + ")", data: value.id});
-                        });
-                        $("#lid_equipamentomov").removeAttr("disabled");
-                    } else {
-                        $("#lid_equipamentomov").val("");
-                        $("#id_equipamentomov").val("");
-                        $("#lid_equipamentomov").attr("disabled", "true");
-                        swal("Atenção","Não existem equipamentos para este modelo!","info");
-                    }
-                }
-            });
-        }
-    });
-
-    //Autocomplete de Equipamento
-    $("#lid_equipamentomov").autocomplete({
-        lookup: listEquip2,
-        noCache: true,
-        minChars: 1,
-        showNoSuggestionNotice: true,
-        noSuggestionNotice: "Não existem resultados para essa consulta!",
-        onSelect: function (suggestion) {
-            $("#id_equipamentomov").val(suggestion.data);
-        }
-    });
+    }
 });
+// $(function () {
+//     "use strict";
+//     var listEquip2 = [];
+//     var listModel2 = [];
+//     $("#id_fabricantemov").on("change", function(){
+//         var id_fabricante = $(this).val();
+//         var action = actionCorreta(window.location.href.toString(), "circuitos/modeloFabricante");
+//         $.ajax({
+//             type: "GET",
+//             dataType: "JSON",
+//             url: action,
+//             data: {id_fabricante: id_fabricante},
+//             beforeSend: function () {
+//             },
+//             complete: function () {
+//             },
+//             error: function (data) {
+//                 if (data.status && data.status === 401)
+//                 {
+//                     swal({
+//                         title: "Erro de Permissão",
+//                         text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+//                         type: "warning"
+//                     });
+//                 }
+//             },
+//             success: function (data) {
+//                 if (data.operacao){
+//                     $(".remove_modelo").remove();
+//                     $.each(data.dados, function (key, value) {
+//                         listModel2.push({ value: value.modelo, data: value.id });
+//                     });
+//                     $("#lid_modelomov").removeAttr("disabled");
+//                     $("#lid_equipamentomov").val("");
+//                     $("#id_equipamentomov").val("");
+//                     $("#lid_equipamentomov").attr("disabled", "true");
+//                 } else {
+//                     $("#lid_modelomov").val("");
+//                     $("#id_modelomov").val("");
+//                     $("#lid_modelomov").attr("disabled", "true");
+//                     $("#lid_equipamentomov").val("");
+//                     $("#id_equipamentomov").val("");
+//                     $("#lid_equipamentomov").attr("disabled", "true");
+//                 }
+//             }
+//         });
+//     });
+//
+//     //Autocomplete de Modelo
+//     $("#lid_modelomov").autocomplete({
+//         lookup: listModel2,
+//         noCache: true,
+//         minChars: 1,
+//         showNoSuggestionNotice: true,
+//         noSuggestionNotice: "Não existem resultados para essa consulta!",
+//         onSelect: function (suggestion) {
+//             $("#id_modelomov").val(suggestion.data);
+//             var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoModelo");
+//             $.ajax({
+//                 type: "GET",
+//                 dataType: "JSON",
+//                 url: action,
+//                 data: {id_modelo: suggestion.data},
+//                 beforeSend: function () {
+//                     $("#lid_equipamentomov").val("");
+//                     $("#id_equipamentomov").val("");
+//                     $("#lid_equipamentomov").attr("disabled", "true");
+//                 },
+//                 complete: function () {
+//                 },
+//                 error: function (data) {
+//                     if (data.status && data.status === 401)
+//                     {
+//                         swal({
+//                             title: "Erro de Permissão",
+//                             text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+//                             type: "warning"
+//                         });
+//                     }
+//                 },
+//                 success: function (data) {
+//                     if (data.operacao){
+//                         $.each(data.dados, function (key, value) {
+//                             var numserie = (value.numserie) ? value.numserie : "Sem Nº Série";
+//                             var numpatrimonio = (value.numpatrimonio) ? value.numpatrimonio : "Sem Nº Patrimônio";
+//                             listEquip2.push({value: value.nome + " (" + numserie + " / " + numpatrimonio + ")", data: value.id});
+//                         });
+//                         $("#lid_equipamentomov").removeAttr("disabled");
+//                     } else {
+//                         $("#lid_equipamentomov").val("");
+//                         $("#id_equipamentomov").val("");
+//                         $("#lid_equipamentomov").attr("disabled", "true");
+//                         swal("Atenção","Não existem equipamentos para este modelo!","info");
+//                     }
+//                 }
+//             });
+//         }
+//     });
+//
+//     //Autocomplete de Equipamento
+//     $("#lid_equipamentomov").autocomplete({
+//         lookup: listEquip2,
+//         noCache: true,
+//         minChars: 1,
+//         showNoSuggestionNotice: true,
+//         noSuggestionNotice: "Não existem resultados para essa consulta!",
+//         onSelect: function (suggestion) {
+//             $("#id_equipamentomov").val(suggestion.data);
+//         }
+//     });
+// });
 
 $(document).on("click", ".criar_mov", function(){
     var id_tipomovimento = $("#id_tipomovimento").val();

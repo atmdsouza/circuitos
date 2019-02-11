@@ -63,7 +63,6 @@ class SecurityPlugin extends Plugin
             foreach ($modulos as $mod){
                 $acl->addResource(new resource($mod['resource']), $mod['actions']);
                 foreach ($mod['actions'] as $acao){
-//                        echo $mod['nome'].'-'.$mod['resource'].'-'.$acao.'<br/>';
                     $acl->allow($mod['nome'], $mod['resource'], $acao);
                 }
             }

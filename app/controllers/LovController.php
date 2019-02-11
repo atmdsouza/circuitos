@@ -2,7 +2,6 @@
 
 namespace Circuitos\Controllers;
 
-use Phalcon\Mvc\Model\Criteria;
 use Phalcon\Paginator\Adapter\Model as Paginator;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
@@ -11,8 +10,6 @@ use Phalcon\Http\Response as Response;
 use Circuitos\Models\Lov;
 
 use Auth\Autentica;
-use Util\Util;
-use Util\TemplatesEmails;
 use Util\TokenManager;
 
 class LovController extends ControllerBase
@@ -45,28 +42,10 @@ class LovController extends ControllerBase
      */
     public function indexAction()
     {
-        $this->persistent->parameters = null;
         $numberPage = 1;
         $dados = filter_input_array(INPUT_POST);
 
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Circuitos\Models\Lov", $dados);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-            $parameters["order"] = "[id] DESC";
-            $parameters["conditions"] = " codigoespecifico <> 'SYS' OR codigoespecifico IS NULL";
-        } else {
-            $parameters["order"] = "[id] DESC";
-            $parameters["conditions"] .= " AND codigoespecifico <> 'SYS' OR codigoespecifico IS NULL";
-        }
-
-        $lov = Lov::find($parameters);
+        $lov = Lov::pesquisarLovs($dados["pesquisa"]);
 
         $tipos_lov = [
             "1" => "Tipo Unidade",

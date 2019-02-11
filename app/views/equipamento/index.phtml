@@ -20,43 +20,9 @@ use Phalcon\Tag;
     ?>
     <div class="form-row">
         <div class="form-group col-md-2">
-            <label for="fieldNome" class="col-sm-2 control-label">Equipamento</label>
+            <label for="fieldPesquisa" class="col-sm-2 control-label">Pesquisa</label>
             <div class="col-sm-10">
-                <?php echo $this->tag->textField(["nome", "size" => 30, "class" => "form-control", "id" => "fieldNome"]) ?>
-            </div>
-        </div>
-        <div class="form-group col-md-2">
-            <label for="fieldNumserie" class="col-sm-10 control-label">Nº de Série</label>
-            <div class="col-sm-10">
-                <?php echo $this->tag->textField(["numserie", "size" => 30, "class" => "form-control", "id" => "fieldNumserie"]) ?>
-            </div>
-        </div>
-        <div class="form-group col-md-2">
-            <label for="fieldNumpatrimonio" class="col-sm-10 control-label">Nº de Patrimônio</label>
-            <div class="col-sm-10">
-                <?php echo $this->tag->textField(["numpatrimonio", "size" => 30, "class" => "form-control", "id" => "fieldNumpatrimonio"]) ?>
-            </div>
-        </div>
-        <div class="form-group col-md-2">
-            <label for="fieldIdFabricante" class="col-sm-2 control-label">Fabricante</label>
-            <div class="col-sm-10">
-                <?php echo $this->tag->select(["id_fabricante", $fabricante, "class" => "form-control", "id" => "fieldIdFabricante",
-                    "using" => ["id", "nome",],
-                    "useEmpty" => true,
-                    "emptyText" => "Selecione o Fabricante",
-                    "emptyValue" => ""])
-                ?>
-            </div>
-        </div>
-        <div class="form-group col-md-2">
-            <label for="fieldIdTipoequipamento" class="col-sm-2 control-label">Tipo</label>
-            <div class="col-sm-10">
-                <?php echo $this->tag->select(["id_tipoequipamento", $tipoequipamento, "class" => "form-control", "id" => "fieldIdTipoequipamento",
-                    "using" => ["id", "descricao",],
-                    "useEmpty" => true,
-                    "emptyText" => "Selecione o tipo",
-                    "emptyValue" => ""])
-                ?>
+                <?php echo $this->tag->textField(["pesquisa", "size" => 60, "class" => "form-control", "id" => "fieldPesquisa"]) ?>
             </div>
         </div>
         <div class="form-group col-md-2">

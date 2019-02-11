@@ -494,10 +494,29 @@ use Util\Util;
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
+                                    <table id="tb_endereco" class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th colspan="4" style="text-align: center;">Endereço do Circuito</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Endereço</th>
+                                            <th>Complemento</th>
+                                            <th>Bairro</th>
+                                            <th>CEP</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
                                     <table id="tb_contatos" class="table table-hover">
                                         <thead>
                                         <tr>
-                                            <th colspan="7" style="text-align: center;">Contatos para o Circuito</th>
+                                            <th colspan="5" style="text-align: center;">Contatos para o Circuito</th>
                                         </tr>
                                         <tr>
                                             <th>Principal</th>
@@ -604,6 +623,10 @@ use Util\Util;
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4 equip" style="display: none;">
+                                    <label for="numero_seriemov">Número de Série</label>
+                                    <?php echo $this->tag->textField(["numero_seriemov", "size" => 60, "class" => "form-control", "id" => "numero_seriemov", "placeholder" => "Número de Série"]) ?>
+                                </div>
+                                <div class="form-group col-md-4 equip" style="display: none;">
                                     <label for="id_fabricantemov">Fabricante <span class="required">*</span></label>
                                     <?php echo $this->tag->select(["id_fabricantemov", $fabricantes, "class" => "form-control", "id" => "id_fabricantemov",
                                         "using" => ["id", "nome",],
@@ -613,24 +636,22 @@ use Util\Util;
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4 equip" style="display: none;">
-<!--                                    <label for="id_modelomov">Modelo <span class="required">*</span></label>-->
-<!--                                    <select disabled name="id_modelomov" id="id_modelomov" class="form-control">-->
-<!--                                        <option value="">Selecione um Modelo</option>-->
-<!--                                    </select>-->
-                                    <label for="lid_equipamentomov">Modelo <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["lid_modelomov", "disabled" => "true", "size" => 60, "class" => "form-control", "id" => "lid_modelomov", "placeholder" => "Modelo"]) ?>
-                                    <?php echo $this->tag->hiddenField(["id_modelomov", "size" => 60, "class" => "form-control", "id" => "id_modelomov"]) ?>
+                                    <label for="id_modelomov">Modelo <span class="required">*</span></label>
+                                    <select disabled name="id_modelomov" id="id_modelomov" class="form-control">
+                                        <option value="">Selecione um Modelo</option>
+                                    </select>
+<!--                                    <label for="lid_equipamentomov">Modelo <span class="required">*</span></label>-->
+<!--                                    --><?php //echo $this->tag->textField(["lid_modelomov", "disabled" => "true", "size" => 60, "class" => "form-control", "id" => "lid_modelomov", "placeholder" => "Modelo"]) ?>
+<!--                                    --><?php //echo $this->tag->hiddenField(["id_modelomov", "size" => 60, "class" => "form-control", "id" => "id_modelomov"]) ?>
                                 </div>
                                 <div class="form-group col-md-4 equip" style="display: none;">
-                                    <!--
                                     <label for="id_equipamentomov">Equipamento <span class="required">*</span></label>
                                     <select disabled name="id_equipamentomov" id="id_equipamentomov" class="form-control">
                                         <option value="">Selecione um Equipamento</option>
                                     </select>
-                                    -->
-                                    <label for="lid_equipamentomov">Equipamento <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["lid_equipamentomov", "disabled" => "true", "size" => 60, "class" => "form-control", "id" => "lid_equipamentomov", "placeholder" => "Equipamento"]) ?>
-                                    <?php echo $this->tag->hiddenField(["id_equipamentomov", "size" => 60, "class" => "form-control", "id" => "id_equipamentomov"]) ?>
+<!--                                    <label for="lid_equipamentomov">Equipamento <span class="required">*</span></label>-->
+<!--                                    --><?php //echo $this->tag->textField(["lid_equipamentomov", "disabled" => "true", "size" => 60, "class" => "form-control", "id" => "lid_equipamentomov", "placeholder" => "Equipamento"]) ?>
+<!--                                    --><?php //echo $this->tag->hiddenField(["id_equipamentomov", "size" => 60, "class" => "form-control", "id" => "id_equipamentomov"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">

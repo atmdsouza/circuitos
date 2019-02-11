@@ -2,6 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
+
 class Equipamento extends \Phalcon\Mvc\Model
 {
 
@@ -309,6 +312,39 @@ class Equipamento extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de equipamentos, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return Equipamentos|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarEquipamentos($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("Equipamento" => "Circuitos\Models\Equipamento"));
+        $query->columns("Equipamento.*");
+
+        $query->leftJoin("Circuitos\Models\Fabricante", "Fabricante.id = Equipamento.id_fabricante", "Fabricante");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Fabricante.id_pessoa = Pessoa.id", "Pessoa");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa.id = PessoaJuridica.id", "PessoaJuridica");
+        $query->leftJoin("Circuitos\Models\Modelo", "Modelo.id = Equipamento.id_modelo", "Modelo");
+        $query->leftJoin("Circuitos\Models\Lov", "Equipamento.id_tipoequipamento = Lov.id", "Lov");
+
+        $query->where("(CONVERT(Equipamento.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Equipamento.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Equipamento.numserie USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Equipamento.numpatrimonio USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica.razaosocial USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Modelo.modelo USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov.descricao USING utf8) LIKE '%{$parameters}%')");
+
+        $query->orderBy("Equipamento.id DESC");
+
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
     /**

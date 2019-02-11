@@ -18,13 +18,13 @@ use Circuitos\Models\Fabricante;
 use Circuitos\Models\Modelo;
 use Circuitos\Models\Equipamento;
 use Circuitos\Models\Lov;
+use Circuitos\Models\PessoaEndereco;
 use Circuitos\Models\PessoaContato;
 
 use Auth\Autentica;
 use Util\Util;
 use Util\TokenManager;
 use Util\Relatorio;
-use Circuitos\Models\PessoaEndereco;
 
 class CircuitosController extends ControllerBase
 {
@@ -197,6 +197,18 @@ class CircuitosController extends ControllerBase
         $parameters["conditions"] = " id_circuitos = :id_circuitos:";
         $parameters["bind"]["id_circuitos"] = $circuitos->getId();
         $movimentos = Movimentos::find($parameters);
+        $parameters_end = [];
+        $parameters_end["order"] = "[id] DESC";
+        $parameters_end["conditions"] = " id_pessoa = :id_pessoa:";
+        if ($circuitos->Cliente->id_tipocliente == 43)//Se PJ
+        {
+            $parameters_end["bind"]["id_pessoa"] = $circuitos->ClienteUnidade->id_pessoa;
+        }
+        else//Se PF
+        {
+            $parameters_end["bind"]["id_pessoa"] = $circuitos->Cliente->id_pessoa;
+        }
+        $enderecos = PessoaEndereco::find($parameters_end);
         $parameters_cont = [];
         $parameters_cont["order"] = "[id] DESC";
         $parameters_cont["conditions"] = " id_pessoa = :id_pessoa:";
@@ -258,7 +270,17 @@ class CircuitosController extends ControllerBase
                 "email" => $contato->getEmail()
             ));
         }
-
+        $end = array();
+        foreach($enderecos as $endereco){
+            array_push($end, array(
+                "id" => $endereco->getId(),
+                "endereco" => $endereco->getEndereco(),
+                "numero" => $endereco->getNumero(),
+                "bairro" => $endereco->getBairro(),
+                "complemento" => $endereco->getComplemento(),
+                "cep" => $endereco->getCep()
+            ));
+        }
         $conec = Conectividade::find("id_cidade_digital={$circuitos->getIdCidadedigital()}");
         $conectividade = array();
         foreach ($conec as $c){
@@ -276,6 +298,7 @@ class CircuitosController extends ControllerBase
             "equip" => $equip,
             "mov" => $mov,
             "cont" => $cont,
+            "endereco" => $end,
             "conectividade" => $conectividade
         )));
         return $response;
