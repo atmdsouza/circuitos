@@ -279,6 +279,8 @@ class Usuario extends \Phalcon\Mvc\Model
                         OR CONVERT(Usuario.roles_name USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(PessoaEmail.email USING utf8) LIKE '%{$parameters}%')");
 
+        $query->groupBy("Usuario.id");
+
         $query->orderBy("Usuario.id DESC");
 
         $resultado = $query->getQuery()->execute();

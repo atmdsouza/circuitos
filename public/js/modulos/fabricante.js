@@ -607,7 +607,7 @@ $(".bt_visual").on("click", function(){
                     linhas += "<td>"+ value.PessoaContato.nome +"<input name='res_nome_contato[]' type='hidden' value='"+ value.PessoaContato.nome +"' /></td>";
                     linhas += "<td>"+ value.PessoaContato.telefone +"<input name='res_telefone_contato[]' type='hidden' value='"+ value.PessoaContato.telefone +"' /></td>";
                     linhas += "<td>"+ value.PessoaContato.email +"<input name='res_email_contato[]' type='hidden' value='"+ value.PessoaContato.email +"' /></td>";
-                    linhas += "<td><a href='#' id='" + value.PessoaContato.id + "' class='del_cto'><i class='fi-circle-cross'></i></a></td>";
+                    linhas += "<td><i class='fi-circle-cross'></i></td>";
                     linhas += "</tr class='remove'>";
                     $("#tb_contato").append(linhas);
                     $("#tb_contato").show();
@@ -620,7 +620,7 @@ $(".bt_visual").on("click", function(){
                     linhas += "<tr class='tr_remove' id='trte" + value.PessoaTelefone.id + "'>";
                     linhas += "<td>"+ principal_desc +"<input name='res_principal_tel[]' type='hidden' value='"+ value.PessoaTelefone.principal +"' /></td>";
                     linhas += "<td>"+ "(" + value.PessoaTelefone.ddd +") " + value.PessoaTelefone.telefone +"<input name='res_telefone[]' type='hidden' value='"+ value.PessoaTelefone.ddd + value.PessoaTelefone.telefone +"' /></td>";
-                    linhas += "<td><a href='#' id='" + value.PessoaTelefone.id + "' class='del_tel'><i class='fi-circle-cross'></i></a></td>";
+                    linhas += "<td><i class='fi-circle-cross'></i></td>";
                     linhas += "</tr>";
                     $("#tb_telefone").append(linhas);
                     $("#tb_telefone").show();
@@ -633,7 +633,7 @@ $(".bt_visual").on("click", function(){
                     linhas += "<tr class='tr_remove' id='trem" + value.PessoaEmail.id + "'>";
                     linhas += "<td>"+ principal_desc +"<input name='res_principal_email[]' type='hidden' value='"+ value.PessoaEmail.principal +"' /></td>";
                     linhas += "<td>"+ value.PessoaEmail.email +"<input name='res_email_pf[]' type='hidden' value='"+ value.PessoaEmail.email +"' /></td>";
-                    linhas += "<td><a href='#' id='" + value.PessoaEmail.id + "' class='del_eml'><i class='fi-circle-cross'></i></a></td>";
+                    linhas += "<td><i class='fi-circle-cross'></i></td>";
                     linhas += "</tr>";
                     $("#tb_email").append(linhas);
                     $("#tb_email").show();

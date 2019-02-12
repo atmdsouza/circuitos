@@ -840,7 +840,7 @@ $(".bt_visual").on("click", function(){
                             linhas += "<td>"+ value.PessoaEndereco.cidade +"<input name='res_cidade[]' type='hidden' value='"+ value.PessoaEndereco.cidade +"' /></td>";
                             linhas += "<td>"+ value.PessoaEndereco.estado +"<input name='res_estado[]' type='hidden' value='"+ value.PessoaEndereco.estado +"' /></td>";
                             linhas += "<td style='display: none;'>"+ value.PessoaEndereco.complemento +"<input name='res_complemento[]' type='hidden' value='"+ value.PessoaEndereco.complemento +"' /></td>";
-                            linhas += "<td><a href='#' id='" + value.PessoaEndereco.id + "' class='del_end'><i class='fi-circle-cross'></i></a></td>";
+                            linhas += "<td><i class='fi-circle-cross'></i></td>";
                             linhas += "</tr class='remove'>";
                             $("#tb_endereco").append(linhas);
                             $("#tb_endereco").show();
@@ -854,7 +854,7 @@ $(".bt_visual").on("click", function(){
                             linhas += "<td>"+ principal_desc +"<input name='res_principal_tel[]' type='hidden' value='"+ value.PessoaTelefone.principal +"' /></td>";
                             linhas += "<td>"+ value.descricao +"<input name='res_tipotelefone[]' type='hidden' value='"+ value.PessoaTelefone.id_tipotelefone +"' /></td>";
                             linhas += "<td>"+ "(" + value.PessoaTelefone.ddd +") " + value.PessoaTelefone.telefone +"<input name='res_telefone[]' type='hidden' value='"+ value.PessoaTelefone.ddd + value.PessoaTelefone.telefone +"' /></td>";
-                            linhas += "<td><a href='#' id='" + value.PessoaTelefone.id + "' class='del_tel'><i class='fi-circle-cross'></i></a></td>";
+                            linhas += "<td><i class='fi-circle-cross'></i></td>";
                             linhas += "</tr>";
                             $("#tb_telefone").append(linhas);
                             $("#tb_telefone").show();
@@ -868,7 +868,7 @@ $(".bt_visual").on("click", function(){
                             linhas += "<td>"+ principal_desc +"<input name='res_principal_email[]' type='hidden' value='"+ value.PessoaEmail.principal +"' /></td>";
                             linhas += "<td>"+ value.descricao +"<input name='res_tipoemailpf[]' type='hidden' value='"+ value.PessoaEmail.id_tipoemail +"' /></td>";
                             linhas += "<td>"+ value.PessoaEmail.email +"<input name='res_email_pf[]' type='hidden' value='"+ value.PessoaEmail.email +"' /></td>";
-                            linhas += "<td><a href='#' id='" + value.PessoaEmail.id + "' class='del_eml'><i class='fi-circle-cross'></i></a></td>";
+                            linhas += "<td><i class='fi-circle-cross'></i></td>";
                             linhas += "</tr>";
                             $("#tb_email").append(linhas);
                             $("#tb_email").show();

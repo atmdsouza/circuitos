@@ -128,15 +128,15 @@ $("#id_cidade").on("change", function(){
     $("#descricao").val("CIDADE DIGITAL " + cidade_desc);
 });
 
-var valCID = [];
+// var valCID = [];
 $("#add_conectividade").on("click", function(){
     var id_tipo = $("#id_tipo_t").val();
     var id_tipo_desc = document.getElementById("id_tipo_t").options[document.getElementById("id_tipo_t").selectedIndex].text;
     var conectividade = $("#descricao_t").val();
     var endereco = $("#endereco_t").val();
 
-    if ($.inArray(conectividade, valCID) == -1) {
-        valCID.push(conectividade);
+    // if ($.inArray(conectividade, valCID) == -1) {
+    //     valCID.push(conectividade);
         if (id_tipo && conectividade) {
             var linhas = null;
             linhas += "<tr class='tr_remove'>";
@@ -155,13 +155,13 @@ $("#add_conectividade").on("click", function(){
                 type: "warning"
             });
         }
-    } else {
-        swal({
-            title: "Conectividade",
-            text: "Essa conectividade já existe na tabela abaixo!",
-            type: "warning"
-        });
-    }
+    // } else {
+    //     swal({
+    //         title: "Conectividade",
+    //         text: "Essa conectividade já existe na tabela abaixo!",
+    //         type: "warning"
+    //     });
+    // }
 });
 
 // $("#id_tipo").on("change", function() {
@@ -363,7 +363,7 @@ $(".bt_visual").on("click", function(){
                     linhas += "<td>"+ value.descricao +"<input name='res_tipo_conectividade[]' type='hidden' value='"+ value.Conectividade.id_tipo +"' /></td>";
                     linhas += "<td>"+ value.Conectividade.descricao +"<input name='res_conectividade[]' type='hidden' value='"+ value.Conectividade.descricao +"' /></td>";
                     linhas += "<td>"+ value.Conectividade.endereco +"<input name='res_endereco[]' type='hidden' value='"+ value.Conectividade.endereco +"' /></td>";
-                    linhas += "<td><a href='#' id='" + value.Conectividade.id + "' class='del_conec'><i class='fi-circle-cross'></i></a></td>";
+                    linhas += "<td><i class='fi-circle-cross'></i></td>";
                     linhas += "</tr class='remove'>";
                     $("#tb_conectividade").append(linhas);
                     $("#tb_conectividade").show();

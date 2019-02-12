@@ -898,6 +898,8 @@ class Circuitos extends \Phalcon\Mvc\Model
                         OR CONVERT(Circuitos.tag USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Circuitos.chamado USING utf8) LIKE '%{$parameters}%')");
 
+        $query->groupBy("Circuitos.id");
+
         $query->orderBy("Circuitos.id DESC");
 
         $resultado = $query->getQuery()->execute();
@@ -994,6 +996,7 @@ class Circuitos extends \Phalcon\Mvc\Model
         $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
         $query->columns("Lov.descricao AS status, COUNT(Circuitos.id_status) AS total");
         $query->innerJoin("Circuitos\Models\Lov", "Lov.id = Circuitos.id_status", "Lov");
+        $query->where("Circuitos.excluido = 0");
         $query->groupBy("Lov.descricao");
         $resultado = $query->getQuery()->execute();
         return $resultado;
@@ -1011,7 +1014,7 @@ class Circuitos extends \Phalcon\Mvc\Model
         $query->columns("Lov.descricao AS status, COUNT(Circuitos.id_status) AS total");
         $query->innerJoin("Circuitos\Models\Lov", "Lov.id = Circuitos.id_status", "Lov");
         $query->innerJoin("Circuitos\Models\Movimentos", "Circuitos.id = Movimentos.id_circuitos", "Movimentos");
-        $query->where("Movimentos.id_tipomovimento=64 AND Movimentos.data_movimento BETWEEN '{$dt_inicial} 00:00:00' AND '{$dt_final} 23:59:59'");
+        $query->where("Circuitos.excluido = 0 AND Movimentos.id_tipomovimento=64 AND Movimentos.data_movimento BETWEEN '{$dt_inicial} 00:00:00' AND '{$dt_final} 23:59:59'");
         $query->groupBy("Lov.descricao");
         $resultado = $query->getQuery()->execute();
         return $resultado;
@@ -1028,6 +1031,7 @@ class Circuitos extends \Phalcon\Mvc\Model
         $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
         $query->columns("Lov.descricao AS funcao, COUNT(Circuitos.id_funcao) AS total");
         $query->innerJoin("Circuitos\Models\Lov", "Lov.id = Circuitos.id_funcao", "Lov");
+        $query->where("Circuitos.excluido = 0");
         $query->groupBy("Lov.descricao");
         $resultado = $query->getQuery()->execute();
         return $resultado;
@@ -1044,6 +1048,7 @@ class Circuitos extends \Phalcon\Mvc\Model
         $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
         $query->columns("Lov.descricao AS acesso, COUNT(Circuitos.id_tipoacesso) AS total");
         $query->innerJoin("Circuitos\Models\Lov", "Lov.id = Circuitos.id_tipoacesso", "Lov");
+        $query->where("Circuitos.excluido = 0");
         $query->groupBy("Lov.descricao");
         $resultado = $query->getQuery()->execute();
         return $resultado;
@@ -1060,6 +1065,7 @@ class Circuitos extends \Phalcon\Mvc\Model
         $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
         $query->columns("Lov.descricao AS link, COUNT(Circuitos.id_tipolink) AS total");
         $query->innerJoin("Circuitos\Models\Lov", "Lov.id = Circuitos.id_tipolink", "Lov");
+        $query->where("Circuitos.excluido = 0");
         $query->groupBy("Lov.descricao");
         $resultado = $query->getQuery()->execute();
         return $resultado;
@@ -1076,7 +1082,7 @@ class Circuitos extends \Phalcon\Mvc\Model
         $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
         $query->columns("Lov.descricao AS link, COUNT(Circuitos.id_tipolink) AS total");
         $query->innerJoin("Circuitos\Models\Lov", "Lov.id = Circuitos.id_tipolink", "Lov");
-        $query->where("Circuitos.data_ativacao BETWEEN '{$dt_inicial} 00:00:00' AND '{$dt_final} 23:59:59'");
+        $query->where("Circuitos.excluido = 0 AND Circuitos.data_ativacao BETWEEN '{$dt_inicial} 00:00:00' AND '{$dt_final} 23:59:59'");
         $query->groupBy("Lov.descricao");
         $resultado = $query->getQuery()->execute();
         return $resultado;
@@ -1096,6 +1102,7 @@ class Circuitos extends \Phalcon\Mvc\Model
         $query->innerJoin("Circuitos\Models\Pessoa", "Pessoa.id = Cliente.id_pessoa", "Pessoa");
         $query->innerJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Pessoa.id", "PessoaJuridica");
         $query->innerJoin("Circuitos\Models\Lov", "Lov.id = PessoaJuridica.id_tipoesfera", "Lov");
+        $query->where("Circuitos.excluido = 0");
         $query->groupBy("Lov.descricao");
         $resultado = $query->getQuery()->execute();
         return $resultado;
@@ -1113,6 +1120,7 @@ class Circuitos extends \Phalcon\Mvc\Model
         $query->columns("Lov.descricao AS conectividade, COUNT(Circuitos.id_conectividade) AS total");
         $query->innerJoin("Circuitos\Models\Conectividade", "Conectividade.id = Circuitos.id_conectividade", "Conectividade");
         $query->innerJoin("Circuitos\Models\Lov", "Lov.id = Conectividade.id_tipo", "Lov");
+        $query->where("Circuitos.excluido = 0");
         $query->groupBy("Lov.descricao");
         $resultado = $query->getQuery()->execute();
         return $resultado;
@@ -1131,7 +1139,7 @@ class Circuitos extends \Phalcon\Mvc\Model
         $query->innerJoin("Circuitos\Models\Lov", "Lov.id = Circuitos.id_funcao", "Lov");
         $query->innerJoin("Circuitos\Models\CidadeDigital", "Circuitos.id_cidadedigital = CidadeDigital.id", "CidadeDigital");
         $query->innerJoin("Circuitos\Models\EndCidade", "CidadeDigital.id_cidade = EndCidade.id", "EndCidade");
-        $query->where("Circuitos.id_funcao = 8");
+        $query->where("Circuitos.excluido = 0 AND Circuitos.id_funcao = 8");
         $query->groupBy("EndCidade.cidade");
         $resultado = $query->getQuery()->execute();
         return $resultado;

@@ -341,6 +341,8 @@ class Equipamento extends \Phalcon\Mvc\Model
                         OR CONVERT(Modelo.modelo USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Lov.descricao USING utf8) LIKE '%{$parameters}%')");
 
+        $query->groupBy("Equipamento.id");
+
         $query->orderBy("Equipamento.id DESC");
 
         $resultado = $query->getQuery()->execute();

@@ -251,6 +251,7 @@ class CidadeDigital extends \Phalcon\Mvc\Model
         $query = new Builder();
         $query->from(array("CidadeDigital" => "Circuitos\Models\CidadeDigital"));
         $query->columns("CASE CidadeDigital.ativo WHEN 1 THEN 'ATIVO' ELSE 'INATIVO' END AS status, count(CidadeDigital.ativo) AS total");
+        $query->where("CidadeDigital.excluido = 0");
         $query->groupBy("CidadeDigital.ativo");
         $resultado = $query->getQuery()->execute();
         return $resultado;

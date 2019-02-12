@@ -133,6 +133,8 @@ class Fabricante extends \Phalcon\Mvc\Model
                         OR CONVERT(PessoaJuridica2.sigla USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(PessoaEndereco2.cidade USING utf8) LIKE '%{$parameters}%')");
 
+        $query->groupBy("Fabricante.id, Fabricante.id_pessoa");
+
         $query->orderBy("Fabricante.id DESC");
 
         $resultado = $query->getQuery()->execute();

@@ -166,6 +166,8 @@ class Cliente extends \Phalcon\Mvc\Model
                         OR CONVERT(PessoaFisica2.rg USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(PessoaEndereco2.cidade USING utf8) LIKE '%{$parameters}%')");
 
+        $query->groupBy("Cliente.id");
+
         $query->orderBy("Cliente.id DESC");
 
         $resultado = $query->getQuery()->execute();
