@@ -8,24 +8,23 @@ use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Phalcon\Http\Response as Response;
 
-use Circuitos\Controllers\ControllerBase;
-
 use Circuitos\Models\Circuitos;
 use Circuitos\Models\CidadeDigital;
+use Circuitos\Models\Conectividade;
 use Circuitos\Models\Movimentos;
 use Circuitos\Models\Cliente;
 use Circuitos\Models\ClienteUnidade;
-use Circuitos\Models\Usuario;
 use Circuitos\Models\Fabricante;
 use Circuitos\Models\Modelo;
 use Circuitos\Models\Equipamento;
 use Circuitos\Models\Lov;
+use Circuitos\Models\PessoaEndereco;
+use Circuitos\Models\PessoaContato;
 
 use Auth\Autentica;
 use Util\Util;
 use Util\TokenManager;
 use Util\Relatorio;
-use Circuitos\Models\PessoaEndereco;
 
 class CircuitosController extends ControllerBase
 {
@@ -57,29 +56,11 @@ class CircuitosController extends ControllerBase
      */
     public function indexAction()
     {
-        $this->persistent->parameters = null;
         $numberPage = 1;
         $dados = filter_input_array(INPUT_POST);
 
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Circuitos\Models\Circuitos", $dados);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
+        $circuitos = Circuitos::pesquisarCircuitos($dados["pesquisa"]);
 
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-            $parameters["order"] = "[designacao] DESC";
-            $parameters["conditions"] = " excluido = :excluido:";
-            $parameters["bind"]["excluido"] = 0;
-        } else {
-            $parameters["order"] = "[designacao] DESC";
-            $parameters["conditions"] .= " AND excluido = :excluido:";
-            $parameters["bind"]["excluido"] = 0;
-        }
-        $circuitos = Circuitos::find($parameters);
         $statuscircuito = Lov::find(array(
             "tipo=6",
             "order" => "descricao"
@@ -91,10 +72,6 @@ class CircuitosController extends ControllerBase
         ));
         $tipoacesso = Lov::find(array(
             "tipo = 7",
-            "order" => "descricao"
-        ));
-        $cluster = Lov::find(array(
-            "tipo = 14",
             "order" => "descricao"
         ));
         $banda = Lov::find(array(
@@ -130,7 +107,6 @@ class CircuitosController extends ControllerBase
         $this->view->usacontrato = $usacontrato;
         $this->view->funcao = $funcao;
         $this->view->tipoacesso = $tipoacesso;
-        $this->view->cluster = $cluster;
         $this->view->banda = $banda;
         $this->view->tipomovimento = $tipomovimento;
         $this->view->tipolink = $tipolink;
@@ -162,6 +138,7 @@ class CircuitosController extends ControllerBase
             "id_tipoacesso" => $circuitos->getIdTipoacesso(),
             "id_tipolink" => $circuitos->getIdTipolink(),
             "id_cidadedigital" => $circuitos->getIdCidadedigital(),
+            "id_conectividade" => $circuitos->getIdConectividade(),
             "designacao" => $circuitos->getDesignacao(),
             "designacao_anterior" => $circuitos->getDesignacaoAnterior(),
             "uf" => $circuitos->getUf(),
@@ -178,18 +155,30 @@ class CircuitosController extends ControllerBase
         $cliente = Cliente::findFirst("id={$circuitos->getIdCliente()}");
         $unidades = ClienteUnidade::buscaClienteUnidade($circuitos->getIdCliente());
         $equipamentos = Equipamento::find();
-        $modelos = Modelo::find();
         $equip = ($circuitos->getIdEquipamento()) ? Equipamento::findFirst("id={$circuitos->getIdEquipamento()}") : null;
         $banda = Lov::find(array(
             "tipo = 17"
         ));
+
+        $conec = Conectividade::find("id_cidade_digital={$circuitos->getIdCidadedigital()}");
+        $conectividade = array();
+        foreach ($conec as $c){
+            $conectividades = array(
+                "id" => $c->getId(),
+                "descricao" => $c->getDescricao(),
+                "tipo" => $c->Lov->descricao
+            );
+            array_push($conectividade,$conectividades);
+        }
+
         $response->setContent(json_encode(array(
             "dados" => $dados,
             "cliente" => $cliente,
             "equipamentos" => $equipamentos,
             "equip" => $equip,
             "unidadescli" => $unidades,
-            "banda" => $banda
+            "banda" => $banda,
+            "conectividade" => $conectividade
         )));
         return $response;
     }
@@ -205,9 +194,26 @@ class CircuitosController extends ControllerBase
 
         $parameters = [];
         $parameters["order"] = "[data_movimento] DESC";
-        $parameters["conditions"] .= " id_circuitos = :id_circuitos:";
+        $parameters["conditions"] = " id_circuitos = :id_circuitos:";
         $parameters["bind"]["id_circuitos"] = $circuitos->getId();
         $movimentos = Movimentos::find($parameters);
+        $parameters_end = [];
+        $parameters_end["order"] = "[id] DESC";
+        $parameters_end["conditions"] = " id_pessoa = :id_pessoa:";
+        if ($circuitos->Cliente->id_tipocliente == 43)//Se PJ
+        {
+            $parameters_end["bind"]["id_pessoa"] = $circuitos->ClienteUnidade->id_pessoa;
+        }
+        else//Se PF
+        {
+            $parameters_end["bind"]["id_pessoa"] = $circuitos->Cliente->id_pessoa;
+        }
+        $enderecos = PessoaEndereco::find($parameters_end);
+        $parameters_cont = [];
+        $parameters_cont["order"] = "[id] DESC";
+        $parameters_cont["conditions"] = " id_pessoa = :id_pessoa:";
+        $parameters_cont["bind"]["id_pessoa"] = $circuitos->ClienteUnidade->id_pessoa;
+        $contatos = PessoaContato::find($parameters_cont);
         $dados = array(
             "id" => $circuitos->getId(),
             "id_cliente" => $circuitos->getIdCliente(),
@@ -220,6 +226,7 @@ class CircuitosController extends ControllerBase
             "id_tipoacesso" => $circuitos->getIdTipoacesso(),
             "id_tipolink" => $circuitos->getIdTipolink(),
             "id_cidadedigital" => $circuitos->getIdCidadedigital(),
+            "id_conectividade" => $circuitos->getIdConectividade(),
             "designacao" => $circuitos->getDesignacao(),
             "designacao_anterior" => $circuitos->getDesignacaoAnterior(),
             "uf" => $circuitos->getUf(),
@@ -250,11 +257,49 @@ class CircuitosController extends ControllerBase
                 "observacao" => $movimento->getObservacao()
             ));
         }
+        $cont = array();
+        foreach($contatos as $contato){
+            $principal = ($contato->getPrincipal() == 0) ? "Sim" : "Não";
+            array_push($cont, array(
+                "id" => $contato->getId(),
+                "id_pessoa" => $contato->getIdPessoa(),
+                "id_tipocontato" => $contato->Lov->descricao,
+                "principal" => $principal,
+                "nome" => $contato->getNome(),
+                "telefone" => $contato->getTelefone(),
+                "email" => $contato->getEmail()
+            ));
+        }
+        $end = array();
+        foreach($enderecos as $endereco){
+            array_push($end, array(
+                "id" => $endereco->getId(),
+                "endereco" => $endereco->getEndereco(),
+                "numero" => $endereco->getNumero(),
+                "bairro" => $endereco->getBairro(),
+                "complemento" => $endereco->getComplemento(),
+                "cep" => $endereco->getCep()
+            ));
+        }
+        $conec = Conectividade::find("id_cidade_digital={$circuitos->getIdCidadedigital()}");
+        $conectividade = array();
+        foreach ($conec as $c){
+            $conectividades = array(
+                "id" => $c->getId(),
+                "descricao" => $c->getDescricao(),
+                "tipo" => $c->Lov->descricao
+            );
+            array_push($conectividade,$conectividades);
+        }
+        
         $equip = ($circuitos->getIdEquipamento()) ? Equipamento::findFirst("id={$circuitos->getIdEquipamento()}") : null;
         $response->setContent(json_encode(array(
             "dados" => $dados,
             "equip" => $equip,
-            "mov" => $mov
+            "mov" => $mov,
+            "cont" => $cont,
+            "endereco" => $end,
+            "conectividade" => $conectividade
         )));
         return $response;
     }
@@ -276,13 +321,13 @@ class CircuitosController extends ControllerBase
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             try {
-                $cliente = Cliente::findFirst("id={$params["id_cliente"]}");
-                $pessoaendereco = PessoaEndereco::findFirst("id_pessoa={$cliente->getIdPessoa()}");
                 $unidade = (isset($params["id_cliente_unidade"])) ? $params["id_cliente_unidade"] : null ;
-                $uf = (!empty($pessoaendereco)) ? $pessoaendereco->getSiglaEstado() : null;
-                $cidade = (!empty($pessoaendereco)) ? $pessoaendereco->getCidade() : null;
+                //Coletando a cidade e estado com base na cidade digital escolhida
+                $cidade_estado = CidadeDigital::CidadeUfporCidadeDigital($params["id_cidadedigital"]);
+                //Coletando a última designação
                 $circuito = Circuitos::findFirst("designacao = (SELECT MAX(designacao) FROM Circuitos\Models\Circuitos)");
                 $vl_designacao = $circuito->getDesignacao() + 1;
+                //Criando o Circuito
                 $circuitos = new Circuitos();
                 $circuitos->setTransaction($transaction);
                 $circuitos->setIdCliente($params["id_cliente"]);
@@ -295,10 +340,11 @@ class CircuitosController extends ControllerBase
                 $circuitos->setIdTipoacesso($params["id_tipoacesso"]);
                 $circuitos->setIdTipolink($params["id_tipolink"]);
                 $circuitos->setIdCidadedigital($params["id_cidadedigital"]);
+                $circuitos->setIdConectividade($params["id_conectividade"]);
                 $circuitos->setDesignacao($vl_designacao);
                 $circuitos->setDesignacaoAnterior(mb_strtoupper($params["designacao_anterior"], $this->encode));
-                $circuitos->setUf(mb_strtoupper($uf, $this->encode));
-                $circuitos->setCidade(mb_strtoupper($cidade, $this->encode));
+                $circuitos->setUf(mb_strtoupper($cidade_estado[0]["uf"], $this->encode));
+                $circuitos->setCidade(mb_strtoupper($cidade_estado[0]["cidade"], $this->encode));
                 $circuitos->setSsid($params["ssid"]);
                 $circuitos->setChamado($params["chamado"]);
                 $circuitos->setIpRedelocal($params["ip_redelocal"]);
@@ -370,11 +416,10 @@ class CircuitosController extends ControllerBase
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             try {
-                $cliente = Cliente::findFirst("id={$params["id_cliente"]}");
-                $pessoaendereco = PessoaEndereco::findFirst("id_pessoa={$cliente->getIdPessoa()}");
+                //Coletando a cidade e estado com base na cidade digital escolhida
+                $cidade_estado = CidadeDigital::CidadeUfporCidadeDigital($params["id_cidadedigital"]);
                 $unidade = (isset($params["id_cliente_unidade"])) ? $params["id_cliente_unidade"] : null ;
-                $uf = (!empty($pessoaendereco)) ? $pessoaendereco->getSiglaEstado() : null;
-                $cidade = (!empty($pessoaendereco)) ? $pessoaendereco->getCidade() : null;
+                //Editando Circuitos
                 $circuitos->setTransaction($transaction);
                 $circuitos->setIdCliente($params["id_cliente"]);
                 $circuitos->setIdClienteUnidade($unidade);
@@ -384,9 +429,10 @@ class CircuitosController extends ControllerBase
                 $circuitos->setIdTipoacesso($params["id_tipoacesso"]);
                 $circuitos->setIdTipolink($params["id_tipolink"]);
                 $circuitos->setIdCidadedigital($params["id_cidadedigital"]);
+                $circuitos->setIdConectividade($params["id_conectividade"]);
                 $circuitos->setDesignacaoAnterior(mb_strtoupper($params["designacao_anterior"], $this->encode));
-                $circuitos->setUf(mb_strtoupper($uf, $this->encode));
-                $circuitos->setCidade(mb_strtoupper($cidade, $this->encode));
+                $circuitos->setUf(mb_strtoupper($cidade_estado[0]["uf"], $this->encode));
+                $circuitos->setCidade(mb_strtoupper($cidade_estado[0]["cidade"], $this->encode));
                 $circuitos->setSsid($params["ssid"]);
                 $circuitos->setChamado($params["chamado"]);
                 $circuitos->setTag($params["tag"]);
@@ -795,6 +841,105 @@ class CircuitosController extends ControllerBase
                 $response->setContent(json_encode(array(
                     "operacao" => True,
                     "dados" => $equipamentos
+                )));
+                return $response;
+            } else {
+                $response->setContent(json_encode(array(
+                    "operacao" => False
+                )));
+                return $response;
+            }
+        } else {
+            $response->setContent(json_encode(array(
+                "operacao" => False
+            )));
+            return $response;
+        }
+    }
+
+    public function equipamentoNumeroSerieAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        if ($dados["numero_serie"]) {
+            $equipamentos = Equipamento::findFirst("numserie={$dados["numero_serie"]}");
+            if ($equipamentos) {
+                $response->setContent(json_encode(array(
+                    "operacao" => True,
+                    "id_equipamento" => $equipamentos->getId(),
+                    "nome_equipamento" => $equipamentos->getNome(),
+                    "numero_patrimonio" => $equipamentos->getNumpatrimonio(),
+                    "id_fabricante" => $equipamentos->getIdFabricante(),
+                    "id_modelo" => $equipamentos->getIdModelo(),
+                    "nome_modelo" => $equipamentos->Modelo->modelo
+                )));
+                return $response;
+            } else {
+                $response->setContent(json_encode(array(
+                    "operacao" => False
+                )));
+                return $response;
+            }
+        } else {
+            $response->setContent(json_encode(array(
+                "operacao" => False
+            )));
+            return $response;
+        }
+    }
+
+    public function validarEquipamentoCircuitoAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        $equipamentos = Circuitos::findFirst("id_equipamento={$dados["id_equipamento"]}");
+        if ($equipamentos) {
+            $response->setContent(json_encode(True));
+            return $response;
+        } else {
+            $response->setContent(json_encode(False));
+            return $response;
+        }
+    }
+
+    public function cidadedigitalAllAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $cidadedigital = CidadeDigital::find("excluido=0 AND ativo=1");
+        $response->setContent(json_encode(array(
+            "operacao" => True,
+            "dados" => $cidadedigital
+        )));
+        return $response;
+    }
+
+    public function cidadedigitalConectividadeAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        if ($dados["id_cidadedigital"]) {
+            $conec = Conectividade::find("id_cidade_digital={$dados["id_cidadedigital"]}");
+            $conectividade = array();
+            foreach ($conec as $c){
+                $conectividades = array(
+                    "id" => $c->getId(),
+                    "descricao" => $c->getDescricao(),
+                    "tipo" => $c->Lov->descricao
+                );
+                array_push($conectividade,$conectividades);
+            }
+            if (isset($conectividade[0])) {
+                $response->setContent(json_encode(array(
+                    "operacao" => True,
+                    "dados" => $conectividade
                 )));
                 return $response;
             } else {

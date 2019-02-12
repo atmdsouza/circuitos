@@ -1,3 +1,55 @@
+// Select2
+$(".select2").select2({
+    language: "pt-BR"
+});
+//Date range picker
+$(".input-daterange-datepicker").daterangepicker({
+    autoApply: true,
+    autoUpdateInput: false,
+    linkedCalendars: false,
+    locale: {
+        "format": "DD/MM/YYYY",
+        "separator": " - ",
+        "applyLabel": "Aplicar",
+        "cancelLabel": "Cancelar",
+        "fromLabel": "De",
+        "toLabel": "Para",
+        "customRangeLabel": "Customizado",
+        "daysOfWeek": [
+            "Do",
+            "Se",
+            "Te",
+            "Qa",
+            "Qi",
+            "Se",
+            "Sa"
+        ],
+        "monthNames": [
+            "Janeiro",
+            "Fevereiro",
+            "Março",
+            "Abril",
+            "Maio",
+            "Junhu",
+            "Julhu",
+            "Agosto",
+            "Setembro",
+            "Outubro",
+            "Novembro",
+            "Dezembro"
+        ],
+        "firstDay": 1
+    }
+});
+
+$(".input-daterange-datepicker").on('apply.daterangepicker', function(ev, picker) {
+    $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+});
+
+$(".input-daterange-datepicker").on('cancel.daterangepicker', function(ev, picker) {
+    $(this).val('');
+});
+
 //Configuração padrão de datatables
 $.extend( $.fn.dataTable.defaults, {
     language: {
@@ -67,6 +119,21 @@ $(function () {
     });
 });
 //Fim
+
+/**
+ * Trabalhando com o ajustse da Action Correta em chamadas Ajax
+ * @url string URL que origina a chamada e será modificada
+ * @action string Action que será usada na chamada, semrpe deve estar formatada como 'controller/action'
+ * */
+function actionCorreta(url, action) {
+    var novaAction;
+    var urls = url.split("/");
+    //Pasta raiz sendo "/circuitos"
+    novaAction = urls[0] + "//" + urls[2] + "/" + urls[3] + "/" + action;
+    //Pasta raiz sendo "/"
+    // novaAction = urls[0] + "//" + urls[2] + "/" + action;
+    return novaAction;
+}
 
 /**
  * Trabalhando com Datas e Horas

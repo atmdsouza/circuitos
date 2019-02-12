@@ -21,9 +21,9 @@ use Util\Util;
     ?>
     <div class="form-row">
         <div class="form-group col-md-2">
-            <label for="fieldNomefabricante" class="col-sm-2 control-label">Fabricante</label>
+            <label for="fieldPesquisa" class="col-sm-2 control-label">Pesquisa</label>
             <div class="col-sm-10">
-                <?php echo $this->tag->textField(["id_pessoa", "size" => 30, "class" => "form-control", "id" => "fieldNomefabricante"]) ?>
+                <?php echo $this->tag->textField(["pesquisa", "size" => 60, "class" => "form-control", "id" => "fieldPesquisa"]) ?>
             </div>
         </div>
         <div class="form-group col-md-2">
@@ -42,6 +42,7 @@ use Util\Util;
                 <tr>
                     <th>Código</th>
                     <th>Nome Fabricante</th>
+                    <th>Cidade</th>
                     <th>Data Cadastro</th>
                     <th>Data Alteração</th>
                     <th>Ativo</th>
@@ -62,6 +63,7 @@ use Util\Util;
                 }
                 $data_cadastro = ($fabricantes->Pessoa->create_at) ? $util->converterDataHoraParaBr($fabricantes->Pessoa->create_at) : null;
                 $data_atualizacao = ($fabricantes->Pessoa->update_at) ? $util->converterDataHoraParaBr($fabricantes->Pessoa->update_at) : null;
+                $cidade = !empty($fabricantes->Pessoa->PessoaEndereco[0]) ? $fabricantes->Pessoa->PessoaEndereco[0]->cidade : null;
             ?>
                 <tr>
                     <td>
@@ -69,6 +71,9 @@ use Util\Util;
                     </td>
                     <td>
                         <?php echo $fabricantes->Pessoa->nome ?>
+                    </td>
+                    <td>
+                        <?php echo $cidade ?>
                     </td>
                     <td>
                         <?php echo $data_cadastro ?>

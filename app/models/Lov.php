@@ -2,6 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
+
 class Lov extends \Phalcon\Mvc\Model
 {
 
@@ -235,6 +238,31 @@ class Lov extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
+
+    /**
+     * Consulta completa de Lovs
+     *
+     * @param string $parameters
+     * @return Lov|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarLovs($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("Lov" => "Circuitos\Models\Lov"));
+        $query->columns("Lov.*");
+
+        $query->where("(Lov.codigoespecifico <> 'SYS' OR Lov.codigoespecifico IS NULL) AND (CONVERT(Lov.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov.codigoespecifico USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov.valor USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov.duracao USING utf8) LIKE '%{$parameters}%')");
+
+        $query->orderBy("Lov.id DESC");
+
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
 
     /**
      * Independent Column Mapping.

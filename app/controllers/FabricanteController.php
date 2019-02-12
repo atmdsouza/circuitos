@@ -56,24 +56,7 @@ class FabricanteController extends ControllerBase
         $this->persistent->parameters = null;
         $numberPage = 1;
         $dados = filter_input_array(INPUT_POST);
-
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Circuitos\Models\Fabricante", $dados);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-            $parameters["order"] = "[id] DESC";
-        } else {
-            $parameters["order"] = "[id] DESC";
-        }
-        $fabricantes = Fabricante::find(array(
-            "order" => "[id] DESC"
-        ));
+        $fabricantes = Fabricante::pesquisarFabricantes($dados["pesquisa"]);
         $tipocontato = Lov::find("tipo=13");
         $paginator = new Paginator([
             'data' => $fabricantes,
@@ -146,13 +129,18 @@ class FabricanteController extends ControllerBase
                 $pessoaendereco->setComplemento(mb_strtoupper($params["complemento"], $this->encode));
                 $pessoaendereco->setSiglaEstado(mb_strtoupper($params["sigla_uf"], $this->encode));
                 if ($pessoaendereco->save() == false) {
-                    $transaction->rollback("Não foi possível salvar o pessoaendereco!");
+                    $messages = $pessoaendereco->getMessages();
+                    $errors = '';
+                    for ($i = 0; $i < count($messages); $i++) {
+                        $errors .= '['.$messages[$i].'] ';
+                    }
+                    $transaction->rollback('Erro ao criar o circuito: ' . $errors);
                 }
                 if (!empty($params["email_pf"])) {
                     foreach($params["email_pf"] as $key => $email){
                         $pessoaemail = new PessoaEmail();
                         $pessoaemail->setTransaction($transaction);
-                        $pessoaendereco->setIdPessoa($pessoa->getId());
+                        $pessoaemail->setIdPessoa($pessoa->getId());
                         $pessoaemail->setIdTipoemail(42);//Comercial
                         $pessoaemail->setPrincipal($params["principal_email"][$key]);
                         $pessoaemail->setEmail($email);
@@ -166,7 +154,7 @@ class FabricanteController extends ControllerBase
                         $tel = $util->formataFone($telefone);
                         $pessoatelefone = new PessoaTelefone();
                         $pessoatelefone->setTransaction($transaction);
-                        $pessoaendereco->setIdPessoa($pessoa->getId());
+                        $pessoatelefone->setIdPessoa($pessoa->getId());
                         $pessoatelefone->setIdTipotelefone(50);//Fixo
                         $pessoatelefone->setPrincipal($params["principal_tel"][$key]);
                         $pessoatelefone->setDdd($tel["ddd"]);
@@ -183,7 +171,7 @@ class FabricanteController extends ControllerBase
                         $email = ($params["email_contato"][$key]) ? $params["email_contato"][$key] : null;
                         $pessoacontato = new PessoaContato();
                         $pessoacontato->setTransaction($transaction);
-                        $pessoaendereco->setIdPessoa($pessoa->getId());
+                        $pessoacontato->setIdPessoa($pessoa->getId());
                         $pessoacontato->setIdTipocontato($params["tipo_contato"][$key]);
                         $pessoacontato->setNome($nome_contato);
                         $pessoacontato->setPrincipal($params["principal_contato"][$key]);
@@ -251,19 +239,48 @@ class FabricanteController extends ControllerBase
                 if ($pessoa->save() == false) {
                     $transaction->rollback("Não foi possível salvar a pessoa!");
                 }
-                $pessoaendereco->setTransaction($transaction);
-                $pessoaendereco->setIdTipoendereco(49);//Comercial
-                $pessoaendereco->setCep($util->formataCpfCnpj($params["cep"]));
-                $pessoaendereco->setPrincipal(1);//Principal
-                $pessoaendereco->setEndereco(mb_strtoupper($params["endereco"], $this->encode));
-                $pessoaendereco->setNumero(mb_strtoupper($params["numero"], $this->encode));
-                $pessoaendereco->setBairro(mb_strtoupper($params["bairro"], $this->encode));
-                $pessoaendereco->setCidade(mb_strtoupper($params["cidade"], $this->encode));
-                $pessoaendereco->setEstado(mb_strtoupper($params["estado"], $this->encode));
-                $pessoaendereco->setComplemento(mb_strtoupper($params["complemento"], $this->encode));
-                $pessoaendereco->setSiglaEstado(mb_strtoupper($params["sigla_uf"], $this->encode));
-                if ($pessoaendereco->save() == false) {
-                    $transaction->rollback("Não foi possível salvar o pessoa fabricante!");
+                if (isset($pessoaendereco)) {
+                    $pessoaendereco = new PessoaEndereco();
+                    $pessoaendereco->setTransaction($transaction);
+                    $pessoaendereco->setIdPessoa($pessoa->getId());
+                    $pessoaendereco->setIdTipoendereco(49);//Comercial
+                    $pessoaendereco->setCep($util->formataCpfCnpj($params["cep"]));
+                    $pessoaendereco->setPrincipal(1);//Principal
+                    $pessoaendereco->setEndereco(mb_strtoupper($params["endereco"], $this->encode));
+                    $pessoaendereco->setNumero(mb_strtoupper($params["numero"], $this->encode));
+                    $pessoaendereco->setBairro(mb_strtoupper($params["bairro"], $this->encode));
+                    $pessoaendereco->setCidade(mb_strtoupper($params["cidade"], $this->encode));
+                    $pessoaendereco->setEstado(mb_strtoupper($params["estado"], $this->encode));
+                    $pessoaendereco->setComplemento(mb_strtoupper($params["complemento"], $this->encode));
+                    $pessoaendereco->setSiglaEstado(mb_strtoupper($params["sigla_uf"], $this->encode));
+                    if ($pessoaendereco->save() == false) {
+                        $messages = $pessoaendereco->getMessages();
+                        $errors = '';
+                        for ($i = 0; $i < count($messages); $i++) {
+                            $errors .= '['.$messages[$i].'] ';
+                        }
+                        $transaction->rollback('Erro ao criar o circuito: ' . $errors);
+                    }
+                } else {
+                    $pessoaendereco->setTransaction($transaction);
+                    $pessoaendereco->setIdTipoendereco(49);//Comercial
+                    $pessoaendereco->setCep($util->formataCpfCnpj($params["cep"]));
+                    $pessoaendereco->setPrincipal(1);//Principal
+                    $pessoaendereco->setEndereco(mb_strtoupper($params["endereco"], $this->encode));
+                    $pessoaendereco->setNumero(mb_strtoupper($params["numero"], $this->encode));
+                    $pessoaendereco->setBairro(mb_strtoupper($params["bairro"], $this->encode));
+                    $pessoaendereco->setCidade(mb_strtoupper($params["cidade"], $this->encode));
+                    $pessoaendereco->setEstado(mb_strtoupper($params["estado"], $this->encode));
+                    $pessoaendereco->setComplemento(mb_strtoupper($params["complemento"], $this->encode));
+                    $pessoaendereco->setSiglaEstado(mb_strtoupper($params["sigla_uf"], $this->encode));
+                    if ($pessoaendereco->save() == false) {
+                        $messages = $pessoaendereco->getMessages();
+                        $errors = '';
+                        for ($i = 0; $i < count($messages); $i++) {
+                            $errors .= '['.$messages[$i].'] ';
+                        }
+                        $transaction->rollback('Erro ao criar o circuito: ' . $errors);
+                    }
                 }
                 if (!empty($params["email_pf"])) {
                     foreach($params["email_pf"] as $key => $email){

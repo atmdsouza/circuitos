@@ -140,6 +140,40 @@ class ClienteUnidade extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Consulta completa de unidade de clientes, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return ClienteUnidade|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarClientesUnidades($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("ClienteUnidade" => "Circuitos\Models\ClienteUnidade"));
+        $query->columns("ClienteUnidade.*");
+
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa2.id = ClienteUnidade.id_pessoa", "Pessoa2");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa2.id = PessoaJuridica2.id", "PessoaJuridica2");
+        $query->leftJoin("Circuitos\Models\PessoaEndereco", "Pessoa2.id = PessoaEndereco2.id_pessoa", "PessoaEndereco2");
+        $query->leftJoin("Circuitos\Models\Cliente", "Cliente.id = ClienteUnidade.id_cliente", "Cliente");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa1.id = Cliente.id_pessoa", "Pessoa1");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa1.id = PessoaJuridica1.id", "PessoaJuridica1");
+
+        $query->where("(CONVERT(ClienteUnidade.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa1.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa2.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica1.razaosocial USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica2.razaosocial USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaEndereco2.cidade USING utf8) LIKE '%{$parameters}%')");
+
+        $query->groupBy("ClienteUnidade.id");
+
+        $query->orderBy("ClienteUnidade.id DESC");
+
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
      * Consulta com o join na tabela com o nome do cliente unidade
      *
      * @param int $tipopessoa

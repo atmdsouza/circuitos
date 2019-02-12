@@ -2,6 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
+
 class CidadeDigital extends \Phalcon\Mvc\Model
 {
 
@@ -15,12 +18,6 @@ class CidadeDigital extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $id_tipo;
-
-    /**
-     *
-     * @var integer
-     */
     protected $id_cidade;
 
     /**
@@ -28,12 +25,6 @@ class CidadeDigital extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $descricao;
-
-    /**
-     *
-     * @var string
-     */
-    protected $endereco;
 
     /**
      *
@@ -61,19 +52,6 @@ class CidadeDigital extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field id_tipo
-     *
-     * @param integer $id_tipo
-     * @return $this
-     */
-    public function setIdTipo($id_tipo)
-    {
-        $this->id_tipo = $id_tipo;
-
-        return $this;
-    }
-
-    /**
      * Method to set the value of field id_cidade
      *
      * @param integer $id_cidade
@@ -95,19 +73,6 @@ class CidadeDigital extends \Phalcon\Mvc\Model
     public function setDescricao($descricao)
     {
         $this->descricao = $descricao;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field endereco
-     *
-     * @param string $endereco
-     * @return $this
-     */
-    public function setEndereco($endereco)
-    {
-        $this->endereco = $endereco;
 
         return $this;
     }
@@ -149,16 +114,6 @@ class CidadeDigital extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id_tipo
-     *
-     * @return integer
-     */
-    public function getIdTipo()
-    {
-        return $this->id_tipo;
-    }
-
-    /**
      * Returns the value of field id_cidade
      *
      * @return integer
@@ -176,16 +131,6 @@ class CidadeDigital extends \Phalcon\Mvc\Model
     public function getDescricao()
     {
         return $this->descricao;
-    }
-
-    /**
-     * Returns the value of field endereco
-     *
-     * @return string
-     */
-    public function getEndereco()
-    {
-        return $this->endereco;
     }
 
     /**
@@ -216,8 +161,8 @@ class CidadeDigital extends \Phalcon\Mvc\Model
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("cidade_digital");
         $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_cidadedigital', ['alias' => 'Circuitos']);
+        $this->hasMany('id', 'Circuitos\Models\Conectividade', 'id_cidade_digital', ['alias' => 'Conectividade']);
         $this->belongsTo('id_cidade', 'Circuitos\Models\EndCidade', 'id', ['alias' => 'EndCidade']);
-        $this->belongsTo('id_tipo', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
     }
 
     /**
@@ -253,6 +198,66 @@ class CidadeDigital extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Consulta completa de Cidades Digitais, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return Cliente|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarCidadeDigital($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("CidadeDigital" => "Circuitos\Models\CidadeDigital"));
+        $query->columns("CidadeDigital.*");
+
+        $query->leftJoin("Circuitos\Models\EndCidade", "CidadeDigital.id_cidade = EndCidade.id", "EndCidade");
+        $query->leftJoin("Circuitos\Models\Conectividade", "CidadeDigital.id = Conectividade.id_cidade_digital", "Conectividade");
+
+        $query->where("CidadeDigital.excluido = 0 AND (CONVERT(CidadeDigital.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(CidadeDigital.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(EndCidade.cidade USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Conectividade.descricao USING utf8) LIKE '%{$parameters}%')");
+
+        $query->groupBy("CidadeDigital.id");
+
+        $query->orderBy("CidadeDigital.id DESC");
+
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta retornar a cidade e o estado do circuito
+     *
+     * @return CidadeDigital|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function CidadeUfporCidadeDigital($id_cidadedigital)
+    {
+        $query = new Builder();
+        $query->from(array("CidadeDigital" => "Circuitos\Models\CidadeDigital"));
+        $query->columns("EndCidade.cidade, EndCidade.uf");
+        $query->innerJoin("Circuitos\Models\EndCidade", "CidadeDigital.id_cidade = EndCidade.id", "EndCidade");
+        $query->where("CidadeDigital.id = {$id_cidadedigital}");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta para gráfico de cidades digitais por status
+     *
+     * @return CidadeDigital|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function cidadedigitalStatus()
+    {
+        $query = new Builder();
+        $query->from(array("CidadeDigital" => "Circuitos\Models\CidadeDigital"));
+        $query->columns("CASE CidadeDigital.ativo WHEN 1 THEN 'ATIVO' ELSE 'INATIVO' END AS status, count(CidadeDigital.ativo) AS total");
+        $query->where("CidadeDigital.excluido = 0");
+        $query->groupBy("CidadeDigital.ativo");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
      * Independent Column Mapping.
      * Keys are the real names in the table and the values their names in the application
      *
@@ -262,10 +267,8 @@ class CidadeDigital extends \Phalcon\Mvc\Model
     {
         return [
             'id' => 'id',
-            'id_tipo' => 'id_tipo',
             'id_cidade' => 'id_cidade',
             'descricao' => 'descricao',
-            'endereco' => 'endereco',
             'excluido' => 'excluido',
             'ativo' => 'ativo'
         ];

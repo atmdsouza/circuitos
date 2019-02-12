@@ -1,0 +1,337 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+
+use Phalcon\Tag;
+
+?>
+
+<?php echo $this->getContent(); ?>
+
+
+<div class="col-12">
+    <?php
+    echo $this->tag->form(
+        [
+            "relatorios_gestao/index",
+            "autocomplete" => "off",
+            "name" => "formFiltros",
+            "id" => "formFiltros"
+        ]
+    );
+    ?>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="eixo_x" class="col-sm-12 control-label">Escolher os Campos para o Relatório</label>
+            <div class="col-sm-12">
+                <select id="eixo_x" class="select2 form-control select2-multiple" multiple="multiple" multiple data-placeholder="Escolher os Campos para o Relatório">
+                    <option value="Circuitos.designacao AS Designacao">Designação</option>
+                    <option value="Circuitos.designacao_anterior AS DesignacaoAnterior">Designação Anterior</option>
+                    <option value="Pessoa1.nome AS Cliente">Cliente</option>
+                    <option value="Pessoa2.nome AS UnidadeCliente">Unidade do Cliente</option>
+                    <option value="CidadeDigital.descricao AS CidadeDigital">Cidade Digital</option>
+                    <option value="Conectividade.descricao AS Conectividade">Conectividade</option>
+                    <option value="Lov1.descricao AS Contrato">Contrato</option>
+                    <option value="Lov7.descricao AS TipoLink">Tipo Link</option>
+                    <option value="Lov4.descricao AS Funcao">Função</option>
+                    <option value="Lov5.descricao AS TipoAcesso">Tipo Acesso</option>
+                    <option value="Pessoa3.nome AS Fabricante">Fabricante</option>
+                    <option value="Modelo.modelo AS Modelo">Modelo</option>
+                    <option value="Equipamento.nome AS Equipamento">Equipamento</option>
+                    <option value="Circuitos.ip_redelocal AS RedeCliente">Rede Cliente</option>
+                    <option value="Circuitos.ip_gerencia AS IPGerencia">IP de Gerência</option>
+                    <option value="Lov6.descricao AS Banda">Banda</option>
+                    <option value="Circuitos.tag AS TAG">TAG</option>
+                    <option value="Circuitos.ssid AS SSID">SSID</option>
+                    <option value="Circuitos.chamado AS Chamado">Chamado</option>
+                    <option value="Lov2.descricao AS Status">Status</option>
+                    <option value="Love.descricao AS Esfera">Esfera</option>
+                    <option value="Lovs.descricao AS Setor">Setor</option>
+                    <option value="Circuitos.cidade AS Cidade">Cidade</option>
+                    <option value="Circuitos.uf AS Estado">Estado</option>
+                    <option value="Circuitos.data_ativacao AS DataAtivacao">Data Ativação</option>
+                    <option value="Circuitos.data_atualizacao AS DataAtualizacao">Data Atualização</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <div class="bt_menu_tabela">
+                <button title="Filtros do Relatório" id="filtrar_relatorio" type="button" class="btn btn-success waves-effect waves-light"> <i class="fa fa-filter m-r-5"></i> <span>Filtros</span> </button>
+                <button title="Limpar Filtros do Relatório" id="limpar_filtros" type="button" class="btn btn-warning waves-effect waves-light"> <i class="fa fa-eraser m-r-5"></i> <span>Limpar Filtros</span> </button>
+            </div>
+        </div>
+    </div>
+    <div class="form-row" id="div_filtros_1" style="display: none">
+        <input name="esconder" id="esconder" type="hidden" value="0"/>
+        <div class="form-group col-md-3">
+            <label for="id_cliente" class="col-sm-12 control-label">Cliente</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->select(["id_cliente", $clientes, "class" => "form-control", "id" => "id_cliente",
+                    "using" => ["id", "nome",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione um Cliente",
+                    "emptyValue" => ""])
+                ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="id_cliente_unidade" class="col-sm-12 control-label">Unidade do Cliente</label>
+            <div class="col-sm-12">
+                <select disabled name="id_cliente_unidade" id="id_cliente_unidade" class="form-control">
+                    <option value="">Selecione uma Unidade</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="fieldDesignacao" class="col-sm-12 control-label">Designação</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->textField(["fieldDesignacao", "size" => 60, "class" => "form-control", "id" => "fieldDesignacao"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="fieldDesignacaoAnterior" class="col-sm-12 control-label">Designação Anterior</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->textField(["fieldDesignacaoAnterior", "size" => 60, "class" => "form-control", "id" => "fieldDesignacaoAnterior"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="id_cidadedigital" class="col-sm-12 control-label">Cidade Digital</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->select(["id_cidadedigital", $cidadedigital, "class" => "form-control", "id" => "id_cidadedigital",
+                    "using" => ["id", "descricao",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione a Cidade Digital",
+                    "emptyValue" => ""])
+                ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="id_conectividade" class="col-sm-12 control-label">Conectividade</label>
+            <div class="col-sm-12">
+                <select disabled name="id_conectividade" id="id_conectividade" class="form-control">
+                    <option value="">Selecione uma Conectividade</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="id_contrato" class="col-sm-12 control-label">Contrato</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->select(["id_contrato", $usacontrato, "class" => "form-control", "id" => "id_contrato",
+                    "using" => ["id", "descricao",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione o tipo de Contrato",
+                    "emptyValue" => ""])
+                ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="id_tipolink" class="col-sm-12 control-label">Tipo Link</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->select(["id_tipolink", $tipolink, "class" => "form-control", "id" => "id_tipolink",
+                    "using" => ["id", "descricao",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione o tipo de Link",
+                    "emptyValue" => ""])
+                ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="id_funcao" class="col-sm-12 control-label">Função</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->select(["id_funcao", $funcao, "class" => "form-control", "id" => "id_funcao",
+                    "using" => ["id", "descricao",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione a Função",
+                    "emptyValue" => ""])
+                ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="id_tipoacesso" class="col-sm-12 control-label">Tipo Acesso</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->select(["id_tipoacesso", $tipoacesso, "class" => "form-control", "id" => "id_tipoacesso",
+                    "using" => ["id", "descricao",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione o tipo de Acesso",
+                    "emptyValue" => ""])
+                ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="id_fabricante" class="col-sm-12 control-label">Fabricante</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->select(["id_fabricante", $fabricantes, "class" => "form-control", "id" => "id_fabricante",
+                    "using" => ["id", "nome",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione um Fabricante",
+                    "emptyValue" => ""])
+                ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="lid_modelo" class="col-sm-12 control-label">Modelo</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->textField(["lid_modelo", "disabled" => "true", "size" => 60, "class" => "form-control", "id" => "lid_modelo", "placeholder" => "Modelo"]) ?>
+                <?php echo $this->tag->hiddenField(["id_modelo", "size" => 60, "class" => "form-control", "id" => "id_modelo"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="lid_equipamento" class="col-sm-12 control-label">Equipamento</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->textField(["lid_equipamento", "disabled" => "true", "size" => 60, "class" => "form-control", "id" => "lid_equipamento", "placeholder" => "Equipamento"]) ?>
+                <?php echo $this->tag->hiddenField(["id_equipamento", "size" => 60, "class" => "form-control", "id" => "id_equipamento"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="fieldIpRedelocal" class="col-sm-12 control-label">Rede Cliente</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->textField(["fieldIpRedelocal", "size" => 60, "class" => "form-control ip2", "id" => "fieldIpRedelocal"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="fieldIpGerencia" class="col-sm-12 control-label">IP de Gerência</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->textField(["fieldIpGerencia", "size" => 60, "class" => "form-control ip", "id" => "fieldIpGerencia"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="banda" class="col-sm-12 control-label">Banda</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->select(["banda", $banda, "class" => "form-control", "id" => "banda",
+                    "using" => ["id", "descricao",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione a Banda",
+                    "emptyValue" => ""])
+                ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="fieldTag" class="col-sm-12 control-label">TAG</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->textField(["fieldTag", "size" => 60, "class" => "form-control", "id" => "fieldTag"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="fieldSsid" class="col-sm-12 control-label">SSID</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->textField(["fieldSsid", "size" => 60, "class" => "form-control", "id" => "fieldSsid"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="fieldChamado" class="col-sm-12 control-label">Chamado</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->textField(["fieldChamado", "size" => 60, "class" => "form-control", "id" => "fieldChamado"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="id_status" class="col-sm-12 control-label">Status</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->select(["id_status", $statuscircuito, "class" => "form-control", "id" => "id_status",
+                    "using" => ["id", "descricao",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione um Status",
+                    "emptyValue" => ""])
+                ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="uf" class="col-sm-12 control-label">Estado</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->select(["uf", $estados, "class" => "form-control", "id" => "uf",
+                    "using" => ["uf", "estado",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione um Estado",
+                    "emptyValue" => ""])
+                ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="cidade" class="col-sm-12 control-label">Cidade</label>
+            <div class="col-sm-12">
+                <select disabled name="cidade" id="cidade" class="form-control">
+                    <option value="">Selecione uma Cidade</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="id_tipoesfera" class="col-sm-12 control-label">Esfera</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->select(["id_tipoesfera", $esfera, "class" => "form-control", "id" => "id_tipoesfera",
+                    "using" => ["id", "descricao",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione uma esfera",
+                    "emptyValue" => ""])
+                ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="id_setor" class="col-sm-12 control-label">Setor</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->select(["id_setor", $setor, "class" => "form-control", "id" => "id_setor",
+                    "using" => ["id", "descricao",],
+                    "useEmpty" => true,
+                    "emptyText" => "Selecione um setor",
+                    "emptyValue" => ""])
+                ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="fieldDataAtivacao" class="col-sm-12 control-label">Data Ativação</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->textField(["fieldDataAtivacao", "size" => 60, "class" => "form-control input-daterange-datepicker", "id" => "fieldDataAtivacao"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="fieldDataAtualizacao" class="col-sm-12 control-label">Data Atualização</label>
+            <div class="col-sm-12">
+                <?php echo $this->tag->textField(["fieldDataAtualizacao", "size" => 60, "class" => "form-control input-daterange-datepicker", "id" => "fieldDataAtualizacao"]) ?>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            <label for="ordenar_campo" class="col-sm-12 control-label">Campo para ordenar</label>
+            <div class="col-sm-12">
+                <select id="ordenar_campo" class="form-control data-placeholder="Escolher os Campos para ordenar...">
+                <option value="Circuitos.designacao">Designação</option>
+                    <option value="Pessoa1.nome">Cliente</option>
+                    <option value="Pessoa2.nome">Unidade do Cliente</option>
+                    <option value="Circuitos.designacao_anterior">Designação Anterior</option>
+                    <option value="CidadeDigital.descricao">Cidade Digital</option>
+                    <option value="Conectividade.descricao">Conectividade</option>
+                    <option value="Lov7.descricao">Tipo Link</option>
+                    <option value="Lov4.descricao">Função</option>
+                    <option value="Lov5.descricao">Tipo Acesso</option>
+                    <option value="Pessoa3.nome">Fabricante</option>
+                    <option value="Modelo.modelo">Modelo</option>
+                    <option value="Equipamento.nome">Equipamento</option>
+                    <option value="Lov6.descricao">Banda</option>
+                    <option value="Circuitos.tag">TAG</option>
+                    <option value="Circuitos.ssid">SSID</option>
+                    <option value="Circuitos.chamado">Chamado</option>
+                    <option value="Circuitos.data_ativacao">Data Atualização</option>
+                    <option value="Circuitos.data_atualizacao">Data Ativação</option>
+                    <option value="Lov2.descricao">Status</option>
+                    <option value="Circuitos.cidade">Cidade</option>
+                    <option value="Circuitos.uf">Estado</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label for="ordenar_sentido" class="col-sm-12 control-label">Sentido</label>
+            <div class="col-sm-12">
+                <select id="ordenar_sentido" class="form-control data-placeholder="Escolher o sentido para ordenar...">
+                <option value="ASC">Ascendente</option>
+                <option value="DESC">Descendente</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-md-2">
+            <div class="bt_menu_tabela">
+                <button title="Gerar Relatório" id="gerar_relatorio" type="button" class="btn btn-success waves-effect waves-light"> <i class="fa fa-rocket m-r-5"></i> <span>Gerar</span> </button>
+            </div>
+        </div>
+    </div>
+    <?php echo $this->tag->endForm(); ?>
+</div>

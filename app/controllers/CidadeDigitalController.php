@@ -9,8 +9,9 @@ use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Phalcon\Http\Response as Response;
 
 use Circuitos\Models\CidadeDigital;
-use Circuitos\Models\Lov;
+use Circuitos\Models\Conectividade;
 use Circuitos\Models\EndCidade;
+use Circuitos\Models\Lov;
 
 use Auth\Autentica;
 use Util\Util;
@@ -46,30 +47,11 @@ class CidadeDigitalController extends ControllerBase
      */
     public function indexAction()
     {
-        $this->persistent->parameters = null;
         $numberPage = 1;
         $dados = filter_input_array(INPUT_POST);
 
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Circuitos\Models\CidadeDigital", $dados);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
+        $cidadedigital = CidadeDigital::pesquisarCidadeDigital($dados["pesquisa"]);
 
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-            $parameters["order"] = "[id] DESC";
-            $parameters['conditions'] = ' excluido = :excluido:';
-            $parameters['bind']['excluido'] = 0;
-        } else {
-            $parameters["order"] = "[id] DESC";
-            $parameters['conditions'] .= ' AND excluido = :excluido:';
-            $parameters['bind']['excluido'] = 0;
-        }
-
-        $cidadedigital = CidadeDigital::find($parameters);
         $cidades = EndCidade::find(array(
             "uf='PA'",
             "order" => "cidade"
@@ -95,15 +77,16 @@ class CidadeDigitalController extends ControllerBase
         $response = new Response();
         $dados = filter_input_array(INPUT_GET);
         $cidadedigital = CidadeDigital::findFirst("id={$dados["id_cidadedigital"]}");
+        $conectividades = Conectividade::buscaCompletaConectividade($cidadedigital->getId());
         $dados = array(
             "id" => $cidadedigital->getId(),
-            "id_tipo" => $cidadedigital->getIdTipo(),
             "id_cidade" => $cidadedigital->getIdCidade(),
-            "descricao" => $cidadedigital->getDescricao(),
-            "endereco" => $cidadedigital->getEndereco()
+            "cidade" => $cidadedigital->EndCidade->Cidade,
+            "descricao" => $cidadedigital->getDescricao()
         );
         $response->setContent(json_encode(array(
-            "dados" => $dados
+            "dados" => $dados,
+            "conectividades" => $conectividades
         )));
         return $response;
     }
@@ -119,17 +102,39 @@ class CidadeDigitalController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados["dados"], $params);
+
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             try {
                 $cidadedigital = new CidadeDigital();
                 $cidadedigital->setTransaction($transaction);
-                $cidadedigital->setIdTipo($params["id_tipo"]);
                 $cidadedigital->setIdCidade($params["id_cidade"]);
                 $cidadedigital->setDescricao(mb_strtoupper($params["descricao"], $this->encode));
-                $cidadedigital->setEndereco($params["endereco"]);
                 if ($cidadedigital->save() == false) {
-                    $transaction->rollback("Não foi possível salvar o cidadedigital!");
+                    $messages = $cidadedigital->getMessages();
+                    $errors = '';
+                    for ($i = 0; $i < count($messages); $i++) {
+                        $errors .= '['.$messages[$i].'] ';
+                    }
+                    $transaction->rollback('Erro ao criar a cidade digital: ' . $errors);
+                }
+                if (!empty($params["tipo_conectividade"])) {
+                    foreach($params["tipo_conectividade"] as $key => $tipo_conectividade){
+                        $conectividade = new Conectividade();
+                        $conectividade->setTransaction($transaction);
+                        $conectividade->setIdCidadeDigital($cidadedigital->getId());
+                        $conectividade->setIdTipo($tipo_conectividade);
+                        $conectividade->setDescricao(mb_strtoupper($params["conectividade"][$key], $this->encode));
+                        $conectividade->setEndereco(mb_strtoupper($params["endereco"][$key], $this->encode));
+                        if ($conectividade->save() == false) {
+                            $messages = $conectividade->getMessages();
+                            $errors = '';
+                            for ($i = 0; $i < count($messages); $i++) {
+                                $errors .= '['.$messages[$i].'] ';
+                            }
+                            $transaction->rollback('Erro ao criar a conectividade: ' . $errors);
+                        }
+                    }
                 }
                 //Commita a transação
                 $transaction->commit();
@@ -169,12 +174,33 @@ class CidadeDigitalController extends ControllerBase
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             try {
                 $cidadedigital->setTransaction($transaction);
-                $cidadedigital->setIdTipo($params["id_tipo"]);
                 $cidadedigital->setIdCidade($params["id_cidade"]);
                 $cidadedigital->setDescricao(mb_strtoupper($params["descricao"], $this->encode));
-                $cidadedigital->setEndereco($params["endereco"]);
                 if ($cidadedigital->save() == false) {
-                    $transaction->rollback("Não foi possível editar o cidadedigital!");
+                    $messages = $cidadedigital->getMessages();
+                    $errors = '';
+                    for ($i = 0; $i < count($messages); $i++) {
+                        $errors .= '['.$messages[$i].'] ';
+                    }
+                    $transaction->rollback('Erro ao criar a cidade digital: ' . $errors);
+                }
+                if (!empty($params["tipo_conectividade"])) {
+                    foreach($params["tipo_conectividade"] as $key => $tipo_conectividade){
+                        $conectividade = new Conectividade();
+                        $conectividade->setTransaction($transaction);
+                        $conectividade->setIdCidadeDigital($cidadedigital->getId());
+                        $conectividade->setIdTipo($tipo_conectividade);
+                        $conectividade->setDescricao(mb_strtoupper($params["conectividade"][$key], $this->encode));
+                        $conectividade->setEndereco(mb_strtoupper($params["endereco"][$key], $this->encode));
+                        if ($conectividade->save() == false) {
+                            $messages = $conectividade->getMessages();
+                            $errors = '';
+                            for ($i = 0; $i < count($messages); $i++) {
+                                $errors .= '['.$messages[$i].'] ';
+                            }
+                            $transaction->rollback('Erro ao criar a conectividade: ' . $errors);
+                        }
+                    }
                 }
                 //Commita a transação
                 $transaction->commit();
@@ -316,6 +342,36 @@ class CidadeDigitalController extends ControllerBase
             $response->setContent(json_encode(array(
                 "operacao" => False,
                 "mensagem" => "Check de formulário inválido!"
+            )));
+            return $response;
+        }
+    }
+
+    public function deletarConectividadeAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $dados = filter_input_array(INPUT_POST);
+        try {
+            $conectividade = Conectividade::findFirst("id={$dados["id"]}");
+            $conectividade->setTransaction($transaction);
+            $conectividade->setExcluido(1);
+            if ($conectividade->save() == false) {
+                $transaction->rollback("Não foi possível editar a conectividade!");
+            }
+                //Commita a transação
+            $transaction->commit();
+            $response->setContent(json_encode(array(
+                "operacao" => True
+            )));
+            return $response;
+        } catch (TxFailed $e) {
+            $response->setContent(json_encode(array(
+                "operacao" => False,
+                "message" => "Ocorreu um erro ao tentar apagar o registro, por favor, tente novamente!"
             )));
             return $response;
         }

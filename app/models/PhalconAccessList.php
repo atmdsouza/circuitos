@@ -24,6 +24,12 @@ class PhalconAccessList extends \Phalcon\Mvc\Model
     protected $resources_name;
 
     /**
+     *
+     * @var string
+     */
+    protected $allowed;
+
+    /**
      * Method to set the value of field access_name
      *
      * @param string $access_name
@@ -60,6 +66,22 @@ class PhalconAccessList extends \Phalcon\Mvc\Model
         $this->resources_name = $resources_name;
 
         return $this;
+    }
+
+    /**
+     * @param string $allowed
+     */
+    public function setAllowed($allowed)
+    {
+        $this->allowed = $allowed;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAllowed()
+    {
+        return $this->allowed;
     }
 
     /**
@@ -147,7 +169,8 @@ class PhalconAccessList extends \Phalcon\Mvc\Model
         return [
             'access_name' => 'access_name',
             'roles_name' => 'roles_name',
-            'resources_name' => 'resources_name'
+            'resources_name' => 'resources_name',
+            'allowed' => 'allowed'
         ];
     }
 

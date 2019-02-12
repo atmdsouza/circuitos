@@ -14,7 +14,6 @@ use Circuitos\Models\Fabricante;
 use Circuitos\Models\Lov;
 
 use Auth\Autentica;
-use Util\Util;
 use Util\TokenManager;
 
 class EquipamentoController extends ControllerBase
@@ -47,26 +46,9 @@ class EquipamentoController extends ControllerBase
      */
     public function indexAction()
     {
-        $this->persistent->parameters = null;
         $numberPage = 1;
         $dados = filter_input_array(INPUT_POST);
-
-        if ($this->request->isPost()) {
-            $query = Criteria::fromInput($this->di, "Circuitos\Models\Equipamento", $dados);
-            $this->persistent->parameters = $query->getParams();
-        } else {
-            $numberPage = $this->request->getQuery("page", "int");
-        }
-
-        $parameters = $this->persistent->parameters;
-        if (!is_array($parameters)) {
-            $parameters = [];
-            $parameters["order"] = "[id] DESC";
-        } else {
-            $parameters["order"] = "[id] DESC";
-        }
-        $numberPage = 1;
-        $equipamento = Equipamento::find($parameters);
+        $equipamento = Equipamento::pesquisarEquipamentos($dados["pesquisa"]);
         $tipoequipamento = Lov::find(array(
             "tipo = 15",
             "order" => "descricao"
@@ -332,6 +314,38 @@ class EquipamentoController extends ControllerBase
                 "operacao" => False,
                 "mensagem" => "Você precisa selecionar um fabricante!"
             )));
+            return $response;
+        }
+    }
+
+    public function validaNumeroSerieAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        $equipamento = Equipamento::findFirst("numserie={$dados["numserie"]}");
+        if ($equipamento) {
+            $response->setContent(json_encode(True));
+            return $response;
+        } else {
+            $response->setContent(json_encode(False));
+            return $response;
+        }
+    }
+
+    public function validaNumeroPatrimonioAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        $equipamento = Equipamento::findFirst("numpatrimonio={$dados["numpatrimonio"]}");
+        if ($equipamento) {
+            $response->setContent(json_encode(True));
+            return $response;
+        } else {
+            $response->setContent(json_encode(False));
             return $response;
         }
     }

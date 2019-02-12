@@ -2,6 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
+
 class Modelo extends \Phalcon\Mvc\Model
 {
 
@@ -191,6 +194,41 @@ class Modelo extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de modelos, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return Modelo|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarModelos($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("Modelo" => "Circuitos\Models\Modelo"));
+        $query->columns("Modelo.*");
+
+        $query->leftJoin("Circuitos\Models\Fabricante", "Fabricante.id = Modelo.id_fabricante", "Fabricante");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa2.id = Fabricante.id_pessoa", "Pessoa2");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa2.id = PessoaJuridica2.id", "PessoaJuridica2");
+        $query->leftJoin("Circuitos\Models\PessoaFisica", "Pessoa2.id = PessoaFisica2.id", "PessoaFisica2");
+        $query->leftJoin("Circuitos\Models\PessoaEndereco", "Pessoa2.id = PessoaEndereco2.id_pessoa", "PessoaEndereco2");
+
+        $query->where("(CONVERT(Modelo.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Modelo.modelo USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Modelo.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa2.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica2.cnpj USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica2.razaosocial USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica2.sigla USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaEndereco2.cidade USING utf8) LIKE '%{$parameters}%')");
+
+        $query->groupBy("Modelo.id");
+
+        $query->orderBy("Modelo.id DESC");
+
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
     /**

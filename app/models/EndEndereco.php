@@ -244,8 +244,8 @@ class EndEndereco extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("end_endereco");
-        $this->belongsTo('id_cidade', 'Circuitos\Models\EndCidade', 'id_cidade', ['alias' => 'EndCidade']);
-        $this->belongsTo('id_bairro', 'Circuitos\Models\EndBairro', 'id_bairro', ['alias' => 'EndBairro']);
+        $this->belongsTo("id_cidade", "Circuitos\Models\EndCidade", "id_cidade", ["alias" => "EndCidade"]);
+        $this->belongsTo("id_bairro", "Circuitos\Models\EndBairro", "id_bairro", ["alias" => "EndBairro"]);
     }
 
     /**
@@ -255,7 +255,7 @@ class EndEndereco extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'end_endereco';
+        return "end_endereco";
     }
 
     /**
@@ -289,14 +289,14 @@ class EndEndereco extends \Phalcon\Mvc\Model
     public function columnMap()
     {
         return [
-            'id' => 'id',
-            'cep' => 'cep',
-            'logradouro' => 'logradouro',
-            'tipo_logradouro' => 'tipo_logradouro',
-            'complemento' => 'complemento',
-            'local' => 'local',
-            'id_cidade' => 'id_cidade',
-            'id_bairro' => 'id_bairro'
+            "id" => "id",
+            "cep" => "cep",
+            "logradouro" => "logradouro",
+            "tipo_logradouro" => "tipo_logradouro",
+            "complemento" => "complemento",
+            "local" => "local",
+            "id_cidade" => "id_cidade",
+            "id_bairro" => "id_bairro"
         ];
     }
 

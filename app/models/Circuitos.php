@@ -2,6 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
+
 class Circuitos extends \Phalcon\Mvc\Model
 {
 
@@ -82,6 +85,12 @@ class Circuitos extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $id_cidadedigital;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $id_conectividade;
 
     /**
      *
@@ -498,6 +507,24 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @param int $id_conectividade
+     */
+    public function setIdConectividade($id_conectividade)
+    {
+        $this->id_conectividade = $id_conectividade;
+    }
+
+    /**
+     * Returns the value of field id_conectividade
+     *
+     * @return int
+     */
+    public function getIdConectividade()
+    {
+        return $this->id_conectividade;
+    }
+
+    /**
      * Returns the value of field id
      *
      * @return integer
@@ -774,6 +801,7 @@ class Circuitos extends \Phalcon\Mvc\Model
         $this->belongsTo("id_funcao", "Circuitos\Models\Lov", "id", ["alias" => "Lov5"]);
         $this->belongsTo("id_tipolink", "Circuitos\Models\Lov", "id", ["alias" => "Lov6"]);
         $this->belongsTo("id_cidadedigital", "Circuitos\Models\CidadeDigital", "id", ["alias" => "CidadeDigital"]);
+        $this->belongsTo("id_conectividade", "Circuitos\Models\Conectividade", "id", ["alias" => "Conectividade"]);
     }
 
     /**
@@ -809,6 +837,315 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Consulta completa de circuitos, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return Circuitos|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarCircuitos($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
+        $query->columns("Circuitos.*");
+
+        $query->leftJoin("Circuitos\Models\Cliente", "Cliente.id = Circuitos.id_cliente", "Cliente");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa1.id = Cliente.id_pessoa", "Pessoa1");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa1.id = PessoaJuridica1.id", "PessoaJuridica1");
+        $query->leftJoin("Circuitos\Models\ClienteUnidade", "ClienteUnidade.id = Circuitos.id_cliente_unidade", "ClienteUnidade");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa2.id = ClienteUnidade.id_pessoa", "Pessoa2");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa2.id = PessoaJuridica2.id", "PessoaJuridica2");
+        $query->leftJoin("Circuitos\Models\Equipamento", "Circuitos.id_equipamento = Equipamento.id", "Equipamento");
+        $query->leftJoin("Circuitos\Models\Modelo", "Equipamento.id_modelo = Modelo.id", "Modelo");
+        $query->leftJoin("Circuitos\Models\Fabricante", "Modelo.id_fabricante = Fabricante.id", "Fabricante");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa3.id = Fabricante.id_pessoa", "Pessoa3");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa3.id = PessoaJuridica3.id", "PessoaJuridica3");
+        $query->leftJoin("Circuitos\Models\CidadeDigital", "Circuitos.id_cidadedigital = CidadeDigital.id", "CidadeDigital");
+        $query->leftJoin("Circuitos\Models\Conectividade", "Circuitos.id_conectividade = Conectividade.id", "Conectividade");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_contrato = Lov1.id", "Lov1");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_status = Lov2.id", "Lov2");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_cluster = Lov3.id", "Lov3");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_funcao = Lov4.id", "Lov4");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_tipoacesso = Lov5.id", "Lov5");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_banda = Lov6.id", "Lov6");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_tipolink = Lov7.id", "Lov7");
+
+        $query->where("Circuitos.excluido = 0 AND (CONVERT(Circuitos.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa1.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa2.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica1.razaosocial USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica2.razaosocial USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Equipamento.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Equipamento.numserie USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Equipamento.numpatrimonio USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Modelo.modelo USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa3.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov1.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov2.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov3.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov4.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov5.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov6.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov7.descricao USING utf8) LIKE '%{$parameters}%'                        
+                        OR CONVERT(CidadeDigital.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Conectividade.descricao USING utf8) LIKE '%{$parameters}%'                        
+                        OR CONVERT(Circuitos.designacao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.designacao_anterior USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.uf USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.cidade USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.ssid USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.ip_gerencia USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.ip_redelocal USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.tag USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Circuitos.chamado USING utf8) LIKE '%{$parameters}%')");
+
+        $query->groupBy("Circuitos.id");
+
+        $query->orderBy("Circuitos.id DESC");
+
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta completa de circuitos para a geração de relatórios, incluíndo os joins de tabelas e filtros
+     *
+     * @param string $parameters
+     * @return Circuitos|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarRelatorioCircuitos($colunas, $where, $orderby)
+    {
+        $query = new Builder();
+        $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
+        $query->columns($colunas);
+
+        $query->leftJoin("Circuitos\Models\Cliente", "Cliente.id = Circuitos.id_cliente", "Cliente");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa1.id = Cliente.id_pessoa", "Pessoa1");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa1.id = PessoaJuridica1.id", "PessoaJuridica1");
+        $query->leftJoin("Circuitos\Models\Lov", "PessoaJuridica1.id_tipoesfera = Love.id", "Love");
+        $query->leftJoin("Circuitos\Models\Lov", "PessoaJuridica1.id_setor = Lovs.id", "Lovs");
+        $query->leftJoin("Circuitos\Models\ClienteUnidade", "ClienteUnidade.id = Circuitos.id_cliente_unidade", "ClienteUnidade");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa2.id = ClienteUnidade.id_pessoa", "Pessoa2");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa2.id = PessoaJuridica2.id", "PessoaJuridica2");
+        $query->leftJoin("Circuitos\Models\Equipamento", "Circuitos.id_equipamento = Equipamento.id", "Equipamento");
+        $query->leftJoin("Circuitos\Models\Modelo", "Equipamento.id_modelo = Modelo.id", "Modelo");
+        $query->leftJoin("Circuitos\Models\Fabricante", "Modelo.id_fabricante = Fabricante.id", "Fabricante");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa3.id = Fabricante.id_pessoa", "Pessoa3");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa3.id = PessoaJuridica3.id", "PessoaJuridica3");
+        $query->leftJoin("Circuitos\Models\CidadeDigital", "Circuitos.id_cidadedigital = CidadeDigital.id", "CidadeDigital");
+        $query->leftJoin("Circuitos\Models\Conectividade", "Circuitos.id_conectividade = Conectividade.id", "Conectividade");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_contrato = Lov1.id", "Lov1");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_status = Lov2.id", "Lov2");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_funcao = Lov4.id", "Lov4");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_tipoacesso = Lov5.id", "Lov5");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_banda = Lov6.id", "Lov6");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_tipolink = Lov7.id", "Lov7");
+
+        $query->where($where);
+        $query->orderBy($orderby);
+
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta completa de circuitos para a geração de relatórios, incluíndo os joins de tabelas e sem filtros
+     *
+     * @param string $parameters
+     * @return Circuitos|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarRelatorioCircuitosSF($colunas, $orderby)
+    {
+        $query = new Builder();
+        $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
+        $query->columns($colunas);
+
+        $query->leftJoin("Circuitos\Models\Cliente", "Cliente.id = Circuitos.id_cliente", "Cliente");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa1.id = Cliente.id_pessoa", "Pessoa1");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa1.id = PessoaJuridica1.id", "PessoaJuridica1");
+        $query->leftJoin("Circuitos\Models\ClienteUnidade", "ClienteUnidade.id = Circuitos.id_cliente_unidade", "ClienteUnidade");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa2.id = ClienteUnidade.id_pessoa", "Pessoa2");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa2.id = PessoaJuridica2.id", "PessoaJuridica2");
+        $query->leftJoin("Circuitos\Models\Equipamento", "Circuitos.id_equipamento = Equipamento.id", "Equipamento");
+        $query->leftJoin("Circuitos\Models\Modelo", "Equipamento.id_modelo = Modelo.id", "Modelo");
+        $query->leftJoin("Circuitos\Models\Fabricante", "Modelo.id_fabricante = Fabricante.id", "Fabricante");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa3.id = Fabricante.id_pessoa", "Pessoa3");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa3.id = PessoaJuridica3.id", "PessoaJuridica3");
+        $query->leftJoin("Circuitos\Models\CidadeDigital", "Circuitos.id_cidadedigital = CidadeDigital.id", "CidadeDigital");
+        $query->leftJoin("Circuitos\Models\Conectividade", "Circuitos.id_conectividade = Conectividade.id", "Conectividade");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_contrato = Lov1.id", "Lov1");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_status = Lov2.id", "Lov2");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_funcao = Lov4.id", "Lov4");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_tipoacesso = Lov5.id", "Lov5");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_banda = Lov6.id", "Lov6");
+        $query->leftJoin("Circuitos\Models\Lov", "Circuitos.id_tipolink = Lov7.id", "Lov7");
+
+        $query->orderBy($orderby);
+
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta para gráfico de circuitos por status
+     *
+     * @return Circuitos|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function circuitoStatus()
+    {
+        $query = new Builder();
+        $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
+        $query->columns("Lov.descricao AS status, COUNT(Circuitos.id_status) AS total");
+        $query->innerJoin("Circuitos\Models\Lov", "Lov.id = Circuitos.id_status", "Lov");
+        $query->where("Circuitos.excluido = 0");
+        $query->groupBy("Lov.descricao");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta para gráfico de circuitos por status no mês
+     *
+     * @return Circuitos|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function circuitoStatusMes($dt_inicial, $dt_final)
+    {
+        $query = new Builder();
+        $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
+        $query->columns("Lov.descricao AS status, COUNT(Circuitos.id_status) AS total");
+        $query->innerJoin("Circuitos\Models\Lov", "Lov.id = Circuitos.id_status", "Lov");
+        $query->innerJoin("Circuitos\Models\Movimentos", "Circuitos.id = Movimentos.id_circuitos", "Movimentos");
+        $query->where("Circuitos.excluido = 0 AND Movimentos.id_tipomovimento=64 AND Movimentos.data_movimento BETWEEN '{$dt_inicial} 00:00:00' AND '{$dt_final} 23:59:59'");
+        $query->groupBy("Lov.descricao");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta para gráfico de circuitos por função
+     *
+     * @return Circuitos|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function circuitoFuncao()
+    {
+        $query = new Builder();
+        $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
+        $query->columns("Lov.descricao AS funcao, COUNT(Circuitos.id_funcao) AS total");
+        $query->innerJoin("Circuitos\Models\Lov", "Lov.id = Circuitos.id_funcao", "Lov");
+        $query->where("Circuitos.excluido = 0");
+        $query->groupBy("Lov.descricao");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta para gráfico de circuitos por acesso
+     *
+     * @return Circuitos|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function circuitoAcesso()
+    {
+        $query = new Builder();
+        $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
+        $query->columns("Lov.descricao AS acesso, COUNT(Circuitos.id_tipoacesso) AS total");
+        $query->innerJoin("Circuitos\Models\Lov", "Lov.id = Circuitos.id_tipoacesso", "Lov");
+        $query->where("Circuitos.excluido = 0");
+        $query->groupBy("Lov.descricao");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta para gráfico de circuitos por link
+     *
+     * @return Circuitos|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function circuitoLink()
+    {
+        $query = new Builder();
+        $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
+        $query->columns("Lov.descricao AS link, COUNT(Circuitos.id_tipolink) AS total");
+        $query->innerJoin("Circuitos\Models\Lov", "Lov.id = Circuitos.id_tipolink", "Lov");
+        $query->where("Circuitos.excluido = 0");
+        $query->groupBy("Lov.descricao");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta para gráfico de circuitos por link no mês
+     *
+     * @return Circuitos|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function circuitoLinkMes($dt_inicial, $dt_final)
+    {
+        $query = new Builder();
+        $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
+        $query->columns("Lov.descricao AS link, COUNT(Circuitos.id_tipolink) AS total");
+        $query->innerJoin("Circuitos\Models\Lov", "Lov.id = Circuitos.id_tipolink", "Lov");
+        $query->where("Circuitos.excluido = 0 AND Circuitos.data_ativacao BETWEEN '{$dt_inicial} 00:00:00' AND '{$dt_final} 23:59:59'");
+        $query->groupBy("Lov.descricao");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta para gráfico de circuitos por esfera
+     *
+     * @return Circuitos|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function circuitoEsfera()
+    {
+        $query = new Builder();
+        $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
+        $query->columns("Lov.descricao AS cliente_esfera, count(PessoaJuridica.id_tipoesfera) AS total");
+        $query->innerJoin("Circuitos\Models\Cliente", "Cliente.id = Circuitos.id_cliente", "Cliente");
+        $query->innerJoin("Circuitos\Models\Pessoa", "Pessoa.id = Cliente.id_pessoa", "Pessoa");
+        $query->innerJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Pessoa.id", "PessoaJuridica");
+        $query->innerJoin("Circuitos\Models\Lov", "Lov.id = PessoaJuridica.id_tipoesfera", "Lov");
+        $query->where("Circuitos.excluido = 0");
+        $query->groupBy("Lov.descricao");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta para gráfico de circuitos por conectividade
+     *
+     * @return Circuitos|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function circuitoConectividade()
+    {
+        $query = new Builder();
+        $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
+        $query->columns("Lov.descricao AS conectividade, COUNT(Circuitos.id_conectividade) AS total");
+        $query->innerJoin("Circuitos\Models\Conectividade", "Conectividade.id = Circuitos.id_conectividade", "Conectividade");
+        $query->innerJoin("Circuitos\Models\Lov", "Lov.id = Conectividade.id_tipo", "Lov");
+        $query->where("Circuitos.excluido = 0");
+        $query->groupBy("Lov.descricao");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta para gráfico de hotzones por cidade
+     *
+     * @return Circuitos|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function circuitoHotzoneCidade()
+    {
+        $query = new Builder();
+        $query->from(array("Circuitos" => "Circuitos\Models\Circuitos"));
+        $query->columns("EndCidade.cidade AS descricao, COUNT(Circuitos.id) AS total");
+        $query->innerJoin("Circuitos\Models\Lov", "Lov.id = Circuitos.id_funcao", "Lov");
+        $query->innerJoin("Circuitos\Models\CidadeDigital", "Circuitos.id_cidadedigital = CidadeDigital.id", "CidadeDigital");
+        $query->innerJoin("Circuitos\Models\EndCidade", "CidadeDigital.id_cidade = EndCidade.id", "EndCidade");
+        $query->where("Circuitos.excluido = 0 AND Circuitos.id_funcao = 8");
+        $query->groupBy("EndCidade.cidade");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
      * Independent Column Mapping.
      * Keys are the real names in the table and the values their names in the application
      *
@@ -827,6 +1164,7 @@ class Circuitos extends \Phalcon\Mvc\Model
             'id_tipoacesso' => 'id_tipoacesso',
             'id_tipolink' => 'id_tipolink',
             'id_cidadedigital' => 'id_cidadedigital',
+            'id_conectividade' => 'id_conectividade',
             'id_funcao' => 'id_funcao',
             'id_banda' => 'id_banda',
             'designacao' => 'designacao',
