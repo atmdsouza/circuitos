@@ -55,7 +55,7 @@ class UsuarioController extends ControllerBase
         $numberPage = 1;
         $dados = filter_input_array(INPUT_POST);
         $usuarios = Usuario::pesquisarUsuarios($dados["pesquisa"]);
-        $roles = PhalconRoles::find();
+        $roles = PhalconRoles::find("excluido=0");
         $paginator = new Paginator([
             'data' => $usuarios,
             'limit'=> 100,

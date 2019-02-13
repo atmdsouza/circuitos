@@ -202,7 +202,7 @@ $("#cep").on("change", function(){
     };
 })(jQuery);
 
-var valCON = [];
+// var valCON = [];
 $("#add_contato").on("click", function(){
     var id_tipocontato = $("#id_tipocontato_t").val();
     var id_tipocontato_desc = document.getElementById("id_tipocontato_t").options[document.getElementById("id_tipocontato_t").selectedIndex].text;
@@ -212,105 +212,105 @@ $("#add_contato").on("click", function(){
     var principal = $("#principal_contato_t").val();
     var eprincipal = principal == "1" ? "Sim" : "Não";
 
-    if ($.inArray(nome_contato, valCON) == -1) {
-        valCON.push(nome_contato);
-        if (id_tipocontato && nome_contato && principal !== "") {
-            var linhas = null;
-            linhas += "<tr class='tr_remove'>";
-            linhas += "<td>"+ eprincipal +"<input name='principal_contato[]' type='hidden' value='"+ principal +"' /></td>";
-            linhas += "<td>"+ id_tipocontato_desc +"<input name='tipo_contato[]' type='hidden' value='"+ id_tipocontato +"' /></td>";
-            linhas += "<td>"+ nome_contato +"<input name='nome_contato[]' type='hidden' value='"+ nome_contato +"' /></td>";
-            linhas += "<td>"+ telefone_contato +"<input name='telefone_contato[]' type='hidden' value='"+ telefone_contato +"' /></td>";
-            linhas += "<td>"+ email_contato +"<input name='email_contato[]' type='hidden' value='"+ email_contato +"' /></td>";
-            linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
-            linhas += "</tr>";
-            $("#tb_contato").append(linhas);
-            $('#tb_contato').show();
-            limpaContato();
-        } else {
-            swal({
-                title: "Contato da Unidade",
-                text: "Você precisa preencher corretamente os campos do contato!",
-                type: "warning"
-            });
-        }
+    // if ($.inArray(nome_contato, valCON) == -1) {
+    //     valCON.push(nome_contato);
+    if (id_tipocontato && nome_contato && principal !== "") {
+        var linhas = null;
+        linhas += "<tr class='tr_remove'>";
+        linhas += "<td>"+ eprincipal +"<input name='principal_contato[]' type='hidden' value='"+ principal +"' /></td>";
+        linhas += "<td>"+ id_tipocontato_desc +"<input name='tipo_contato[]' type='hidden' value='"+ id_tipocontato +"' /></td>";
+        linhas += "<td>"+ nome_contato +"<input name='nome_contato[]' type='hidden' value='"+ nome_contato +"' /></td>";
+        linhas += "<td>"+ telefone_contato +"<input name='telefone_contato[]' type='hidden' value='"+ telefone_contato +"' /></td>";
+        linhas += "<td>"+ email_contato +"<input name='email_contato[]' type='hidden' value='"+ email_contato +"' /></td>";
+        linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
+        linhas += "</tr>";
+        $("#tb_contato").append(linhas);
+        $('#tb_contato').show();
+        limpaContato();
     } else {
         swal({
             title: "Contato da Unidade",
-            text: "Esse contato já existe na tabela abaixo!",
+            text: "Você precisa preencher corretamente os campos do contato!",
             type: "warning"
         });
     }
+    // } else {
+    //     swal({
+    //         title: "Contato da Unidade",
+    //         text: "Esse contato já existe na tabela abaixo!",
+    //         type: "warning"
+    //     });
+    // }
 });
 
-var valTEL = [];
+// var valTEL = [];
 $("#insert_telefone").on("click", function(){
     var telefone = $("#telefone_t").val();
     var principal = $("#princtel_t").val();
     var eprincipal = principal == "1" ? "Sim" : "Não";
 
-    if ($.inArray(telefone, valTEL) == -1) {
-        valTEL.push(telefone);
-        if (telefone && principal !== "") {
-            var linhas = null;
-            linhas += "<tr class='tr_remove'>";
-            linhas += "<td>"+ eprincipal +"<input name='principal_tel[]' type='hidden' value='"+ principal +"' /></td>";
-            linhas += "<td>"+ telefone +"<input name='telefone[]' type='hidden' value='"+ telefone +"' /></td>";
-            linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
-            linhas += "</tr>";
-            $("#tb_telefone").append(linhas);
-            $('#tb_telefone').show();
-            $("#telefone_t").val(null);
-            $("#princtel_t").val(null).selected = "true";
-        } else {
-            swal({
-                title: "Contatos do Cliente",
-                text: "Você precisa preencher corretamente os campos do telefone!",
-                type: "warning"
-            });
-        }
+    // if ($.inArray(telefone, valTEL) == -1) {
+    //     valTEL.push(telefone);
+    if (telefone && principal !== "") {
+        var linhas = null;
+        linhas += "<tr class='tr_remove'>";
+        linhas += "<td>"+ eprincipal +"<input name='principal_tel[]' type='hidden' value='"+ principal +"' /></td>";
+        linhas += "<td>"+ telefone +"<input name='telefone[]' type='hidden' value='"+ telefone +"' /></td>";
+        linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
+        linhas += "</tr>";
+        $("#tb_telefone").append(linhas);
+        $('#tb_telefone').show();
+        $("#telefone_t").val(null);
+        $("#princtel_t").val(null).selected = "true";
     } else {
         swal({
-            title: "Endereço do Cliente",
-            text: "Esse telefone já existe na tabela abaixo!",
+            title: "Contatos do Cliente",
+            text: "Você precisa preencher corretamente os campos do telefone!",
             type: "warning"
         });
     }
+    // } else {
+    //     swal({
+    //         title: "Endereço do Cliente",
+    //         text: "Esse telefone já existe na tabela abaixo!",
+    //         type: "warning"
+    //     });
+    // }
 });
 
-var valEML = [];
+// var valEML = [];
 $("#insert_email").on("click", function(){
     var email = $("#email_t").val();
     var principal = $("#princemail_t").val();
     var eprincipal = principal == "1" ? "Sim" : "Não";
 
-    if ($.inArray(email, valEML) == -1) {
-        valEML.push(email);
-        if (email && principal !== "") {
-            var linhas = null;
-            linhas += "<tr class='tr_remove'>";
-            linhas += "<td>"+ eprincipal +"<input name='principal_email[]' type='hidden' value='"+ principal +"' /></td>";
-            linhas += "<td>"+ email +"<input name='email_pf[]' type='hidden' value='"+ email +"' /></td>";
-            linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
-            linhas += "</tr>";
-            $("#tb_email").append(linhas);
-            $('#tb_email').show();
-            $("#email_t").val(null);
-            $("#princemail_t").val(null).selected = "true";
-        } else {
-            swal({
-                title: "Contatos do Cliente",
-                text: "Você precisa preencher corretamente os campos do e-mail!",
-                type: "warning"
-            });
-        }
+    // if ($.inArray(email, valEML) == -1) {
+    //     valEML.push(email);
+    if (email && principal !== "") {
+        var linhas = null;
+        linhas += "<tr class='tr_remove'>";
+        linhas += "<td>"+ eprincipal +"<input name='principal_email[]' type='hidden' value='"+ principal +"' /></td>";
+        linhas += "<td>"+ email +"<input name='email_pf[]' type='hidden' value='"+ email +"' /></td>";
+        linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
+        linhas += "</tr>";
+        $("#tb_email").append(linhas);
+        $('#tb_email').show();
+        $("#email_t").val(null);
+        $("#princemail_t").val(null).selected = "true";
     } else {
         swal({
-            title: "Endereço do Cliente",
-            text: "Esse e-mail já existe na tabela abaixo!",
+            title: "Contatos do Cliente",
+            text: "Você precisa preencher corretamente os campos do e-mail!",
             type: "warning"
         });
     }
+    // } else {
+    //     swal({
+    //         title: "Endereço do Cliente",
+    //         text: "Esse e-mail já existe na tabela abaixo!",
+    //         type: "warning"
+    //     });
+    // }
 });
 
 $(".email_val").on("change", function(){

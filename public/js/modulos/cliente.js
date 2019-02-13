@@ -229,7 +229,7 @@ $("#cep_t").on("change", function(){
     };
 })(jQuery);
 
-var valCEP = [];
+// var valCEP = [];
 $("#insert_endereco").on("click", function(){
     var sigla_uf = $("#sigla_uf_t").val();
     var tipoendereco = $("#tipoendereco_t").val();
@@ -244,43 +244,43 @@ $("#insert_endereco").on("click", function(){
     var principal = $("#principal_t").val();
     var eprincipal = principal == "1" ? "Sim" : "Não";
 
-    if ($.inArray(cep, valCEP) == -1) {
-        valCEP.push(cep);
-        if (tipoendereco != 0 && cep && endereco && numero && cidade && principal !== "") {
-            var linhas = null;
-            linhas += "<tr class='tr_remove'>";
-            linhas += "<td style='display: none;'>" + sigla_uf + "<input name='sigla_uf[]' type='hidden' value='" + sigla_uf + "' /></td>";
-            linhas += "<td>"+ eprincipal +"<input name='principal_end[]' type='hidden' value='"+ principal +"' /></td>";
-            linhas += "<td>"+ tipoendereco_desc +"<input name='tipoendereco[]' type='hidden' value='"+ tipoendereco +"' /></td>";
-            linhas += "<td>"+ cep +"<input name='cep[]' type='hidden' value='"+ cep +"' /></td>";
-            linhas += "<td>"+ endereco +"<input name='endereco[]' type='hidden' value='"+ endereco +"' /></td>";
-            linhas += "<td style='display: none;'>"+ numero +"<input name='numero[]' type='hidden' value='"+ numero +"' /></td>";
-            linhas += "<td style='display: none;'>"+ bairro +"<input name='bairro[]' type='hidden' value='"+ bairro +"' /></td>";
-            linhas += "<td>"+ cidade +"<input name='cidade[]' type='hidden' value='"+ cidade +"' /></td>";
-            linhas += "<td>"+ estado +"<input name='estado[]' type='hidden' value='"+ estado +"' /></td>";
-            linhas += "<td style='display: none;'>"+ complemento +"<input name='complemento[]' type='hidden' value='"+ complemento +"' /></td>";
-            linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
-            linhas += "</tr>";
-            $("#tb_endereco").append(linhas);
-            $("#tb_endereco").show();
-            limpaEndereco();
-        } else {
-            swal({
-                title: "Endereço do Cliente",
-                text: "Você precisa preencher corretamente os campos do endereço!",
-                type: "warning"
-            });
-        }
+    // if ($.inArray(cep, valCEP) == -1) {
+    //     valCEP.push(cep);
+    if (tipoendereco != 0 && cep && endereco && numero && cidade && principal !== "") {
+        var linhas = null;
+        linhas += "<tr class='tr_remove'>";
+        linhas += "<td style='display: none;'>" + sigla_uf + "<input name='sigla_uf[]' type='hidden' value='" + sigla_uf + "' /></td>";
+        linhas += "<td>"+ eprincipal +"<input name='principal_end[]' type='hidden' value='"+ principal +"' /></td>";
+        linhas += "<td>"+ tipoendereco_desc +"<input name='tipoendereco[]' type='hidden' value='"+ tipoendereco +"' /></td>";
+        linhas += "<td>"+ cep +"<input name='cep[]' type='hidden' value='"+ cep +"' /></td>";
+        linhas += "<td>"+ endereco +"<input name='endereco[]' type='hidden' value='"+ endereco +"' /></td>";
+        linhas += "<td style='display: none;'>"+ numero +"<input name='numero[]' type='hidden' value='"+ numero +"' /></td>";
+        linhas += "<td style='display: none;'>"+ bairro +"<input name='bairro[]' type='hidden' value='"+ bairro +"' /></td>";
+        linhas += "<td>"+ cidade +"<input name='cidade[]' type='hidden' value='"+ cidade +"' /></td>";
+        linhas += "<td>"+ estado +"<input name='estado[]' type='hidden' value='"+ estado +"' /></td>";
+        linhas += "<td style='display: none;'>"+ complemento +"<input name='complemento[]' type='hidden' value='"+ complemento +"' /></td>";
+        linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
+        linhas += "</tr>";
+        $("#tb_endereco").append(linhas);
+        $("#tb_endereco").show();
+        limpaEndereco();
     } else {
         swal({
             title: "Endereço do Cliente",
-            text: "Esse endereço já existe na tabela abaixo!",
+            text: "Você precisa preencher corretamente os campos do endereço!",
             type: "warning"
         });
     }
+    // } else {
+    //     swal({
+    //         title: "Endereço do Cliente",
+    //         text: "Esse endereço já existe na tabela abaixo!",
+    //         type: "warning"
+    //     });
+    // }
 });
 
-var valTEL = [];
+// var valTEL = [];
 $("#insert_telefone").on("click", function(){
     var tipotelefone = $("#tipotelefone_t").val();
     var tipotelefone_desc = document.getElementById("tipotelefone_t").options[document.getElementById("tipotelefone_t").selectedIndex].text;
@@ -288,38 +288,38 @@ $("#insert_telefone").on("click", function(){
     var principal = $("#princtel_t").val();
     var eprincipal = principal == "1" ? "Sim" : "Não";
 
-    if ($.inArray(telefone, valTEL) == -1) {
-        valTEL.push(telefone);
-        if (tipotelefone != 0 && telefone && principal !== "") {
-            var linhas = null;
-            linhas += "<tr class='tr_remove'>";
-            linhas += "<td>"+ eprincipal +"<input name='principal_tel[]' type='hidden' value='"+ principal +"' /></td>";
-            linhas += "<td>"+ tipotelefone_desc +"<input name='tipotelefone[]' type='hidden' value='"+ tipotelefone +"' /></td>";
-            linhas += "<td>"+ telefone +"<input name='telefone[]' type='hidden' value='"+ telefone +"' /></td>";
-            linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
-            linhas += "</tr>";
-            $("#tb_telefone").append(linhas);
-            $("#tb_telefone").show();
-            $("#tipotelefone_t").val(null).selected = "true";
-            $("#telefone_t").val(null);
-            $("#princtel_t").val(null).selected = "true";
-        } else {
-            swal({
-                title: "Contatos do Cliente",
-                text: "Você precisa preencher corretamente os campos do telefone!",
-                type: "warning"
-            });
-        }
+    // if ($.inArray(telefone, valTEL) == -1) {
+    //     valTEL.push(telefone);
+    if (tipotelefone != 0 && telefone && principal !== "") {
+        var linhas = null;
+        linhas += "<tr class='tr_remove'>";
+        linhas += "<td>"+ eprincipal +"<input name='principal_tel[]' type='hidden' value='"+ principal +"' /></td>";
+        linhas += "<td>"+ tipotelefone_desc +"<input name='tipotelefone[]' type='hidden' value='"+ tipotelefone +"' /></td>";
+        linhas += "<td>"+ telefone +"<input name='telefone[]' type='hidden' value='"+ telefone +"' /></td>";
+        linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
+        linhas += "</tr>";
+        $("#tb_telefone").append(linhas);
+        $("#tb_telefone").show();
+        $("#tipotelefone_t").val(null).selected = "true";
+        $("#telefone_t").val(null);
+        $("#princtel_t").val(null).selected = "true";
     } else {
         swal({
-            title: "Endereço do Cliente",
-            text: "Esse telefone já existe na tabela abaixo!",
+            title: "Contatos do Cliente",
+            text: "Você precisa preencher corretamente os campos do telefone!",
             type: "warning"
         });
     }
+    // } else {
+    //     swal({
+    //         title: "Endereço do Cliente",
+    //         text: "Esse telefone já existe na tabela abaixo!",
+    //         type: "warning"
+    //     });
+    // }
 });
 
-var valEML = [];
+// var valEML = [];
 $("#insert_email").on("click", function(){
     var tipoemail = $("#tipoemail_t").val();
     var tipoemail_desc = document.getElementById("tipoemail_t").options[document.getElementById("tipoemail_t").selectedIndex].text;
@@ -327,35 +327,35 @@ $("#insert_email").on("click", function(){
     var principal = $("#princemail_t").val();
     var eprincipal = principal == "1" ? "Sim" : "Não";
 
-    if ($.inArray(email, valEML) == -1) {
-        valEML.push(email);
-        if (tipoemail != 0 && email && principal !== "") {
-            var linhas = null;
-            linhas += "<tr class='tr_remove'>";
-            linhas += "<td>"+ eprincipal +"<input name='principal_email[]' type='hidden' value='"+ principal +"' /></td>";
-            linhas += "<td>"+ tipoemail_desc +"<input name='tipoemailpf[]' type='hidden' value='"+ tipoemail +"' /></td>";
-            linhas += "<td>"+ email +"<input name='email_pf[]' type='hidden' value='"+ email +"' /></td>";
-            linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
-            linhas += "</tr>";
-            $("#tb_email").append(linhas);
-            $('#tb_email').show();
-            $("#tipoemail_t").val(null).selected = "true";
-            $("#email_t").val(null);
-            $("#princemail_t").val(null).selected = "true";
-        } else {
-            swal({
-                title: "Contatos do Cliente",
-                text: "Você precisa preencher corretamente os campos do e-mail!",
-                type: "warning"
-            });
-        }
+    // if ($.inArray(email, valEML) == -1) {
+    //     valEML.push(email);
+    if (tipoemail != 0 && email && principal !== "") {
+        var linhas = null;
+        linhas += "<tr class='tr_remove'>";
+        linhas += "<td>"+ eprincipal +"<input name='principal_email[]' type='hidden' value='"+ principal +"' /></td>";
+        linhas += "<td>"+ tipoemail_desc +"<input name='tipoemailpf[]' type='hidden' value='"+ tipoemail +"' /></td>";
+        linhas += "<td>"+ email +"<input name='email_pf[]' type='hidden' value='"+ email +"' /></td>";
+        linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
+        linhas += "</tr>";
+        $("#tb_email").append(linhas);
+        $('#tb_email').show();
+        $("#tipoemail_t").val(null).selected = "true";
+        $("#email_t").val(null);
+        $("#princemail_t").val(null).selected = "true";
     } else {
         swal({
-            title: "Endereço do Cliente",
-            text: "Esse e-mail já existe na tabela abaixo!",
+            title: "Contatos do Cliente",
+            text: "Você precisa preencher corretamente os campos do e-mail!",
             type: "warning"
         });
     }
+    // } else {
+    //     swal({
+    //         title: "Endereço do Cliente",
+    //         text: "Esse e-mail já existe na tabela abaixo!",
+    //         type: "warning"
+    //     });
+    // }
 });
 
 $("#email_t").on("change", function(){

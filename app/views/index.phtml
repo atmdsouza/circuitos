@@ -204,7 +204,7 @@
                                 if ($acl->isAllowed($role, 'controle_acesso', 'index'))
                                 {
                                     ?>
-<!--                                    <li>--><?php //echo $this->tag->linkTo(["controle_acesso", "Perfis e Acessos"]) ?><!--</li>-->
+                                    <li><?php echo $this->tag->linkTo(["controle_acesso", "Perfis e Acessos"]) ?></li>
                                 <?php } ?>
                             </ul>
                         </li>
@@ -363,6 +363,12 @@ case "modelo":?>
 <?php break;
 case "relatorios_gestao":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/relatorios_gestao.js" type="text/javascript"></script>
+<?php break;
+case "controle_acesso":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/controle_acesso.js" type="text/javascript"></script>
+<?php break;
+case "central_mensagens":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/central_mensagens.js" type="text/javascript"></script>
 <?php break;
 case "circuitos":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/circuitos.js" type="text/javascript"></script>

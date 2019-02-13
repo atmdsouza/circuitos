@@ -2,6 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
+
 class PhalconRoles extends \Phalcon\Mvc\Model
 {
 
@@ -127,6 +130,32 @@ class PhalconRoles extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de Controle de Acesso, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return PhalconRoles|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarControleAcesso($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("PhalconRoles" => "Circuitos\Models\PhalconRoles"));
+        $query->columns("PhalconRoles.*");
+
+        $query->leftJoin("Circuitos\Models\PhalconAccessList", "PhalconRoles.name = PhalconAccessList.roles_name", "PhalconAccessList");
+
+        $query->where("PhalconRoles.excluido = 0 AND (CONVERT(PhalconRoles.name USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PhalconAccessList.resources_name USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PhalconAccessList.access_name USING utf8) LIKE '%{$parameters}%')");
+
+        $query->groupBy("PhalconRoles.name");
+
+        $query->orderBy("PhalconRoles.name DESC");
+
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
     /**
