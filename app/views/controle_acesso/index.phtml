@@ -104,7 +104,7 @@ use Phalcon\Tag;
 </div><!-- /.modal -->
 <!--  Modal Permissões -->
 <div id="modalpermissoes" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalpermissoes" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -114,18 +114,345 @@ use Phalcon\Tag;
                 <input type="hidden" id="token" name="<?php echo $token['tokenKey'] ?>" value="<?php echo $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
                 <div class="modal-body">
                     <div class="form-row">
-                        <div class="col-12">
-                            <!--                            <h6>Dados da Cidade Digital</h6>-->
+                        <div class="col-4">
+                            <h6>Módulo "Dashboard"</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
-                                    <label for="nome_perfil">Nome do Perfil de Acesso <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["nome_perfil", "size" => 200, "class" => "form-control", "id" => "nome_perfil", "placeholder" => "Nome do Perfil de Acesso"]) ?>
+                                    <div class="posicao_total">
+                                        <input id="acesso_total_dashboard" name="acesso_total_dashboard" class="switches special permissao_total" type="checkbox" value="acesso_total"/>
+                                        <label for="acesso_total_dashboard">Acesso Total</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_status" name="circuito_status" class="switches chkChange permissao_unitária" type="checkbox" value="circuitoStatus"/>
+                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_status_mes" name="circuito_status_mes" class="switches chkChange permissao_unitária" type="checkbox" value="circuitoStatusMes"/>
+                                        <label for="circuito_status_mes">Gráfico Circuito por Status / Mês</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_link" name="circuito_link" class="switches chkChange permissao_unitária" type="checkbox" value="circuitoLink"/>
+                                        <label for="circuito_link">Gráfico Circuitos por Tipo de Link</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="switches chkChange permissao_unitária" type="checkbox" value="circuitoLinkMes"/>
+                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link / Mês</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="cidadedigital_status" name="cidadedigital_status" class="switches chkChange permissao_unitária" type="checkbox" value="cidadedigitalStatus"/>
+                                        <label for="cidadedigital_status">Gráfico Cidades Digitais por Status</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_acesso" name="circuito_acesso" class="switches chkChange permissao_unitária" type="checkbox" value="circuitoAcesso"/>
+                                        <label for="circuito_acesso">Gráfico Circuitos por Tipo de Acesso</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_conectividade" name="circuito_conectividade" class="switches chkChange permissao_unitária" type="checkbox" value="circuitoConectividade"/>
+                                        <label for="circuito_conectividade">Gráfico Circuitos por Tipo Conectividade</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_esfera" name="circuito_esfera" class="switches chkChange permissao_unitária" type="checkbox" value="circuitoEsfera"/>
+                                        <label for="circuito_esfera">Gráfico Clientes por Esfera</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_funcao" name="circuito_funcao" class="switches chkChange permissao_unitária" type="checkbox" value="circuitoFuncao"/>
+                                        <label for="circuito_funcao">Gráfico Circuitos por Função</label>
+                                    </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-4">
+                            <h6>Módulo "Administração (Core)"</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
-                                    <label for="descricao_perfil">Descrição do Perfil</label>
-                                    <?php echo $this->tag->textArea(["descricao_perfil", "size" => 400, "class" => "form-control", "id" => "descricao_perfil", "placeholder" => "Descrição do Perfil"]) ?>
+                                    <div class="posicao_total">
+                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <label for="acesso_total">Acesso Total</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h6>Módulo "Central Mensagens"</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="posicao_total">
+                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <label for="acesso_total">Acesso Total</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-4">
+                            <h6>Módulo "Usuário"</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="posicao_total">
+                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <label for="acesso_total">Acesso Total</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h6>Módulo "Circuitos"</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="posicao_total">
+                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <label for="acesso_total">Acesso Total</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h6>Módulo "Cadastro de Cidade Digital"</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="posicao_total">
+                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <label for="acesso_total">Acesso Total</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-4">
+                            <h6>Módulo "Cadastro de Cliente"</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="posicao_total">
+                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <label for="acesso_total">Acesso Total</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h6>Módulo "Cadastro de Unidade de Cliente"</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="posicao_total">
+                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <label for="acesso_total">Acesso Total</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h6>Módulo "Controle de Acesso"</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="posicao_total">
+                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <label for="acesso_total">Acesso Total</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-4">
+                            <h6>Módulo "Empresa"</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="posicao_total">
+                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <label for="acesso_total">Acesso Total</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h6>Módulo "Cadastro de Fabricante"</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="posicao_total">
+                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <label for="acesso_total">Acesso Total</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h6>Módulo "Cadastro de Modelo"</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="posicao_total">
+                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <label for="acesso_total">Acesso Total</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-4">
+                            <h6>Módulo "Cadastro de Equipamento"</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="posicao_total">
+                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <label for="acesso_total">Acesso Total</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h6>Módulo "Cadastro de Lista de Valores"</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="posicao_total">
+                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <label for="acesso_total">Acesso Total</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h6>Módulo "Relatórios de Gestão"</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="posicao_total">
+                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <label for="acesso_total">Acesso Total</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-4">
+                            <h6>Módulo "Sessão"</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="posicao_total">
+                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <label for="acesso_total">Acesso Total</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

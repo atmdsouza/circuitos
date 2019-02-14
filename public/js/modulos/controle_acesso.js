@@ -93,9 +93,7 @@ table.on( 'select deselect', function () {
 
     table.button( 1 ).enable( selectedRows === 1 );
     table.button( 2 ).enable( selectedRows === 1 );
-    table.button( 3 ).enable( selectedRows === 1 );
-    table.button( 4 ).enable( selectedRows > 0 );
-    table.button( 5 ).enable( selectedRows > 0 );
+    table.button( 3 ).enable( selectedRows > 0 );
 });
 
 //Limpar Linhas da Tabela
@@ -487,6 +485,107 @@ $("#tb_controleacesso").on("click", "tr", function () {
     }
 });
 //Permissões de Acesso
+var animating = false;
+var masteranimate = false;
+
+$(function() {
+    // Initialize multiple switches
+    if (Array.prototype.forEach) {
+        var elems = Array.prototype.slice.call(document.querySelectorAll('.switches'));
+        elems.forEach(function(html) {
+            var switcherys = new Switchery(html);
+        });
+    }
+    else {
+        var elems = document.querySelectorAll('.switches');
+        for (var i = 0; i < elems.length; i++) {
+            var switcherys = new Switchery(elems[i]);
+        }
+    }
+
+    $('input.special').change( function(e){
+        masteranimate = true;
+        if (!animating){
+            var masterStatus = $(this).prop('checked');
+            $('input.chkChange').each(function(index){
+                var switchStatus = $('input.chkChange')[index].checked;
+                if(switchStatus != masterStatus){
+                    $(this).trigger('click');
+                }
+            });
+        }
+        masteranimate = false;
+    });
+    // $('input.chkChange').change(function(e){
+    //     animating = true;
+    //     if ( !masteranimate ){
+    //         // if( !$('input.special').prop('checked') ){
+    //         //     $('input.special').trigger('click');
+    //         // }
+    //         var goinoff = true;
+    //         $('input.chkChange').each(function(index){
+    //             if( $('input.chkChange')[index].checked ){
+    //                 goinoff = false;
+    //             }
+    //         });
+    //         if(goinoff){
+    //             $('input.special').trigger('click');
+    //         }
+    //     }
+    //     animating = false;
+    //
+    // });
+
+});
+
+$(".permissao_total").on("change", function(){
+    var dados = [];
+    dados.push($(this).val());
+    console.log(dados);
+    alert(dados);
+    //Verifica o check clicado
+    if ($(this).prop("checked"))
+    {
+        alert("Check verdadeiro");
+    }
+    else
+    {
+        alert("Check false");
+    }
+    //Verifica se existe algum check unitário diferente
+    if ($(".permissao_unitária").prop("checked"))
+    {
+        alert("Check unitario verdadeiro");
+    }
+    else
+    {
+        alert("Check unitario false");
+    }
+});
+
+$(".permissao_unitária").on("change", function(){
+    console.log($(this).val());
+    alert($(this).val());
+    //Verifica o check clicado
+    if ($(this).prop("checked"))
+    {
+        alert("Check verdadeiro");
+    }
+    else
+    {
+        alert("Check false");
+    }
+    //Verifica o check geral
+    if ($(".permissao_total").prop("checked"))
+    {
+        alert("Check total verdadeiro");
+    }
+    else
+    {
+        alert("Check total false");
+    }
+});
+
 $(".bt_permissoes").on("click", function(){
     $("#modalpermissoes").modal();
     $("#salvarControleAcesso").removeClass("editar_permissoes").addClass("criar_permissoes");
