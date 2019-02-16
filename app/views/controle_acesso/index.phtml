@@ -108,74 +108,68 @@ use Phalcon\Tag;
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h5 class="modal-title" id="modalpermissoes">Permissões de Acesso para o Perfil <span id="nome_perfil"></span></h5>
+                <h5 class="modal-title" id="modalpermissoes">Permissões de Acesso para o Perfil "<span id="titulo_nome_perfil"></span>"</h5>
             </div>
             <form id="formPermissoes">
                 <input type="hidden" id="token" name="<?php echo $token['tokenKey'] ?>" value="<?php echo $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
                 <div class="modal-body">
+                    <div class="form-row">
+                        <div class="col-12">
+                            <h6>Conceder Permissão de Super Usuário (todas as permissões possíveis do sistema)</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="posicao_total">
+                                        <input id="acesso_global" name="acesso_global" class="permissao_total_global" type="checkbox"/>
+                                        <label for="acesso_global">Acesso Total a todos os Módulos</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-row">
                         <div class="col-4">
                             <h6>Módulo "Dashboard"</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total_dashboard" name="acesso_total_dashboard" class="switches special permissao_total" type="checkbox" value="acesso_total"/>
-                                        <label for="acesso_total_dashboard">Acesso Total</label>
+                                        <input id="indexacesso_total" name="indexacesso_total" class="permissao_total_dashboard" type="checkbox"/>
+                                        <label for="indexacesso_total">Acesso Total</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="switches chkChange permissao_unitária" type="checkbox" value="circuitoStatus"/>
-                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                        <input id="indexcircuitoStatus" name="indexcircuitoStatus" class="permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoStatus"/>
+                                        <label for="indexcircuitoStatus">Gráfico Circuito por Status</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status_mes" name="circuito_status_mes" class="switches chkChange permissao_unitária" type="checkbox" value="circuitoStatusMes"/>
-                                        <label for="circuito_status_mes">Gráfico Circuito por Status / Mês</label>
+                                        <input id="indexcircuitoStatusMes" name="indexcircuitoStatusMes" class="permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoStatusMes"/>
+                                        <label for="indexcircuitoStatusMes">Gráfico Circuito por Status / Mês</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link" name="circuito_link" class="switches chkChange permissao_unitária" type="checkbox" value="circuitoLink"/>
-                                        <label for="circuito_link">Gráfico Circuitos por Tipo de Link</label>
+                                        <input id="indexcircuitoLink" name="indexcircuitoLink" class="permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoLink"/>
+                                        <label for="indexcircuitoLink">Gráfico Circuitos por Tipo de Link</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="switches chkChange permissao_unitária" type="checkbox" value="circuitoLinkMes"/>
-                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link / Mês</label>
+                                        <input id="indexcircuitoLinkMes" name="indexcircuitoLinkMes" class="permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoLinkMes"/>
+                                        <label for="indexcircuitoLinkMes">Gráfico Circuitos por Tipo de Link / Mês</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="cidadedigital_status" name="cidadedigital_status" class="switches chkChange permissao_unitária" type="checkbox" value="cidadedigitalStatus"/>
-                                        <label for="cidadedigital_status">Gráfico Cidades Digitais por Status</label>
+                                        <input id="indexcidadedigitalStatus" name="indexcidadedigitalStatus" class="permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.cidadedigitalStatus"/>
+                                        <label for="indexcidadedigitalStatus">Gráfico Cidades Digitais por Status</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_acesso" name="circuito_acesso" class="switches chkChange permissao_unitária" type="checkbox" value="circuitoAcesso"/>
-                                        <label for="circuito_acesso">Gráfico Circuitos por Tipo de Acesso</label>
+                                        <input id="indexcircuitoAcesso" name="indexcircuitoAcesso" class="permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoAcesso"/>
+                                        <label for="indexcircuitoAcesso">Gráfico Circuitos por Tipo de Acesso</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_conectividade" name="circuito_conectividade" class="switches chkChange permissao_unitária" type="checkbox" value="circuitoConectividade"/>
-                                        <label for="circuito_conectividade">Gráfico Circuitos por Tipo Conectividade</label>
+                                        <input id="indexcircuitoConectividade" name="indexcircuitoConectividade" class="permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoConectividade"/>
+                                        <label for="indexcircuitoConectividade">Gráfico Circuitos por Tipo Conectividade</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_esfera" name="circuito_esfera" class="switches chkChange permissao_unitária" type="checkbox" value="circuitoEsfera"/>
-                                        <label for="circuito_esfera">Gráfico Clientes por Esfera</label>
+                                        <input id="indexcircuitoEsfera" name="indexcircuitoEsfera" class="permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoEsfera"/>
+                                        <label for="indexcircuitoEsfera">Gráfico Clientes por Esfera</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_funcao" name="circuito_funcao" class="switches chkChange permissao_unitária" type="checkbox" value="circuitoFuncao"/>
-                                        <label for="circuito_funcao">Gráfico Circuitos por Função</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <h6>Módulo "Administração (Core)"</h6>
-                            <div class="form-row">
-                                <div class="form-group col-md-12">
-                                    <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
-                                        <label for="acesso_total">Acesso Total</label>
-                                    </div>
-                                    <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
-                                        <label for="circuito_status">Gráfico Circuito por Status</label>
-                                    </div>
-                                    <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
-                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                        <input id="indexcircuitoFuncao" name="indexcircuitoFuncao" class="permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoFuncao"/>
+                                        <label for="indexcircuitoFuncao">Gráfico Circuitos por Função</label>
                                     </div>
                                 </div>
                             </div>
@@ -185,15 +179,34 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
-                                        <label for="acesso_total">Acesso Total</label>
+                                        <input id="central_mensagensacesso_total" name="central_mensagensacesso_total" class="permissao_total" type="checkbox"/>
+                                        <label for="central_mensagensacesso_total">Acesso Total</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="central_mensagens.circuitoStatus"/>
                                         <label for="circuito_status">Gráfico Circuito por Status</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="central_mensagens.circuitoLinkMes"/>
+                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h6>Módulo "Relatórios de Gestão"</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="posicao_total">
+                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="relatorio_gestao.acesso_total"/>
+                                        <label for="acesso_total">Acesso Total</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="relatorio_gestao.circuitoStatus"/>
+                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="relatorio_gestao.circuitoLinkMes"/>
                                         <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
                                     </div>
                                 </div>
@@ -206,15 +219,15 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="usuario.acesso_total"/>
                                         <label for="acesso_total">Acesso Total</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="usuario.circuitoStatus"/>
                                         <label for="circuito_status">Gráfico Circuito por Status</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="usuario.circuitoLinkMes"/>
                                         <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
                                     </div>
                                 </div>
@@ -225,15 +238,15 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="circuitos.acesso_total"/>
                                         <label for="acesso_total">Acesso Total</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="circuitos.circuitoStatus"/>
                                         <label for="circuito_status">Gráfico Circuito por Status</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="circuitos.circuitoLinkMes"/>
                                         <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
                                     </div>
                                 </div>
@@ -244,15 +257,15 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="cidade_digital.acesso_total"/>
                                         <label for="acesso_total">Acesso Total</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="cidade_digital.circuitoStatus"/>
                                         <label for="circuito_status">Gráfico Circuito por Status</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="cidade_digital.circuitoLinkMes"/>
                                         <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
                                     </div>
                                 </div>
@@ -265,15 +278,15 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="cliente.acesso_total"/>
                                         <label for="acesso_total">Acesso Total</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="cliente.circuitoStatus"/>
                                         <label for="circuito_status">Gráfico Circuito por Status</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="cliente.circuitoLinkMes"/>
                                         <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
                                     </div>
                                 </div>
@@ -284,34 +297,34 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="cliente_unidade.acesso_total"/>
                                         <label for="acesso_total">Acesso Total</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="cliente_unidade.circuitoStatus"/>
                                         <label for="circuito_status">Gráfico Circuito por Status</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="cliente_unidade.circuitoLinkMes"/>
                                         <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-4">
-                            <h6>Módulo "Controle de Acesso"</h6>
+                            <h6>Módulo "Cadastro do Controle de Acesso"</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="controle_acesso.acesso_total"/>
                                         <label for="acesso_total">Acesso Total</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="controle_acesso.circuitoStatus"/>
                                         <label for="circuito_status">Gráfico Circuito por Status</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="controle_acesso.circuitoLinkMes"/>
                                         <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
                                     </div>
                                 </div>
@@ -320,19 +333,19 @@ use Phalcon\Tag;
                     </div>
                     <div class="form-row">
                         <div class="col-4">
-                            <h6>Módulo "Empresa"</h6>
+                            <h6>Módulo "Cadastro de Empresa"</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="empresa.acesso_total"/>
                                         <label for="acesso_total">Acesso Total</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="empresa.circuitoStatus"/>
                                         <label for="circuito_status">Gráfico Circuito por Status</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="empresa.circuitoLinkMes"/>
                                         <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
                                     </div>
                                 </div>
@@ -343,15 +356,15 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="fabricante.acesso_total"/>
                                         <label for="acesso_total">Acesso Total</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="fabricante.circuitoStatus"/>
                                         <label for="circuito_status">Gráfico Circuito por Status</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="fabricante.circuitoLinkMes"/>
                                         <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
                                     </div>
                                 </div>
@@ -362,15 +375,15 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="modelo.acesso_total"/>
                                         <label for="acesso_total">Acesso Total</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="modelo.circuitoStatus"/>
                                         <label for="circuito_status">Gráfico Circuito por Status</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="modelo.circuitoLinkMes"/>
                                         <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
                                     </div>
                                 </div>
@@ -383,15 +396,15 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="equipamento.acesso_total"/>
                                         <label for="acesso_total">Acesso Total</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="equipamento.circuitoStatus"/>
                                         <label for="circuito_status">Gráfico Circuito por Status</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="equipamento.circuitoLinkMes"/>
                                         <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
                                     </div>
                                 </div>
@@ -402,15 +415,15 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="lov.acesso_total"/>
                                         <label for="acesso_total">Acesso Total</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="lov.circuitoStatus"/>
                                         <label for="circuito_status">Gráfico Circuito por Status</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="lov.circuitoLinkMes"/>
                                         <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
                                     </div>
                                 </div>
@@ -421,15 +434,15 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="relatorio_gestao.acesso_total"/>
                                         <label for="acesso_total">Acesso Total</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="relatorio_gestao.circuitoStatus"/>
                                         <label for="circuito_status">Gráfico Circuito por Status</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="relatorio_gestao.circuitoLinkMes"/>
                                         <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
                                     </div>
                                 </div>
@@ -442,15 +455,15 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="" type="checkbox" value="acesso_total"/>
+                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="session.acesso_total"/>
                                         <label for="acesso_total">Acesso Total</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="" type="checkbox" value="circuitoStatus"/>
+                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="session.circuitoStatus"/>
                                         <label for="circuito_status">Gráfico Circuito por Status</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="" type="checkbox" value="circuitoLinkMes"/>
+                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="session.circuitoLinkMes"/>
                                         <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
                                     </div>
                                 </div>
@@ -463,7 +476,7 @@ use Phalcon\Tag;
                         <p class="texto_rodape">Os campos com <span class="required">*</span> são obrigatórios!</p>
                     </div>
                     <div class="form-group col-md-6 botoes_rodape">
-                        <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
+                        <input type="hidden" id="roles_name" name="roles_name" value=""><!-- Manter como hidden -->
                         <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" data-dismiss="modal">Fechar</button>
                         <button id="salvarPermissoes" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
                     </div>

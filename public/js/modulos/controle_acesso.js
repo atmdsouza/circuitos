@@ -473,120 +473,296 @@ $(".bt_del").on("click", function(){
     }
 });
 
-//Coletando os ids das linhas selecionadas na tabela
-var ids = [];
-$("#tb_controleacesso").on("click", "tr", function () {
-    var valr = $(this)[0].cells[0].innerText;
-    if (!ids.includes(valr)) {
-        ids.push(valr);
-    } else {
-        var index = ids.indexOf(valr);
-        ids.splice(index, 1);
-    }
-});
 //Permissões de Acesso
-var animating = false;
-var masteranimate = false;
+// var animating = false;
+// var masteranimate = false;
+//
+// $(function() {
+//     // Initialize multiple switches
+//     if (Array.prototype.forEach) {
+//         var elems = Array.prototype.slice.call(document.querySelectorAll(".switches"));
+//         elems.forEach(function(html) {
+//             var switcherys = new Switchery(html);
+//         });
+//     }
+//     else {
+//         var elems = document.querySelectorAll(".switches");
+//         for (var i = 0; i < elems.length; i++) {
+//             var switcherys = new Switchery(elems[i]);
+//         }
+//     }
+//
+//     $("input.special").change( function(e){
+//         masteranimate = true;
+//         if (!animating){
+//             var masterStatus = $(this).prop("checked");
+//             $("input.chkChange").each(function(index){
+//                 var switchStatus = $("input.chkChange")[index].checked;
+//                 if(switchStatus != masterStatus){
+//                     $(this).trigger("click");
+//                 }
+//             });
+//         }
+//         masteranimate = false;
+//     });
+//     // $("input.chkChange").change(function(e){
+//     //     animating = true;
+//     //     if ( !masteranimate ){
+//     //         // if( !$("input.special").prop("checked") ){
+//     //         //     $("input.special").trigger("click");
+//     //         // }
+//     //         var goinoff = true;
+//     //         $("input.chkChange").each(function(index){
+//     //             if( $("input.chkChange")[index].checked ){
+//     //                 goinoff = false;
+//     //             }
+//     //         });
+//     //         if(goinoff){
+//     //             $("input.special").trigger("click");
+//     //         }
+//     //     }
+//     //     animating = false;
+//     //
+//     // });
+//
+// });
 
-$(function() {
-    // Initialize multiple switches
-    if (Array.prototype.forEach) {
-        var elems = Array.prototype.slice.call(document.querySelectorAll('.switches'));
-        elems.forEach(function(html) {
-            var switcherys = new Switchery(html);
-        });
-    }
-    else {
-        var elems = document.querySelectorAll('.switches');
-        for (var i = 0; i < elems.length; i++) {
-            var switcherys = new Switchery(elems[i]);
+//Funções para realizar as mudanças
+function adicionarPermissao(role, resource, access_name)
+{
+    var action = actionCorreta(window.location.href.toString(), "controle_acesso/adicionarPermissao");
+    $.ajax({
+        type: "POST",
+        dataType: "JSON",
+        url: action,
+        data: {
+            tokenKey: $("#token").attr("name"),
+            tokenValue: $("#token").attr("value"),
+            role: role,
+            resource: resource,
+            access_name: access_name
+        },
+        async: false,
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
         }
-    }
-
-    $('input.special').change( function(e){
-        masteranimate = true;
-        if (!animating){
-            var masterStatus = $(this).prop('checked');
-            $('input.chkChange').each(function(index){
-                var switchStatus = $('input.chkChange')[index].checked;
-                if(switchStatus != masterStatus){
-                    $(this).trigger('click');
-                }
-            });
-        }
-        masteranimate = false;
     });
-    // $('input.chkChange').change(function(e){
-    //     animating = true;
-    //     if ( !masteranimate ){
-    //         // if( !$('input.special').prop('checked') ){
-    //         //     $('input.special').trigger('click');
-    //         // }
-    //         var goinoff = true;
-    //         $('input.chkChange').each(function(index){
-    //             if( $('input.chkChange')[index].checked ){
-    //                 goinoff = false;
-    //             }
-    //         });
-    //         if(goinoff){
-    //             $('input.special').trigger('click');
-    //         }
-    //     }
-    //     animating = false;
-    //
-    // });
+}
 
-});
+function removerPermissao(role, resource, access_name)
+{
+    var action = actionCorreta(window.location.href.toString(), "controle_acesso/removerPermissao");
+    $.ajax({
+        type: "POST",
+        dataType: "JSON",
+        url: action,
+        data: {
+            tokenKey: $("#token").attr("name"),
+            tokenValue: $("#token").attr("value"),
+            role: role,
+            resource: resource,
+            access_name: access_name
+        },
+        async: false,
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            return data.operacao;
+        }
+    });
 
-$(".permissao_total").on("change", function(){
+}
+
+function buscarPermissoes(role)
+{
+    var action = actionCorreta(window.location.href.toString(), "controle_acesso/buscarPermissoes");
     var dados = [];
-    dados.push($(this).val());
-    console.log(dados);
-    alert(dados);
-    //Verifica o check clicado
-    if ($(this).prop("checked"))
-    {
-        alert("Check verdadeiro");
-    }
-    else
-    {
-        alert("Check false");
-    }
-    //Verifica se existe algum check unitário diferente
-    if ($(".permissao_unitária").prop("checked"))
-    {
-        alert("Check unitario verdadeiro");
-    }
-    else
-    {
-        alert("Check unitario false");
-    }
-});
-
-$(".permissao_unitária").on("change", function(){
-    console.log($(this).val());
-    alert($(this).val());
-    //Verifica o check clicado
-    if ($(this).prop("checked"))
-    {
-        alert("Check verdadeiro");
-    }
-    else
-    {
-        alert("Check false");
-    }
-    //Verifica o check geral
-    if ($(".permissao_total").prop("checked"))
-    {
-        alert("Check total verdadeiro");
-    }
-    else
-    {
-        alert("Check total false");
-    }
-});
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {role: role},
+        async: false,
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            dados.push(data.controleacesso);
+        }
+    });
+    return dados;
+}
 
 $(".bt_permissoes").on("click", function(){
+    var dados = buscarPermissoes(ids[0]);
+    //Popula os dados
+    if (dados)
+    {
+        $.each(dados[0], function (key, value) {
+            $("#" + value.resources_name + value.access_name).prop("checked", true);
+        });
+    }
+    $("#roles_name").val(ids[0]);
+    $("#titulo_nome_perfil").html(ids[0]);
+    //Verifica checkTotal
+    checkAessoTotalDashoboard();
+    //Abre o modal
     $("#modalpermissoes").modal();
-    $("#salvarControleAcesso").removeClass("editar_permissoes").addClass("criar_permissoes");
+});
+
+$(".permissao_total_global").on("change", function(){
+    if ($(this).prop("checked")) {
+        $(".permissao_unitaria_global").each(function () {
+            if (!$(this).prop("checked"))
+            {
+                $(this).trigger("click");
+            }
+        });
+    }
+    else{
+        $(".permissao_unitaria_global").each(function () {
+            if ($(this).prop("checked"))
+            {
+                $(this).trigger("click");
+            }
+        });
+    }
+});
+
+$(".permissao_total_global").on("change", function(){
+    var valor = $(this).val();
+    var resources_access = valor.split(".");
+    var resource = resources_access[0];
+    var access_name = resources_access[1];
+    var role = $("#roles_name").val();
+    //Verifica o check_total clicado
+    if ($(this).prop("checked"))
+    {
+        //Verifica se existe algum check unitário diferente
+        if (!$(".permissao_unitaria_global").prop("checked"))
+        {
+            adicionarPermissao(role, resource, access_name);
+        }
+    }
+    else
+    {
+        //Verifica se existe algum check unitário diferente
+        if ($(".permissao_unitaria_global").prop("checked"))
+        {
+            removerPermissao(role, resource, access_name);
+        }
+    }
+});
+//Funções que controlam o Módulo de Dashboard
+function checkAessoTotalDashoboard()
+{
+    var verdadeiro = 0;
+    var falso = 0;
+    //verifica o check total
+    $(".permissao_unitaria_dashboard").each(function () {
+        if ($(this).prop("checked"))
+        {
+            verdadeiro++;
+        }
+        else
+        {
+            falso++;
+        }
+    });
+    var total = verdadeiro + falso;
+    if (total === verdadeiro)
+    {
+        $(".permissao_total_dashboard").prop("checked", true);
+    }
+    else
+    {
+        $(".permissao_total_dashboard").prop("checked", false);
+        $(".permissao_total_global").prop("checked", false);
+    }
+
+}
+//Função que controla o quando o check total de permissões (identifica quando já estou ou não ckecado)
+$(".permissao_total_dashboard").on("change", function(){
+    if ($(this).prop("checked")) {
+        $(".permissao_unitaria_dashboard").each(function () {
+            if (!$(this).prop("checked"))
+            {
+                $(this).trigger("click");
+            }
+        });
+    }
+    else{
+        $(".permissao_unitaria_dashboard").each(function () {
+            if ($(this).prop("checked"))
+            {
+                $(this).trigger("click");
+            }
+        });
+    }
+});
+//Faz o check automático de todos
+$(".permissao_total_dashboard").on("change", function(){
+    var valor = $(this).val();
+    var resources_access = valor.split(".");
+    var resource = resources_access[0];
+    var access_name = resources_access[1];
+    var role = $("#roles_name").val();
+    //Verifica o check_total clicado
+    if ($(this).prop("checked"))
+    {
+        //Verifica se existe algum check unitário diferente
+        if (!$(".permissao_unitaria_dashboard").prop("checked"))
+        {
+            adicionarPermissao(role, resource, access_name);
+        }
+    }
+    else
+    {
+        //Verifica se existe algum check unitário diferente
+        if ($(".permissao_unitaria_dashboard").prop("checked"))
+        {
+            removerPermissao(role, resource, access_name);
+        }
+    }
+});
+//Faz a concessão de permissões unitárias
+$(".permissao_unitaria_dashboard").on("change", function(){
+    var valor = $(this).val();
+    var resources_access = valor.split(".");
+    var resource = resources_access[0];
+    var access_name = resources_access[1];
+    var role = $("#roles_name").val();
+    //Verifica o check clicado
+    if ($(this).prop("checked"))
+    {
+        adicionarPermissao(role, resource, access_name);
+    }
+    else
+    {
+        removerPermissao(role, resource, access_name);
+    }
+    //verifica o check total
+    checkAessoTotalDashoboard();
 });

@@ -326,7 +326,7 @@ class CircuitosController extends ControllerBase
                 $cidade_estado = CidadeDigital::CidadeUfporCidadeDigital($params["id_cidadedigital"]);
                 //Coletando a última designação
                 $circuito = Circuitos::findFirst("designacao = (SELECT MAX(designacao) FROM Circuitos\Models\Circuitos)");
-                $vl_designacao = $circuito->getDesignacao() + 1;
+                $vl_designacao = ($circuito) ? $circuito->getDesignacao() + 1 : 0;
                 //Criando o Circuito
                 $circuitos = new Circuitos();
                 $circuitos->setTransaction($transaction);
