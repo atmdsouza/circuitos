@@ -118,7 +118,6 @@ class CircuitosController extends ControllerBase
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
-        $util = new Util();
         $response = new Response();
         $dados = filter_input_array(INPUT_GET);
         $circuitos = Circuitos::findFirst("id={$dados["id_circuitos"]}");
@@ -310,7 +309,6 @@ class CircuitosController extends ControllerBase
         $this->view->disable();
         //Instanciando classes
         $auth = new Autentica();
-        $util = new Util();
         $response = new Response();
         $manager = new TxManager();
         $transaction = $manager->get();

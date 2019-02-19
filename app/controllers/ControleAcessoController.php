@@ -223,102 +223,31 @@ class ControleAcessoController extends ControllerBase
         $transaction = $manager->get();
         $permissoes = array(
             "session"           => ["login", "logout", "sair", "recuperar", "inativo"],
-            "usuario"           => ["gerarSenha", "resetarSenha", "alterarSenha", "primeiro", "redirecionaUsuario", "recuperarSenha", "trocar"],
+            "usuario"           => ["gerarSenha", "resetarSenha", "alterarSenha", "primeiro", "redirecionaUsuario", "recuperarSenha", "trocar", "validarLogin", "formUsuario"],
             "core"              => ["ativarPessoa", "inativarPessoa", "deletarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail"],
             "error"             => ["show401", "show404"],
             "index"             => ["index"],
-//            "relatorios_gestao" => ["index", "relatorioCustomizado"],
-//            "cidade_digital"    => ["index", "formCidadeDigital"],
-//            "circuitos"         => ["index", "formCircuitos", "visualizaCircuitos", "pdfCircuito"],
-//            "cliente"           => ["index", "formCliente"],
-//            "cliente_unidade"   => ["index", "formClienteUnidade"],
-//            "equipamento"       => ["index", "formEquipamento"],
-//            "fabricante"        => ["index", "formFabricante"],
-//            "index"             => ["index", "circuitoStatusMes", "circuitoStatus", "circuitoLinkMes", "circuitoLink", "circuitoHotzoneCidade", "circuitoFuncao", "circuitoEsfera", "circuitoConectividade", "circuitoAcesso", "cidadedigitalStatus"],
-//            "modelo"            => ["index", "formModelo"],
+            "cidade_digital"    => ["formCidadeDigital"],
+            "circuitos"         => ["formCircuitos", "cidadedigitalAll", "cidadedigitalConectividade", "equipamentoModelo", "equipamentoNumeroSerie", "modeloFabricante", "unidadeCliente", "validarEquipamentoCircuito", "visualizaCircuitos"],
+            "cliente"           => ["formCliente"],
+            "cliente_unidade"   => ["formClienteUnidade"],
+            "empresa"           => ["formEmpresa"],
+            "lov"               => ["formLov"],
+            "controle_acesso"   => ["buscarPermissoes"],
+            "equipamento"       => ["formEquipamento", "carregaModelos", "validaNumeroPatrimonio", "validaNumeroSerie"],
+            "fabricante"        => ["formFabricante"],
+            "modelo"            => ["formModelo"],
         );
+        $modulos = ["session", "usuario", "core", "error", "index", "cidade_digital", "circuitos", "cliente", "cliente_unidade", "empresa", "lov", "controle_acesso", "equipamento", "fabricante", "modelo"];
         //Permissões Padrão
-        foreach($permissoes as $permissao)
+        foreach ($modulos as $modulo)
         {
-            //session
-            foreach($permissoes["session"] as $session)
+            foreach($permissoes[$modulo] as $session)
             {
                 $permissoespadrao = new PhalconAccessList();
                 $permissoespadrao->setTransaction($transaction);
                 $permissoespadrao->setAccessName($session);
-                $permissoespadrao->setResourcesName("session");
-                $permissoespadrao->setRolesName($roles);
-                $permissoespadrao->setAllowed(0);
-                if ($permissoespadrao->save() == false) {
-                    $messages = $permissoespadrao->getMessages();
-                    $errors = "";
-                    for ($i = 0; $i < count($messages); $i++) {
-                        $errors .= "[".$messages[$i]."] ";
-                    }
-                    $transaction->rollback("Erro ao criar a permissão: " . $errors);
-                }
-            }
-            //usuario
-            foreach($permissoes["usuario"] as $session)
-            {
-                $permissoespadrao = new PhalconAccessList();
-                $permissoespadrao->setTransaction($transaction);
-                $permissoespadrao->setAccessName($session);
-                $permissoespadrao->setResourcesName("usuario");
-                $permissoespadrao->setRolesName($roles);
-                $permissoespadrao->setAllowed(0);
-                if ($permissoespadrao->save() == false) {
-                    $messages = $permissoespadrao->getMessages();
-                    $errors = "";
-                    for ($i = 0; $i < count($messages); $i++) {
-                        $errors .= "[".$messages[$i]."] ";
-                    }
-                    $transaction->rollback("Erro ao criar a permissão: " . $errors);
-                }
-            }
-            //error
-            foreach($permissoes["error"] as $session)
-            {
-                $permissoespadrao = new PhalconAccessList();
-                $permissoespadrao->setTransaction($transaction);
-                $permissoespadrao->setAccessName($session);
-                $permissoespadrao->setResourcesName("error");
-                $permissoespadrao->setRolesName($roles);
-                $permissoespadrao->setAllowed(0);
-                if ($permissoespadrao->save() == false) {
-                    $messages = $permissoespadrao->getMessages();
-                    $errors = "";
-                    for ($i = 0; $i < count($messages); $i++) {
-                        $errors .= "[".$messages[$i]."] ";
-                    }
-                    $transaction->rollback("Erro ao criar a permissão: " . $errors);
-                }
-            }
-            //core
-            foreach($permissoes["core"] as $session)
-            {
-                $permissoespadrao = new PhalconAccessList();
-                $permissoespadrao->setTransaction($transaction);
-                $permissoespadrao->setAccessName($session);
-                $permissoespadrao->setResourcesName("core");
-                $permissoespadrao->setRolesName($roles);
-                $permissoespadrao->setAllowed(0);
-                if ($permissoespadrao->save() == false) {
-                    $messages = $permissoespadrao->getMessages();
-                    $errors = "";
-                    for ($i = 0; $i < count($messages); $i++) {
-                        $errors .= "[".$messages[$i]."] ";
-                    }
-                    $transaction->rollback("Erro ao criar a permissão: " . $errors);
-                }
-            }
-            //index
-            foreach($permissoes["index"] as $session)
-            {
-                $permissoespadrao = new PhalconAccessList();
-                $permissoespadrao->setTransaction($transaction);
-                $permissoespadrao->setAccessName($session);
-                $permissoespadrao->setResourcesName("index");
+                $permissoespadrao->setResourcesName($modulo);
                 $permissoespadrao->setRolesName($roles);
                 $permissoespadrao->setAllowed(0);
                 if ($permissoespadrao->save() == false) {

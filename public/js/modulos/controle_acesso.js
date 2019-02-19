@@ -704,9 +704,61 @@ function checkAessoTotalDashoboard()
 
 }
 //Função que controla o quando o check total de permissões (identifica quando já estou ou não ckecado)
-$(".permissao_total_dashboard").on("change", function(){
+$(".permissao_total_modulo").on("change", function(){
+    var attrname = $(this).attr("name");
+    var modulo = attrname.split(".");
+    var seletor;
+    console.log(modulo[0]);
+    switch (modulo[0])
+    {
+        case "index":
+            seletor = ".permissao_unitaria_dashboard";
+            break;
+        case "relatorios_gestao":
+            seletor = ".permissao_unitaria_relatorios_gestao";
+            break;
+        case "cidade_digital":
+            seletor = ".permissao_unitaria_cidade_digital";
+        break;
+        case "circuitos":
+            seletor = ".permissao_unitaria_circuitos";
+            break;
+        case "cliente":
+            seletor = ".permissao_unitaria_cliente";
+            break;
+        case "cliente_unidade":
+            seletor = ".permissao_unitaria_cliente_unidade";
+            break;
+        case "controle_acesso":
+            seletor = ".permissao_unitaria_controle_acesso";
+            break;
+        case "core":
+            seletor = ".permissao_unitaria_core";
+            break;
+        case "empresa":
+            seletor = ".permissao_unitaria_empresa";
+            break;
+        case "equipamento":
+            seletor = ".permissao_unitaria_equipamento";
+            break;
+        case "fabricante":
+            seletor = ".permissao_unitaria_fabricante";
+            break;
+        case "lov":
+            seletor = ".permissao_unitaria_lov";
+            break;
+        case "modelo":
+            seletor = ".permissao_unitaria_modelo";
+            break;
+        case "session":
+            seletor = ".permissao_unitaria_session";
+            break;
+        case "usuario":
+            seletor = ".permissao_unitaria_usuario";
+            break;
+    }
     if ($(this).prop("checked")) {
-        $(".permissao_unitaria_dashboard").each(function () {
+        $(seletor).each(function () {
             if (!$(this).prop("checked"))
             {
                 $(this).trigger("click");
@@ -714,7 +766,7 @@ $(".permissao_total_dashboard").on("change", function(){
         });
     }
     else{
-        $(".permissao_unitaria_dashboard").each(function () {
+        $(seletor).each(function () {
             if ($(this).prop("checked"))
             {
                 $(this).trigger("click");
@@ -723,17 +775,68 @@ $(".permissao_total_dashboard").on("change", function(){
     }
 });
 //Faz o check automático de todos
-$(".permissao_total_dashboard").on("change", function(){
+$(".permissao_total_modulo").on("change", function(){
     var valor = $(this).val();
     var resources_access = valor.split(".");
     var resource = resources_access[0];
     var access_name = resources_access[1];
     var role = $("#roles_name").val();
+    var attrname = $(this).attr("name");
+    var modulo = attrname.split(".");
+    var seletor;
+    switch (modulo[0])
+    {
+        case "index":
+            seletor = ".permissao_unitaria_dashboard";
+            break;
+        case "relatorios_gestao":
+            seletor = ".permissao_unitaria_relatorios_gestao";
+            break;
+        case "cidade_digital":
+            seletor = ".permissao_unitaria_cidade_digital";
+            break;
+        case "circuitos":
+            seletor = ".permissao_unitaria_circuitos";
+            break;
+        case "cliente":
+            seletor = ".permissao_unitaria_cliente";
+            break;
+        case "cliente_unidade":
+            seletor = ".permissao_unitaria_cliente_unidade";
+            break;
+        case "controle_acesso":
+            seletor = ".permissao_unitaria_controle_acesso";
+            break;
+        case "core":
+            seletor = ".permissao_unitaria_core";
+            break;
+        case "empresa":
+            seletor = ".permissao_unitaria_empresa";
+            break;
+        case "equipamento":
+            seletor = ".permissao_unitaria_equipamento";
+            break;
+        case "fabricante":
+            seletor = ".permissao_unitaria_fabricante";
+            break;
+        case "lov":
+            seletor = ".permissao_unitaria_lov";
+            break;
+        case "modelo":
+            seletor = ".permissao_unitaria_modelo";
+            break;
+        case "session":
+            seletor = ".permissao_unitaria_session";
+            break;
+        case "usuario":
+            seletor = ".permissao_unitaria_usuario";
+            break;
+    }
     //Verifica o check_total clicado
     if ($(this).prop("checked"))
     {
         //Verifica se existe algum check unitário diferente
-        if (!$(".permissao_unitaria_dashboard").prop("checked"))
+        if (!$(seletor).prop("checked"))
         {
             adicionarPermissao(role, resource, access_name);
         }
@@ -741,14 +844,14 @@ $(".permissao_total_dashboard").on("change", function(){
     else
     {
         //Verifica se existe algum check unitário diferente
-        if ($(".permissao_unitaria_dashboard").prop("checked"))
+        if ($(seletor).prop("checked"))
         {
             removerPermissao(role, resource, access_name);
         }
     }
 });
 //Faz a concessão de permissões unitárias
-$(".permissao_unitaria_dashboard").on("change", function(){
+$(".permissao_unitaria").on("change", function(){
     var valor = $(this).val();
     var resources_access = valor.split(".");
     var resource = resources_access[0];

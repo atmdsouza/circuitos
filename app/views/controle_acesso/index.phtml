@@ -38,11 +38,11 @@ use Phalcon\Tag;
     <div class="card-box">
         <table id="tb_controleacesso" class="table table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
-                <tr>
-                    <th>Código</th>
-                    <th>Perfil</th>
-                    <th>Permissões Configuradas</th>
-                </tr>
+            <tr>
+                <th>Código</th>
+                <th>Perfil</th>
+                <th>Permissões Configuradas</th>
+            </tr>
             </thead>
             <tbody>
             <?php foreach ($page->items as $controleacesso): ?>
@@ -72,7 +72,7 @@ use Phalcon\Tag;
                 <div class="modal-body">
                     <div class="form-row">
                         <div class="col-12">
-<!--                            <h6>Dados da Cidade Digital</h6>-->
+                            <!--                            <h6>Dados da Cidade Digital</h6>-->
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <label for="nome_perfil">Nome do Perfil de Acesso <span class="required">*</span></label>
@@ -132,103 +132,44 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="indexacesso_total" name="indexacesso_total" class="permissao_total_dashboard" type="checkbox"/>
-                                        <label for="indexacesso_total">Acesso Total</label>
+                                        <input id="indexacesso_total" name="index.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <label for="indexacesso_total">Acesso Total a Dashboard</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="indexcircuitoStatus" name="indexcircuitoStatus" class="permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoStatus"/>
+                                        <input id="indexcircuitoStatus" name="index.circuitoStatus" class="permissao_unitaria permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoStatus"/>
                                         <label for="indexcircuitoStatus">Gráfico Circuito por Status</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="indexcircuitoStatusMes" name="indexcircuitoStatusMes" class="permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoStatusMes"/>
+                                        <input id="indexcircuitoStatusMes" name="index.circuitoStatusMes" class="permissao_unitaria permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoStatusMes"/>
                                         <label for="indexcircuitoStatusMes">Gráfico Circuito por Status / Mês</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="indexcircuitoLink" name="indexcircuitoLink" class="permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoLink"/>
+                                        <input id="indexcircuitoLink" name="index.circuitoLink" class="permissao_unitaria permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoLink"/>
                                         <label for="indexcircuitoLink">Gráfico Circuitos por Tipo de Link</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="indexcircuitoLinkMes" name="indexcircuitoLinkMes" class="permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoLinkMes"/>
+                                        <input id="indexcircuitoLinkMes" name="index.circuitoLinkMes" class="permissao_unitaria permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoLinkMes"/>
                                         <label for="indexcircuitoLinkMes">Gráfico Circuitos por Tipo de Link / Mês</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="indexcidadedigitalStatus" name="indexcidadedigitalStatus" class="permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.cidadedigitalStatus"/>
+                                        <input id="indexcidadedigitalStatus" name="index.cidadedigitalStatus" class="permissao_unitaria permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.cidadedigitalStatus"/>
                                         <label for="indexcidadedigitalStatus">Gráfico Cidades Digitais por Status</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="indexcircuitoAcesso" name="indexcircuitoAcesso" class="permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoAcesso"/>
+                                        <input id="indexcircuitoAcesso" name="index.circuitoAcesso" class="permissao_unitaria permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoAcesso"/>
                                         <label for="indexcircuitoAcesso">Gráfico Circuitos por Tipo de Acesso</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="indexcircuitoConectividade" name="indexcircuitoConectividade" class="permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoConectividade"/>
+                                        <input id="indexcircuitoConectividade" name="index.circuitoConectividade" class="permissao_unitaria permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoConectividade"/>
                                         <label for="indexcircuitoConectividade">Gráfico Circuitos por Tipo Conectividade</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="indexcircuitoEsfera" name="indexcircuitoEsfera" class="permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoEsfera"/>
+                                        <input id="indexcircuitoEsfera" name="index.circuitoEsfera" class="permissao_unitaria permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoEsfera"/>
                                         <label for="indexcircuitoEsfera">Gráfico Clientes por Esfera</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="indexcircuitoFuncao" name="indexcircuitoFuncao" class="permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoFuncao"/>
+                                        <input id="indexcircuitoFuncao" name="index.circuitoFuncao" class="permissao_unitaria permissao_unitaria_dashboard permissao_unitaria_global" type="checkbox" value="index.circuitoFuncao"/>
                                         <label for="indexcircuitoFuncao">Gráfico Circuitos por Função</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <h6>Módulo "Central Mensagens"</h6>
-                            <div class="form-row">
-                                <div class="form-group col-md-12">
-                                    <div class="posicao_total">
-                                        <input id="central_mensagensacesso_total" name="central_mensagensacesso_total" class="permissao_total" type="checkbox"/>
-                                        <label for="central_mensagensacesso_total">Acesso Total</label>
-                                    </div>
-                                    <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="central_mensagens.circuitoStatus"/>
-                                        <label for="circuito_status">Gráfico Circuito por Status</label>
-                                    </div>
-                                    <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="central_mensagens.circuitoLinkMes"/>
-                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <h6>Módulo "Relatórios de Gestão"</h6>
-                            <div class="form-row">
-                                <div class="form-group col-md-12">
-                                    <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="relatorio_gestao.acesso_total"/>
-                                        <label for="acesso_total">Acesso Total</label>
-                                    </div>
-                                    <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="relatorio_gestao.circuitoStatus"/>
-                                        <label for="circuito_status">Gráfico Circuito por Status</label>
-                                    </div>
-                                    <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="relatorio_gestao.circuitoLinkMes"/>
-                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-4">
-                            <h6>Módulo "Usuário"</h6>
-                            <div class="form-row">
-                                <div class="form-group col-md-12">
-                                    <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="usuario.acesso_total"/>
-                                        <label for="acesso_total">Acesso Total</label>
-                                    </div>
-                                    <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="usuario.circuitoStatus"/>
-                                        <label for="circuito_status">Gráfico Circuito por Status</label>
-                                    </div>
-                                    <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="usuario.circuitoLinkMes"/>
-                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
                                     </div>
                                 </div>
                             </div>
@@ -238,16 +179,67 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="circuitos.acesso_total"/>
-                                        <label for="acesso_total">Acesso Total</label>
+                                        <input id="circuitosacesso_total" name="circuitos.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <label for="circuitosacesso_total">Acesso Total a Circuitos</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="circuitos.circuitoStatus"/>
-                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                        <input id="circuitosindex" name="circuitos.index" class="permissao_unitaria permissao_unitaria_circuitos permissao_unitaria_global" type="checkbox" value="circuitos.index"/>
+                                        <label for="circuitosindex">Menu e Lista de Circuitos</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="circuitos.circuitoLinkMes"/>
-                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                        <input id="circuitoscriarCircuitos" name="circuitos.criarCircuitos" class="permissao_unitaria permissao_unitaria_circuitos permissao_unitaria_global" type="checkbox" value="circuitos.criarCircuitos"/>
+                                        <label for="circuitoscriarCircuitos">Criar Circuitos</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuitoseditarCircuitos" name="circuitos.editarCircuitos" class="permissao_unitaria permissao_unitaria_circuitos permissao_unitaria_global" type="checkbox" value="circuitos.editarCircuitos"/>
+                                        <label for="circuitoseditarCircuitos">Editar Circuitos</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuitosmovCircuitos" name="circuitos.movCircuitos" class="permissao_unitaria permissao_unitaria_circuitos permissao_unitaria_global" type="checkbox" value="circuitos.movCircuitos"/>
+                                        <label for="circuitosmovCircuitos">Movimentar Circuitos</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuitospdfCircuito" name="circuitos.pdfCircuito" class="permissao_unitaria permissao_unitaria_circuitos permissao_unitaria_global" type="checkbox" value="circuitos.pdfCircuito"/>
+                                        <label for="circuitospdfCircuito">PDF dos Circuitos</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="circuitosdeletarCircuitos" name="circuitos.deletarCircuitos" class="permissao_unitaria permissao_unitaria_circuitos permissao_unitaria_global" type="checkbox" value="circuitos.deletarCircuitos"/>
+                                        <label for="circuitosdeletarCircuitos">Deletar Circuitos</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h6>Módulo "Usuário"</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="posicao_total">
+                                        <input id="usuarioacesso_total" name="usuario.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <label for="usuarioacesso_total">Acesso Total a Usuário</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="usuarioindex" name="usuario.index" class="permissao_unitaria permissao_unitaria_usuario permissao_unitaria_global" type="checkbox" value="usuario.index"/>
+                                        <label for="usuarioindex">Menu e Lista de Usuários</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="usuariocriarUsuario" name="usuario.criarUsuario" class="permissao_unitaria permissao_unitaria_usuario permissao_unitaria_global" type="checkbox" value="usuario.criarUsuario"/>
+                                        <label for="usuariocriarUsuario">Criar Usuário</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="usuariocriarUsuario" name="usuario.editarUsuario" class="permissao_unitaria permissao_unitaria_usuario permissao_unitaria_global" type="checkbox" value="usuario.criarUsuario"/>
+                                        <label for="usuariocriarUsuario">Editar Usuário</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="usuarioativarUsuario" name="usuario.ativarUsuario" class="permissao_unitaria permissao_unitaria_usuario permissao_unitaria_global" type="checkbox" value="usuario.ativarUsuario"/>
+                                        <label for="usuarioativarUsuario">Ativar Usuário</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="usuarioinativarUsuario" name="usuario.inativarUsuario" class="permissao_unitaria permissao_unitaria_usuario permissao_unitaria_global" type="checkbox" value="usuario.inativarUsuario"/>
+                                        <label for="usuarioinativarUsuario">Inativar Usuário</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="usuariodeletarUsuario" name="usuario.deletarUsuario" class="permissao_unitaria permissao_unitaria_usuario permissao_unitaria_global" type="checkbox" value="usuario.deletarUsuario"/>
+                                        <label for="usuariodeletarUsuario">Deletar Usuário</label>
                                     </div>
                                 </div>
                             </div>
@@ -257,37 +249,71 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="cidade_digital.acesso_total"/>
-                                        <label for="acesso_total">Acesso Total</label>
+                                        <input id="cidade_digitalacesso_total" name="cidade_digital.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <label for="cidade_digitalacesso_total">Acesso Total a Cidade Digital</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="cidade_digital.circuitoStatus"/>
-                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                        <input id="cidade_digitalindex" name="cidade_digital.index" class="permissao_unitaria permissao_unitaria_cidade_digital permissao_unitaria_global" type="checkbox" value="cidade_digital.index"/>
+                                        <label for="cidade_digitalindex">Menu e Lista de Cidade Digital</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="cidade_digital.circuitoLinkMes"/>
-                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                        <input id="cidade_digitalcriarCidadeDigital" name="cidade_digital.criarCidadeDigital" class="permissao_unitaria permissao_unitaria_cidade_digital permissao_unitaria_global" type="checkbox" value="cidade_digital.index"/>
+                                        <label for="cidade_digitalcriarCidadeDigital">Criar Cidade Digital</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="cidade_digitaleditarCidadeDigital" name="cidade_digital.editarCidadeDigital" class="permissao_unitaria permissao_unitaria_cidade_digital permissao_unitaria_global" type="checkbox" value="cidade_digital.index"/>
+                                        <label for="cidade_digitaleditarCidadeDigital">Editar Cidade Digital</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="cidade_digitalativarCidadeDigital" name="cidade_digital.ativarCidadeDigital" class="permissao_unitaria permissao_unitaria_cidade_digital permissao_unitaria_global" type="checkbox" value="cidade_digital.index"/>
+                                        <label for="cidade_digitalativarCidadeDigital">Ativar Cidade Digital</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="cidade_digitalinativarCidadeDigital" name="cidade_digital.inativarCidadeDigital" class="permissao_unitaria permissao_unitaria_cidade_digital permissao_unitaria_global" type="checkbox" value="cidade_digital.index"/>
+                                        <label for="cidade_digitalinativarCidadeDigital">Inativar Cidade Digital</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="cidade_digitaldeletarConectividade" name="cidade_digital.deletarConectividade" class="permissao_unitaria permissao_unitaria_cidade_digital permissao_unitaria_global" type="checkbox" value="cidade_digital.deletarConectividade"/>
+                                        <label for="cidade_digitaldeletarConectividade">Deletar Conectividade</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="cidade_digitaldeletarCidadeDigital" name="cidade_digital.deletarCidadeDigital" class="permissao_unitaria permissao_unitaria_cidade_digital permissao_unitaria_global" type="checkbox" value="cidade_digital.deletarCidadeDigital"/>
+                                        <label for="cidade_digitaldeletarCidadeDigital">Deletar Cidade Digital</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-row">
                         <div class="col-4">
                             <h6>Módulo "Cadastro de Cliente"</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="cliente.acesso_total"/>
-                                        <label for="acesso_total">Acesso Total</label>
+                                        <input id="clienteacesso_total" name="cliente.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <label for="clienteacesso_total">Acesso Total a Cliente</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="cliente.circuitoStatus"/>
-                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                        <input id="clienteindex" name="cliente.index" class="permissao_unitaria permissao_unitaria_cliente permissao_unitaria_global" type="checkbox" value="cliente.index"/>
+                                        <label for="clienteindex">Menu e Lista de Cliente</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="cliente.circuitoLinkMes"/>
-                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                        <input id="clientecriarCliente" name="cliente.criarCliente" class="permissao_unitaria permissao_unitaria_cliente permissao_unitaria_global" type="checkbox" value="cliente.criarCliente"/>
+                                        <label for="clientecriarCliente">Criar Cliente</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="clienteeditarCliente" name="cliente.editarCliente" class="permissao_unitaria permissao_unitaria_cliente permissao_unitaria_global" type="checkbox" value="cliente.editarCliente"/>
+                                        <label for="clienteeditarCliente">Editar Cliente</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="clienteativarCliente" name="cliente.ativarCliente" class="permissao_unitaria permissao_unitaria_cliente permissao_unitaria_global" type="checkbox" value="cliente.ativarCliente"/>
+                                        <label for="clienteativarCliente">Ativar Cliente</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="clienteinativarCliente" name="cliente.inativarCliente" class="permissao_unitaria permissao_unitaria_cliente permissao_unitaria_global" type="checkbox" value="cliente.inativarCliente"/>
+                                        <label for="clienteinativarCliente">Inativar Cliente</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="clientedeletarCliente" name="cliente.deletarCliente" class="permissao_unitaria permissao_unitaria_cliente permissao_unitaria_global" type="checkbox" value="cliente.deletarCliente"/>
+                                        <label for="clientedeletarCliente">Deletar Cliente</label>
                                     </div>
                                 </div>
                             </div>
@@ -297,56 +323,59 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="cliente_unidade.acesso_total"/>
-                                        <label for="acesso_total">Acesso Total</label>
+                                        <input id="cliente_unidadeacesso_total" name="cliente_unidade.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <label for="cliente_unidadeacesso_total">Acesso Total a Cliente Unidade</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="cliente_unidade.circuitoStatus"/>
-                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                        <input id="cliente_unidadeindex" name="cliente_unidade.index" class="permissao_unitaria permissao_unitaria_cliente_unidade permissao_unitaria_global" type="checkbox" value="cliente_unidade.index"/>
+                                        <label for="cliente_unidadeindex">Menu e Lista de Cliente Unidade</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="cliente_unidade.circuitoLinkMes"/>
-                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                        <input id="cliente_unidadecriarClienteUnidade" name="cliente_unidade.criarClienteUnidade" class="permissao_unitaria permissao_unitaria_cliente_unidade permissao_unitaria_global" type="checkbox" value="cliente_unidade.criarClienteUnidade"/>
+                                        <label for="cliente_unidadecriarClienteUnidade">Criar Cliente Unidade</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="cliente_unidadeeditarClienteUnidade" name="cliente_unidade.editarClienteUnidade" class="permissao_unitaria permissao_unitaria_cliente_unidade permissao_unitaria_global" type="checkbox" value="cliente_unidade.editarClienteUnidade"/>
+                                        <label for="cliente_unidadeeditarClienteUnidade">Editar Cliente Unidade</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="cliente_unidadeativarClienteUnidade" name="cliente_unidade.ativarClienteUnidade" class="permissao_unitaria permissao_unitaria_cliente_unidade permissao_unitaria_global" type="checkbox" value="cliente_unidade.ativarClienteUnidade"/>
+                                        <label for="cliente_unidadeativarClienteUnidade">Ativar Cliente Unidade</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="cliente_unidadeinativarClienteUnidade" name="cliente_unidade.inativarClienteUnidade" class="permissao_unitaria permissao_unitaria_cliente_unidade permissao_unitaria_global" type="checkbox" value="cliente_unidade.inativarClienteUnidade"/>
+                                        <label for="cliente_unidadeinativarClienteUnidade">Inativar Cliente Unidade</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="cliente_unidadedeletarClienteUnidade" name="cliente_unidade.deletarClienteUnidade" class="permissao_unitaria permissao_unitaria_cliente_unidade permissao_unitaria_global" type="checkbox" value="cliente_unidade.deletarClienteUnidade"/>
+                                        <label for="cliente_unidadedeletarClienteUnidade">Deletar Cliente Unidade</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-4">
-                            <h6>Módulo "Cadastro do Controle de Acesso"</h6>
-                            <div class="form-row">
-                                <div class="form-group col-md-12">
-                                    <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="controle_acesso.acesso_total"/>
-                                        <label for="acesso_total">Acesso Total</label>
-                                    </div>
-                                    <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="controle_acesso.circuitoStatus"/>
-                                        <label for="circuito_status">Gráfico Circuito por Status</label>
-                                    </div>
-                                    <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="controle_acesso.circuitoLinkMes"/>
-                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-row">
                         <div class="col-4">
                             <h6>Módulo "Cadastro de Empresa"</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="empresa.acesso_total"/>
-                                        <label for="acesso_total">Acesso Total</label>
+                                        <input id="empresaacesso_total" name="empresa.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <label for="empresaacesso_total">Acesso Total a Empresa</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="empresa.circuitoStatus"/>
-                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                        <input id="empresaindex" name="empresa.index" class="permissao_unitaria permissao_unitaria_empresa permissao_unitaria_global" type="checkbox" value="empresa.index"/>
+                                        <label for="empresaindex">Menu e Lista de Empresa</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="empresa.circuitoLinkMes"/>
-                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                        <input id="empresacriarEmpresa" name="empresa.criarEmpresa" class="permissao_unitaria permissao_unitaria_empresa permissao_unitaria_global" type="checkbox" value="empresa.criarEmpresa"/>
+                                        <label for="empresacriarEmpresa">Criar Empresa</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="empresaeditarEmpresa" name="empresa.editarEmpresa" class="permissao_unitaria permissao_unitaria_empresa permissao_unitaria_global" type="checkbox" value="empresa.editarEmpresa"/>
+                                        <label for="empresaeditarEmpresa">Editar Empresa</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="empresadeletarEmpresa" name="empresa.deletarEmpresa" class="permissao_unitaria permissao_unitaria_empresa permissao_unitaria_global" type="checkbox" value="empresa.deletarEmpresa"/>
+                                        <label for="empresadeletarEmpresa">Deletar Empresa</label>
                                     </div>
                                 </div>
                             </div>
@@ -356,16 +385,32 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="fabricante.acesso_total"/>
-                                        <label for="acesso_total">Acesso Total</label>
+                                        <input id="fabricanteacesso_total" name="fabricante.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <label for="fabricanteacesso_total">Acesso Total a Fabricante</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="fabricante.circuitoStatus"/>
-                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                        <input id="fabricanteindex" name="fabricante.index" class="permissao_unitaria permissao_unitaria_fabricante permissao_unitaria_global" type="checkbox" value="fabricante.index"/>
+                                        <label for="fabricanteindex">Menu e Lista de Fabricante</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="fabricante.circuitoLinkMes"/>
-                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                        <input id="fabricantecriarFabricante" name="fabricante.criarFabricante" class="permissao_unitaria permissao_unitaria_fabricante permissao_unitaria_global" type="checkbox" value="fabricante.criarFabricante"/>
+                                        <label for="fabricantecriarFabricante">Criar Fabricante</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="fabricanteeditarFabricante" name="fabricante.editarFabricante" class="permissao_unitaria permissao_unitaria_fabricante permissao_unitaria_global" type="checkbox" value="fabricante.editarFabricante"/>
+                                        <label for="fabricanteeditarFabricante">Editar Fabricante</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="fabricanteativarFabricante" name="fabricante.ativarFabricante" class="permissao_unitaria permissao_unitaria_fabricante permissao_unitaria_global" type="checkbox" value="fabricante.ativarFabricante"/>
+                                        <label for="fabricanteativarFabricante">Ativar Fabricante</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="fabricanteinativarFabricante" name="fabricante.inativarFabricante" class="permissao_unitaria permissao_unitaria_fabricante permissao_unitaria_global" type="checkbox" value="fabricante.inativarFabricante"/>
+                                        <label for="fabricanteinativarFabricante">Inativar Fabricante</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="fabricantedeletarFabricante" name="fabricante.deletarFabricante" class="permissao_unitaria permissao_unitaria_fabricante permissao_unitaria_global" type="checkbox" value="fabricante.deletarFabricante"/>
+                                        <label for="fabricantedeletarFabricante">Deletar Fabricante</label>
                                     </div>
                                 </div>
                             </div>
@@ -375,37 +420,67 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="modelo.acesso_total"/>
-                                        <label for="acesso_total">Acesso Total</label>
+                                        <input id="modeloacesso_total" name="modelo.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <label for="modeloacesso_total">Acesso Total a Modelo</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="modelo.circuitoStatus"/>
-                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                        <input id="modeloindex" name="modelo.index" class="permissao_unitaria permissao_unitaria_modelo permissao_unitaria_global" type="checkbox" value="modelo.index"/>
+                                        <label for="modeloindex">Menu e Lista de Modelo</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="modelo.circuitoLinkMes"/>
-                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                        <input id="modelocriarModelo" name="modelo.criarModelo" class="permissao_unitaria permissao_unitaria_modelo permissao_unitaria_global" type="checkbox" value="modelo.criarModelo"/>
+                                        <label for="modelocriarModelo">Criar Modelo</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="modeloeditarModelo" name="modelo.editarModelo" class="permissao_unitaria permissao_unitaria_modelo permissao_unitaria_global" type="checkbox" value="modelo.editarModelo"/>
+                                        <label for="modeloeditarModelo">Editar Modelo</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="modeloativarModelo" name="modelo.ativarModelo" class="permissao_unitaria permissao_unitaria_modelo permissao_unitaria_global" type="checkbox" value="modelo.ativarModelo"/>
+                                        <label for="modeloativarModelo">Ativar Modelo</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="modeloinativarModelo" name="modelo.inativarModelo" class="permissao_unitaria permissao_unitaria_modelo permissao_unitaria_global" type="checkbox" value="modelo.inativarModelo"/>
+                                        <label for="modeloinativarModelo">Inativar Modelo</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="modelodeletarModelo" name="modelo.deletarModelo" class="permissao_unitaria permissao_unitaria_modelo permissao_unitaria_global" type="checkbox" value="modelo.deletarModelo"/>
+                                        <label for="modelodeletarModelo">Deletar Modelo</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-row">
                         <div class="col-4">
                             <h6>Módulo "Cadastro de Equipamento"</h6>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="equipamento.acesso_total"/>
-                                        <label for="acesso_total">Acesso Total</label>
+                                        <input id="equipamentoacesso_total" name="equipamento.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <label for="equipamentoacesso_total">Acesso Total a Equipamento</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="equipamento.circuitoStatus"/>
-                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                        <input id="equipamentoindex" name="equipamento.index" class="permissao_unitaria permissao_unitaria_equipamento permissao_unitaria_global" type="checkbox" value="equipamento.index"/>
+                                        <label for="equipamentoindex">Menu e Lista de Equipamento</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="equipamento.circuitoLinkMes"/>
-                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                        <input id="equipamentocriarEquipamento" name="equipamento.criarEquipamento" class="permissao_unitaria permissao_unitaria_equipamento permissao_unitaria_global" type="checkbox" value="equipamento.criarEquipamento"/>
+                                        <label for="equipamentocriarEquipamento">Criar Equipamento</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="equipamentoeditarEquipamento" name="equipamento.editarEquipamento" class="permissao_unitaria permissao_unitaria_equipamento permissao_unitaria_global" type="checkbox" value="equipamento.editarEquipamento"/>
+                                        <label for="equipamentoeditarEquipamento">Editar Equipamento</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="equipamentoativarEquipamento" name="equipamento.ativarEquipamento" class="permissao_unitaria permissao_unitaria_equipamento permissao_unitaria_global" type="checkbox" value="equipamento.ativarEquipamento"/>
+                                        <label for="equipamentoativarEquipamento">Ativar Equipamento</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="equipamentoinativarEquipamento" name="equipamento.inativarEquipamento" class="permissao_unitaria permissao_unitaria_equipamento permissao_unitaria_global" type="checkbox" value="equipamento.inativarEquipamento"/>
+                                        <label for="equipamentoinativarEquipamento">Inativar Equipamento</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="equipamentodeletarEquipamento" name="equipamento.deletarEquipamento" class="permissao_unitaria permissao_unitaria_equipamento permissao_unitaria_global" type="checkbox" value="equipamento.deletarEquipamento"/>
+                                        <label for="equipamentodeletarEquipamento">Deletar Equipamento</label>
                                     </div>
                                 </div>
                             </div>
@@ -415,16 +490,59 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="lov.acesso_total"/>
-                                        <label for="acesso_total">Acesso Total</label>
+                                        <input id="lovacesso_total" name="lov.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <label for="lovacesso_total">Acesso Total a Lista de Valores</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="lov.circuitoStatus"/>
-                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                        <input id="lovindex" name="lov.index" class="permissao_unitaria permissao_unitaria_lov permissao_unitaria_global" type="checkbox" value="lov.index"/>
+                                        <label for="lovindex">Menu e Lista de Lista de Valores</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="lov.circuitoLinkMes"/>
-                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                        <input id="lovcriarLov" name="lov.criarLov" class="permissao_unitaria permissao_unitaria_lov permissao_unitaria_global" type="checkbox" value="lov.criarLov"/>
+                                        <label for="lovcriarLov">Criar Lista de Valores</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="loveditarLov" name="lov.editarLov" class="permissao_unitaria permissao_unitaria_lov permissao_unitaria_global" type="checkbox" value="lov.editarLov"/>
+                                        <label for="loveditarLov">Editar Lista de Valores</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="lovdeletarLov" name="lov.deletarLov" class="permissao_unitaria permissao_unitaria_lov permissao_unitaria_global" type="checkbox" value="lov.deletarLov"/>
+                                        <label for="lovdeletarLov">Deletar Lista de Valores</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h6>Módulo "Cadastro do Controle de Acesso"</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div class="posicao_total">
+                                        <input id="controle_acessoacesso_total" name="controle_acesso.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <label for="controle_acessoacesso_total">Acesso Total a Controle de Acesso</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="controle_acessoindex" name="controle_acesso.index" class="permissao_unitaria permissao_unitaria_controle_acesso permissao_unitaria_global" type="checkbox" value="controle_acesso.index"/>
+                                        <label for="controle_acessoindex">Menu e Lista de Controle de Acesso</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="controle_acessocriarControleAcesso" name="controle_acesso.criarControleAcesso" class="permissao_unitaria permissao_unitaria_controle_acesso permissao_unitaria_global" type="checkbox" value="controle_acesso.criarControleAcesso"/>
+                                        <label for="controle_acessocriarControleAcesso">Criar Perfil</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="controle_acessoeditarControleAcesso" name="controle_acesso.editarControleAcesso" class="permissao_unitaria permissao_unitaria_controle_acesso permissao_unitaria_global" type="checkbox" value="controle_acesso.editarControleAcesso"/>
+                                        <label for="controle_acessoeditarControleAcesso">Editar Perfil</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="controle_acessodeletarControleAcesso" name="controle_acesso.deletarControleAcesso" class="permissao_unitaria permissao_unitaria_controle_acesso permissao_unitaria_global" type="checkbox" value="controle_acesso.deletarControleAcesso"/>
+                                        <label for="controle_acessodeletarControleAcesso">Deletar Perfil</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="controle_acessoadicionarPermissao" name="controle_acesso.adicionarPermissao" class="permissao_unitaria permissao_unitaria_controle_acesso permissao_unitaria_global" type="checkbox" value="controle_acesso.adicionarPermissao"/>
+                                        <label for="controle_acessoadicionarPermissao">Adicionar Permissões</label>
+                                    </div>
+                                    <div class="posicao_unitaria">
+                                        <input id="controle_acessoremoverPermissao" name="controle_acesso.removerPermissao" class="permissao_unitaria permissao_unitaria_controle_acesso permissao_unitaria_global" type="checkbox" value="controle_acesso.removerPermissao"/>
+                                        <label for="controle_acessoremoverPermissao">Remover Permissões</label>
                                     </div>
                                 </div>
                             </div>
@@ -434,41 +552,39 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="relatorio_gestao.acesso_total"/>
-                                        <label for="acesso_total">Acesso Total</label>
+                                        <input id="relatorios_gestaoacesso_total" name="relatorios_gestao.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <label for="relatorios_gestaoacesso_total">Acesso Total a Relatórios</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="relatorio_gestao.circuitoStatus"/>
-                                        <label for="circuito_status">Gráfico Circuito por Status</label>
+                                        <input id="relatorios_gestaoindex" name="relatorios_gestao.index" class="permissao_unitaria permissao_unitaria_relatorios_gestao permissao_unitaria_global" type="checkbox" value="relatorios_gestao.index"/>
+                                        <label for="relatorios_gestaoindex">Menu do Relatório</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="relatorio_gestao.circuitoLinkMes"/>
-                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
+                                        <input id="relatorios_gestaorelatorioCustomizado" name="relatorios_gestao.relatorioCustomizado" class="permissao_unitaria permissao_unitaria_relatorios_gestao permissao_unitaria_global" type="checkbox" value="relatorios_gestao.relatorioCustomizado"/>
+                                        <label for="relatorios_gestaorelatorioCustomizado">Geração do Relatório</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-4">
-                            <h6>Módulo "Sessão"</h6>
-                            <div class="form-row">
-                                <div class="form-group col-md-12">
-                                    <div class="posicao_total">
-                                        <input id="acesso_total" name="acesso_total" class="permissao_total" type="checkbox" value="session.acesso_total"/>
-                                        <label for="acesso_total">Acesso Total</label>
-                                    </div>
-                                    <div class="posicao_unitaria">
-                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="session.circuitoStatus"/>
-                                        <label for="circuito_status">Gráfico Circuito por Status</label>
-                                    </div>
-                                    <div class="posicao_unitaria">
-                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="session.circuitoLinkMes"/>
-                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<!--                        <div class="col-4">-->
+<!--                            <h6>Módulo "Central Mensagens"</h6>-->
+<!--                            <div class="form-row">-->
+<!--                                <div class="form-group col-md-12">-->
+<!--                                    <div class="posicao_total">-->
+<!--                                        <input id="central_mensagensacesso_total" name="central_mensagensacesso_total" class="permissao_total_modulo" type="checkbox"/>-->
+<!--                                        <label for="central_mensagensacesso_total">Acesso Total</label>-->
+<!--                                    </div>-->
+<!--                                    <div class="posicao_unitaria">-->
+<!--                                        <input id="circuito_status" name="circuito_status" class="permissao_unitaria" type="checkbox" value="central_mensagens.circuitoStatus"/>-->
+<!--                                        <label for="circuito_status">Gráfico Circuito por Status</label>-->
+<!--                                    </div>-->
+<!--                                    <div class="posicao_unitaria">-->
+<!--                                        <input id="circuito_link_mes" name="circuito_link_mes" class="permissao_unitaria" type="checkbox" value="central_mensagens.circuitoLinkMes"/>-->
+<!--                                        <label for="circuito_link_mes">Gráfico Circuitos por Tipo de Link</label>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </div>
                 </div>
                 <div class="modal-footer">
