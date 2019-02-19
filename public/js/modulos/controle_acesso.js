@@ -89,6 +89,7 @@ var table = $("#tb_controleacesso").DataTable({
 table.buttons().container().appendTo("#tb_controleacesso_wrapper .col-md-6:eq(0)");
 
 table.on( 'select deselect', function () {
+    "use strict";
     var selectedRows = table.rows( { selected: true } ).count();
 
     table.button( 1 ).enable( selectedRows === 1 );
@@ -98,7 +99,8 @@ table.on( 'select deselect', function () {
 
 //Limpar Linhas da Tabela
 (function ($) {
-    RemoveTableRow = function (handler) {
+    "use strict";
+    var RemoveTableRow = function (handler) {
         var tr = $(handler).closest("tr");
         tr.fadeOut(400, function () {
             tr.remove();
@@ -108,11 +110,13 @@ table.on( 'select deselect', function () {
 })(jQuery);
 
 $(".bt_novo").on("click", function(){
+    "use strict";
     $("#modalcontroleacesso").modal();
     $("#salvarControleAcesso").removeClass("editar_controleacesso").addClass("criar_controleacesso");
 });
 
 $(document).on("click", ".criar_controleacesso", function(){
+    "use strict";
     //Validação de formulário
     $("#formControleAcesso").validate({
         rules : {
@@ -182,6 +186,7 @@ $(document).on("click", ".criar_controleacesso", function(){
 //Coletando os ids das linhas selecionadas na tabela
 var ids = [];
 $("#tb_controleacesso").on("click", "tr", function () {
+    "use strict";
     var valr = $(this)[0].cells[0].innerText;
     if (!ids.includes(valr)) {
         ids.push(valr);
@@ -192,6 +197,7 @@ $("#tb_controleacesso").on("click", "tr", function () {
 });
 
 $(".bt_edit").on("click", function(){
+    "use strict";
     var id_controleacesso = ids[0];
     var action = actionCorreta(window.location.href.toString(), "controle_acesso/formControleAcesso");
     $.ajax({
@@ -241,6 +247,7 @@ $(".bt_edit").on("click", function(){
 });
 
 $(".bt_visual").on("click", function(){
+    "use strict";
     var id_controleacesso = ids[0];
     var action = actionCorreta(window.location.href.toString(), "controle_acesso/formControleAcesso");
     $.ajax({
@@ -290,6 +297,7 @@ $(".bt_visual").on("click", function(){
 });
 
 $(document).on("click", ".editar_controleacesso", function(){
+    "use strict";
     //Validação de formulário
     $("#formControleAcesso").validate({
         rules : {
@@ -355,6 +363,7 @@ $(document).on("click", ".editar_controleacesso", function(){
 });
 
 $(".bt_del").on("click", function(){
+    "use strict";
     var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
@@ -527,9 +536,10 @@ $(".bt_del").on("click", function(){
 //
 // });
 
-//Funções para realizar as mudanças
+//Adicionar permissões
 function adicionarPermissao(role, resource, access_name)
 {
+    "use strict";
     var action = actionCorreta(window.location.href.toString(), "controle_acesso/adicionarPermissao");
     $.ajax({
         type: "POST",
@@ -555,9 +565,10 @@ function adicionarPermissao(role, resource, access_name)
         }
     });
 }
-
+//Remover permissões
 function removerPermissao(role, resource, access_name)
 {
+    "use strict";
     var action = actionCorreta(window.location.href.toString(), "controle_acesso/removerPermissao");
     $.ajax({
         type: "POST",
@@ -587,9 +598,10 @@ function removerPermissao(role, resource, access_name)
     });
 
 }
-
+//Buscando permissões por Perfil
 function buscarPermissoes(role)
 {
+    "use strict";
     var action = actionCorreta(window.location.href.toString(), "controle_acesso/buscarPermissoes");
     var dados = [];
     $.ajax({
@@ -614,244 +626,252 @@ function buscarPermissoes(role)
     });
     return dados;
 }
+//Funções que controlam o checkbox do total já iniciar corretamente
+function checkAcessoUnitario(resources)
+{
+    "use strict";
+    var verdadeiro_modulo = 0;
+    var falso_modulo = 0;
+    var seletor_unitario;
+    var seletor_total;
+    switch (resources)
+    {
+        case "index":
+            seletor_unitario = ".permissao_unitaria_dashboard";
+            seletor_total = ".check_total_dashboard";
+            break;
+        case "relatorios_gestao":
+            seletor_unitario = ".permissao_unitaria_relatorios_gestao";
+            seletor_total = ".check_total_relatorios_gestao";
+            break;
+        case "cidade_digital":
+            seletor_unitario = ".permissao_unitaria_cidade_digital";
+            seletor_total = ".check_total_cidade_digital";
+            break;
+        case "circuitos":
+            seletor_unitario = ".permissao_unitaria_circuitos";
+            seletor_total = ".check_total_circuitos";
+            break;
+        case "cliente":
+            seletor_unitario = ".permissao_unitaria_cliente";
+            seletor_total = ".check_total_cliente";
+            break;
+        case "cliente_unidade":
+            seletor_unitario = ".permissao_unitaria_cliente_unidade";
+            seletor_total = ".check_total_cliente_unidade";
+            break;
+        case "controle_acesso":
+            seletor_unitario = ".permissao_unitaria_controle_acesso";
+            seletor_total = ".check_total_controle_acesso";
+            break;
+        case "empresa":
+            seletor_unitario = ".permissao_unitaria_empresa";
+            seletor_total = ".check_total_empresa";
+            break;
+        case "equipamento":
+            seletor_unitario = ".permissao_unitaria_equipamento";
+            seletor_total = ".check_total_equipamento";
+            break;
+        case "fabricante":
+            seletor_unitario = ".permissao_unitaria_fabricante";
+            seletor_total = ".check_total_fabricante";
+            break;
+        case "lov":
+            seletor_unitario = ".permissao_unitaria_lov";
+            seletor_total = ".check_total_lov";
+            break;
+        case "modelo":
+            seletor_unitario = ".permissao_unitaria_modelo";
+            seletor_total = ".check_total_modelo";
+            break;
+        case "usuario":
+            seletor_unitario = ".permissao_unitaria_usuario";
+            seletor_total = ".check_total_usuario";
+            break;
+    }
+    //verifica o check total
+    $(seletor_unitario).each(function () {
+        if ($(this).prop("checked"))
+        {
+            verdadeiro_modulo++;
+        }
+        else
+        {
+            falso_modulo++;
+        }
+    });
+    var total_modulo = verdadeiro_modulo + falso_modulo;
+    if (total_modulo === verdadeiro_modulo)
+    {
+        $(seletor_total).prop("checked", true);
+    }
+    else
+    {
+        $(seletor_total).prop("checked", false);
+    }
 
+}
+//Funções que controlam o checkbox do total já iniciar corretamente
+function checkAcessoTotal()
+{
+    "use strict";
+    var verdadeiro_global = 0;
+    var falso_global = 0;
+    //verifica o check total
+    $(".permissao_unitaria").each(function () {
+        if ($(this).prop("checked"))
+        {
+            verdadeiro_global++;
+        }
+        else
+        {
+            falso_global++;
+        }
+    });
+    var total_global = verdadeiro_global + falso_global;
+    if (total_global === verdadeiro_global)
+    {
+        // $(".permissao_total_global").prop("checked", true);
+        $(".permissao_total_global").prop("checked", true);
+    }
+    else
+    {
+        $(".permissao_total_global").prop("checked", false);
+    }
+
+}
+//Carregando permissões já atribuídas
 $(".bt_permissoes").on("click", function(){
+    "use strict";
     var dados = buscarPermissoes(ids[0]);
     //Popula os dados
     if (dados)
     {
         $.each(dados[0], function (key, value) {
             $("#" + value.resources_name + value.access_name).prop("checked", true);
+            checkAcessoUnitario(value.resources_name);
         });
     }
     $("#roles_name").val(ids[0]);
     $("#titulo_nome_perfil").html(ids[0]);
     //Verifica checkTotal
-    checkAessoTotalDashoboard();
+    checkAcessoTotal();
     //Abre o modal
     $("#modalpermissoes").modal();
 });
-
+//Permissão de Super User
 $(".permissao_total_global").on("change", function(){
-    if ($(this).prop("checked")) {
-        $(".permissao_unitaria_global").each(function () {
-            if (!$(this).prop("checked"))
+    "use strict";
+    var role = $("#roles_name").val();
+    //Verifica o check_total clicado
+    if ($(this).prop("checked")) {//Verifica se check total já está checked
+        $(".permissao_unitaria_global").each(function () {//Faz o laço entre todos que possuem a classe selecionada
+            var valor = $(this).val();
+            var resources_access = valor.split(".");
+            var resource = resources_access[0];
+            var access_name = resources_access[1];
+            if (!$(this).prop("checked"))//Verifica se ele não está checked
             {
-                $(this).trigger("click");
+                adicionarPermissao(role, resource, access_name);
+                $(this).prop("checked", true);
             }
         });
     }
     else{
         $(".permissao_unitaria_global").each(function () {
+            var valor = $(this).val();
+            var resources_access = valor.split(".");
+            var resource = resources_access[0];
+            var access_name = resources_access[1];
             if ($(this).prop("checked"))
             {
-                $(this).trigger("click");
+                removerPermissao(role, resource, access_name);
+                $(this).prop("checked", false);
             }
         });
     }
 });
-
-$(".permissao_total_global").on("change", function(){
-    var valor = $(this).val();
-    var resources_access = valor.split(".");
-    var resource = resources_access[0];
-    var access_name = resources_access[1];
+//Faz o check automático de todos por módulo
+$(".permissao_total_modulo").on("change", function(){
+    "use strict";
     var role = $("#roles_name").val();
-    //Verifica o check_total clicado
-    if ($(this).prop("checked"))
+    var attrname = $(this).attr("name");
+    var modulo = attrname.split(".");
+    var seletor;
+    switch (modulo[0])
     {
-        //Verifica se existe algum check unitário diferente
-        if (!$(".permissao_unitaria_global").prop("checked"))
-        {
-            adicionarPermissao(role, resource, access_name);
-        }
+        case "index":
+            seletor = ".permissao_unitaria_dashboard";
+            break;
+        case "relatorios_gestao":
+            seletor = ".permissao_unitaria_relatorios_gestao";
+            break;
+        case "cidade_digital":
+            seletor = ".permissao_unitaria_cidade_digital";
+            break;
+        case "circuitos":
+            seletor = ".permissao_unitaria_circuitos";
+            break;
+        case "cliente":
+            seletor = ".permissao_unitaria_cliente";
+            break;
+        case "cliente_unidade":
+            seletor = ".permissao_unitaria_cliente_unidade";
+            break;
+        case "controle_acesso":
+            seletor = ".permissao_unitaria_controle_acesso";
+            break;
+        case "empresa":
+            seletor = ".permissao_unitaria_empresa";
+            break;
+        case "equipamento":
+            seletor = ".permissao_unitaria_equipamento";
+            break;
+        case "fabricante":
+            seletor = ".permissao_unitaria_fabricante";
+            break;
+        case "lov":
+            seletor = ".permissao_unitaria_lov";
+            break;
+        case "modelo":
+            seletor = ".permissao_unitaria_modelo";
+            break;
+        case "usuario":
+            seletor = ".permissao_unitaria_usuario";
+            break;
     }
-    else
-    {
-        //Verifica se existe algum check unitário diferente
-        if ($(".permissao_unitaria_global").prop("checked"))
-        {
-            removerPermissao(role, resource, access_name);
-        }
+    if ($(this).prop("checked")) {//Verifica se check total já está checked
+        $(seletor).each(function () {//Faz o laço entre todos que possuem a classe selecionada
+            var valor = $(this).val();
+            var resources_access = valor.split(".");
+            var resource = resources_access[0];
+            var access_name = resources_access[1];
+            if (!$(this).prop("checked"))//Verifica se ele não está checked
+            {
+                adicionarPermissao(role, resource, access_name);
+                $(this).prop("checked", true);
+            }
+        });
     }
-});
-//Funções que controlam o Módulo de Dashboard
-function checkAessoTotalDashoboard()
-{
-    var verdadeiro = 0;
-    var falso = 0;
+    else{
+        $(seletor).each(function () {
+            var valor = $(this).val();
+            var resources_access = valor.split(".");
+            var resource = resources_access[0];
+            var access_name = resources_access[1];
+            if ($(this).prop("checked"))
+            {
+                removerPermissao(role, resource, access_name);
+                $(this).prop("checked", false);
+            }
+        });
+    }
     //verifica o check total
-    $(".permissao_unitaria_dashboard").each(function () {
-        if ($(this).prop("checked"))
-        {
-            verdadeiro++;
-        }
-        else
-        {
-            falso++;
-        }
-    });
-    var total = verdadeiro + falso;
-    if (total === verdadeiro)
-    {
-        $(".permissao_total_dashboard").prop("checked", true);
-    }
-    else
-    {
-        $(".permissao_total_dashboard").prop("checked", false);
-        $(".permissao_total_global").prop("checked", false);
-    }
-
-}
-//Função que controla o quando o check total de permissões (identifica quando já estou ou não ckecado)
-$(".permissao_total_modulo").on("change", function(){
-    var attrname = $(this).attr("name");
-    var modulo = attrname.split(".");
-    var seletor;
-    console.log(modulo[0]);
-    switch (modulo[0])
-    {
-        case "index":
-            seletor = ".permissao_unitaria_dashboard";
-            break;
-        case "relatorios_gestao":
-            seletor = ".permissao_unitaria_relatorios_gestao";
-            break;
-        case "cidade_digital":
-            seletor = ".permissao_unitaria_cidade_digital";
-        break;
-        case "circuitos":
-            seletor = ".permissao_unitaria_circuitos";
-            break;
-        case "cliente":
-            seletor = ".permissao_unitaria_cliente";
-            break;
-        case "cliente_unidade":
-            seletor = ".permissao_unitaria_cliente_unidade";
-            break;
-        case "controle_acesso":
-            seletor = ".permissao_unitaria_controle_acesso";
-            break;
-        case "core":
-            seletor = ".permissao_unitaria_core";
-            break;
-        case "empresa":
-            seletor = ".permissao_unitaria_empresa";
-            break;
-        case "equipamento":
-            seletor = ".permissao_unitaria_equipamento";
-            break;
-        case "fabricante":
-            seletor = ".permissao_unitaria_fabricante";
-            break;
-        case "lov":
-            seletor = ".permissao_unitaria_lov";
-            break;
-        case "modelo":
-            seletor = ".permissao_unitaria_modelo";
-            break;
-        case "session":
-            seletor = ".permissao_unitaria_session";
-            break;
-        case "usuario":
-            seletor = ".permissao_unitaria_usuario";
-            break;
-    }
-    if ($(this).prop("checked")) {
-        $(seletor).each(function () {
-            if (!$(this).prop("checked"))
-            {
-                $(this).trigger("click");
-            }
-        });
-    }
-    else{
-        $(seletor).each(function () {
-            if ($(this).prop("checked"))
-            {
-                $(this).trigger("click");
-            }
-        });
-    }
-});
-//Faz o check automático de todos
-$(".permissao_total_modulo").on("change", function(){
-    var valor = $(this).val();
-    var resources_access = valor.split(".");
-    var resource = resources_access[0];
-    var access_name = resources_access[1];
-    var role = $("#roles_name").val();
-    var attrname = $(this).attr("name");
-    var modulo = attrname.split(".");
-    var seletor;
-    switch (modulo[0])
-    {
-        case "index":
-            seletor = ".permissao_unitaria_dashboard";
-            break;
-        case "relatorios_gestao":
-            seletor = ".permissao_unitaria_relatorios_gestao";
-            break;
-        case "cidade_digital":
-            seletor = ".permissao_unitaria_cidade_digital";
-            break;
-        case "circuitos":
-            seletor = ".permissao_unitaria_circuitos";
-            break;
-        case "cliente":
-            seletor = ".permissao_unitaria_cliente";
-            break;
-        case "cliente_unidade":
-            seletor = ".permissao_unitaria_cliente_unidade";
-            break;
-        case "controle_acesso":
-            seletor = ".permissao_unitaria_controle_acesso";
-            break;
-        case "core":
-            seletor = ".permissao_unitaria_core";
-            break;
-        case "empresa":
-            seletor = ".permissao_unitaria_empresa";
-            break;
-        case "equipamento":
-            seletor = ".permissao_unitaria_equipamento";
-            break;
-        case "fabricante":
-            seletor = ".permissao_unitaria_fabricante";
-            break;
-        case "lov":
-            seletor = ".permissao_unitaria_lov";
-            break;
-        case "modelo":
-            seletor = ".permissao_unitaria_modelo";
-            break;
-        case "session":
-            seletor = ".permissao_unitaria_session";
-            break;
-        case "usuario":
-            seletor = ".permissao_unitaria_usuario";
-            break;
-    }
-    //Verifica o check_total clicado
-    if ($(this).prop("checked"))
-    {
-        //Verifica se existe algum check unitário diferente
-        if (!$(seletor).prop("checked"))
-        {
-            adicionarPermissao(role, resource, access_name);
-        }
-    }
-    else
-    {
-        //Verifica se existe algum check unitário diferente
-        if ($(seletor).prop("checked"))
-        {
-            removerPermissao(role, resource, access_name);
-        }
-    }
+    checkAcessoTotal();
 });
 //Faz a concessão de permissões unitárias
 $(".permissao_unitaria").on("change", function(){
+    "use strict";
     var valor = $(this).val();
     var resources_access = valor.split(".");
     var resource = resources_access[0];
@@ -867,5 +887,6 @@ $(".permissao_unitaria").on("change", function(){
         removerPermissao(role, resource, access_name);
     }
     //verifica o check total
-    checkAessoTotalDashoboard();
+    checkAcessoUnitario(resource);
+    checkAcessoTotal();
 });

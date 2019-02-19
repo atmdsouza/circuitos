@@ -132,7 +132,7 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="indexacesso_total" name="index.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <input id="indexacesso_total" name="index.acesso_total" class="check_total_dashboard permissao_total_modulo" type="checkbox"/>
                                         <label for="indexacesso_total">Acesso Total a Dashboard</label>
                                     </div>
                                     <div class="posicao_unitaria">
@@ -179,7 +179,7 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="circuitosacesso_total" name="circuitos.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <input id="circuitosacesso_total" name="circuitos.acesso_total" class="check_total_circuitos permissao_total_modulo" type="checkbox"/>
                                         <label for="circuitosacesso_total">Acesso Total a Circuitos</label>
                                     </div>
                                     <div class="posicao_unitaria">
@@ -214,7 +214,7 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="usuarioacesso_total" name="usuario.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <input id="usuarioacesso_total" name="usuario.acesso_total" class="check_total_usuario permissao_total_modulo" type="checkbox"/>
                                         <label for="usuarioacesso_total">Acesso Total a Usuário</label>
                                     </div>
                                     <div class="posicao_unitaria">
@@ -226,8 +226,8 @@ use Phalcon\Tag;
                                         <label for="usuariocriarUsuario">Criar Usuário</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="usuariocriarUsuario" name="usuario.editarUsuario" class="permissao_unitaria permissao_unitaria_usuario permissao_unitaria_global" type="checkbox" value="usuario.criarUsuario"/>
-                                        <label for="usuariocriarUsuario">Editar Usuário</label>
+                                        <input id="usuarioeditarUsuario" name="usuario.editarUsuario" class="permissao_unitaria permissao_unitaria_usuario permissao_unitaria_global" type="checkbox" value="usuario.editarUsuario"/>
+                                        <label for="usuarioeditarUsuario">Editar Usuário</label>
                                     </div>
                                     <div class="posicao_unitaria">
                                         <input id="usuarioativarUsuario" name="usuario.ativarUsuario" class="permissao_unitaria permissao_unitaria_usuario permissao_unitaria_global" type="checkbox" value="usuario.ativarUsuario"/>
@@ -249,7 +249,7 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="cidade_digitalacesso_total" name="cidade_digital.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <input id="cidade_digitalacesso_total" name="cidade_digital.acesso_total" class="check_total_cidade_digital permissao_total_modulo" type="checkbox"/>
                                         <label for="cidade_digitalacesso_total">Acesso Total a Cidade Digital</label>
                                     </div>
                                     <div class="posicao_unitaria">
@@ -257,19 +257,19 @@ use Phalcon\Tag;
                                         <label for="cidade_digitalindex">Menu e Lista de Cidade Digital</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="cidade_digitalcriarCidadeDigital" name="cidade_digital.criarCidadeDigital" class="permissao_unitaria permissao_unitaria_cidade_digital permissao_unitaria_global" type="checkbox" value="cidade_digital.index"/>
+                                        <input id="cidade_digitalcriarCidadeDigital" name="cidade_digital.criarCidadeDigital" class="permissao_unitaria permissao_unitaria_cidade_digital permissao_unitaria_global" type="checkbox" value="cidade_digital.criarCidadeDigital"/>
                                         <label for="cidade_digitalcriarCidadeDigital">Criar Cidade Digital</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="cidade_digitaleditarCidadeDigital" name="cidade_digital.editarCidadeDigital" class="permissao_unitaria permissao_unitaria_cidade_digital permissao_unitaria_global" type="checkbox" value="cidade_digital.index"/>
+                                        <input id="cidade_digitaleditarCidadeDigital" name="cidade_digital.editarCidadeDigital" class="permissao_unitaria permissao_unitaria_cidade_digital permissao_unitaria_global" type="checkbox" value="cidade_digital.editarCidadeDigital"/>
                                         <label for="cidade_digitaleditarCidadeDigital">Editar Cidade Digital</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="cidade_digitalativarCidadeDigital" name="cidade_digital.ativarCidadeDigital" class="permissao_unitaria permissao_unitaria_cidade_digital permissao_unitaria_global" type="checkbox" value="cidade_digital.index"/>
+                                        <input id="cidade_digitalativarCidadeDigital" name="cidade_digital.ativarCidadeDigital" class="permissao_unitaria permissao_unitaria_cidade_digital permissao_unitaria_global" type="checkbox" value="cidade_digital.ativarCidadeDigital"/>
                                         <label for="cidade_digitalativarCidadeDigital">Ativar Cidade Digital</label>
                                     </div>
                                     <div class="posicao_unitaria">
-                                        <input id="cidade_digitalinativarCidadeDigital" name="cidade_digital.inativarCidadeDigital" class="permissao_unitaria permissao_unitaria_cidade_digital permissao_unitaria_global" type="checkbox" value="cidade_digital.index"/>
+                                        <input id="cidade_digitalinativarCidadeDigital" name="cidade_digital.inativarCidadeDigital" class="permissao_unitaria permissao_unitaria_cidade_digital permissao_unitaria_global" type="checkbox" value="cidade_digital.inativarCidadeDigital"/>
                                         <label for="cidade_digitalinativarCidadeDigital">Inativar Cidade Digital</label>
                                     </div>
                                     <div class="posicao_unitaria">
@@ -288,7 +288,7 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="clienteacesso_total" name="cliente.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <input id="clienteacesso_total" name="cliente.acesso_total" class="check_total_cliente permissao_total_modulo" type="checkbox"/>
                                         <label for="clienteacesso_total">Acesso Total a Cliente</label>
                                     </div>
                                     <div class="posicao_unitaria">
@@ -323,7 +323,7 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="cliente_unidadeacesso_total" name="cliente_unidade.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <input id="cliente_unidadeacesso_total" name="cliente_unidade.acesso_total" class="check_total_cliente_unidade permissao_total_modulo" type="checkbox"/>
                                         <label for="cliente_unidadeacesso_total">Acesso Total a Cliente Unidade</label>
                                     </div>
                                     <div class="posicao_unitaria">
@@ -358,7 +358,7 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="empresaacesso_total" name="empresa.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <input id="empresaacesso_total" name="empresa.acesso_total" class="check_total_empresa permissao_total_modulo" type="checkbox"/>
                                         <label for="empresaacesso_total">Acesso Total a Empresa</label>
                                     </div>
                                     <div class="posicao_unitaria">
@@ -385,7 +385,7 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="fabricanteacesso_total" name="fabricante.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <input id="fabricanteacesso_total" name="fabricante.acesso_total" class="check_total_fabricante permissao_total_modulo" type="checkbox"/>
                                         <label for="fabricanteacesso_total">Acesso Total a Fabricante</label>
                                     </div>
                                     <div class="posicao_unitaria">
@@ -420,7 +420,7 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="modeloacesso_total" name="modelo.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <input id="modeloacesso_total" name="modelo.acesso_total" class="check_total_modelo permissao_total_modulo" type="checkbox"/>
                                         <label for="modeloacesso_total">Acesso Total a Modelo</label>
                                     </div>
                                     <div class="posicao_unitaria">
@@ -455,7 +455,7 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="equipamentoacesso_total" name="equipamento.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <input id="equipamentoacesso_total" name="equipamento.acesso_total" class="check_total_equipamento permissao_total_modulo" type="checkbox"/>
                                         <label for="equipamentoacesso_total">Acesso Total a Equipamento</label>
                                     </div>
                                     <div class="posicao_unitaria">
@@ -490,7 +490,7 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="lovacesso_total" name="lov.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <input id="lovacesso_total" name="lov.acesso_total" class="check_total_lov permissao_total_modulo" type="checkbox"/>
                                         <label for="lovacesso_total">Acesso Total a Lista de Valores</label>
                                     </div>
                                     <div class="posicao_unitaria">
@@ -517,7 +517,7 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="controle_acessoacesso_total" name="controle_acesso.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <input id="controle_acessoacesso_total" name="controle_acesso.acesso_total" class="check_total_controle_acesso permissao_total_modulo" type="checkbox"/>
                                         <label for="controle_acessoacesso_total">Acesso Total a Controle de Acesso</label>
                                     </div>
                                     <div class="posicao_unitaria">
@@ -552,7 +552,7 @@ use Phalcon\Tag;
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <div class="posicao_total">
-                                        <input id="relatorios_gestaoacesso_total" name="relatorios_gestao.acesso_total" class="permissao_total_modulo" type="checkbox"/>
+                                        <input id="relatorios_gestaoacesso_total" name="relatorios_gestao.acesso_total" class="check_total_relatorios_gestao permissao_total_modulo" type="checkbox"/>
                                         <label for="relatorios_gestaoacesso_total">Acesso Total a Relatórios</label>
                                     </div>
                                     <div class="posicao_unitaria">
