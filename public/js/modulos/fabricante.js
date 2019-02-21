@@ -469,12 +469,16 @@ $(document).on("click", ".criar_fabricantes", function(){
 //Coletando os ids das linhas selecionadas na tabela
 var ids = [];
 $("#tb_fabricantes").on("click", "tr", function () {
+    "use strict";
     var valr = $(this)[0].cells[0].innerText;
-    if (!ids.includes(valr)) {
-        ids.push(valr);
-    } else {
-        var index = ids.indexOf(valr);
-        ids.splice(index, 1);
+    if (valr !== "Código")
+    {
+        if (!ids.includes(valr)) {
+            ids.push(valr);
+        } else {
+            var index = ids.indexOf(valr);
+            ids.splice(index, 1);
+        }
     }
 });
 

@@ -39,44 +39,44 @@ use Util\Util;
     <div class="card-box">
         <table id="tb_circuitos" class="table table-striped table-bordered" cellspacing="0" width="100%">
             <thead>
-                <tr>
-                    <th style="display: none;">Código</th>
-                    <th>Designação</th>
-                    <th>Cliente</th>
-                    <th>Unidade</th>
-                    <th>Cidade</th>
-                    <th>Tipo de Link</th>
-                    <th>IP de Gerência</th>
-                    <th>Função</th>
-                    <th>Tipo Acesso</th>
-                    <th>Banda</th>
-<!--                    <th>Data Cadastro</th>-->
-<!--                    <th>Data Atualização</th>-->
-                    <th>Status</th>
-                </tr>
+            <tr>
+                <th style="display: none;">Código</th>
+                <th>Designação</th>
+                <th>Cliente</th>
+                <th>Unidade</th>
+                <th>Cidade</th>
+                <th>Tipo de Link</th>
+                <th>IP de Gerência</th>
+                <th>Função</th>
+                <th>Tipo Acesso</th>
+                <th>Banda</th>
+                <!--                    <th>Data Cadastro</th>-->
+                <!--                    <th>Data Atualização</th>-->
+                <th>Status</th>
+            </tr>
             </thead>
             <tbody>
-                <?php foreach ($page->items as $circuitos): ?>
-                <?php            
-                    $util = new Util();
-                    switch($circuitos->Cliente->id_tipocliente)
-                    {
-                        case "44"://Pessoa Física
-                            $unidade = null;
+            <?php foreach ($page->items as $circuitos): ?>
+                <?php
+                $util = new Util();
+                switch($circuitos->Cliente->id_tipocliente)
+                {
+                    case "44"://Pessoa Física
+                        $unidade = null;
                         break;
-                        case "43"://Pessoa Jurídica
-                            $unidade = $circuitos->ClienteUnidade->Pessoa->nome;
+                    case "43"://Pessoa Jurídica
+                        $unidade = $circuitos->ClienteUnidade->Pessoa->nome;
                         break;
-                    }
-                    $desc_tipolink = ($circuitos->id_tipolink) ? $circuitos->Lov6->descricao : "Campo Obrigatório";
-                    $desc_funcao = ($circuitos->id_funcao) ? $circuitos->Lov5->descricao : "Campo Obrigatório";
-                    $desc_tipoacesso = ($circuitos->id_tipoacesso) ? $circuitos->Lov4->descricao : "Campo Obrigatório";
-                    $desc_banda = ($circuitos->id_banda) ? $circuitos->Lov7->descricao : "Campo Obrigatório";
-                    $color_tipolink = (!$circuitos->id_tipolink) ? "style='font-weight: bold; color: red;'" : null;
-                    $color_funcao = (!$circuitos->id_funcao) ? "style='font-weight: bold; color: red;'" : null;
-                    $color_tipoacesso = (!$circuitos->id_tipoacesso) ? "style='font-weight: bold; color: red;'" : null;
-                    $color_banda = (!$circuitos->id_banda) ? "style='font-weight: bold; color: red;'" : null;
-                    $cidade = ($circuitos->CidadeDigital->EndCidade->cidade) ? $circuitos->CidadeDigital->EndCidade->cidade : null;
+                }
+                $desc_tipolink = ($circuitos->id_tipolink) ? $circuitos->Lov6->descricao : "Campo Obrigatório";
+                $desc_funcao = ($circuitos->id_funcao) ? $circuitos->Lov5->descricao : "Campo Obrigatório";
+                $desc_tipoacesso = ($circuitos->id_tipoacesso) ? $circuitos->Lov4->descricao : "Campo Obrigatório";
+                $desc_banda = ($circuitos->id_banda) ? $circuitos->Lov7->descricao : "Campo Obrigatório";
+                $color_tipolink = (!$circuitos->id_tipolink) ? "style='font-weight: bold; color: red;'" : null;
+                $color_funcao = (!$circuitos->id_funcao) ? "style='font-weight: bold; color: red;'" : null;
+                $color_tipoacesso = (!$circuitos->id_tipoacesso) ? "style='font-weight: bold; color: red;'" : null;
+                $color_banda = (!$circuitos->id_banda) ? "style='font-weight: bold; color: red;'" : null;
+                $cidade = ($circuitos->CidadeDigital->EndCidade->cidade) ? $circuitos->CidadeDigital->EndCidade->cidade : null;
                 ?>
                 <tr>
                     <td style="display: none;">
@@ -109,17 +109,17 @@ use Util\Util;
                     <td <?php echo $color_banda ?>>
                         <?php echo $desc_banda ?>
                     </td>
-<!--                    <td>-->
-<!--                        --><?php //echo $data_cadastro ?>
-<!--                    </td>-->
-<!--                    <td>-->
-<!--                        --><?php //echo $data_atualizacao ?>
-<!--                    </td>-->
+                    <!--                    <td>-->
+                    <!--                        --><?php //echo $data_cadastro ?>
+                    <!--                    </td>-->
+                    <!--                    <td>-->
+                    <!--                        --><?php //echo $data_atualizacao ?>
+                    <!--                    </td>-->
                     <td>
                         <?php echo $circuitos->Lov2->descricao ?>
                     </td>
                 </tr>
-                <?php endforeach; ?>
+            <?php endforeach; ?>
             </tbody>
         </table>
     </div>
@@ -127,7 +127,7 @@ use Util\Util;
 
 <!--  Modal Circuitos -->
 <div id="modalcircuitos" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalcircuitos" aria-hidden="true"
-    style="display: none;" data-backdrop="static" data-keyboard="false">
+     style="display: none;" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -234,9 +234,9 @@ use Util\Util;
                                     <select disabled name="id_modelo" id="id_modelo" class="form-control">
                                         <option value="">Selecione um Modelo</option>
                                     </select>
-<!--                                    <label for="lid_modelo">Modelo <span class="required">*</span></label>-->
-<!--                                    --><?php //echo $this->tag->textField(["lid_modelo", "disabled" => "true", "size" => 60, "class" => "form-control", "id" => "lid_modelo", "placeholder" => "Modelo"]) ?>
-<!--                                    --><?php //echo $this->tag->hiddenField(["id_modelo", "size" => 60, "class" => "form-control", "id" => "id_modelo"]) ?>
+                                    <!--                                    <label for="lid_modelo">Modelo <span class="required">*</span></label>-->
+                                    <!--                                    --><?php //echo $this->tag->textField(["lid_modelo", "disabled" => "true", "size" => 60, "class" => "form-control", "id" => "lid_modelo", "placeholder" => "Modelo"]) ?>
+                                    <!--                                    --><?php //echo $this->tag->hiddenField(["id_modelo", "size" => 60, "class" => "form-control", "id" => "id_modelo"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -245,9 +245,9 @@ use Util\Util;
                                     <select disabled name="id_equipamento" id="id_equipamento" class="form-control">
                                         <option value="">Selecione um Equipamento</option>
                                     </select>
-<!--                                    <label for="lid_equipamento">Equipamento <span class="required">*</span></label>-->
-<!--                                    --><?php //echo $this->tag->textField(["lid_equipamento", "disabled" => "true", "size" => 60, "class" => "form-control", "id" => "lid_equipamento", "placeholder" => "Equipamento"]) ?>
-<!--                                    --><?php //echo $this->tag->hiddenField(["id_equipamento", "size" => 60, "class" => "form-control", "id" => "id_equipamento"]) ?>
+                                    <!--                                    <label for="lid_equipamento">Equipamento <span class="required">*</span></label>-->
+                                    <!--                                    --><?php //echo $this->tag->textField(["lid_equipamento", "disabled" => "true", "size" => 60, "class" => "form-control", "id" => "lid_equipamento", "placeholder" => "Equipamento"]) ?>
+                                    <!--                                    --><?php //echo $this->tag->hiddenField(["id_equipamento", "size" => 60, "class" => "form-control", "id" => "id_equipamento"]) ?>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="ip_redelocal">Rede Cliente <span class="required">*</span></label> <!-- Antigo IP Rede Local -->
@@ -307,7 +307,7 @@ use Util\Util;
 
 <!--  Modal Visualizar -->
 <div id="modalvisualizar" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalvisualizar" aria-hidden="true"
-    style="display: none;" data-backdrop="static" data-keyboard="false">
+     style="display: none;" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -535,18 +535,18 @@ use Util\Util;
                                 <div class="form-group col-md-12">
                                     <table id="tb_movimento" class="table table-hover">
                                         <thead>
-                                            <tr>
-                                                <th colspan="7" style="text-align: center;">Histórico de Movimentos do Circuito</th>
-                                            </tr>
-                                            <tr>
-                                                <th>OS</th>
-                                                <th>Data Movimento</th>
-                                                <th>Tipo Movimento</th>
-                                                <th>Usuário</th>
-                                                <th>Valor Anterior</th>
-                                                <th>Valor Atual</th>
-                                                <th>Observação</th>
-                                            </tr>
+                                        <tr>
+                                            <th colspan="7" style="text-align: center;">Histórico de Movimentos do Circuito</th>
+                                        </tr>
+                                        <tr>
+                                            <th>OS</th>
+                                            <th>Data Movimento</th>
+                                            <th>Tipo Movimento</th>
+                                            <th>Usuário</th>
+                                            <th>Valor Anterior</th>
+                                            <th>Valor Atual</th>
+                                            <th>Observação</th>
+                                        </tr>
                                         </thead>
                                         <tbody>
                                         </tbody>
@@ -568,7 +568,7 @@ use Util\Util;
 
 <!--  Modal Movimento -->
 <div id="modalcircuitosmov" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalcircuitosmov" aria-hidden="true"
-    style="display: none;" data-backdrop="static" data-keyboard="false">
+     style="display: none;" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -640,18 +640,18 @@ use Util\Util;
                                     <select disabled name="id_modelomov" id="id_modelomov" class="form-control">
                                         <option value="">Selecione um Modelo</option>
                                     </select>
-<!--                                    <label for="lid_equipamentomov">Modelo <span class="required">*</span></label>-->
-<!--                                    --><?php //echo $this->tag->textField(["lid_modelomov", "disabled" => "true", "size" => 60, "class" => "form-control", "id" => "lid_modelomov", "placeholder" => "Modelo"]) ?>
-<!--                                    --><?php //echo $this->tag->hiddenField(["id_modelomov", "size" => 60, "class" => "form-control", "id" => "id_modelomov"]) ?>
+                                    <!--                                    <label for="lid_equipamentomov">Modelo <span class="required">*</span></label>-->
+                                    <!--                                    --><?php //echo $this->tag->textField(["lid_modelomov", "disabled" => "true", "size" => 60, "class" => "form-control", "id" => "lid_modelomov", "placeholder" => "Modelo"]) ?>
+                                    <!--                                    --><?php //echo $this->tag->hiddenField(["id_modelomov", "size" => 60, "class" => "form-control", "id" => "id_modelomov"]) ?>
                                 </div>
                                 <div class="form-group col-md-4 equip" style="display: none;">
                                     <label for="id_equipamentomov">Equipamento <span class="required">*</span></label>
                                     <select disabled name="id_equipamentomov" id="id_equipamentomov" class="form-control">
                                         <option value="">Selecione um Equipamento</option>
                                     </select>
-<!--                                    <label for="lid_equipamentomov">Equipamento <span class="required">*</span></label>-->
-<!--                                    --><?php //echo $this->tag->textField(["lid_equipamentomov", "disabled" => "true", "size" => 60, "class" => "form-control", "id" => "lid_equipamentomov", "placeholder" => "Equipamento"]) ?>
-<!--                                    --><?php //echo $this->tag->hiddenField(["id_equipamentomov", "size" => 60, "class" => "form-control", "id" => "id_equipamentomov"]) ?>
+                                    <!--                                    <label for="lid_equipamentomov">Equipamento <span class="required">*</span></label>-->
+                                    <!--                                    --><?php //echo $this->tag->textField(["lid_equipamentomov", "disabled" => "true", "size" => 60, "class" => "form-control", "id" => "lid_equipamentomov", "placeholder" => "Equipamento"]) ?>
+                                    <!--                                    --><?php //echo $this->tag->hiddenField(["id_equipamentomov", "size" => 60, "class" => "form-control", "id" => "id_equipamentomov"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -671,6 +671,63 @@ use Util\Util;
                         <input type="hidden" id="idmov" name="idmov" value=""><!-- Manter como hidden -->
                         <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="limparModal()" data-dismiss="modal">Fechar</button>
                         <button disabled id="salvaCircuitosmov" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
+                    </div>
+                </div><!-- /.modal-footer -->
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!--  Modal Upload de Anexos -->
+<div id="modalanexoscircuitos" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalanexoscircuitos" aria-hidden="true"
+     style="display: none;" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h5 class="modal-title" id="modalanexoscircuitos">Upload de Anexos para o Circuito de Designação Nº.: <span id="designacao_circuito_anexo"></span></h5>
+            </div>
+            <form class="fileupload" enctype="multipart/form-data" action="upload" method="POST" id="formAnexosCircuitos">
+                <input type="hidden" id="token" name="<?php echo $token['tokenKey'] ?>" value="<?php echo $token['tokenValue'] ?>">
+                <!-- CSRFToken Control -->
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="col-12">
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <div id="dropzone">Arraste e solte os arquivos aqui!</div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <input type="file" id="id_file" name="files[]" class="inputfile inputfile-1" data-multiple-caption="{count} arquivos selecionados" multiple/>
+                                    <label for="id_file"><span>Escolher Arquivos</span></label>
+                                </div>
+                            </div>
+                            <!-- The table listing the files available for upload/download -->
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <table id="fileTable" style="display: none;" class="table table-striped">
+                                        <thead>
+                                        <tr><th class="tdth_class">Arquivo</th><th>Tamanho</th><th>Tipo</th><th>Descrição</th><th>Ação Individual</th></tr>
+                                        </thead>
+                                        <tbody id="fileList">
+
+                                        </tbody>
+                                        <tfoot><tr><td id="result"></td><td>&nbsp</td><td>&nbsp</td></tr></tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group col-md-6">
+<!--                        <p class="texto_rodape">Os campos com <span class="required">*</span> são obrigatórios!</p>-->
+                    </div>
+                    <div class="form-group col-md-6 botoes_rodape">
+                        <input type="hidden" id="id_anexocircuito" name="id_anexocircuito" value=""><!-- Manter como hidden -->
+                        <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="limparModalAnexos()" data-dismiss="modal">Fechar</button>
+                        <button id="cancel" type="reset" class="btn btn-danger btn-rounded waves-effect waves-light">Cancelar</button>
+                        <button id="salvaAnexosCircuitos" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Upload</button>
                     </div>
                 </div><!-- /.modal-footer -->
             </form>

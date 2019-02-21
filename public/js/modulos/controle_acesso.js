@@ -1,3 +1,4 @@
+var URLImagensSistema = "public/images";
 var table = $("#tb_controleacesso").DataTable({
     buttons: [
         {//Botão Novo Registro
@@ -188,11 +189,14 @@ var ids = [];
 $("#tb_controleacesso").on("click", "tr", function () {
     "use strict";
     var valr = $(this)[0].cells[0].innerText;
-    if (!ids.includes(valr)) {
-        ids.push(valr);
-    } else {
-        var index = ids.indexOf(valr);
-        ids.splice(index, 1);
+    if (valr !== "Código")
+    {
+        if (!ids.includes(valr)) {
+            ids.push(valr);
+        } else {
+            var index = ids.indexOf(valr);
+            ids.splice(index, 1);
+        }
     }
 });
 
@@ -840,6 +844,7 @@ $(".permissao_total_modulo").on("change", function(){
             seletor = ".permissao_unitaria_usuario";
             break;
     }
+    $.blockUI({ message: "<img src='" + URLImagensSistema + "/loader_gears.gif' width='50' height='50'/>      Aguarde um momento, estamos processando seu pedido...", baseZ: 2000 });
     if ($(this).prop("checked")) {//Verifica se check total já está checked
         $(seletor).each(function () {//Faz o laço entre todos que possuem a classe selecionada
             var valor = $(this).val();
@@ -866,6 +871,7 @@ $(".permissao_total_modulo").on("change", function(){
             }
         });
     }
+    $.unblockUI;
     //verifica o check total
     checkAcessoTotal();
 });

@@ -13,6 +13,15 @@ var table = $("#tb_circuitos").DataTable({
             action: function (e, dt, node, config) {
             }
         },
+        {//Botão Anexos
+            className: "bt_anexo",
+            text: "Anexos",
+            name: "anexo", // do not change name
+            titleAttr: "Anexos do Circuito",
+            action: function (e, dt, node, config) {
+            },
+            enabled: false
+        },
         {//Botão Visualizar Registro
             className: "bt_visual",
             text: "Visualizar",
@@ -31,15 +40,6 @@ var table = $("#tb_circuitos").DataTable({
             },
             enabled: false
         },
-        // {//Botão Inativar Registro
-        //     className: "bt_inativo",
-        //     text: "Inativar",
-        //     name: "inativo", // do not change name
-        //     titleAttr: "Inativar registro",
-        //     action: function (e, dt, node, config) {
-        //     },
-        //     enabled: false
-        // },
         {//Botão Movimentar Registro (Inativo)
             className: "bt_mov",
             text: "Movimentar",
@@ -90,20 +90,30 @@ var table = $("#tb_circuitos").DataTable({
 table.buttons().container().appendTo("#tb_circuitos_wrapper .col-md-6:eq(0)");
 
 table.on( "select deselect", function () {
+    "use strict";
     var selectedRows = table.rows( { selected: true } ).count();
 
     table.button( 1 ).enable( selectedRows === 1 );
     table.button( 2 ).enable( selectedRows === 1 );
     table.button( 3 ).enable( selectedRows === 1 );
-    table.button( 4 ).enable( selectedRows > 0 );
+    table.button( 4 ).enable( selectedRows === 1 );
+    table.button( 5 ).enable( selectedRows > 0 );
 });
 
 function limparModal()
 {
+    "use strict";
     $("#id").val(null);
+}
+
+function limparModalAnexos()
+{
+    "use strict";
+    $("#id_anexocircuito").val(null);
 }
 //Cliente e suas unidades
 $("#id_cliente").on("change", function(){
+    "use strict";
     var id_cliente = $(this).val();
     var action = actionCorreta(window.location.href.toString(), "circuitos/unidadeCliente");
     $.ajax({
@@ -145,6 +155,7 @@ $("#id_cliente").on("change", function(){
 
 //Cidade Digital e suas conectividades
 $("#id_cidadedigital").on("change", function(){
+    "use strict";
     var id_cidadedigital = $(this).val();
     var action = actionCorreta(window.location.href.toString(), "circuitos/cidadedigitalConectividade");
     $.ajax({
@@ -418,6 +429,7 @@ $("#id_cidadedigital").on("change", function(){
 // });
 //Fabricante, seus modelos e equipamentos
 $("#id_fabricante").on("change", function(){
+    "use strict";
     var id_fabricante = $(this).val();
     var action = actionCorreta(window.location.href.toString(), "circuitos/modeloFabricante");
     $.ajax({
@@ -463,6 +475,7 @@ $("#id_fabricante").on("change", function(){
     });
 });
 $("#id_modelo").on("change", function(){
+    "use strict";
     var id_modelo = $(this).val();
     var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoModelo");
     $.ajax({
@@ -505,6 +518,7 @@ $("#id_modelo").on("change", function(){
 });
 //Validando o equipamento selecionados
 $("#id_equipamento").on("change", function(){
+    "use strict";
     var id_equipamento = $(this).val();
     validaEquipamentoCircuito(id_equipamento).done(function(valida){
         if (valida) {
@@ -519,6 +533,7 @@ $("#id_equipamento").on("change", function(){
 });
 //Campo Número de Série
 $("#numero_serie").on("change", function () {
+    "use strict";
     var numero_serie = $(this).val();
     if (numero_serie !== ""){
         var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoNumeroSerie");
@@ -574,6 +589,7 @@ $("#numero_serie").on("change", function () {
 //Validar vinculo de equipamento e circuito
 function validaEquipamentoCircuito(id_equipamento)
 {
+    "use strict";
     var action = actionCorreta(window.location.href.toString(), "circuitos/validarEquipamentoCircuito");
     return $.ajax({
         type: "GET",
@@ -594,11 +610,13 @@ function validaEquipamentoCircuito(id_equipamento)
     });
 }
 $(".bt_novo").on("click", function(){
+    "use strict";
     $("#modalcircuitos").modal();
     $("#salvaCircuitos").removeClass("editar_circuitos").addClass("criar_circuitos");
 });
 
 $(document).on("click", ".criar_circuitos", function(){
+    "use strict";
     var tipocliente = $("#tipocliente").val();
     switch (tipocliente)
     {
@@ -769,7 +787,7 @@ $(document).on("click", ".criar_circuitos", function(){
             });
             break;
         default://Pessoa Física
-                //Validação de formulário
+            //Validação de formulário
             $("#formCircuitos").validate({
                 rules : {
                     id_cliente:{
@@ -934,282 +952,259 @@ $(document).on("click", ".criar_circuitos", function(){
 //Coletando os ids das linhas selecionadas na tabela
 var ids = [];
 $("#tb_circuitos").on("click", "tr", function () {
+    "use strict";
     var valr = $(this)[0].cells[0].innerText;
-    if (!ids.includes(valr)) {
-        ids.push(valr);
-    } else {
-        var index = ids.indexOf(valr);
-        ids.splice(index, 1);
+    if (valr !== "Código")
+    {
+        if (!ids.includes(valr)) {
+            ids.push(valr);
+        } else {
+            var index = ids.indexOf(valr);
+            ids.splice(index, 1);
+        }
     }
 });
 
 $(".bt_edit").on("click", function(){
-    var nm_rows = ids.length;
-    if(nm_rows > 1){
-        swal({
-            title: "Edição de Circuitos",
-            text: "Você somente pode editar um único circuitos! Selecione apenas um e tente novamente!",
-            type: "warning"
-        });
-    } else if (nm_rows == 0) {
-        swal({
-            title: "Edição de Circuitos",
-            text: "Você precisa selecionar um circuitos para a edição!",
-            type: "warning"
-        });
-    } else {
-        var id_circuitos = ids[0];
-        var action = actionCorreta(window.location.href.toString(), "circuitos/formCircuitos");
-        $.ajax({
-            type: "GET",
-            dataType: "JSON",
-            url: action,
-            data: {id_circuitos: id_circuitos},
-            beforeSend: function () {
-            },
-            complete: function () {
-            },
-            error: function (data) {
-                if (data.status && data.status === 401)
-                {
-                    swal({
-                        title: "Erro de Permissão",
-                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                        type: "warning"
-                    });
-                }
-            },
-            success: function (data) {
-                var id_fabricante = (data.equip) ? data.equip.id_fabricante : null;
-                var id_modelo = (data.equip) ? data.equip.id_modelo : null;
-                //Conectividade
-                $(".remove_conectividade").remove();
-                $.each(data.conectividade, function (key, value) {
-                    var linhas = "<option class='remove_conectividade' value='" + value.id + "'>" + value.tipo + " " + value.descricao + "</option>";
-                    $("#id_conectividade").append(linhas);
+    "use strict";
+    var id_circuitos = ids[0];
+    var action = actionCorreta(window.location.href.toString(), "circuitos/formCircuitos");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_circuitos: id_circuitos},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
                 });
-                $("#id_conectividade").removeAttr("disabled");
-                //Cliente Unidades
-                $(".remove_cliente_unidade").remove();
-                $.each(data.unidadescli, function (key, value) {
-                    var linhas = "<option class='remove_cliente_unidade' value='" + value.id + "'>" + value.nome + "</option>";
-                    $("#id_cliente_unidade").append(linhas);
-                });
-                $("#id_cliente_unidade").removeAttr("disabled");
-                //Modelos
-                $(".remove_modelo").remove();
-                $.each(data.modelos, function (key, value) {
-                    var linhas = "<option class='remove_modelo' value='" + value.id + "'>" + value.modelo + "</option>";
-                    $("#id_modelo").append(linhas);
-                });
-                $("#id").val(data.dados.id);
-                $("#tipocliente").val(data.cliente.id_tipocliente);
-                $("#id_cliente").val(data.dados.id_cliente).selected = "true";
-                $("#id_cliente_unidade").val(data.dados.id_cliente_unidade).selected = "true";
-                $("#id_fabricante").attr("disabled", "true");
-                $("#id_fabricante").val(id_fabricante).selected = "true";
-                $("#lid_modelo").val(data.dados.desc_modelo);
-                $("#id_modelo").attr("disabled", "true");
-                $("#id_modelo").val(id_modelo);
-                $("#id_equipamento").attr("disabled", "true");
-                $("#lid_equipamento").val(data.dados.desc_equip + " ("+ data.dados.nums_equip +" / "+ data.dados.patr_equip +")");
-                $("#id_equipamento").val(data.dados.id_equipamento);
-                $("#id_contrato").val(data.dados.id_contrato).selected = "true";
-                $("#id_cluster").val(data.dados.id_cluster).selected = "true";
-                $("#id_tipolink").val(data.dados.id_tipolink).selected = "true";
-                $("#id_cidadedigital").val(data.dados.id_cidadedigital).selected = "true";
-                $("#id_conectividade").val(data.dados.id_conectividade).selected = "true";
-                $("#id_funcao").val(data.dados.id_funcao).selected = "true";
-                $("#id_tipoacesso").val(data.dados.id_tipoacesso).selected = "true";
-                $("#banda").attr("disabled", "true");
-                $("#banda").val(data.dados.id_banda).selected = "true";
-                $("#designacao").val(data.dados.designacao);
-                $("#designacao_anterior").val(data.dados.designacao_anterior);
-                $("#chamado").val(data.dados.chamado);
-                $("#uf").val(data.dados.uf);
-                $("#cidade").val(data.dados.cidade);
-                $("#ssid").val(data.dados.cssidcode);
-                $("#ip_redelocal").attr("disabled", "true");
-                $("#ip_redelocal").val(data.dados.ip_redelocal);
-                $("#ip_gerencia").attr("disabled", "true");
-                $("#ip_gerencia").val(data.dados.ip_gerencia);
-                $("#tag").val(data.dados.tag);
-                $("#observacao").val(data.dados.observacao);
-                $("#modalcircuitos").modal();
             }
-        });
-        $("#salvaCircuitos").removeClass("criar_circuitos").addClass("editar_circuitos");
-    }
+        },
+        success: function (data) {
+            var id_fabricante = (data.equip) ? data.equip.id_fabricante : null;
+            var id_modelo = (data.equip) ? data.equip.id_modelo : null;
+            //Conectividade
+            $(".remove_conectividade").remove();
+            $.each(data.conectividade, function (key, value) {
+                var linhas = "<option class='remove_conectividade' value='" + value.id + "'>" + value.tipo + " " + value.descricao + "</option>";
+                $("#id_conectividade").append(linhas);
+            });
+            $("#id_conectividade").removeAttr("disabled");
+            //Cliente Unidades
+            $(".remove_cliente_unidade").remove();
+            $.each(data.unidadescli, function (key, value) {
+                var linhas = "<option class='remove_cliente_unidade' value='" + value.id + "'>" + value.nome + "</option>";
+                $("#id_cliente_unidade").append(linhas);
+            });
+            $("#id_cliente_unidade").removeAttr("disabled");
+            //Modelos
+            $(".remove_modelo").remove();
+            $.each(data.modelos, function (key, value) {
+                var linhas = "<option class='remove_modelo' value='" + value.id + "'>" + value.modelo + "</option>";
+                $("#id_modelo").append(linhas);
+            });
+            $("#id").val(data.dados.id);
+            $("#tipocliente").val(data.cliente.id_tipocliente);
+            $("#id_cliente").val(data.dados.id_cliente).selected = "true";
+            $("#id_cliente_unidade").val(data.dados.id_cliente_unidade).selected = "true";
+            $("#id_fabricante").attr("disabled", "true");
+            $("#id_fabricante").val(id_fabricante).selected = "true";
+            $("#lid_modelo").val(data.dados.desc_modelo);
+            $("#id_modelo").attr("disabled", "true");
+            $("#id_modelo").val(id_modelo);
+            $("#id_equipamento").attr("disabled", "true");
+            $("#lid_equipamento").val(data.dados.desc_equip + " ("+ data.dados.nums_equip +" / "+ data.dados.patr_equip +")");
+            $("#id_equipamento").val(data.dados.id_equipamento);
+            $("#id_contrato").val(data.dados.id_contrato).selected = "true";
+            $("#id_cluster").val(data.dados.id_cluster).selected = "true";
+            $("#id_tipolink").val(data.dados.id_tipolink).selected = "true";
+            $("#id_cidadedigital").val(data.dados.id_cidadedigital).selected = "true";
+            $("#id_conectividade").val(data.dados.id_conectividade).selected = "true";
+            $("#id_funcao").val(data.dados.id_funcao).selected = "true";
+            $("#id_tipoacesso").val(data.dados.id_tipoacesso).selected = "true";
+            $("#banda").attr("disabled", "true");
+            $("#banda").val(data.dados.id_banda).selected = "true";
+            $("#designacao").val(data.dados.designacao);
+            $("#designacao_anterior").val(data.dados.designacao_anterior);
+            $("#chamado").val(data.dados.chamado);
+            $("#uf").val(data.dados.uf);
+            $("#cidade").val(data.dados.cidade);
+            $("#ssid").val(data.dados.cssidcode);
+            $("#ip_redelocal").attr("disabled", "true");
+            $("#ip_redelocal").val(data.dados.ip_redelocal);
+            $("#ip_gerencia").attr("disabled", "true");
+            $("#ip_gerencia").val(data.dados.ip_gerencia);
+            $("#tag").val(data.dados.tag);
+            $("#observacao").val(data.dados.observacao);
+            $("#modalcircuitos").modal();
+        }
+    });
+    $("#salvaCircuitos").removeClass("criar_circuitos").addClass("editar_circuitos");
 });
 
 $(".bt_visual").on("click", function(){
-    nm_rows = ids.length;
-    if(nm_rows > 1){
-        swal({
-            title: "Visualização de Circuitos",
-            text: "Você somente pode editar um único circuitos! Selecione apenas um e tente novamente!",
-            type: "warning"
-        });
-    } else if (nm_rows == 0) {
-        swal({
-            title: "Visualização de Circuitos",
-            text: "Você precisa selecionar um circuitos para a edição!",
-            type: "warning"
-        });
-    } else {
-        var id_circuitos = ids[0];
-        var action = actionCorreta(window.location.href.toString(), "circuitos/visualizaCircuitos");
-        $.ajax({
-            type: "GET",
-            dataType: "JSON",
-            url: action,
-            data: {id_circuitos: id_circuitos},
-            beforeSend: function () {
-            },
-            complete: function () {
-            },
-            error: function (data) {
-                if (data.status && data.status === 401)
-                {
-                    swal({
-                        title: "Erro de Permissão",
-                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                        type: "warning"
-                    });
-                }
-            },
-            success: function (data) {
-                var id_fabricante = (data.equip) ? data.equip.id_fabricante : null;
-                var id_modelo = (data.equip) ? data.equip.id_modelo : null;
-                //Conectividade
-                $(".remove_conectividade").remove();
-                $.each(data.conectividade, function (key, value) {
-                    var linhas = "<option class='remove_conectividade' value='" + value.id + "'>" + value.tipo + " " + value.descricao + "</option>";
-                    $("#id_conectividadev").append(linhas);
+    "use strict";
+    var id_circuitos = ids[0];
+    var action = actionCorreta(window.location.href.toString(), "circuitos/visualizaCircuitos");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {id_circuitos: id_circuitos},
+        beforeSend: function () {
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
                 });
-                $("#idv").val(data.dados.id);
-                $("#id_clientev").val(data.dados.id_cliente).selected = "true";
-                $("#id_cliente_unidadev").val(data.dados.id_cliente_unidade).selected = "true";
-                $("#id_fabricantev").val(id_fabricante).selected = "true";
-                $("#id_modelov").val(id_modelo).selected = "true";
-                $("#id_equipamentov").val(data.dados.id_equipamento).selected = "true";
-                $("#id_contratov").val(data.dados.id_contrato).selected = "true";
-                $("#id_statusv").val(data.dados.id_status).selected = "true";
-                $("#id_clusterv").val(data.dados.id_cluster).selected = "true";
-                $("#id_tipolinkv").val(data.dados.id_tipolink).selected = "true";
-                $("#id_cidadedigitalv").val(data.dados.id_cidadedigital).selected = "true";
-                $("#id_conectividadev").val(data.dados.id_conectividade).selected = "true";
-                $("#id_funcaov").val(data.dados.id_funcao).selected = "true";
-                $("#id_tipoacessov").val(data.dados.id_tipoacesso).selected = "true";
-                $("#bandav").val(data.dados.id_banda).selected = "true";
-                $("#designacaov").val(data.dados.designacao);
-                $("#designacao_anteriorv").val(data.dados.designacao_anterior);
-                $("#ufv").val(data.dados.uf);
-                $("#cidadev").val(data.dados.cidade);
-                $("#chamadov").val(data.dados.chamado);
-                $("#ssidv").val(data.dados.ssid);
-                $("#ip_redelocalv").val(data.dados.ip_redelocal);
-                $("#ip_gerenciav").val(data.dados.ip_gerencia);
-                $("#tagv").val(data.dados.tag);
-                $("#observacaov").val(data.dados.observacao);
-                $("#dtativacaov").val(data.dados.data_ativacao);
-                $("#dtatualizacaov").val(data.dados.data_atualizacao);
-                $("#numpatserv").val(data.dados.numpatrimonio + " / " + data.dados.numserie);
-                //Bloco de movimmentos
-                var linhas;
-                if(data.mov.length > 0)
-                {
-                    $(".rem_mov").remove();
-                    $.each(data.mov, function (key, value) {
-                        var os = value.osocomon ? value.osocomon : "";
-                        var ant = value.valoranterior ? value.valoranterior : "";
-                        var atu = value.valoratualizado ? value.valoratualizado : "";
-                        var obs = value.observacao ? value.observacao : "";
-                        linhas = "<tr class='rem_mov'>";
-                        linhas += "<td>" + os + "</td>";
-                        linhas += "<td>" + value.data_movimento + "</td>";
-                        linhas += "<td>" + value.id_tipomovimento + "</td>";
-                        linhas += "<td>" + value.id_usuario + "</td>";
-                        linhas += "<td>" + ant + "</td>";
-                        linhas += "<td>" + atu + "</td>";
-                        linhas += "<td>" + obs + "</td>";
-                        linhas += "</tr>";
-                        $("#tb_movimento").append(linhas);
-                    });
-                }
-                else
-                {
-                    $(".rem_mov").remove();
+            }
+        },
+        success: function (data) {
+            var id_fabricante = (data.equip) ? data.equip.id_fabricante : null;
+            var id_modelo = (data.equip) ? data.equip.id_modelo : null;
+            //Conectividade
+            $(".remove_conectividade").remove();
+            $.each(data.conectividade, function (key, value) {
+                var linhas = "<option class='remove_conectividade' value='" + value.id + "'>" + value.tipo + " " + value.descricao + "</option>";
+                $("#id_conectividadev").append(linhas);
+            });
+            $("#idv").val(data.dados.id);
+            $("#id_clientev").val(data.dados.id_cliente).selected = "true";
+            $("#id_cliente_unidadev").val(data.dados.id_cliente_unidade).selected = "true";
+            $("#id_fabricantev").val(id_fabricante).selected = "true";
+            $("#id_modelov").val(id_modelo).selected = "true";
+            $("#id_equipamentov").val(data.dados.id_equipamento).selected = "true";
+            $("#id_contratov").val(data.dados.id_contrato).selected = "true";
+            $("#id_statusv").val(data.dados.id_status).selected = "true";
+            $("#id_clusterv").val(data.dados.id_cluster).selected = "true";
+            $("#id_tipolinkv").val(data.dados.id_tipolink).selected = "true";
+            $("#id_cidadedigitalv").val(data.dados.id_cidadedigital).selected = "true";
+            $("#id_conectividadev").val(data.dados.id_conectividade).selected = "true";
+            $("#id_funcaov").val(data.dados.id_funcao).selected = "true";
+            $("#id_tipoacessov").val(data.dados.id_tipoacesso).selected = "true";
+            $("#bandav").val(data.dados.id_banda).selected = "true";
+            $("#designacaov").val(data.dados.designacao);
+            $("#designacao_anteriorv").val(data.dados.designacao_anterior);
+            $("#ufv").val(data.dados.uf);
+            $("#cidadev").val(data.dados.cidade);
+            $("#chamadov").val(data.dados.chamado);
+            $("#ssidv").val(data.dados.ssid);
+            $("#ip_redelocalv").val(data.dados.ip_redelocal);
+            $("#ip_gerenciav").val(data.dados.ip_gerencia);
+            $("#tagv").val(data.dados.tag);
+            $("#observacaov").val(data.dados.observacao);
+            $("#dtativacaov").val(data.dados.data_ativacao);
+            $("#dtatualizacaov").val(data.dados.data_atualizacao);
+            $("#numpatserv").val(data.dados.numpatrimonio + " / " + data.dados.numserie);
+            //Bloco de movimmentos
+            var linhas;
+            if(data.mov.length > 0)
+            {
+                $(".rem_mov").remove();
+                $.each(data.mov, function (key, value) {
+                    var os = value.osocomon ? value.osocomon : "";
+                    var ant = value.valoranterior ? value.valoranterior : "";
+                    var atu = value.valoratualizado ? value.valoratualizado : "";
+                    var obs = value.observacao ? value.observacao : "";
                     linhas = "<tr class='rem_mov'>";
-                    linhas = "<td colspan='7' style='text-align: center;'>Não existem dados para serem exibidos! Dados Importados!</td>";
+                    linhas += "<td>" + os + "</td>";
+                    linhas += "<td>" + value.data_movimento + "</td>";
+                    linhas += "<td>" + value.id_tipomovimento + "</td>";
+                    linhas += "<td>" + value.id_usuario + "</td>";
+                    linhas += "<td>" + ant + "</td>";
+                    linhas += "<td>" + atu + "</td>";
+                    linhas += "<td>" + obs + "</td>";
                     linhas += "</tr>";
                     $("#tb_movimento").append(linhas);
-                }
-                //Bloco de endereço
-                var linhas_end;
-                if(data.endereco.length > 0)
-                {
-                    $(".rem_end").remove();
-                    $.each(data.endereco, function (key, value) {
-                        var numero = value.numero ? " Nº "+ value.numero : "";
-                        linhas_end = "<tr class='rem_end'>";
-                        linhas_end += "<td>" + value.endereco + numero + "</td>";
-                        linhas_end += "<td>" + value.complemento + "</td>";
-                        linhas_end += "<td>" + value.bairro + "</td>";
-                        linhas_end += "<td>" + value.cep + "</td>";
-                        linhas_end += "</tr>";
-                        $("#tb_endereco").append(linhas_end);
-                    });
-                }
-                else
-                {
-                    $(".rem_end").remove();
+                });
+            }
+            else
+            {
+                $(".rem_mov").remove();
+                linhas = "<tr class='rem_mov'>";
+                linhas = "<td colspan='7' style='text-align: center;'>Não existem dados para serem exibidos! Dados Importados!</td>";
+                linhas += "</tr>";
+                $("#tb_movimento").append(linhas);
+            }
+            //Bloco de endereço
+            var linhas_end;
+            if(data.endereco.length > 0)
+            {
+                $(".rem_end").remove();
+                $.each(data.endereco, function (key, value) {
+                    var numero = value.numero ? " Nº "+ value.numero : "";
                     linhas_end = "<tr class='rem_end'>";
-                    linhas_end += "<td colspan='4' style='text-align: center;'>Não existe endereço para ser exibido! Favor Cadastrar!</td>";
+                    linhas_end += "<td>" + value.endereco + numero + "</td>";
+                    linhas_end += "<td>" + value.complemento + "</td>";
+                    linhas_end += "<td>" + value.bairro + "</td>";
+                    linhas_end += "<td>" + value.cep + "</td>";
                     linhas_end += "</tr>";
                     $("#tb_endereco").append(linhas_end);
-                }
-                //Bloco de contatos
-                var linhas_cont;
-                if(data.cont.length > 0)
-                {
-                    $(".rem_cont").remove();
-                    $.each(data.cont, function (key, value) {
-                        var fone;
-                        if (value.telefone || value.telefone.length == 11)
-                        {
-                            fone = value.telefone ? value.telefone.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3') : "";
-                        }
-                        else
-                        {
-                            fone = value.telefone ? value.telefone.replace(/^(\d{2})(\d{4})(\d{4}).*/, '($1) $2-$3') : "";
-                        }
-                        var mail = value.email ? value.email : "";
-                        linhas_cont = "<tr class='rem_cont'>";
-                        linhas_cont += "<td>" + value.principal + "</td>";
-                        linhas_cont += "<td>" + value.id_tipocontato + "</td>";
-                        linhas_cont += "<td>" + value.nome + "</td>";
-                        linhas_cont += "<td>" + fone + "</td>";
-                        linhas_cont += "<td>" + mail + "</td>";
-                        linhas_cont += "</tr>";
-                        $("#tb_contatos").append(linhas_cont);
-                    });
-                }
-                else
-                {
-                    $(".rem_cont").remove();
+                });
+            }
+            else
+            {
+                $(".rem_end").remove();
+                linhas_end = "<tr class='rem_end'>";
+                linhas_end += "<td colspan='4' style='text-align: center;'>Não existe endereço para ser exibido! Favor Cadastrar!</td>";
+                linhas_end += "</tr>";
+                $("#tb_endereco").append(linhas_end);
+            }
+            //Bloco de contatos
+            var linhas_cont;
+            if(data.cont.length > 0)
+            {
+                $(".rem_cont").remove();
+                $.each(data.cont, function (key, value) {
+                    var fone;
+                    if (value.telefone || value.telefone.length == 11)
+                    {
+                        fone = value.telefone ? value.telefone.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3') : "";
+                    }
+                    else
+                    {
+                        fone = value.telefone ? value.telefone.replace(/^(\d{2})(\d{4})(\d{4}).*/, '($1) $2-$3') : "";
+                    }
+                    var mail = value.email ? value.email : "";
                     linhas_cont = "<tr class='rem_cont'>";
-                    linhas_cont += "<td colspan='5' style='text-align: center;'>Não existem contatos para serem exibidos! Favor Cadastrar!</td>";
+                    linhas_cont += "<td>" + value.principal + "</td>";
+                    linhas_cont += "<td>" + value.id_tipocontato + "</td>";
+                    linhas_cont += "<td>" + value.nome + "</td>";
+                    linhas_cont += "<td>" + fone + "</td>";
+                    linhas_cont += "<td>" + mail + "</td>";
                     linhas_cont += "</tr>";
                     $("#tb_contatos").append(linhas_cont);
-                }
-                $("#modalvisualizar").modal();
+                });
             }
-        });
-    }
+            else
+            {
+                $(".rem_cont").remove();
+                linhas_cont = "<tr class='rem_cont'>";
+                linhas_cont += "<td colspan='5' style='text-align: center;'>Não existem contatos para serem exibidos! Favor Cadastrar!</td>";
+                linhas_cont += "</tr>";
+                $("#tb_contatos").append(linhas_cont);
+            }
+            $("#modalvisualizar").modal();
+        }
+    });
 });
 
 $(document).on("click", ".editar_circuitos", function(){
+    "use strict";
     var tipocliente = $("#tipocliente").val();
     switch (tipocliente)
     {
@@ -1380,7 +1375,7 @@ $(document).on("click", ".editar_circuitos", function(){
             });
             break;
         default://Pessoa Física
-                //Validação de formulário
+            //Validação de formulário
             $("#formCircuitos").validate({
                 rules : {
                     id_cliente:{
@@ -1543,12 +1538,14 @@ $(document).on("click", ".editar_circuitos", function(){
 });
 
 $(".bt_mov").on("click", function(){
+    "use strict";
     $("#id_circuito").val(ids[0]);
     $("#modalcircuitosmov").modal();
     $("#salvaCircuitosmov").addClass("criar_mov");
 });
 
 $("#id_tipomovimento").on("change", function(){
+    "use strict";
     var id_tipomovimento = $("#id_tipomovimento").val();
     switch(id_tipomovimento)
     {
@@ -1605,6 +1602,7 @@ $("#id_tipomovimento").on("change", function(){
 
 //Fabricante, Modelo e equipamento para o movimento de circuitos
 $("#id_fabricantemov").on("change", function(){
+    "use strict";
     var id_fabricante = $(this).val();
     var action = actionCorreta(window.location.href.toString(), "circuitos/modeloFabricante");
     $.ajax({
@@ -1650,6 +1648,7 @@ $("#id_fabricantemov").on("change", function(){
     });
 });
 $("#id_modelomov").on("change", function(){
+    "use strict";
     var id_modelo = $(this).val();
     var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoModelo");
     $.ajax({
@@ -1692,6 +1691,7 @@ $("#id_modelomov").on("change", function(){
 });
 //Validando o equipamento selecionados
 $("#id_equipamentomov").on("change", function(){
+    "use strict";
     var id_equipamento = $(this).val();
     validaEquipamentoCircuito(id_equipamento).done(function(valida){
         if (valida) {
@@ -1706,6 +1706,7 @@ $("#id_equipamentomov").on("change", function(){
 });
 //Campo Número de Série
 $("#numero_seriemov").on("change", function () {
+    "use strict";
     var numero_serie = $(this).val();
     if (numero_serie !== ""){
         var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoNumeroSerie");
@@ -1871,6 +1872,7 @@ $("#numero_seriemov").on("change", function () {
 // });
 
 $(document).on("click", ".criar_mov", function(){
+    "use strict";
     var id_tipomovimento = $("#id_tipomovimento").val();
     switch (id_tipomovimento)
     {
@@ -2240,6 +2242,7 @@ $(document).on("click", ".criar_mov", function(){
 });
 
 $(".bt_del").on("click", function(){
+    "use strict";
     var nm_rows = ids.length;
     if(nm_rows > 1){
         swal({
@@ -2294,7 +2297,7 @@ $(".bt_del").on("click", function(){
                 }
             });
         });
-    } else if (nm_rows == 0) {
+    } else if (nm_rows === 0) {
         swal({
             title: "Deletar Circuitos",
             text: "Você precisa selecionar uma ou mais unidades para serem deletadas!",
@@ -2357,6 +2360,7 @@ $(".bt_del").on("click", function(){
 });
 
 $("#pdfCircuito").on("click", function () {
+    "use strict";
     var id_circuito = $("#idv").val();
     var action = actionCorreta(window.location.href.toString(), "circuitos/pdfCircuito");
     $.ajax({
@@ -2383,4 +2387,90 @@ $("#pdfCircuito").on("click", function () {
             window.open(data.url);
         }
     });
+});
+
+
+$(".bt_anexo").on("click", function(){
+    "use strict";
+    $("#modalanexoscircuitos").modal();
+});
+//jquery file upload example jsfiddle
+// (https://github.com/stanislav-web/phalcon-uploader and https://forum.phalconphp.com/discussion/14401/how-to-use-blueimp-file-upload-with-phalcon and phalcon with jQuery File Upload)
+$(".fileupload").fileupload({
+    dataType: "JSON",
+    dropZone: $("#dropzone"),
+    add: function (e, data) {
+        "use strict";
+        var table= $("#fileTable");
+        table.show();
+        var tpl = $("<tr class='file'>" +
+            "<td class='fname'></td>" +
+            "<td class='fsize'></td>" +
+            //Select de tipo
+            "<td class='ftipo'>" +
+            "<div class='form-group'>" +
+            "<select name='id_tipo_anexo[]' id='id_tipo_anexo' class='form-control'>" +
+            "<option value=''>Selecione</option>"+
+            "</select>"+
+            "</div>"+
+            //Input de descrição
+            "</td>" +
+            "<td class='fdescricao'>" +
+            "<div class='form-group'>" +
+            "<input type='text' class='form-control' id='file_descricao' name='file_descricao[]'/>" +
+            "</div>"+
+            "</td>" +
+
+            "<td class='fact'>" +
+            "<a href='#' class='btn btn-warning rmvBtn'><i class='fi-ban'></i> Cancelar</a>" +
+            // "<a href='#' class='btn btn-primary uplBtn'><i class='fi-cloud-upload'></i> Upload</a>" +
+            "</td></tr>");
+        tpl.find(".fname").text(data.files[0].name);
+        tpl.find(".fsize").text(formatFileSize(data.files[0].size));
+        data.context = tpl.appendTo("#fileList");
+
+        $("#salvaAnexosCircuitos").click(function () {
+            //fix this?
+            data.submit();
+        });
+        $("#cancel").click(function () {
+            data.submit().abort();
+            tpl.fadeOut(function(){
+                tpl.remove();
+            });
+            table.hide();
+            $(".inputfile").val(null);
+            $("label > span").html("Escolher Arquivos");
+        });
+        tpl.find(".rmvBtn").click(function(){
+            if(tpl.hasClass("file")){
+                data.submit().abort();
+            }
+            tpl.fadeOut(function(){
+                tpl.remove();
+            });
+        });
+        tpl.find(".uplBtn").click(function(){
+            if(tpl.hasClass("file")){
+                data.submit();
+            }
+            $(this).replaceWith("<p>Finalizado!</p>");
+            tpl.find(".rmvBtn").hide();
+            tpl.fadeOut(function(){
+                tpl.remove();
+            });
+        });
+        //var jqXHR = data.submit();
+        //return false;
+    },
+    done: function (e, data) {
+        "use strict";
+        $("#result").val("Upload finalizado.");
+    },
+    error: function (jqXHR, textStatus, errorThrown) {
+        "use strict";
+        if (errorThrown === "abort") {
+            $("#result").val("Upload de arquivo cancelado.");
+        }
+    }
 });

@@ -372,7 +372,7 @@ class CircuitosController extends ControllerBase
                     for ($i = 0; $i < count($messages); $i++) {
                         $errors .= '['.$messages[$i].'] ';
                     }
-                    $transaction->rollback('Erro ao criar o movimento: ' . $errors);
+                    $transaction->rollback("Erro ao criar o movimento: " . $errors);
                 }
                 //Commita a transação
                 $transaction->commit();
@@ -442,7 +442,7 @@ class CircuitosController extends ControllerBase
                     for ($i = 0; $i < count($messages); $i++) {
                         $errors .= '['.$messages[$i].'] ';
                     }
-                    $transaction->rollback('Erro ao editar o circuito: ' . $errors);
+                    $transaction->rollback("Erro ao editar o circuito: " . $errors);
                 }
                 //Registrando o movimento de alteração do circuito
                 $movimento = new Movimentos();
@@ -457,7 +457,7 @@ class CircuitosController extends ControllerBase
                     for ($i = 0; $i < count($messages); $i++) {
                         $errors .= '['.$messages[$i].'] ';
                     }
-                    $transaction->rollback('Erro ao criar o movimento: ' . $errors);
+                    $transaction->rollback("Erro ao criar o movimento: " . $errors);
                 }
                 //Commita a transação
                 $transaction->commit();
