@@ -224,11 +224,11 @@ class ControleAcessoController extends ControllerBase
         $permissoes = array(
             "session"           => ["login", "logout", "sair", "recuperar", "inativo"],
             "usuario"           => ["gerarSenha", "resetarSenha", "alterarSenha", "primeiro", "redirecionaUsuario", "recuperarSenha", "trocar", "validarLogin", "formUsuario"],
-            "core"              => ["ativarPessoa", "inativarPessoa", "deletarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail"],
+            "core"              => ["ativarPessoa", "inativarPessoa", "deletarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail", "upload"],
             "error"             => ["show401", "show404"],
             "index"             => ["index"],
             "cidade_digital"    => ["formCidadeDigital"],
-            "circuitos"         => ["formCircuitos", "cidadedigitalAll", "cidadedigitalConectividade", "equipamentoModelo", "equipamentoNumeroSerie", "modeloFabricante", "unidadeCliente", "validarEquipamentoCircuito", "visualizaCircuitos"],
+            "circuitos"         => ["formCircuitos", "clienteAll", "fabricanteAll", "cidadedigitalAll", "cidadedigitalConectividade", "equipamentoModelo", "equipamentoNumeroSerie", "modeloFabricante", "unidadeCliente", "validarEquipamentoCircuito", "visualizaCircuitos"],
             "cliente"           => ["formCliente"],
             "cliente_unidade"   => ["formClienteUnidade"],
             "empresa"           => ["formEmpresa"],
@@ -271,36 +271,84 @@ class ControleAcessoController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $manager = new TxManager();
-        $transaction = $manager->get();
         $dados = filter_input_array(INPUT_POST);
-        $valida_controleacesso = PhalconAccessList::findFirst([
-            "conditions" => "access_name = ?1 AND roles_name = ?2 AND resources_name = ?3",
-            'bind'       => [
-                1 => $dados["access_name"],
-                2 => $dados["role"],
-                3 => $dados["resource"]
-            ]
-        ]);
-        //CSRF Token Check
-        if (!$valida_controleacesso)
+        foreach ($dados["arrayRoles"] as $key => $role)
         {
+            $valida_controleacesso = PhalconAccessList::findFirst([
+                "conditions" => "access_name = ?1 AND roles_name = ?2 AND resources_name = ?3",
+                'bind'       => [
+                    1 => $dados["arrayAccessNames"][$key],
+                    2 => $role,
+                    3 => $dados["arrayResources"][$key]
+                ]
+            ]);
+            //CSRF Token Check
+            if (!$valida_controleacesso)
+            {
+                if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
+                    try {
+                        $transaction = $manager->get();
+                        $controleacesso = new PhalconAccessList();
+                        $controleacesso->setTransaction($transaction);
+                        $controleacesso->setRolesName($role);
+                        $controleacesso->setResourcesName($dados["arrayResources"][$key]);
+                        $controleacesso->setAccessName($dados["arrayAccessNames"][$key]);
+                        $controleacesso->setAllowed(0);
+                        if ($controleacesso->save() == false) {
+                            $transaction->rollback("Não foi possível cadastrar as permissões!");
+                        }
+                        //Commita a transação
+                        $transaction->commit();
+                        $response->setContent(json_encode(array(
+                            "operacao" => True
+                        )));
+                    } catch (TxFailed $e) {
+                        $response->setContent(json_encode(array(
+                            "operacao" => False,
+                            "mensagem" => $e->getMessage()
+                        )));
+                        return $response;
+                    }
+                } else {//Formulário Inválido
+                    $response->setContent(json_encode(array(
+                        "operacao" => False,
+                        "mensagem" => "Check de formulário inválido!"
+                    )));
+                    return $response;
+                }
+            }
+        }
+        return $response;
+    }
+
+    public function removerPermissaoAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $manager = new TxManager();
+        $dados = filter_input_array(INPUT_POST);
+        foreach ($dados["arrayRoles"] as $key => $role)
+        {
+            //CSRF Token Check
             if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
                 try {
-                    $controleacesso = new PhalconAccessList();
-                    $controleacesso->setTransaction($transaction);
-                    $controleacesso->setRolesName($dados["role"]);
-                    $controleacesso->setResourcesName($dados["resource"]);
-                    $controleacesso->setAccessName($dados["access_name"]);
-                    $controleacesso->setAllowed(0);
-                    if ($controleacesso->save() == false) {
-                        $transaction->rollback("Não foi possível cadastrar as permissões!");
+                    $controleacesso = PhalconAccessList::findFirst([
+                        "conditions" => "access_name = ?1 AND roles_name = ?2 AND resources_name = ?3",
+                        'bind' => [
+                            1 => $dados["arrayAccessNames"][$key],
+                            2 => $role,
+                            3 => $dados["arrayResources"][$key]
+                        ]
+                    ]);
+                    $transaction = $manager->get();
+                    if ($controleacesso->delete() == false) {
+                        $transaction->rollback("Não foi possível deletar a pessoa!");
                     }
-                    //Commita a transação
                     $transaction->commit();
                     $response->setContent(json_encode(array(
                         "operacao" => True
                     )));
-                    return $response;
                 } catch (TxFailed $e) {
                     $response->setContent(json_encode(array(
                         "operacao" => False,
@@ -316,49 +364,7 @@ class ControleAcessoController extends ControllerBase
                 return $response;
             }
         }
-    }
-
-    public function removerPermissaoAction()
-    {
-        //Desabilita o layout para o ajax
-        $this->view->disable();
-        $response = new Response();
-        $manager = new TxManager();
-        $dados = filter_input_array(INPUT_POST);
-        //CSRF Token Check
-        if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
-            try {
-                $controleacesso = PhalconAccessList::findFirst([
-                    "conditions" => "access_name = ?1 AND roles_name = ?2 AND resources_name = ?3",
-                    'bind'       => [
-                        1 => $dados["access_name"],
-                        2 => $dados["role"],
-                        3 => $dados["resource"]
-                    ]
-                ]);
-                $transaction = $manager->get();
-                if ($controleacesso->delete() == false) {
-                    $transaction->rollback("Não foi possível deletar a pessoa!");
-                }
-                $transaction->commit();
-                $response->setContent(json_encode(array(
-                    "operacao" => True
-                )));
-                return $response;
-            } catch (TxFailed $e) {
-                $response->setContent(json_encode(array(
-                    "operacao" => False,
-                    "mensagem" => $e->getMessage()
-                )));
-                return $response;
-            }
-        } else {//Formulário Inválido
-            $response->setContent(json_encode(array(
-                "operacao" => False,
-                "mensagem" => "Check de formulário inválido!"
-            )));
-            return $response;
-        }
+        return $response;
     }
 
     public function buscarPermissoesAction()

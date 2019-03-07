@@ -123,13 +123,19 @@ class CircuitosController extends ControllerBase
         $circuitos = Circuitos::findFirst("id={$dados["id_circuitos"]}");
         $dados = array(
             "id" => $circuitos->getId(),
+            "id_tipocliente" => $circuitos->getIdTipoCliente(),
             "id_cliente" => $circuitos->getIdCliente(),
             "id_cliente_unidade" => $circuitos->getIdClienteUnidade(),
+            "lid_cliente" => $circuitos->getClienteNome(),
+            "lid_cliente_unidade" => $circuitos->getClienteUnidadeNome(),
+            "id_fabricante" => $circuitos->getIdFabricante(),
+            "id_modelo" => $circuitos->getIdModelo(),
             "id_equipamento" => $circuitos->getIdEquipamento(),
-            "desc_modelo" => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->Modelo->modelo : null,
-            "desc_equip" => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->nome : null,
-            "patr_equip" => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->numpatrimonio : null,
-            "nums_equip" => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->numserie : null,
+            "lid_fabricante" => $circuitos->getFabricanteNome(),
+            "lid_modelo" => $circuitos->getModeloNome(),
+            "lid_equipamento" => $circuitos->getEquipamentoNome(),
+            "patr_equip" => $circuitos->getEquipamentoPatrimonio(),
+            "nums_equip" => $circuitos->getEquipamentoSerie(),
             "id_contrato" => $circuitos->getIdContrato(),
             "id_status" => $circuitos->getIdStatus(),
             "id_cluster" => $circuitos->getIdCluster(),
@@ -138,6 +144,8 @@ class CircuitosController extends ControllerBase
             "id_tipolink" => $circuitos->getIdTipolink(),
             "id_cidadedigital" => $circuitos->getIdCidadedigital(),
             "id_conectividade" => $circuitos->getIdConectividade(),
+            "lid_cidadedigital" => $circuitos->getCidadeDigitalNome(),
+            "lid_conectividade" => $circuitos->getConectividadeNome(),
             "designacao" => $circuitos->getDesignacao(),
             "designacao_anterior" => $circuitos->getDesignacaoAnterior(),
             "uf" => $circuitos->getUf(),
@@ -151,33 +159,32 @@ class CircuitosController extends ControllerBase
             "observacao" => $circuitos->getObservacao(),
             "data_ativacao" => $circuitos->getDataAtivacao(),
         );
-        $cliente = Cliente::findFirst("id={$circuitos->getIdCliente()}");
-        $unidades = ClienteUnidade::buscaClienteUnidade($circuitos->getIdCliente());
-        $equipamentos = Equipamento::find();
-        $equip = ($circuitos->getIdEquipamento()) ? Equipamento::findFirst("id={$circuitos->getIdEquipamento()}") : null;
+//        $cliente = Cliente::findFirst("id={$circuitos->getIdCliente()}");
+//        $unidades = ClienteUnidade::buscaClienteUnidade($circuitos->getIdCliente());
+//        $equipamentos = Equipamento::find();
+//        $equip = ($circuitos->getIdEquipamento()) ? Equipamento::findFirst("id={$circuitos->getIdEquipamento()}") : null;
         $banda = Lov::find(array(
             "tipo = 17"
         ));
-
-        $conec = Conectividade::find("id_cidade_digital={$circuitos->getIdCidadedigital()}");
-        $conectividade = array();
-        foreach ($conec as $c){
-            $conectividades = array(
-                "id" => $c->getId(),
-                "descricao" => $c->getDescricao(),
-                "tipo" => $c->Lov->descricao
-            );
-            array_push($conectividade,$conectividades);
-        }
+//        $conec = Conectividade::find("id_cidade_digital={$circuitos->getIdCidadedigital()}");
+//        $conectividade = array();
+//        foreach ($conec as $c){
+//            $conectividades = array(
+//                "id" => $c->getId(),
+//                "descricao" => $c->getDescricao(),
+//                "tipo" => $c->getTipoConectividade()
+//            );
+//            array_push($conectividade,$conectividades);
+//        }
 
         $response->setContent(json_encode(array(
             "dados" => $dados,
-            "cliente" => $cliente,
-            "equipamentos" => $equipamentos,
-            "equip" => $equip,
-            "unidadescli" => $unidades,
+//            "cliente" => $cliente,
+//            "equipamentos" => $equipamentos,
+//            "equip" => $equip,
+//            "unidadescli" => $unidades,
             "banda" => $banda,
-            "conectividade" => $conectividade
+//            "conectividade" => $conectividade
         )));
         return $response;
     }
@@ -217,7 +224,12 @@ class CircuitosController extends ControllerBase
             "id" => $circuitos->getId(),
             "id_cliente" => $circuitos->getIdCliente(),
             "id_cliente_unidade" => $circuitos->getIdClienteUnidade(),
+            "lid_cliente" => $circuitos->getClienteNome(),
+            "lid_cliente_unidade" => $circuitos->getClienteUnidadeNome(),
             "id_equipamento" => $circuitos->getIdEquipamento(),
+            "lid_equipamento" => $circuitos->getEquipamentoNome(),
+            "lid_fabricante" => $circuitos->getFabricanteNome(),
+            "lid_modelo" => $circuitos->getModeloNome(),
             "id_contrato" => $circuitos->getIdContrato(),
             "id_status" => $circuitos->getIdStatus(),
             "id_cluster" => $circuitos->getIdCluster(),
@@ -226,6 +238,8 @@ class CircuitosController extends ControllerBase
             "id_tipolink" => $circuitos->getIdTipolink(),
             "id_cidadedigital" => $circuitos->getIdCidadedigital(),
             "id_conectividade" => $circuitos->getIdConectividade(),
+            "lid_cidadedigital" => $circuitos->getCidadeDigitalNome(),
+            "lid_conectividade" => $circuitos->getConectividadeNome(),
             "designacao" => $circuitos->getDesignacao(),
             "designacao_anterior" => $circuitos->getDesignacaoAnterior(),
             "uf" => $circuitos->getUf(),
@@ -239,16 +253,16 @@ class CircuitosController extends ControllerBase
             "observacao" => $circuitos->getObservacao(),
             "data_ativacao" => $util->converterDataHoraParaBr($circuitos->getDataAtivacao()),
             "data_atualizacao" => $util->converterDataHoraParaBr($circuitos->getDataAtualizacao()),
-            "numserie" => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->numserie : null,
-            "numpatrimonio" => ($circuitos->getIdEquipamento()) ? $circuitos->Equipamento->numpatrimonio : null
+            "numserie" => $circuitos->getEquipamentoSerie(),
+            "numpatrimonio" => $circuitos->getEquipamentoPatrimonio()
         );
         $mov = array();
         foreach($movimentos as $movimento){
             array_push($mov, array(
                 "id" => $movimento->getId(),
                 "id_circuitos" => $movimento->getIdCircuitos(),
-                "id_tipomovimento" => $movimento->Lov->descricao,
-                "id_usuario" => $movimento->Usuario->Pessoa->nome,
+                "id_tipomovimento" => $movimento->getTipoMovimento(),
+                "id_usuario" => $movimento->getUsuarioMovimento(),
                 "data_movimento" => $util->converterDataHoraParaBr($movimento->getDataMovimento()),
                 "osocomon" => $movimento->getOsocomon(),
                 "valoranterior" => $movimento->getValoranterior(),
@@ -262,7 +276,7 @@ class CircuitosController extends ControllerBase
             array_push($cont, array(
                 "id" => $contato->getId(),
                 "id_pessoa" => $contato->getIdPessoa(),
-                "id_tipocontato" => $contato->Lov->descricao,
+                "id_tipocontato" => $contato->getTipoContato(),
                 "principal" => $principal,
                 "nome" => $contato->getNome(),
                 "telefone" => $contato->getTelefone(),
@@ -324,7 +338,7 @@ class CircuitosController extends ControllerBase
                 $cidade_estado = CidadeDigital::CidadeUfporCidadeDigital($params["id_cidadedigital"]);
                 //Coletando a última designação
                 $circuito = Circuitos::findFirst("designacao = (SELECT MAX(designacao) FROM Circuitos\Models\Circuitos)");
-                $vl_designacao = ($circuito) ? $circuito->getDesignacao() + 1 : 0;
+                $vl_designacao = ($circuito) ? $circuito->getDesignacao() + 1 : 1;
                 //Criando o Circuito
                 $circuitos = new Circuitos();
                 $circuitos->setTransaction($transaction);
@@ -870,6 +884,7 @@ class CircuitosController extends ControllerBase
                     "nome_equipamento" => $equipamentos->getNome(),
                     "numero_patrimonio" => $equipamentos->getNumpatrimonio(),
                     "id_fabricante" => $equipamentos->getIdFabricante(),
+                    "nome_fabricante" => $equipamentos->Fabricante->Pessoa->nome,
                     "id_modelo" => $equipamentos->getIdModelo(),
                     "nome_modelo" => $equipamentos->Modelo->modelo
                 )));
@@ -913,6 +928,32 @@ class CircuitosController extends ControllerBase
         $response->setContent(json_encode(array(
             "operacao" => True,
             "dados" => $cidadedigital
+        )));
+        return $response;
+    }
+
+    public function clienteAllAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $cliente = Cliente::buscarClientes();
+        $response->setContent(json_encode(array(
+            "operacao" => True,
+            "dados" => $cliente
+        )));
+        return $response;
+    }
+
+    public function fabricanteAllAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $fabricante = Fabricante::buscarFabricantes();
+        $response->setContent(json_encode(array(
+            "operacao" => True,
+            "dados" => $fabricante
         )));
         return $response;
     }

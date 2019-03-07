@@ -16,13 +16,13 @@ $loader->registerDirs(
 
 $loader->registerNamespaces(
     [
-        'Circuitos\Models'      => $config->application->modelsDir,
-        'Circuitos\Controllers' => $config->application->controllersDir,
-        'Circuitos\Library'     => $config->application->libraryDir,
-        'Auth'                  => $config->application->libraryDir . 'Auth/Autentica.php',
-        'Util'                  => $config->application->libraryDir . 'Util/Util.php',
-        'TemplatesEmails'       => $config->application->libraryDir . 'Util/TemplatesEmails.php',
-        'TokenManager'          => $config->application->libraryDir . 'Util/TokenManager.php'
+        "Circuitos\Models"      => $config->application->modelsDir,
+        "Circuitos\Controllers" => $config->application->controllersDir,
+        "Circuitos\Library"     => $config->application->libraryDir,
+        "Auth"                  => $config->application->libraryDir . "Auth/Autentica.php",
+        "Util"                  => $config->application->libraryDir . "Util/Util.php",
+        "TemplatesEmails"       => $config->application->libraryDir . "Util/TemplatesEmails.php",
+        "TokenManager"          => $config->application->libraryDir . "Util/TokenManager.php"
     ]);
 
 // $loader->registerClasses(

@@ -177,6 +177,22 @@ class Fabricante extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Consulta com o join na tabela com o nome do fabricante
+     * @return Fabricante|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function buscarFabricantes()
+    {
+        $query = new Builder();
+        $query->from(array("Fabricante" => "Circuitos\Models\Fabricante"));
+        $query->columns("Fabricante.id, Pessoa.nome");
+        $query->join("Circuitos\Models\Pessoa", "Pessoa.id = Fabricante.id_pessoa", "Pessoa");
+        $query->where("Pessoa.ativo = 1");
+        $query->orderBy("Pessoa.nome ASC");
+        $resultado = $query->getQuery()->execute()->setHydrateMode(Resultset::HYDRATE_ARRAYS);
+        return $resultado;
+    }
+
+    /**
      * Independent Column Mapping.
      * Keys are the real names in the table and the values their names in the application
      *

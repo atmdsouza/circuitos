@@ -782,6 +782,135 @@ class Circuitos extends \Phalcon\Mvc\Model
         return $this->id_cidadedigital;
     }
 
+
+    /**
+     * Returns the value of Cliente Nome
+     *
+     * @return string
+     */
+    public function getClienteNome()
+    {
+        return $this->Cliente->Pessoa->nome;
+    }
+
+
+    /**
+     * Returns the value of Cliente Unidade Nome
+     *
+     * @return string
+     */
+    public function getClienteUnidadeNome()
+    {
+        return $this->ClienteUnidade->Pessoa->nome;
+    }
+
+
+    /**
+     * Returns the value of Cidade Digital Nome
+     *
+     * @return string
+     */
+    public function getCidadeDigitalNome()
+    {
+        return $this->CidadeDigital->descricao;
+    }
+
+
+    /**
+     * Returns the value of Conectividade Nome
+     *
+     * @return string
+     */
+    public function getConectividadeNome()
+    {
+        return $this->Conectividade->Lov->descricao . " " . $this->Conectividade->descricao;
+    }
+
+
+    /**
+     * Returns the value of Fabricante Nome
+     *
+     * @return string
+     */
+    public function getFabricanteNome()
+    {
+        return $this->Equipamento->Fabricante->Pessoa->nome;
+    }
+
+
+    /**
+     * Returns the value of Modelo Nome
+     *
+     * @return string
+     */
+    public function getModeloNome()
+    {
+        return $this->Equipamento->Modelo->modelo;
+    }
+
+
+    /**
+     * Returns the value of Equipamento Nome
+     *
+     * @return string
+     */
+    public function getEquipamentoNome()
+    {
+        return $this->Equipamento->nome;
+    }
+
+
+    /**
+     * Returns the value of Equipamento Patromonio
+     *
+     * @return string
+     */
+    public function getEquipamentoPatrimonio()
+    {
+        return $this->Equipamento->numpatrimonio;
+    }
+
+
+    /**
+     * Returns the value of Equipamento Num Série
+     *
+     * @return string
+     */
+    public function getEquipamentoSerie()
+    {
+        return $this->Equipamento->numserie;
+    }
+
+    /**
+     * Returns the value of id_tipocliente
+     *
+     * @return int
+     */
+    public function getIdTipoCliente()
+    {
+        return $this->Cliente->id_tipocliente;
+    }
+
+    /**
+     * Returns the value of id_fabricante
+     *
+     * @return int
+     */
+    public function getIdFabricante()
+    {
+        return $this->Equipamento->Fabricante->id;
+    }
+
+    /**
+     * Returns the value of id_modelo
+     *
+     * @return int
+     */
+    public function getIdModelo()
+    {
+        return $this->Equipamento->Modelo->id;
+    }
+
     /**
      * Initialize method for model.
      */

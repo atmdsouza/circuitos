@@ -267,6 +267,26 @@ class Movimentos extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field Tipo Movimento
+     *
+     * @return string
+     */
+    public function getTipoMovimento()
+    {
+        return $this->Lov->descricao;
+    }
+
+    /**
+     * Returns the value of field Usuario Movimento
+     *
+     * @return string
+     */
+    public function getUsuarioMovimento()
+    {
+        return $this->Usuario->Pessoa->nome;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()

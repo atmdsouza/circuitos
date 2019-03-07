@@ -487,121 +487,6 @@ $(".bt_del").on("click", function(){
 });
 
 //Permissões de Acesso
-// var animating = false;
-// var masteranimate = false;
-//
-// $(function() {
-//     // Initialize multiple switches
-//     if (Array.prototype.forEach) {
-//         var elems = Array.prototype.slice.call(document.querySelectorAll(".switches"));
-//         elems.forEach(function(html) {
-//             var switcherys = new Switchery(html);
-//         });
-//     }
-//     else {
-//         var elems = document.querySelectorAll(".switches");
-//         for (var i = 0; i < elems.length; i++) {
-//             var switcherys = new Switchery(elems[i]);
-//         }
-//     }
-//
-//     $("input.special").change( function(e){
-//         masteranimate = true;
-//         if (!animating){
-//             var masterStatus = $(this).prop("checked");
-//             $("input.chkChange").each(function(index){
-//                 var switchStatus = $("input.chkChange")[index].checked;
-//                 if(switchStatus != masterStatus){
-//                     $(this).trigger("click");
-//                 }
-//             });
-//         }
-//         masteranimate = false;
-//     });
-//     // $("input.chkChange").change(function(e){
-//     //     animating = true;
-//     //     if ( !masteranimate ){
-//     //         // if( !$("input.special").prop("checked") ){
-//     //         //     $("input.special").trigger("click");
-//     //         // }
-//     //         var goinoff = true;
-//     //         $("input.chkChange").each(function(index){
-//     //             if( $("input.chkChange")[index].checked ){
-//     //                 goinoff = false;
-//     //             }
-//     //         });
-//     //         if(goinoff){
-//     //             $("input.special").trigger("click");
-//     //         }
-//     //     }
-//     //     animating = false;
-//     //
-//     // });
-//
-// });
-
-//Adicionar permissões
-function adicionarPermissao(role, resource, access_name)
-{
-    "use strict";
-    var action = actionCorreta(window.location.href.toString(), "controle_acesso/adicionarPermissao");
-    $.ajax({
-        type: "POST",
-        dataType: "JSON",
-        url: action,
-        data: {
-            tokenKey: $("#token").attr("name"),
-            tokenValue: $("#token").attr("value"),
-            role: role,
-            resource: resource,
-            access_name: access_name
-        },
-        async: false,
-        error: function (data) {
-            if (data.status && data.status === 401)
-            {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        }
-    });
-}
-//Remover permissões
-function removerPermissao(role, resource, access_name)
-{
-    "use strict";
-    var action = actionCorreta(window.location.href.toString(), "controle_acesso/removerPermissao");
-    $.ajax({
-        type: "POST",
-        dataType: "JSON",
-        url: action,
-        data: {
-            tokenKey: $("#token").attr("name"),
-            tokenValue: $("#token").attr("value"),
-            role: role,
-            resource: resource,
-            access_name: access_name
-        },
-        async: false,
-        error: function (data) {
-            if (data.status && data.status === 401)
-            {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function (data) {
-            return data.operacao;
-        }
-    });
-
-}
 //Buscando permissões por Perfil
 function buscarPermissoes(role)
 {
@@ -735,8 +620,8 @@ function checkAcessoTotal()
     var total_global = verdadeiro_global + falso_global;
     if (total_global === verdadeiro_global)
     {
-        // $(".permissao_total_global").prop("checked", true);
         $(".permissao_total_global").prop("checked", true);
+        $(".permissao_total_modulo").prop("checked", true);
     }
     else
     {
@@ -767,33 +652,110 @@ $(".bt_permissoes").on("click", function(){
 $(".permissao_total_global").on("change", function(){
     "use strict";
     var role = $("#roles_name").val();
-    //Verifica o check_total clicado
-    if ($(this).prop("checked")) {//Verifica se check total já está checked
-        $(".permissao_unitaria_global").each(function () {//Faz o laço entre todos que possuem a classe selecionada
-            var valor = $(this).val();
-            var resources_access = valor.split(".");
-            var resource = resources_access[0];
-            var access_name = resources_access[1];
-            if (!$(this).prop("checked"))//Verifica se ele não está checked
-            {
-                adicionarPermissao(role, resource, access_name);
-                $(this).prop("checked", true);
+    var parent = $(this);
+    var arrayRoles = [];
+    var arrayResources = [];
+    var arrayAccessNames = [];
+    $.blockUI({
+        message: "<img src='" + URLImagensSistema + "/loader_gears.gif' width='50' height='50'/>      Aguarde um momento, estamos processando suas permissões...",
+        baseZ: 2000,
+        onBlock: function(){
+            if ($(parent).prop("checked")) {//Verifica se check total já está checked
+                let prom = $(".permissao_unitaria_global").each(function (item) {//Faz o laço entre todos que possuem a classe selecionada
+                    var elem = $(".permissao_unitaria_global")[item];
+                    var valor = $(elem).val();
+                    var resources_access = valor.split(".");
+                    var resource = resources_access[0];
+                    var access_name = resources_access[1];
+                    if (!$(elem).prop("checked"))//Verifica se ele não está checked
+                    {
+                        arrayRoles.push(role);
+                        arrayResources.push(resource);
+                        arrayAccessNames.push(access_name);
+                        $(elem).prop("checked", true);
+                    }
+                });
+                Promise.all(prom).then(function() {
+                    var action = actionCorreta(window.location.href.toString(), "controle_acesso/adicionarPermissao");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: action,
+                        data: {
+                            tokenKey: $("#token").attr("name"),
+                            tokenValue: $("#token").attr("value"),
+                            arrayRoles: arrayRoles,
+                            arrayResources: arrayResources,
+                            arrayAccessNames: arrayAccessNames
+                        },
+                        error: function (data) {
+                            if (data.status && data.status === 401)
+                            {
+                                swal({
+                                    title: "Erro de Permissão",
+                                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                    type: "warning"
+                                });
+                            }
+                        },
+                        complete: function () {
+                            //Verifica checkTotal
+                            checkAcessoTotal();
+                            $.unblockUI();
+                        }
+                    });
+                });
             }
-        });
-    }
-    else{
-        $(".permissao_unitaria_global").each(function () {
-            var valor = $(this).val();
-            var resources_access = valor.split(".");
-            var resource = resources_access[0];
-            var access_name = resources_access[1];
-            if ($(this).prop("checked"))
-            {
-                removerPermissao(role, resource, access_name);
-                $(this).prop("checked", false);
+            else{
+                let prom = $(".permissao_unitaria_global").each(function (item) {//Faz o laço entre todos que possuem a classe selecionada
+                    var elem = $(".permissao_unitaria_global")[item];
+                    var valor = $(elem).val();
+                    var resources_access = valor.split(".");
+                    var resource = resources_access[0];
+                    var access_name = resources_access[1];
+                    if ($(elem).prop("checked"))//Verifica se ele não está checked
+                    {
+                        arrayRoles.push(role);
+                        arrayResources.push(resource);
+                        arrayAccessNames.push(access_name);
+                        $(elem).prop("checked", false);
+                    }
+                });
+                Promise.all(prom).then(function() {
+                    var action = actionCorreta(window.location.href.toString(), "controle_acesso/removerPermissao");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: action,
+                        data: {
+                            tokenKey: $("#token").attr("name"),
+                            tokenValue: $("#token").attr("value"),
+                            arrayRoles: arrayRoles,
+                            arrayResources: arrayResources,
+                            arrayAccessNames: arrayAccessNames
+                        },
+                        error: function (data) {
+                            if (data.status && data.status === 401)
+                            {
+                                swal({
+                                    title: "Erro de Permissão",
+                                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                    type: "warning"
+                                });
+                            }
+                        },
+                        complete: function () {
+                            //Verifica checkTotal
+                            $(".permissao_total_modulo").prop("checked", false);
+                            checkAcessoTotal();
+                            $.unblockUI();
+                        }
+                    });
+                });
             }
-        });
-    }
+
+        }
+    });
 });
 //Faz o check automático de todos por módulo
 $(".permissao_total_modulo").on("change", function(){
@@ -802,6 +764,12 @@ $(".permissao_total_modulo").on("change", function(){
     var attrname = $(this).attr("name");
     var modulo = attrname.split(".");
     var seletor;
+    var parent = $(this);
+
+    var arrayRoles = [];
+    var arrayResources = [];
+    var arrayAccessNames = [];
+
     switch (modulo[0])
     {
         case "index":
@@ -844,36 +812,105 @@ $(".permissao_total_modulo").on("change", function(){
             seletor = ".permissao_unitaria_usuario";
             break;
     }
-    $.blockUI({ message: "<img src='" + URLImagensSistema + "/loader_gears.gif' width='50' height='50'/>      Aguarde um momento, estamos processando seu pedido...", baseZ: 2000 });
-    if ($(this).prop("checked")) {//Verifica se check total já está checked
-        $(seletor).each(function () {//Faz o laço entre todos que possuem a classe selecionada
-            var valor = $(this).val();
-            var resources_access = valor.split(".");
-            var resource = resources_access[0];
-            var access_name = resources_access[1];
-            if (!$(this).prop("checked"))//Verifica se ele não está checked
-            {
-                adicionarPermissao(role, resource, access_name);
-                $(this).prop("checked", true);
+    $.blockUI({
+        message: "<img src='" + URLImagensSistema + "/loader_gears.gif' width='50' height='50'/>      Aguarde um momento, estamos processando suas permissões...",
+        baseZ: 2000,
+        onBlock: function(){
+            if ($(parent).prop("checked")) {//Verifica se check total já está checked
+                let prom = $(seletor).each(function (item) {//Faz o laço entre todos que possuem a classe selecionada
+                    var elem = $(seletor)[item];
+                    var valor = $(elem).val();
+                    var resources_access = valor.split(".");
+                    var resource = resources_access[0];
+                    var access_name = resources_access[1];
+                    if (!$(elem).prop("checked"))//Verifica se ele não está checked
+                    {
+                        arrayRoles.push(role);
+                        arrayResources.push(resource);
+                        arrayAccessNames.push(access_name);
+                        $(elem).prop("checked", true);
+                    }
+                });
+                Promise.all(prom).then(function() {
+                    var action = actionCorreta(window.location.href.toString(), "controle_acesso/adicionarPermissao");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: action,
+                        data: {
+                            tokenKey: $("#token").attr("name"),
+                            tokenValue: $("#token").attr("value"),
+                            arrayRoles: arrayRoles,
+                            arrayResources: arrayResources,
+                            arrayAccessNames: arrayAccessNames
+                        },
+                        error: function (data) {
+                            if (data.status && data.status === 401)
+                            {
+                                swal({
+                                    title: "Erro de Permissão",
+                                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                    type: "warning"
+                                });
+                            }
+                        },
+                        complete: function () {
+                            //Verifica checkTotal
+                            checkAcessoTotal();
+                            $.unblockUI();
+                        }
+                    });
+                });
             }
-        });
-    }
-    else{
-        $(seletor).each(function () {
-            var valor = $(this).val();
-            var resources_access = valor.split(".");
-            var resource = resources_access[0];
-            var access_name = resources_access[1];
-            if ($(this).prop("checked"))
-            {
-                removerPermissao(role, resource, access_name);
-                $(this).prop("checked", false);
+            else{
+                let prom = $(seletor).each(function (item) {//Faz o laço entre todos que possuem a classe selecionada
+                    var elem = $(seletor)[item];
+                    var valor = $(elem).val();
+                    var resources_access = valor.split(".");
+                    var resource = resources_access[0];
+                    var access_name = resources_access[1];
+                    if ($(elem).prop("checked"))//Verifica se ele não está checked
+                    {
+                        arrayRoles.push(role);
+                        arrayResources.push(resource);
+                        arrayAccessNames.push(access_name);
+                        $(elem).prop("checked", false);
+                    }
+                });
+                Promise.all(prom).then(function() {
+                    var action = actionCorreta(window.location.href.toString(), "controle_acesso/removerPermissao");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: action,
+                        data: {
+                            tokenKey: $("#token").attr("name"),
+                            tokenValue: $("#token").attr("value"),
+                            arrayRoles: arrayRoles,
+                            arrayResources: arrayResources,
+                            arrayAccessNames: arrayAccessNames
+                        },
+                        error: function (data) {
+                            if (data.status && data.status === 401)
+                            {
+                                swal({
+                                    title: "Erro de Permissão",
+                                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                    type: "warning"
+                                });
+                            }
+                        },
+                        complete: function () {
+                            //Verifica checkTotal
+                            checkAcessoTotal();
+                            $.unblockUI();
+                        }
+                    });
+                });
             }
-        });
-    }
-    $.unblockUI;
-    //verifica o check total
-    checkAcessoTotal();
+
+        }
+    });
 });
 //Faz a concessão de permissões unitárias
 $(".permissao_unitaria").on("change", function(){
@@ -883,14 +920,67 @@ $(".permissao_unitaria").on("change", function(){
     var resource = resources_access[0];
     var access_name = resources_access[1];
     var role = $("#roles_name").val();
+    var arrayRoles = [];
+    var arrayResources = [];
+    var arrayAccessNames = [];
     //Verifica o check clicado
     if ($(this).prop("checked"))
     {
-        adicionarPermissao(role, resource, access_name);
+        arrayRoles.push(role);
+        arrayResources.push(resource);
+        arrayAccessNames.push(access_name);
+        var action = actionCorreta(window.location.href.toString(), "controle_acesso/adicionarPermissao");
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: action,
+            data: {
+                tokenKey: $("#token").attr("name"),
+                tokenValue: $("#token").attr("value"),
+                arrayRoles: arrayRoles,
+                arrayResources: arrayResources,
+                arrayAccessNames: arrayAccessNames
+            },
+            error: function (data) {
+                if (data.status && data.status === 401)
+                {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            }
+        });
     }
     else
     {
-        removerPermissao(role, resource, access_name);
+        arrayRoles.push(role);
+        arrayResources.push(resource);
+        arrayAccessNames.push(access_name);
+        var action = actionCorreta(window.location.href.toString(), "controle_acesso/removerPermissao");
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: action,
+            data: {
+                tokenKey: $("#token").attr("name"),
+                tokenValue: $("#token").attr("value"),
+                arrayRoles: arrayRoles,
+                arrayResources: arrayResources,
+                arrayAccessNames: arrayAccessNames
+            },
+            error: function (data) {
+                if (data.status && data.status === 401)
+                {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            }
+        });
     }
     //verifica o check total
     checkAcessoUnitario(resource);
