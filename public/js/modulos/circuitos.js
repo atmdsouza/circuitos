@@ -41,7 +41,7 @@ var table = $("#tb_circuitos").DataTable({
             enabled: false
         },
         {//Botão Movimentar Registro (Inativo)
-            className: "bt_mov auto_fabricante",
+            className: "bt_mov auto_fabricantemov",
             text: "Movimentar",
             name: "mov", // do not change name
             titleAttr: "Movimentar Circuito",
@@ -1275,26 +1275,25 @@ $(".bt_visual").on("click", function(){
             }
         },
         success: function (data) {
-            var id_fabricante = (data.equip) ? data.equip.id_fabricante : null;
-            var id_modelo = (data.equip) ? data.equip.id_modelo : null;
-            //Conectividade
-            $(".remove_conectividade").remove();
-            $.each(data.conectividade, function (key, value) {
-                var linhas = "<option class='remove_conectividade' value='" + value.id + "'>" + value.tipo + " " + value.descricao + "</option>";
-                $("#id_conectividadev").append(linhas);
-            });
             $("#idv").val(data.dados.id);
-            $("#id_clientev").val(data.dados.id_cliente).selected = "true";
-            $("#id_cliente_unidadev").val(data.dados.id_cliente_unidade).selected = "true";
-            $("#id_fabricantev").val(id_fabricante).selected = "true";
-            $("#id_modelov").val(id_modelo).selected = "true";
-            $("#id_equipamentov").val(data.dados.id_equipamento).selected = "true";
+            $("#lid_clientev").val(data.dados.lid_cliente);
+            $("#lid_cliente_unidadev").val(data.dados.lid_cliente_unidade);
+            $("#id_clientev").val(data.dados.id_cliente);
+            $("#id_cliente_unidadev").val(data.dados.id_cliente_unidade);
+            $("#lid_fabricantev").val(data.dados.lid_fabricante);
+            $("#lid_modelov").val(data.dados.lid_modelo);
+            $("#lid_equipamentov").val(data.dados.lid_equipamento);
+            $("#id_fabricantev").val(data.dados.id_fabricante);
+            $("#id_modelov").val(data.dados.id_modelo);
+            $("#id_equipamentov").val(data.dados.id_equipamento);
             $("#id_contratov").val(data.dados.id_contrato).selected = "true";
             $("#id_statusv").val(data.dados.id_status).selected = "true";
             $("#id_clusterv").val(data.dados.id_cluster).selected = "true";
             $("#id_tipolinkv").val(data.dados.id_tipolink).selected = "true";
-            $("#id_cidadedigitalv").val(data.dados.id_cidadedigital).selected = "true";
-            $("#id_conectividadev").val(data.dados.id_conectividade).selected = "true";
+            $("#lid_cidadedigitalv").val(data.dados.lid_cidadedigital);
+            $("#lid_conectividadev").val(data.dados.lid_conectividade);
+            $("#id_cidadedigitalv").val(data.dados.id_cidadedigital);
+            $("#id_conectividadev").val(data.dados.id_conectividade);
             $("#id_funcaov").val(data.dados.id_funcao).selected = "true";
             $("#id_tipoacessov").val(data.dados.id_tipoacesso).selected = "true";
             $("#bandav").val(data.dados.id_banda).selected = "true";
@@ -1809,7 +1808,7 @@ $("#id_tipomovimento").on("change", function(){
 
 //Fabricante, Modelo e equipamento para o movimento de circuitos
 
-$(".auto_fabricante").on("click", function(){
+$(".auto_fabricantemov").on("click", function(){
     "use strict";
     //Autocomplete de Fabricante
     var ac_fabricante = $("#lid_fabricantemov");

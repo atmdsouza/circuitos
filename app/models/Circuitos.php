@@ -912,6 +912,56 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of Status do Circuito
+     *
+     * @return string
+     */
+    public function getStatusCircuito()
+    {
+        return $this->Lov2->descricao;
+    }
+
+    /**
+     * Returns the value of Contrato do Circuito
+     *
+     * @return string
+     */
+    public function getContratoCircuito()
+    {
+        return $this->Lov1->descricao;
+    }
+
+    /**
+     * Returns the value of Função do Circuito
+     *
+     * @return string
+     */
+    public function getFuncaoCircuito()
+    {
+        return $this->Lov5->descricao;
+    }
+
+    /**
+     * Returns the value of Tipo de Link do Circuito
+     *
+     * @return string
+     */
+    public function getTipoLinkCircuito()
+    {
+        return $this->Lov6->descricao;
+    }
+
+    /**
+     * Returns the value of Banda do Circuito
+     *
+     * @return string
+     */
+    public function getBandaCircuito()
+    {
+        return $this->Lov7->descricao;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()

@@ -159,32 +159,12 @@ class CircuitosController extends ControllerBase
             "observacao" => $circuitos->getObservacao(),
             "data_ativacao" => $circuitos->getDataAtivacao(),
         );
-//        $cliente = Cliente::findFirst("id={$circuitos->getIdCliente()}");
-//        $unidades = ClienteUnidade::buscaClienteUnidade($circuitos->getIdCliente());
-//        $equipamentos = Equipamento::find();
-//        $equip = ($circuitos->getIdEquipamento()) ? Equipamento::findFirst("id={$circuitos->getIdEquipamento()}") : null;
         $banda = Lov::find(array(
             "tipo = 17"
         ));
-//        $conec = Conectividade::find("id_cidade_digital={$circuitos->getIdCidadedigital()}");
-//        $conectividade = array();
-//        foreach ($conec as $c){
-//            $conectividades = array(
-//                "id" => $c->getId(),
-//                "descricao" => $c->getDescricao(),
-//                "tipo" => $c->getTipoConectividade()
-//            );
-//            array_push($conectividade,$conectividades);
-//        }
-
         $response->setContent(json_encode(array(
             "dados" => $dados,
-//            "cliente" => $cliente,
-//            "equipamentos" => $equipamentos,
-//            "equip" => $equip,
-//            "unidadescli" => $unidades,
-            "banda" => $banda,
-//            "conectividade" => $conectividade
+            "banda" => $banda
         )));
         return $response;
     }
@@ -226,6 +206,8 @@ class CircuitosController extends ControllerBase
             "id_cliente_unidade" => $circuitos->getIdClienteUnidade(),
             "lid_cliente" => $circuitos->getClienteNome(),
             "lid_cliente_unidade" => $circuitos->getClienteUnidadeNome(),
+            "id_fabricante" => $circuitos->getIdFabricante(),
+            "id_modelo" => $circuitos->getIdModelo(),
             "id_equipamento" => $circuitos->getIdEquipamento(),
             "lid_equipamento" => $circuitos->getEquipamentoNome(),
             "lid_fabricante" => $circuitos->getFabricanteNome(),
