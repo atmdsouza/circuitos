@@ -13,15 +13,15 @@ var table = $("#tb_circuitos").DataTable({
             action: function (e, dt, node, config) {
             }
         },
-        {//Botão Anexos
-            className: "bt_anexo",
-            text: "Anexos",
-            name: "anexo", // do not change name
-            titleAttr: "Anexos do Circuito",
-            action: function (e, dt, node, config) {
-            },
-            enabled: false
-        },
+        // {//Botão Anexos
+        //     className: "bt_anexo",
+        //     text: "Anexos",
+        //     name: "anexo", // do not change name
+        //     titleAttr: "Anexos do Circuito",
+        //     action: function (e, dt, node, config) {
+        //     },
+        //     enabled: false
+        // },
         {//Botão Visualizar Registro
             className: "bt_visual",
             text: "Visualizar",
@@ -96,8 +96,8 @@ table.on( "select deselect", function () {
     table.button( 1 ).enable( selectedRows === 1 );
     table.button( 2 ).enable( selectedRows === 1 );
     table.button( 3 ).enable( selectedRows === 1 );
-    table.button( 4 ).enable( selectedRows === 1 );
-    table.button( 5 ).enable( selectedRows > 0 );
+    table.button( 4 ).enable( selectedRows > 0 );
+    // table.button( 5 ).enable( selectedRows > 0 );
 });
 
 function limparModal()
@@ -196,6 +196,7 @@ function limparModalAnexos()
 // });
 
 $(".auto_cliente").on("click", function(){
+    "use strict";
     //Autocomplete de Cidade Digital
     var ac_cliente = $("#lid_cliente");
     var listCliente = [];
@@ -308,6 +309,7 @@ $(".auto_cliente").on("click", function(){
 
 $(".auto_cidadedigital").on("click", function(){
     //Autocomplete de Cidade Digital
+    "use strict";
     var ac_cidadedigital = $("#lid_cidadedigital");
     var listCidadeDigital = [];
     var ac_conectividade = $("#lid_conectividade");
@@ -1753,61 +1755,514 @@ $(".bt_mov").on("click", function(){
 $("#id_tipomovimento").on("change", function(){
     "use strict";
     var id_tipomovimento = $("#id_tipomovimento").val();
+    var id_circuito = $("#id_circuito").val();
     switch(id_tipomovimento)
     {
-        case "63"://Alteração de Banda
+        case "4"://Alteração de Banda
             $("#bandamovdiv").show();
             $("#redelocalmovdiv").hide();
             $("#gerenciamovdiv").hide();
             $("#statusmovdiv").hide();
             $(".equip").hide();
+            $(".cidade_digital").hide();
+            $(".conectividade").hide();
+            $(".cliente").hide();
+            $(".ucliente").hide();
             $("#salvaCircuitosmov").removeAttr("disabled");
             break;
-        case "64"://Mudança de Status do Circuito
+        case "5"://Mudança de Status do Circuito
             $("#statusmovdiv").show();
             $("#gerenciamovdiv").hide();
             $("#redelocalmovdiv").hide();
             $("#bandamovdiv").hide();
             $(".equip").hide();
+            $(".cidade_digital").hide();
+            $(".conectividade").hide();
+            $(".cliente").hide();
+            $(".ucliente").hide();
             $("#salvaCircuitosmov").removeAttr("disabled");
             break;
-        case "65"://Alteração de IP Gerencial
+        case "6"://Alteração de IP Gerencial
             $("#gerenciamovdiv").show();
             $("#bandamovdiv").hide();
             $("#redelocalmovdiv").hide();
             $("#statusmovdiv").hide();
             $(".equip").hide();
+            $(".cidade_digital").hide();
+            $(".conectividade").hide();
+            $(".cliente").hide();
+            $(".ucliente").hide();
             $("#salvaCircuitosmov").removeAttr("disabled");
             break;
-        case "66"://Alteração de IP Local
+        case "7"://Alteração de IP Local
             $("#redelocalmovdiv").show();
             $("#statusmovdiv").hide();
             $("#bandamovdiv").hide();
             $("#gerenciamovdiv").hide();
             $(".equip").hide();
+            $(".cidade_digital").hide();
+            $(".conectividade").hide();
+            $(".cliente").hide();
+            $(".ucliente").hide();
             $("#salvaCircuitosmov").removeAttr("disabled");
             break;
-        case "67"://Alteração de Equipamento
+        case "8"://Alteração de Equipamento
             $(".equip").show();
             $("#redelocalmovdiv").hide();
             $("#statusmovdiv").hide();
             $("#bandamovdiv").hide();
             $("#gerenciamovdiv").hide();
+            $(".cidade_digital").hide();
+            $(".conectividade").hide();
+            $(".cliente").hide();
+            $(".ucliente").hide();
             $("#salvaCircuitosmov").removeAttr("disabled");
             break;
-        default:
-            $(".equip").hide();
+        case "9"://Alteração de Cliente
+
+            var ac_cliente = $("#lid_clientemov");
+            var listCliente = [];
+            var ac_cliente_unidade = $("#lid_cliente_unidademov");
+            var listUnidadeCliente = [];
+            var action = actionCorreta(window.location.href.toString(), "circuitos/clienteAll");
+            $.ajax({
+                type: "GET",
+                dataType: "JSON",
+                url: action,
+                beforeSend: function () {
+                    $("#id_clientemov").val("");
+                    $("#lid_clientemov").val("");
+                    listCliente = [];
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        $.each(data.dados, function (key, value) {
+                            listCliente.push({value: value.nome, data: value.id});
+                        });
+                    } else {
+                        $("#id_clientemov").val("");
+                        $("#lid_clientemov").val("");
+                    }
+                    //Autocomplete de Equipamento
+                    ac_cliente.autocomplete({
+                        lookup: listCliente,
+                        noCache: true,
+                        minChars: 1,
+                        triggerSelectOnValidInput: false,
+                        showNoSuggestionNotice: true,
+                        noSuggestionNotice: "Não existem resultados para essa consulta!",
+                        onSelect: function (suggestion) {
+                            $("#id_clientemov").val(suggestion.data);
+                            var vl_cliente = suggestion.data;
+                            if (vl_cliente) {
+                                var id_cliente = $("#id_clientemov").val();
+                                var action = actionCorreta(window.location.href.toString(), "circuitos/unidadeCliente");
+                                $.ajax({
+                                    type: "GET",
+                                    dataType: "JSON",
+                                    url: action,
+                                    data: {id_cliente: id_cliente},
+                                    beforeSend: function () {
+                                        $("#id_cliente_unidademov").val("");
+                                        $("#lid_cliente_unidademov").val("");
+                                        $("#lid_cliente_unidademov").attr("disabled", "true");
+                                        listUnidadeCliente = [];
+                                    },
+                                    error: function (data) {
+                                        if (data.status && data.status === 401)
+                                        {
+                                            swal({
+                                                title: "Erro de Permissão",
+                                                text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                                type: "warning"
+                                            });
+                                        }
+                                    },
+                                    success: function (data) {
+                                        if (data.operacao){
+                                            $.each(data.dados, function (key, value) {
+                                                listUnidadeCliente.push({value: value.nome, data: value.id});
+                                            });
+                                            $("#lid_cliente_unidademov").removeAttr("disabled");
+                                        } else {
+                                            $("#id_cliente_unidademov").val("");
+                                            $("#lid_cliente_unidademov").val("");
+                                            $("#lid_cliente_unidademov").attr("disabled", "true");
+                                            swal("Atenção","Não existem unidade para esse cliente!","info");
+                                        }
+                                        //Autocomplete de Cliente Unidade
+                                        ac_cliente_unidade.autocomplete({
+                                            lookup: listUnidadeCliente,
+                                            noCache: true,
+                                            minChars: 1,
+                                            triggerSelectOnValidInput: false,
+                                            showNoSuggestionNotice: true,
+                                            noSuggestionNotice: "Não existem resultados para essa consulta!",
+                                            onSelect: function (suggestion) {
+                                                $("#id_cliente_unidademov").val(suggestion.data);
+                                            }
+                                        });
+                                    }
+                                });
+                            } else {
+                                $("#id_cliente_unidademov").val("");
+                                $("#lid_cliente_unidademov").val("");
+                                $("#lid_cliente_unidademov").attr("disabled", "true");
+                            }
+                        }
+                    });
+                }
+            });
+
+            $(".cliente").show();
+            $(".ucliente").show();
             $("#redelocalmovdiv").hide();
             $("#statusmovdiv").hide();
             $("#bandamovdiv").hide();
             $("#gerenciamovdiv").hide();
+            $(".cidade_digital").hide();
+            $(".conectividade").hide();
+            $("#lid_cliente_unidademov").attr("disabled", "true");
+            $("#lid_clientemov").removeAttr("disabled");
+            $("#salvaCircuitosmov").removeAttr("disabled");
+            break;
+        case "10"://Alteração de Unidade Cliente
+
+            ac_cliente_unidade = $("#lid_cliente_unidademov");
+            listUnidadeCliente = [];
+            action = actionCorreta(window.location.href.toString(), "circuitos/getClienteCircuito");
+            $.ajax({
+                type: "GET",
+                dataType: "JSON",
+                url: action,
+                data: {id_circuito: id_circuito},
+                beforeSend: function () {
+                    $("#id_clientemov").val("");
+                    $("#lid_clientemov").val("");
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    $("#id_clientemov").val(data.cliente_id);
+                    $("#lid_clientemov").val(data.cliente_nome);
+                    var vl_cliente = data.cliente_id;
+                    if (vl_cliente) {
+                        var action = actionCorreta(window.location.href.toString(), "circuitos/unidadeCliente");
+                        $.ajax({
+                            type: "GET",
+                            dataType: "JSON",
+                            url: action,
+                            data: {id_cliente: vl_cliente},
+                            beforeSend: function () {
+                                $("#id_cliente_unidademov").val("");
+                                $("#lid_cliente_unidademov").val("");
+                                $("#lid_cliente_unidademov").attr("disabled", "true");
+                                listUnidadeCliente = [];
+                            },
+                            error: function (data) {
+                                if (data.status && data.status === 401)
+                                {
+                                    swal({
+                                        title: "Erro de Permissão",
+                                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                        type: "warning"
+                                    });
+                                }
+                            },
+                            success: function (data) {
+                                if (data.operacao){
+                                    $.each(data.dados, function (key, value) {
+                                        listUnidadeCliente.push({value: value.nome, data: value.id});
+                                    });
+                                    $("#lid_cliente_unidademov").removeAttr("disabled");
+                                } else {
+                                    $("#id_cliente_unidademov").val("");
+                                    $("#lid_cliente_unidademov").val("");
+                                    $("#lid_cliente_unidademov").attr("disabled", "true");
+                                    swal("Atenção","Não existem unidade para esse cliente!","info");
+                                }
+                                //Autocomplete de Cliente Unidade
+                                ac_cliente_unidade.autocomplete({
+                                    lookup: listUnidadeCliente,
+                                    noCache: true,
+                                    minChars: 1,
+                                    triggerSelectOnValidInput: false,
+                                    showNoSuggestionNotice: true,
+                                    noSuggestionNotice: "Não existem resultados para essa consulta!",
+                                    onSelect: function (suggestion) {
+                                        $("#id_cliente_unidademov").val(suggestion.data);
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        $("#id_cliente_unidademov").val("");
+                        $("#lid_cliente_unidademov").val("");
+                        $("#lid_cliente_unidademov").attr("disabled", "true");
+                    }
+                }
+            });
+
+            $(".cliente").show();
+            $(".ucliente").show();
+            $("#redelocalmovdiv").hide();
+            $("#statusmovdiv").hide();
+            $("#bandamovdiv").hide();
+            $("#gerenciamovdiv").hide();
+            $(".cidade_digital").hide();
+            $(".conectividade").hide();
+            $("#lid_clientemov").attr("disabled", "true");
+            $("#lid_cliente_unidademov").removeAttr("disabled");
+            $("#salvaCircuitosmov").removeAttr("disabled");
+            break;
+        case "11"://Alteração de Cidade Digital
+
+            var ac_cidadedigital = $("#lid_cidadedigitalmov");
+            var listCidadeDigital = [];
+            var ac_conectividade = $("#lid_conectividademov");
+            var listConectividade = [];
+            var action = actionCorreta(window.location.href.toString(), "circuitos/cidadedigitalAll");
+            $.ajax({
+                type: "GET",
+                dataType: "JSON",
+                url: action,
+                beforeSend: function () {
+                    $("#id_cidadedigitalmov").val("");
+                    $("#lid_cidadedigitalmov").val("");
+                    listCidadeDigital = [];
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        $.each(data.dados, function (key, value) {
+                            listCidadeDigital.push({value: value.descricao, data: value.id});
+                        });
+                    } else {
+                        $("#id_cidadedigitalmov").val("");
+                        $("#lid_cidadedigitalmov").val("");
+                    }
+                    //Autocomplete de Equipamento
+                    ac_cidadedigital.autocomplete({
+                        lookup: listCidadeDigital,
+                        noCache: true,
+                        minChars: 1,
+                        triggerSelectOnValidInput: false,
+                        showNoSuggestionNotice: true,
+                        noSuggestionNotice: "Não existem resultados para essa consulta!",
+                        onSelect: function (suggestion) {
+                            $("#id_cidadedigitalmov").val(suggestion.data);
+                            var vl_cidadedigital = $("#lid_cidadedigitalmov").val();
+                            if (vl_cidadedigital) {
+                                var id_cidadedigital = suggestion.data;
+                                var action = actionCorreta(window.location.href.toString(), "circuitos/cidadedigitalConectividade");
+                                $.ajax({
+                                    type: "GET",
+                                    dataType: "JSON",
+                                    url: action,
+                                    data: {id_cidadedigital: id_cidadedigital},
+                                    beforeSend: function () {
+                                        $("#id_conectividademov").val("");
+                                        $("#lid_conectividademov").val("");
+                                        $("#lid_conectividademov").attr("disabled", "true");
+                                        listConectividade = [];
+                                    },
+                                    error: function (data) {
+                                        if (data.status && data.status === 401)
+                                        {
+                                            swal({
+                                                title: "Erro de Permissão",
+                                                text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                                type: "warning"
+                                            });
+                                        }
+                                    },
+                                    success: function (data) {
+                                        if (data.operacao){
+                                            $.each(data.dados, function (key, value) {
+                                                listConectividade.push({value: value.tipo + " " + value.descricao, data: value.id});
+                                            });
+                                            $("#lid_conectividademov").removeAttr("disabled");
+                                        } else {
+                                            $("#id_conectividademov").val("");
+                                            $("#lid_conectividademov").val("");
+                                            $("#lid_conectividademov").attr("disabled", "true");
+                                            swal("Atenção","Não existem conectividades para essa cidade digital!","info");
+                                        }
+                                        //Autocomplete de Equipamento
+                                        ac_conectividade.autocomplete({
+                                            lookup: listConectividade,
+                                            noCache: true,
+                                            minChars: 1,
+                                            triggerSelectOnValidInput: false,
+                                            showNoSuggestionNotice: true,
+                                            noSuggestionNotice: "Não existem resultados para essa consulta!",
+                                            onSelect: function (suggestion) {
+                                                $("#id_conectividademov").val(suggestion.data);
+                                            }
+                                        });
+                                    }
+                                });
+                            } else {
+                                $("#id_conectividademov").val("");
+                                $("#lid_conectividademov").val("");
+                                $("#lid_conectividademov").attr("disabled", "true");
+                            }
+                        }
+                    });
+                }
+            });
+
+            $(".cidade_digital").show();
+            $(".conectividade").show();
+            $("#redelocalmovdiv").hide();
+            $("#statusmovdiv").hide();
+            $("#bandamovdiv").hide();
+            $("#gerenciamovdiv").hide();
+            $(".cliente").hide();
+            $(".ucliente").hide();
+            $("#lid_conectividademov").attr("disabled", "true");
+            $("#lid_cidadedigitalmov").removeAttr("disabled");
+            $("#salvaCircuitosmov").removeAttr("disabled");
+            break;
+        case "12"://Alteração de Conectividade
+
+            ac_conectividade = $("#lid_conectividademov");
+            listConectividade = [];
+            action = actionCorreta(window.location.href.toString(), "circuitos/getCidadeDigitalCircuito");
+            $.ajax({
+                type: "GET",
+                dataType: "JSON",
+                url: action,
+                data: {id_circuito: id_circuito},
+                beforeSend: function () {
+                    $("#id_cidadedigitalmov").val("");
+                    $("#lid_cidadedigitalmov").val("");
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    $("#lid_cidadedigitalmov").val(data.cidade_digital_nome);
+                    $("#id_cidadedigitalmov").val(data.cidade_digital_id);
+                    var vl_cidadedigital = data.cidade_digital_id;
+                    if (vl_cidadedigital) {
+                        var action = actionCorreta(window.location.href.toString(), "circuitos/cidadedigitalConectividade");
+                        $.ajax({
+                            type: "GET",
+                            dataType: "JSON",
+                            url: action,
+                            data: {id_cidadedigital: vl_cidadedigital},
+                            beforeSend: function () {
+                                $("#id_conectividademov").val("");
+                                $("#lid_conectividademov").val("");
+                                $("#lid_conectividademov").attr("disabled", "true");
+                            },
+                            error: function (data) {
+                                if (data.status && data.status === 401)
+                                {
+                                    swal({
+                                        title: "Erro de Permissão",
+                                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                        type: "warning"
+                                    });
+                                }
+                            },
+                            success: function (data) {
+                                if (data.operacao){
+                                    $.each(data.dados, function (key, value) {
+                                        listConectividade.push({value: value.tipo + " " + value.descricao, data: value.id});
+                                    });
+                                    $("#lid_conectividademov").removeAttr("disabled");
+                                } else {
+                                    $("#id_conectividademov").val("");
+                                    $("#lid_conectividademov").val("");
+                                    $("#lid_conectividademov").attr("disabled", "true");
+                                    swal("Atenção","Não existem conectividades para essa cidade digital!","info");
+                                }
+                                //Autocomplete de Equipamento
+                                ac_conectividade.autocomplete({
+                                    lookup: listConectividade,
+                                    noCache: true,
+                                    minChars: 1,
+                                    triggerSelectOnValidInput: false,
+                                    showNoSuggestionNotice: true,
+                                    noSuggestionNotice: "Não existem resultados para essa consulta!",
+                                    onSelect: function (suggestion) {
+                                        $("#id_conectividademov").val(suggestion.data);
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        $("#id_conectividademov").val("");
+                        $("#lid_conectividademov").val("");
+                        $("#lid_conectividademov").attr("disabled", "true");
+                    }
+                }
+            });
+
+            $(".cidade_digital").show();
+            $(".conectividade").show();
+            $("#redelocalmovdiv").hide();
+            $("#statusmovdiv").hide();
+            $("#bandamovdiv").hide();
+            $("#gerenciamovdiv").hide();
+            $(".cliente").hide();
+            $(".ucliente").hide();
+            $("#lid_cidadedigitalmov").attr("disabled", "true");
+            $("#lid_conectividademov").removeAttr("disabled");
+            $("#salvaCircuitosmov").removeAttr("disabled");
+            break;
+        default:
+            $("#redelocalmovdiv").hide();
+            $("#statusmovdiv").hide();
+            $("#bandamovdiv").hide();
+            $("#gerenciamovdiv").hide();
+            $(".cidade_digital").hide();
+            $(".conectividade").hide();
+            $(".cliente").hide();
+            $(".ucliente").hide();
+            $(".equip").hide();
             $("#salvaCircuitosmov").attr("disabled", "true");
             break;
     }
 });
 
 //Fabricante, Modelo e equipamento para o movimento de circuitos
-
 $(".auto_fabricantemov").on("click", function(){
     "use strict";
     //Autocomplete de Fabricante
@@ -2281,7 +2736,7 @@ $(document).on("click", ".criar_mov", function(){
     var id_tipomovimento = $("#id_tipomovimento").val();
     switch (id_tipomovimento)
     {
-        case "63"://Alteração de Banda
+        case "4"://Alteração de Banda
             //Validação de formulário
             $("#formCircuitosmov").validate({
                 rules : {
@@ -2337,7 +2792,7 @@ $(document).on("click", ".criar_mov", function(){
                                     cancelButtonColor: "#d33",
                                     confirmButtonText: "Ok"
                                 }).then((result) => {
-                                    window.location.reload(true);
+                                    // window.location.reload(true);
                                 });
                             } else {
                                 swal({
@@ -2351,7 +2806,7 @@ $(document).on("click", ".criar_mov", function(){
                 }
             });
             break;
-        case "64"://Mudança de Status do Circuito
+        case "5"://Mudança de Status do Circuito
             //Validação de formulário
             $("#formCircuitosmov").validate({
                 rules : {
@@ -2421,7 +2876,7 @@ $(document).on("click", ".criar_mov", function(){
                 }
             });
             break;
-        case "65"://Alteração de IP Gerencial
+        case "6"://Alteração de IP Gerencial
             //Validação de formulário
             $("#formCircuitosmov").validate({
                 rules : {
@@ -2491,7 +2946,7 @@ $(document).on("click", ".criar_mov", function(){
                 }
             });
             break;
-        case "66"://Alteração de IP Local
+        case "7"://Alteração de IP Local
             //Validação de formulário
             $("#formCircuitosmov").validate({
                 rules : {
@@ -2561,7 +3016,7 @@ $(document).on("click", ".criar_mov", function(){
                 }
             });
             break;
-        case "67"://Alteração de Equipamento
+        case "8"://Alteração de Equipamento
             //Validação de formulário
             $("#formCircuitosmov").validate({
                 rules : {
@@ -2590,6 +3045,298 @@ $(document).on("click", ".criar_mov", function(){
                     },
                     id_equipamentomov:{
                         required:"É necessário informar um equipamento"
+                    }
+                },
+                submitHandler: function(form) {
+                    var dados = $("#formCircuitosmov").serialize();
+                    var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: action,
+                        data: {
+                            tokenKey: $("#token").attr("name"),
+                            tokenValue: $("#token").attr("value"),
+                            dados: dados
+                        },
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        error: function (data) {
+                            if (data.status && data.status === 401)
+                            {
+                                swal({
+                                    title: "Erro de Permissão",
+                                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                    type: "warning"
+                                });
+                            }
+                        },
+                        success: function (data) {
+                            if (data.operacao){
+                                swal({
+                                    title: "Movimento de Circuito",
+                                    text: "Movimento de Circuito concluído!",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Ok"
+                                }).then((result) => {
+                                    window.location.reload(true);
+                                });
+                            } else {
+                                swal({
+                                    title: "Movimento de Circuito",
+                                    text: data.mensagem,
+                                    type: "error"
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            break;
+        case "9"://Alteração de Cliente / Unidade
+            //Validação de formulário
+            $("#formCircuitosmov").validate({
+                rules : {
+                    id_tipomovimento:{
+                        required: true
+                    },
+                    lid_clientemov:{
+                        required: true
+                    },
+                    lid_cliente_unidademov:{
+                        required: true
+                    }
+                },
+                messages:{
+                    id_tipomovimento:{
+                        required:"É necessário informar um tipo de movimento"
+                    },
+                    lid_clientemov:{
+                        required:"É necessário informar um cliente"
+                    },
+                    lid_cliente_unidademov:{
+                        required:"É necessário informar uma unidade de cliente"
+                    }
+                },
+                submitHandler: function(form) {
+                    var dados = $("#formCircuitosmov").serialize();
+                    var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: action,
+                        data: {
+                            tokenKey: $("#token").attr("name"),
+                            tokenValue: $("#token").attr("value"),
+                            dados: dados
+                        },
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        error: function (data) {
+                            if (data.status && data.status === 401)
+                            {
+                                swal({
+                                    title: "Erro de Permissão",
+                                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                    type: "warning"
+                                });
+                            }
+                        },
+                        success: function (data) {
+                            if (data.operacao){
+                                swal({
+                                    title: "Movimento de Circuito",
+                                    text: "Movimento de Circuito concluído!",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Ok"
+                                }).then((result) => {
+                                    window.location.reload(true);
+                                });
+                            } else {
+                                swal({
+                                    title: "Movimento de Circuito",
+                                    text: data.mensagem,
+                                    type: "error"
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            break;
+        case "10"://Alteração de Unidade de Cliente
+            //Validação de formulário
+            $("#formCircuitosmov").validate({
+                rules : {
+                    id_tipomovimento:{
+                        required: true
+                    },
+                    lid_cliente_unidademov:{
+                        required: true
+                    }
+                },
+                messages:{
+                    id_tipomovimento:{
+                        required:"É necessário informar um tipo de movimento"
+                    },
+                    lid_cliente_unidademov:{
+                        required:"É necessário informar uma unidade de cliente"
+                    }
+                },
+                submitHandler: function(form) {
+                    var dados = $("#formCircuitosmov").serialize();
+                    var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: action,
+                        data: {
+                            tokenKey: $("#token").attr("name"),
+                            tokenValue: $("#token").attr("value"),
+                            dados: dados
+                        },
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        error: function (data) {
+                            if (data.status && data.status === 401)
+                            {
+                                swal({
+                                    title: "Erro de Permissão",
+                                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                    type: "warning"
+                                });
+                            }
+                        },
+                        success: function (data) {
+                            if (data.operacao){
+                                swal({
+                                    title: "Movimento de Circuito",
+                                    text: "Movimento de Circuito concluído!",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Ok"
+                                }).then((result) => {
+                                    window.location.reload(true);
+                                });
+                            } else {
+                                swal({
+                                    title: "Movimento de Circuito",
+                                    text: data.mensagem,
+                                    type: "error"
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            break;
+        case "11"://Alteração de Cidade Digital / Conectividade
+            //Validação de formulário
+            $("#formCircuitosmov").validate({
+                rules : {
+                    id_tipomovimento:{
+                        required: true
+                    },
+                    lid_cidadedigitalmov:{
+                        required: true
+                    },
+                    lid_conectividademov:{
+                        required: true
+                    }
+                },
+                messages:{
+                    id_tipomovimento:{
+                        required:"É necessário informar um tipo de movimento"
+                    },
+                    lid_cidadedigitalmov:{
+                        required:"É necessário informar uma cidade digital"
+                    },
+                    lid_conectividademov:{
+                        required:"É necessário informar uma conectividade"
+                    }
+                },
+                submitHandler: function(form) {
+                    var dados = $("#formCircuitosmov").serialize();
+                    var action = actionCorreta(window.location.href.toString(), "circuitos/movCircuitos");
+                    $.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        url: action,
+                        data: {
+                            tokenKey: $("#token").attr("name"),
+                            tokenValue: $("#token").attr("value"),
+                            dados: dados
+                        },
+                        beforeSend: function () {
+                        },
+                        complete: function () {
+                        },
+                        error: function (data) {
+                            if (data.status && data.status === 401)
+                            {
+                                swal({
+                                    title: "Erro de Permissão",
+                                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                    type: "warning"
+                                });
+                            }
+                        },
+                        success: function (data) {
+                            if (data.operacao){
+                                swal({
+                                    title: "Movimento de Circuito",
+                                    text: "Movimento de Circuito concluído!",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#3085d6",
+                                    cancelButtonColor: "#d33",
+                                    confirmButtonText: "Ok"
+                                }).then((result) => {
+                                    window.location.reload(true);
+                                });
+                            } else {
+                                swal({
+                                    title: "Movimento de Circuito",
+                                    text: data.mensagem,
+                                    type: "error"
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+            break;
+        case "12"://Alteração de Conectividade
+            //Validação de formulário
+            $("#formCircuitosmov").validate({
+                rules : {
+                    id_tipomovimento:{
+                        required: true
+                    },
+                    lid_conectividademov:{
+                        required: true
+                    }
+                },
+                messages:{
+                    id_tipomovimento:{
+                        required:"É necessário informar um tipo de movimento"
+                    },
+                    lid_conectividademov:{
+                        required:"É necessário informar uma conectividade"
                     }
                 },
                 submitHandler: function(form) {

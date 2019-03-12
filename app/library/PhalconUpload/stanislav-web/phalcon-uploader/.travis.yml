@@ -20,5 +20,5 @@ before_script:
   - php -m | grep -i Phalcon
 
 script:
-  - mkdir -p build/logs
-  - phpunit --coverage-clover build/logs/clover.xml
+  - mkdir -p build/logs_sistema
+  - phpunit --coverage-clover build/logs_sistema/clover.xml

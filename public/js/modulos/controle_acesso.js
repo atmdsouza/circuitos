@@ -566,6 +566,10 @@ function checkAcessoUnitario(resources)
             seletor_total = ".check_total_fabricante";
             break;
         case "lov":
+            seletor_unitario = ".permissao_unitaria_logs_sistema";
+            seletor_total = ".check_total_logs_sistema";
+            break;
+        case "lov":
             seletor_unitario = ".permissao_unitaria_lov";
             seletor_total = ".check_total_lov";
             break;
@@ -801,6 +805,9 @@ $(".permissao_total_modulo").on("change", function(){
             break;
         case "fabricante":
             seletor = ".permissao_unitaria_fabricante";
+            break;
+        case "logs_sistema":
+            seletor = ".permissao_unitaria_logs_sistema";
             break;
         case "lov":
             seletor = ".permissao_unitaria_lov";

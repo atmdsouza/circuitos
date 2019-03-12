@@ -96,6 +96,16 @@ class ClienteUnidade extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of Nome do Cliente Unidade
+     *
+     * @return string
+     */
+    public function getClienteUnidadeNome()
+    {
+        return $this->Pessoa->nome;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()

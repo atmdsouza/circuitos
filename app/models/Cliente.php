@@ -96,6 +96,16 @@ class Cliente extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of Nome do Cliente
+     *
+     * @return string
+     */
+    public function getClienteNome()
+    {
+        return $this->Pessoa->nome;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
