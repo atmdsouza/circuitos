@@ -2792,7 +2792,7 @@ $(document).on("click", ".criar_mov", function(){
                                     cancelButtonColor: "#d33",
                                     confirmButtonText: "Ok"
                                 }).then((result) => {
-                                    // window.location.reload(true);
+                                    window.location.reload(true);
                                 });
                             } else {
                                 swal({
@@ -2946,7 +2946,7 @@ $(document).on("click", ".criar_mov", function(){
                 }
             });
             break;
-        case "7"://Alteração de IP Local
+        case "7"://Alteração de IP Rede Cliente
             //Validação de formulário
             $("#formCircuitosmov").validate({
                 rules : {

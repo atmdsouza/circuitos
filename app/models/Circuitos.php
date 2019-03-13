@@ -167,12 +167,6 @@ class Circuitos extends \Phalcon\Mvc\Model
     protected $data_atualizacao;
 
     /**
-     *
-     * @var integer
-     */
-    protected $ativo;
-
-    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -485,19 +479,6 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field ativo
-     *
-     * @param integer $ativo
-     * @return $this
-     */
-    public function setAtivo($ativo)
-    {
-        $this->ativo = $ativo;
-
-        return $this;
-    }
-
-    /**
      * @param integer $id_cidadedigital
      * @return $this
      */
@@ -764,16 +745,6 @@ class Circuitos extends \Phalcon\Mvc\Model
     public function getDataAtualizacao()
     {
         return $this->data_atualizacao;
-    }
-
-    /**
-     * Returns the value of field ativo
-     *
-     * @return integer
-     */
-    public function getAtivo()
-    {
-        return $this->ativo;
     }
 
     /**

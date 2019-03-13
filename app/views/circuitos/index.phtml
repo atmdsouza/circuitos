@@ -632,7 +632,7 @@ use Util\Util;
                                     <label for="osocomon">Chamado</label>
                                     <?php echo $this->tag->textField(["osocomon", "size" => 60, "class" => "form-control", "id" => "osocomon", "placeholder" => "Chamado"]) ?>
                                 </div>
-                                <div id="bandamovdiv" class="form-group col-md-4" style="display: none;">
+                                <div id="bandamovdiv" class="form-group col-md-4 botoes_forms_alinhamento" style="display: none;">
                                     <label for="bandamov">Banda</label>
                                     <?php echo $this->tag->select(["bandamov", $banda, "class" => "form-control", "id" => "bandamov",
                                         "using" => ["id", "descricao",],
@@ -658,7 +658,7 @@ use Util\Util;
                                         "emptyValue" => ""])
                                     ?>
                                 </div>
-                                <div class="form-group col-md-4 equip" style="display: none;">
+                                <div class="form-group col-md-4 equip botoes_forms_alinhamento" style="display: none;">
                                     <label for="numero_seriemov">Número de Série</label>
                                     <?php echo $this->tag->textField(["numero_seriemov", "size" => 60, "class" => "form-control", "id" => "numero_seriemov", "placeholder" => "Número de Série"]) ?>
                                 </div>
