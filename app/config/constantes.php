@@ -11,4 +11,4 @@ define("CAMINHO_PADRAO_RELATORIOS", "/circuitos/public/relatorios/");
 //define("CAMINHO_PADRAO_RELATORIOS", "/public/relatorios/");
 
 //Versão do sistema
-define("VERSAO", "1.01");
+define("VERSAO", "1.04.05");//Versão em 12/03/2019

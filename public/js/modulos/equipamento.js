@@ -239,12 +239,16 @@ $(document).on("click", ".criar_equipamento", function(){
 //Coletando os ids das linhas selecionadas na tabela
 var ids = [];
 $("#tb_equipamento").on("click", "tr", function () {
+    "use strict";
     var valr = $(this)[0].cells[0].innerText;
-    if (!ids.includes(valr)) {
-        ids.push(valr);
-    } else {
-        var index = ids.indexOf(valr);
-        ids.splice(index, 1);
+    if (valr !== "Código")
+    {
+        if (!ids.includes(valr)) {
+            ids.push(valr);
+        } else {
+            var index = ids.indexOf(valr);
+            ids.splice(index, 1);
+        }
     }
 });
 
@@ -611,18 +615,6 @@ $(".bt_del").on("click", function(){
                 }
             });
         });
-    }
-});
-
-//Coletando os ids das linhas selecionadas na tabela
-var ids = [];
-$("#tb_fabricantes").on("click", "tr", function () {
-    var valr = $(this)[0].cells[0].innerText;
-    if (!ids.includes(valr)) {
-        ids.push(valr);
-    } else {
-        var index = ids.indexOf(valr);
-        ids.splice(index, 1);
     }
 });
 

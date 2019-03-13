@@ -8,8 +8,6 @@ use Phalcon\Http\Response as Response;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 
-use Circuitos\Controllers\ControllerBase;
-
 use Circuitos\Models\Pessoa;
 use Circuitos\Models\PessoaJuridica;
 use Circuitos\Models\PessoaFisica;
@@ -23,14 +21,13 @@ use Circuitos\Models\EndEstado;
 use Circuitos\Models\EndCidade;
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 use Util\Util;
 
-require APP_PATH . '/library/PHPMailer/src/Exception.php';
-require APP_PATH . '/library/PHPMailer/src/PHPMailer.php';
-require APP_PATH . '/library/PHPMailer/src/SMTP.php';
+require APP_PATH . "/library/PHPMailer/src/Exception.php";
+require APP_PATH . "/library/PHPMailer/src/PHPMailer.php";
+require APP_PATH . "/library/PHPMailer/src/SMTP.php";
 
 class CoreController extends ControllerBase
 {
@@ -333,13 +330,6 @@ class CoreController extends ControllerBase
         $response = new Response();
         $dados = filter_input_array(INPUT_GET);
         $cidade = EndCidade::find("uf='{$dados["uf"]}'");
-//
-//        var_dump($cidade->getCidade());
-//        exit;
-//
-//        $cid = [
-//            "cidade" => $cidade->getCidade()
-//        ];
         if ($cidade) {
             $response->setContent(json_encode(array(
                 "cidade" => $cidade,
@@ -352,6 +342,61 @@ class CoreController extends ControllerBase
             )));
             return $response;
         }
+    }
+
+    public function uploadAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+
+        $modulo = $this->router->getControllerName();
+        $action = $this->router->getActionName();
+
+        $diretorio = BASE_PATH . "/data/" . $modulo . "/" . $action;
+
+        if($this->request->hasFiles() !== false) {
+
+            // get uploader service or \Uploader\Uploader
+            $uploader = $this->di->get("uploader");
+
+            // setting up uloader rules
+            $uploader->setRules([
+                "dynamic"   =>  $diretorio,
+                "mimes"     =>  [       // any allowed mime types
+                    "image/gif",
+                    "image/jpeg",
+                    "image/png",
+                ],
+                "extensions"     =>  [  // any allowed extensions
+                    "gif",
+                    "jpeg",
+                    "jpg",
+                    "png",
+                ],
+                "sanitize" => true,
+                "hash"     => "md5"
+            ]);
+
+            if($uploader->isValid() === true) {
+
+                $uploader->move(); // upload files array result
+
+                $uploader->getInfo(); // var dump to see upload files
+
+            }
+            else {
+                $uploader->getErrors(); // var_dump errors
+            }
+        }
+
+        var_dump($diretorio);
+        exit;
+
+        $response->setContent(json_encode(array(
+            "operacao" => False
+        )));
+        return $response;
     }
 
     public function enviarEmailAction($id_empresa=null, $address=null, $address_name=null, $attach=null, $subject=null, $content=null)
@@ -378,11 +423,11 @@ class CoreController extends ControllerBase
             $mail->Port = $port;
             //Recipients
             $mail->setFrom($from,  $from_name);
-            $mail->addAddress($address, $address_name);        
+            $mail->addAddress($address, $address_name);
             //Attachments
             if($attach){
                 $mail->addAttachment($attach);
-            }        
+            }
             //Content
             $mail->isHTML(true);
             $mail->CharSet = 'UTF-8';

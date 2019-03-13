@@ -5,6 +5,8 @@ namespace Circuitos\Models;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Resultset;
 
+use Circuitos\Models\Lov;
+
 class Circuitos extends \Phalcon\Mvc\Model
 {
 
@@ -163,12 +165,6 @@ class Circuitos extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $data_atualizacao;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $ativo;
 
     /**
      * Method to set the value of field id
@@ -483,19 +479,6 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field ativo
-     *
-     * @param integer $ativo
-     * @return $this
-     */
-    public function setAtivo($ativo)
-    {
-        $this->ativo = $ativo;
-
-        return $this;
-    }
-
-    /**
      * @param integer $id_cidadedigital
      * @return $this
      */
@@ -765,21 +748,333 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field ativo
-     *
-     * @return integer
-     */
-    public function getAtivo()
-    {
-        return $this->ativo;
-    }
-
-    /**
      * @return int
      */
     public function getIdCidadedigital()
     {
         return $this->id_cidadedigital;
+    }
+
+
+    /**
+     * Returns the value of Cliente Nome
+     *
+     * @return string
+     */
+    public function getClienteNome()
+    {
+        return $this->Cliente->Pessoa->nome;
+    }
+
+
+    /**
+     * Returns the value of Cliente Unidade Nome
+     *
+     * @return string
+     */
+    public function getClienteUnidadeNome()
+    {
+        return $this->ClienteUnidade->Pessoa->nome;
+    }
+
+
+    /**
+     * Returns the value of Cidade Digital Nome
+     *
+     * @return string
+     */
+    public function getCidadeDigitalNome()
+    {
+        return $this->CidadeDigital->descricao;
+    }
+
+
+    /**
+     * Returns the value of Conectividade Nome
+     *
+     * @return string
+     */
+    public function getConectividadeNome()
+    {
+        return $this->Conectividade->Lov->descricao . " " . $this->Conectividade->descricao;
+    }
+
+
+    /**
+     * Returns the value of Fabricante Nome
+     *
+     * @return string
+     */
+    public function getFabricanteNome()
+    {
+        return $this->Equipamento->Fabricante->Pessoa->nome;
+    }
+
+
+    /**
+     * Returns the value of Modelo Nome
+     *
+     * @return string
+     */
+    public function getModeloNome()
+    {
+        return $this->Equipamento->Modelo->modelo;
+    }
+
+
+    /**
+     * Returns the value of Equipamento Nome
+     *
+     * @return string
+     */
+    public function getEquipamentoNome()
+    {
+        return $this->Equipamento->nome;
+    }
+
+
+    /**
+     * Returns the value of Equipamento Patromonio
+     *
+     * @return string
+     */
+    public function getEquipamentoPatrimonio()
+    {
+        return $this->Equipamento->numpatrimonio;
+    }
+
+
+    /**
+     * Returns the value of Equipamento Num Série
+     *
+     * @return string
+     */
+    public function getEquipamentoSerie()
+    {
+        return $this->Equipamento->numserie;
+    }
+
+    /**
+     * Returns the value of id_tipocliente
+     *
+     * @return int
+     */
+    public function getIdTipoCliente()
+    {
+        return $this->Cliente->id_tipocliente;
+    }
+
+    /**
+     * Returns the value of id_fabricante
+     *
+     * @return int
+     */
+    public function getIdFabricante()
+    {
+        return $this->Equipamento->Fabricante->id;
+    }
+
+    /**
+     * Returns the value of id_modelo
+     *
+     * @return int
+     */
+    public function getIdModelo()
+    {
+        return $this->Equipamento->Modelo->id;
+    }
+
+    /**
+     * Returns the value of Status do Circuito
+     *
+     * @return string
+     */
+    public function getStatusCircuito()
+    {
+        return $this->Lov2->descricao;
+    }
+
+    /**
+     * Returns the value of Contrato do Circuito
+     *
+     * @return string
+     */
+    public function getContratoCircuito()
+    {
+        return $this->Lov1->descricao;
+    }
+
+    /**
+     * Returns the value of Função do Circuito
+     *
+     * @return string
+     */
+    public function getFuncaoCircuito()
+    {
+        return $this->Lov5->descricao;
+    }
+
+    /**
+     * Returns the value of Tipo de Link do Circuito
+     *
+     * @return string
+     */
+    public function getTipoLinkCircuito()
+    {
+        return $this->Lov6->descricao;
+    }
+
+    /**
+     * Returns the value of Banda do Circuito
+     *
+     * @return string
+     */
+    public function getBandaCircuito()
+    {
+        return $this->Lov7->descricao;
+    }
+
+    /**
+     * Returns the value of Id Tipo de Movimento Criação
+     *
+     * @return int
+     */
+    public function getIdMovimentoCriacaoCircuito()
+    {
+        $movimento = Lov::findFirst("tipo=16 AND valor=1");
+        return $movimento->getId();
+    }
+
+    /**
+     * Returns the value of Id Status do Circuito
+     *
+     * @return int
+     */
+    public function getIdStatusInicialCircuito()
+    {
+        $status = Lov::findFirst("tipo=6 AND valor=1");
+        return $status->getId();
+    }
+
+    /**
+     * Returns the value of Id Tipo de Movimento Exclusão
+     *
+     * @return int
+     */
+    public function getIdMovimentoExclusaoCircuito()
+    {
+        $movimento = Lov::findFirst("tipo=16 AND valor=2");
+        return $movimento->getId();
+    }
+
+    /**
+     * Returns the value of Id Tipo de Movimento Edição
+     *
+     * @return int
+     */
+    public function getIdMovimentoEdicaoCircuito()
+    {
+        $movimento = Lov::findFirst("tipo=16 AND valor=3");
+        return $movimento->getId();
+    }
+
+    /**
+     * Returns the value of Id Tipo de Movimento Banda
+     *
+     * @return int
+     */
+    public function getIdMovimentoBandaCircuito()
+    {
+        $movimento = Lov::findFirst("tipo=16 AND valor=4");
+        return $movimento->getId();
+    }
+
+    /**
+     * Returns the value of Id Tipo de Movimento Status
+     *
+     * @return int
+     */
+    public function getIdMovimentoStatusCircuito()
+    {
+        $movimento = Lov::findFirst("tipo=16 AND valor=5");
+        return $movimento->getId();
+    }
+
+    /**
+     * Returns the value of Id Tipo de Movimento IP Gerencial
+     *
+     * @return int
+     */
+    public function getIdMovimentoIpGerenciaCircuito()
+    {
+        $movimento = Lov::findFirst("tipo=16 AND valor=6");
+        return $movimento->getId();
+    }
+
+    /**
+     * Returns the value of Id Tipo de Movimento IP Local
+     *
+     * @return int
+     */
+    public function getIdMovimentoIpLocalCircuito()
+    {
+        $movimento = Lov::findFirst("tipo=16 AND valor=7");
+        return $movimento->getId();
+    }
+
+    /**
+     * Returns the value of Id Tipo de Movimento Equipamento
+     *
+     * @return int
+     */
+    public function getIdMovimentoEquipamentoCircuito()
+    {
+        $movimento = Lov::findFirst("tipo=16 AND valor=8");
+        return $movimento->getId();
+    }
+
+    /**
+     * Returns the value of Id Tipo de Movimento Cliente
+     *
+     * @return int
+     */
+    public function getIdMovimentoClienteCircuito()
+    {
+        $movimento = Lov::findFirst("tipo=16 AND valor=9");
+        return $movimento->getId();
+    }
+
+    /**
+     * Returns the value of Id Tipo de Movimento Cliente Unidade
+     *
+     * @return int
+     */
+    public function getIdMovimentoClienteUnidadeCircuito()
+    {
+        $movimento = Lov::findFirst("tipo=16 AND valor=10");
+        return $movimento->getId();
+    }
+
+    /**
+     * Returns the value of Id Tipo de Movimento Cidade Digital
+     *
+     * @return int
+     */
+    public function getIdMovimentoCidadeDigitalCircuito()
+    {
+        $movimento = Lov::findFirst("tipo=16 AND valor=11");
+        return $movimento->getId();
+    }
+
+    /**
+     * Returns the value of Id Tipo de Movimento Conectividade
+     *
+     * @return int
+     */
+    public function getIdMovimentoConectividadeCircuito()
+    {
+        $movimento = Lov::findFirst("tipo=16 AND valor=12");
+        return $movimento->getId();
     }
 
     /**

@@ -96,6 +96,16 @@ class Cliente extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of Nome do Cliente
+     *
+     * @return string
+     */
+    public function getClienteNome()
+    {
+        return $this->Pessoa->nome;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -217,6 +227,22 @@ class Cliente extends \Phalcon\Mvc\Model
      * @return Cliente|\Phalcon\Mvc\Model\Resultset
      */
     public static function buscaClienteAtivo()
+    {
+        $query = new Builder();
+        $query->from(array("Cliente" => "Circuitos\Models\Cliente"));
+        $query->columns("Cliente.id, Pessoa.nome");
+        $query->join("Circuitos\Models\Pessoa", "Pessoa.id = Cliente.id_pessoa", "Pessoa");
+        $query->where("Pessoa.ativo = 1");
+        $query->orderBy("Pessoa.nome ASC");
+        $resultado = $query->getQuery()->execute()->setHydrateMode(Resultset::HYDRATE_ARRAYS);
+        return $resultado;
+    }
+
+    /**
+     * Consulta com o join na tabela com o nome do cliente
+     * @return Cliente|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function buscarClientes()
     {
         $query = new Builder();
         $query->from(array("Cliente" => "Circuitos\Models\Cliente"));

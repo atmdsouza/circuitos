@@ -56,6 +56,11 @@ $router->add("/index", [
     "action" => "index"
 ]);
 
+$router->add("/logs_sistema", [
+    "controller" => "logs_sistema",
+    "action" => "index"
+]);
+
 $router->add("/lov", [
     "controller" => "lov",
     "action" => "index"

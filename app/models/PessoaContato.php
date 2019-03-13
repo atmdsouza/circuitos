@@ -244,6 +244,16 @@ class PessoaContato extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of Tipo Contato
+     *
+     * @return string
+     */
+    public function getTipoContato()
+    {
+        return $this->Lov->descricao;
+    }
+
+    /**
      * Validations and business logic
      *
      * @return boolean

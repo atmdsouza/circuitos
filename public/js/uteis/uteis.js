@@ -522,6 +522,21 @@ function formata_cep(cep) { //66.113-280
     return cep_limpo;
 }
 
+//Helper function for calculation of progress
+function formatFileSize(bytes) {
+    "use strict";
+    if (typeof bytes !== "number") {
+        return "";
+    }
+    if (bytes >= 1000000000) {
+        return (bytes / 1000000000).toFixed(2) + " GB";
+    }
+    if (bytes >= 1000000) {
+        return (bytes / 1000000).toFixed(2) + " MB";
+    }
+    return (bytes / 1000).toFixed(2) + " KB";
+}
+
 //Máscaras
 $(document).ready(function () {
     $(".ct_credito").mask("0000 0000 0000 0000"); //Cartão de Crédito

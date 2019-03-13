@@ -64,6 +64,26 @@ class Empresa extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of Nome Empresa
+     *
+     * @return string
+     */
+    public function getNomeEmpresa()
+    {
+        return $this->Pessoa->nome;
+    }
+
+    /**
+     * Returns the value of Razão Social Empresa
+     *
+     * @return string
+     */
+    public function getRazaoEmpresa()
+    {
+        return $this->Pessoa->PessoaJuridica->razaosocial;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()

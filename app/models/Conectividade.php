@@ -212,6 +212,16 @@ class Conectividade extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of tipo de conectividade
+     *
+     * @return string
+     */
+    public function getTipoConectividade()
+    {
+        return $this->Lov->descricao;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
