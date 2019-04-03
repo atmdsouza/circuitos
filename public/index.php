@@ -6,7 +6,16 @@ error_reporting(E_ALL);
 
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
-define('HOST', 'http://' . $_SERVER['SERVER_NAME']);
+
+if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
+{
+    define('HOST', 'https://' . $_SERVER['SERVER_NAME']);
+}
+else
+{
+    define('HOST', 'http://' . $_SERVER['SERVER_NAME']);
+}
+
 define('DIR_STATICS', HOST . '/circuitos/');
 
 try {

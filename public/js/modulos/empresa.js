@@ -253,6 +253,9 @@ $("#cep").on("change", function(){
 
 $(".bt_novo").on("click", function(){
     $("#modalempresa").modal();
+    $("#formEmpresa input").removeAttr('readonly', 'readonly');
+    $("#formEmpresa select").removeAttr('readonly', 'readonly');
+    $("#formEmpresa textarea").removeAttr('readonly', 'readonly');
     $("#salvaEmpresa").removeClass("editar_empresa").addClass("criar_empresa");
 });
 

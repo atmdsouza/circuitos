@@ -398,6 +398,13 @@ $("#cnpj").on("change", function(){
 
 $(".bt_novo").on("click", function(){
     $("#modalfabricantes").modal();
+    $("#formFabricante input").removeAttr('readonly', 'readonly');
+    $("#formFabricante select").removeAttr('readonly', 'readonly');
+    $("#formFabricante textarea").removeAttr('readonly', 'readonly');
+    $(".tr_remove").remove();
+    $("#tb_contato").hide();
+    $("#tb_telefone").hide();
+    $("#tb_email").hide();
     $("#salvaFabricante").removeClass("editar_fabricantes").addClass("criar_fabricantes");
 });
 
@@ -508,6 +515,10 @@ $(".bt_edit").on("click", function(){
             $("#formFabricante input").removeAttr('readonly', 'readonly');
             $("#formFabricante select").removeAttr('readonly', 'readonly');
             $("#formFabricante textarea").removeAttr('readonly', 'readonly');
+            $(".tr_remove").remove();
+            $("#tb_contato").hide();
+            $("#tb_telefone").hide();
+            $("#tb_email").hide();
             $("#id").val(data.dados.id);
             $("#nome_pessoa").val(data.dados.nome);
             $("#cep").val(data.dados.pessoaendereco.cep);

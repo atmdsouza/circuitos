@@ -65,7 +65,7 @@ class LovController extends ControllerBase
             "15" => "Tipo Equipamento",
             "16" => "Tipo Movimento",
             "17" => "Tipo Banda",
-            "18" => "Tipo Cidade Digital",
+            "18" => "Tipo Conectividade",
             "19" => "Tipo Link"
         ];
         $paginator = new Paginator([

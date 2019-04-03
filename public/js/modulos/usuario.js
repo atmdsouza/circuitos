@@ -178,6 +178,9 @@ $("#email").on("change", function(){
 
 $(".bt_novo").on("click", function(){
     $("#modalusuario").modal();
+    $("#formUser input").removeAttr('readonly', 'readonly');
+    $("#formUser select").removeAttr('readonly', 'readonly');
+    $("#formUser textarea").removeAttr('readonly', 'readonly');
     $("#salvaUser").removeClass("editar_usuario").addClass("criar_usuario");
 });
 

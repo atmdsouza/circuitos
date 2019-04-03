@@ -398,6 +398,13 @@ $("#cnpj").on("change", function(){
 
 $(".bt_novo").on("click", function(){
     $("#modalclienteunidades").modal();
+    $("#formClienteUnidade input").removeAttr('readonly', 'readonly');
+    $("#formClienteUnidade select").removeAttr('readonly', 'readonly');
+    $("#formClienteUnidade textarea").removeAttr('readonly', 'readonly');
+    $(".tr_remove").remove();
+    $("#tb_contato").hide();
+    $("#tb_telefone").hide();
+    $("#tb_email").hide();
     $("#salvaClienteUnidade").removeClass("editar_clienteunidades").addClass("criar_clienteunidades");
 });
 
@@ -550,6 +557,10 @@ $(".bt_edit").on("click", function(){
             $("#formClienteUnidade input").removeAttr('readonly', 'readonly');
             $("#formClienteUnidade select").removeAttr('readonly', 'readonly');
             $("#formClienteUnidade textarea").removeAttr('readonly', 'readonly');
+            $(".tr_remove").remove();
+            $("#tb_contato").hide();
+            $("#tb_telefone").hide();
+            $("#tb_email").hide();
             $("#id").val(data.dados.id);
             $("#cliente").val(data.dados.id_cliente).selected = "true";
             $("#nome_pessoa").val(data.dados.nome);

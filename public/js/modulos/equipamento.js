@@ -100,6 +100,9 @@ table.on( "select deselect", function () {
 
 $(".bt_novo").on("click", function(){
     $("#modalequipamento").modal();
+    $("#formEquipamento input").removeAttr('readonly', 'readonly');
+    $("#formEquipamento select").removeAttr('readonly', 'readonly');
+    $("#formEquipamento textarea").removeAttr('readonly', 'readonly');
     $("#salvarEquipamento").removeClass("editar_equipamento").addClass("criar_equipamento");
 });
 

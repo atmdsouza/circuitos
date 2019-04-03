@@ -1185,28 +1185,6 @@ $(".bt_edit").on("click", function(){
             }
         },
         success: function (data) {
-            // var id_fabricante = (data.equip) ? data.equip.id_fabricante : null;
-            // var id_modelo = (data.equip) ? data.equip.id_modelo : null;
-            //Conectividade
-            // $(".remove_conectividade").remove();
-            // $.each(data.conectividade, function (key, value) {
-            //     var linhas = "<option class='remove_conectividade' value='" + value.id + "'>" + value.tipo + " " + value.descricao + "</option>";
-            //     $("#id_conectividade").append(linhas);
-            // });
-            // $("#id_conectividade").removeAttr("disabled");
-            //Cliente Unidades
-            // $(".remove_cliente_unidade").remove();
-            // $.each(data.unidadescli, function (key, value) {
-            //     var linhas = "<option class='remove_cliente_unidade' value='" + value.id + "'>" + value.nome + "</option>";
-            //     $("#id_cliente_unidade").append(linhas);
-            // });
-            // $("#id_cliente_unidade").removeAttr("disabled");
-            //Modelos
-            // $(".remove_modelo").remove();
-            // $.each(data.modelos, function (key, value) {
-            //     var linhas = "<option class='remove_modelo' value='" + value.id + "'>" + value.modelo + "</option>";
-            //     $("#id_modelo").append(linhas);
-            // });
             $("#id").val(data.dados.id);
             $("#tipocliente").val(data.dados.id_tipocliente);
             $("#lid_cliente").attr("disabled", "true");
@@ -1230,7 +1208,9 @@ $(".bt_edit").on("click", function(){
             $("#id_cidadedigital").val(data.dados.id_cidadedigital);
             $("#id_conectividade").val(data.dados.id_conectividade);
             $("#lid_cidadedigital").val(data.dados.lid_cidadedigital);
+            $("#lid_cidadedigital").attr("disabled", "true");
             $("#lid_conectividade").val(data.dados.lid_conectividade);
+            $("#lid_conectividade").attr("disabled", "true");
             $("#id_funcao").val(data.dados.id_funcao).selected = "true";
             $("#id_tipoacesso").val(data.dados.id_tipoacesso).selected = "true";
             $("#banda").val(data.dados.id_banda).selected = "true";
