@@ -84,6 +84,66 @@ class Empresa extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of Host Empresa
+     *
+     * @return string
+     */
+    public function getHostEmpresa()
+    {
+        return $this->EmpresaParametros->mail_host;
+    }
+
+    /**
+     * Returns the value of Mail User Empresa
+     *
+     * @return string
+     */
+    public function getMailUserEmpresa()
+    {
+        return $this->EmpresaParametros->mail_user;
+    }
+
+    /**
+     * Returns the value of Mail User Empresa
+     *
+     * @return string
+     */
+    public function getMailPswEmpresa()
+    {
+        return $this->EmpresaParametros->mail_passwrd;
+    }
+
+    /**
+     * Returns the value of Mail SMTP Empresa
+     *
+     * @return string
+     */
+    public function getMailSmtpEmpresa()
+    {
+        return $this->EmpresaParametros->mail_smtpssl;
+    }
+
+    /**
+     * Returns the value of Mail SMTP Empresa
+     *
+     * @return string
+     */
+    public function getMailPortEmpresa()
+    {
+        return $this->EmpresaParametros->mail_port;
+    }
+
+    /**
+     * Returns the value of EMail Empresa
+     *
+     * @return string
+     */
+    public function getEMailEmpresa()
+    {
+        return $this->Pessoa->PessoaEmail[0]->email;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()

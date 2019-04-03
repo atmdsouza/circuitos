@@ -408,22 +408,13 @@ class CircuitosController extends ControllerBase
         //CSRF Token Check
         if ($this->tokenManager->checkToken("User", $dados["tokenKey"], $dados["tokenValue"])) {//Formulário Válido
             try {
-                //Coletando a cidade e estado com base na cidade digital escolhida
-                $cidade_estado = CidadeDigital::CidadeUfporCidadeDigital($params["id_cidadedigital"]);
-                $unidade = (isset($params["id_cliente_unidade"])) ? $params["id_cliente_unidade"] : null ;
                 //Editando Circuitos
                 $circuitos->setTransaction($transaction);
-                $circuitos->setIdCliente($params["id_cliente"]);
-                $circuitos->setIdClienteUnidade($unidade);
                 $circuitos->setIdContrato($params["id_contrato"]);
                 $circuitos->setIdFuncao($params["id_funcao"]);
                 $circuitos->setIdTipoacesso($params["id_tipoacesso"]);
                 $circuitos->setIdTipolink($params["id_tipolink"]);
-                $circuitos->setIdCidadedigital($params["id_cidadedigital"]);
-                $circuitos->setIdConectividade($params["id_conectividade"]);
                 $circuitos->setDesignacaoAnterior(mb_strtoupper($params["designacao_anterior"], $this->encode));
-                $circuitos->setUf(mb_strtoupper($cidade_estado[0]["uf"], $this->encode));
-                $circuitos->setCidade(mb_strtoupper($cidade_estado[0]["cidade"], $this->encode));
                 $circuitos->setSsid($params["ssid"]);
                 $circuitos->setChamado($params["chamado"]);
                 $circuitos->setTag($params["tag"]);

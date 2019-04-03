@@ -98,6 +98,9 @@ table.on( "select deselect", function () {
 
 $(".bt_novo").on("click", function(){
     $("#modallov").modal();
+    $("#formLov input").removeAttr('readonly', 'readonly');
+    $("#formLov select").removeAttr('readonly', 'readonly');
+    $("#formLov textarea").removeAttr('readonly', 'readonly');
     $("#salvarLov").removeClass("editar_lov").addClass("criar_lov");
 });
 

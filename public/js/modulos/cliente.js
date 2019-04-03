@@ -491,6 +491,13 @@ $("#cnpj").on("change", function(){
 
 $(".bt_novo").on("click", function(){
     $("#modalcliente").modal();
+    $("#formCliente input").removeAttr('readonly', 'readonly');
+    $("#formCliente select").removeAttr('readonly', 'readonly');
+    $("#formCliente textarea").removeAttr('readonly', 'readonly');
+    $(".tr_remove").remove();
+    $("#tb_endereco").hide();
+    $("#tb_telefone").hide();
+    $("#tb_email").hide();
     $("#salvaCliente").removeClass("editar_cliente").addClass("criar_cliente");
 });
 
@@ -709,6 +716,10 @@ $(".bt_edit").on("click", function(){
             $("#formCliente input").removeAttr('readonly', 'readonly');
             $("#formCliente select").removeAttr('readonly', 'readonly');
             $("#formCliente textarea").removeAttr('readonly', 'readonly');
+            $(".tr_remove").remove();
+            $("#tb_endereco").hide();
+            $("#tb_telefone").hide();
+            $("#tb_email").hide();
             switch (data.dados.tipo)
             {
                 case "44"://Pessoa Física

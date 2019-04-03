@@ -119,6 +119,11 @@ function limpaConectividade()
 
 $(".bt_novo").on("click", function(){
     $("#modalcidadedigital").modal();
+    $("#formCidadeDigital input").removeAttr('readonly', 'readonly');
+    $("#formCidadeDigital select").removeAttr('readonly', 'readonly');
+    $("#formCidadeDigital textarea").removeAttr('readonly', 'readonly');
+    $(".tr_remove").remove();
+    $("#tb_conectividade").hide();
     $("#salvarCidadeDigital").removeClass("editar_cidadedigital").addClass("criar_cidadedigital");
 });
 
@@ -308,6 +313,7 @@ $(".bt_edit").on("click", function(){
             $("#formCidadeDigital select").removeAttr('readonly', 'readonly');
             $("#formCidadeDigital textarea").removeAttr('readonly', 'readonly');
             $(".tr_remove").remove();
+            $("#tb_conectividade").hide();
             $("#id").val(data.dados.id);
             $("#id_cidade").val(data.dados.id_cidade).selected = "true";
             $("#descricao").val(data.dados.descricao);

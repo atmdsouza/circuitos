@@ -100,6 +100,9 @@ table.on( "select deselect", function () {
 
 $(".bt_novo").on("click", function(){
     $("#modalmodelo").modal();
+    $("#formModelo input").removeAttr('readonly', 'readonly');
+    $("#formModelo select").removeAttr('readonly', 'readonly');
+    $("#formModelo textarea").removeAttr('readonly', 'readonly');
     $("#salvarModelo").removeClass("editar_modelo").addClass("criar_modelo");
 });
 

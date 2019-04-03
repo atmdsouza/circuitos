@@ -403,13 +403,13 @@ class CoreController extends ControllerBase
     {
         $logger = new FileAdapter(BASE_PATH . "/logs/systemlog.log");
         $empresa = Empresa::findFirst("id={$id_empresa}");
-        $host=$empresa->EmpresaParametros->mail_host;
-        $user=$empresa->EmpresaParametros->mail_user;
-        $pass=$empresa->EmpresaParametros->mail_passwrd;
-        $smtlssl=$empresa->EmpresaParametros->mail_smtpssl;
-        $port=$empresa->EmpresaParametros->mail_port;
-        $from=$empresa->Pessoa->PessoaEmail[0]->email;
-        $from_name=$empresa->Pessoa->nome;
+        $host=$empresa->getHostEmpresa();
+        $user=$empresa->getMailUserEmpresa();
+        $pass=$empresa->getMailPswEmpresa();
+        $smtlssl=$empresa->getMailSmtpEmpresa();
+        $port=$empresa->getMailPortEmpresa();
+        $from=$empresa->getEMailEmpresa();
+        $from_name=$empresa->getNomeEmpresa();
 
         $mail = new PHPMailer(true);
         try {
