@@ -270,6 +270,26 @@ class Equipamento extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of Nome Fabricante
+     *
+     * @return string
+     */
+    public function getNomeFabricante()
+    {
+        return $this->Fabricante->Pessoa->nome;
+    }
+
+    /**
+     * Returns the value of Nome Modelo
+     *
+     * @return string
+     */
+    public function getNomeModelo()
+    {
+        return $this->Modelo->modelo;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()

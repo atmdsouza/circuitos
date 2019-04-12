@@ -6,7 +6,7 @@ var URLImagensSistema = "public/images";
 var table = $("#tb_circuitos").DataTable({
     buttons: [
         {//Botão Novo Registro
-            className: "bt_novo auto_cidadedigital auto_cliente auto_fabricante",
+            className: "bt_novo auto_serie_patrimonio auto_cidadedigital auto_cliente auto_fabricante",
             text: "Novo",
             name: "novo", // do not change name
             titleAttr: "Novo Circuito",
@@ -41,7 +41,7 @@ var table = $("#tb_circuitos").DataTable({
             enabled: false
         },
         {//Botão Movimentar Registro (Inativo)
-            className: "bt_mov auto_fabricantemov",
+            className: "bt_mov auto_fabricantemov auto_serie_patrimoniomov",
             text: "Movimentar",
             name: "mov", // do not change name
             titleAttr: "Movimentar Circuito",
@@ -717,65 +717,65 @@ $("#lid_equipamento").on("change", function(){
     });
 });
 //Campo Número de Série
-$("#numero_serie").on("change", function () {
-    "use strict";
-    var numero_serie = $(this).val();
-    if (numero_serie !== ""){
-        var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoNumeroSerie");
-        $.ajax({
-            type: "GET",
-            dataType: "JSON",
-            url: action,
-            data: {numero_serie: numero_serie},
-            error: function (data) {
-                if (data.status && data.status === 401)
-                {
-                    swal({
-                        title: "Erro de Permissão",
-                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                        type: "warning"
-                    });
-                }
-            },
-            success: function (data) {
-                if (data.operacao){
-                    validaEquipamentoCircuito(data.id_equipamento).done(function(valida){
-                        if (valida) {
-                            $("#lid_fabricante").val(null);
-                            $("#lid_modelo").val(null);
-                            $("#lid_equipamento").val(null);
-                            $("#id_fabricante").val(null);
-                            $("#id_modelo").val(null);
-                            $("#id_equipamento").val(null);
-                            $("#lid_modelo").attr("disabled", "true");
-                            $("#lid_equipamento").attr("disabled", "true");
-                            swal("Atenção","Esse equipamento já foi cadastrado para outro circuito!","info");
-                        } else {
-                            $("#lid_fabricante").val(data.nome_fabricante);
-                            $("#lid_modelo").val(data.nome_modelo);
-                            $("#lid_equipamento").val(data.nome_equipamento + " (" + numero_serie + " / " + data.numero_patrimonio + ")");
-                            $("#id_fabricante").val(data.id_fabricante);
-                            $("#id_modelo").val(data.id_modelo);
-                            $("#id_equipamento").val(data.id_equipamento);
-                            $("#lid_modelo").removeAttr("disabled");
-                            $("#lid_equipamento").removeAttr("disabled");
-                        }
-                    });
-                } else {
-                    $("#lid_fabricante").val(null);
-                    $("#lid_modelo").val(null);
-                    $("#lid_equipamento").val(null);
-                    $("#id_fabricante").val(null);
-                    $("#id_modelo").val(null);
-                    $("#id_equipamento").val(null);
-                    $("#lid_modelo").attr("disabled", "true");
-                    $("#lid_equipamento").attr("disabled", "true");
-                    swal("Atenção","Não existem equipamentos para esse número de série!","info");
-                }
-            }
-        });
-    }
-});
+// $("#lnumero_serie").on("change", function () {
+//     "use strict";
+//     var numero_serie = $(this).val();
+//     if (numero_serie !== ""){
+//         var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoNumeroSerie");
+//         $.ajax({
+//             type: "GET",
+//             dataType: "JSON",
+//             url: action,
+//             data: {numero_serie: numero_serie},
+//             error: function (data) {
+//                 if (data.status && data.status === 401)
+//                 {
+//                     swal({
+//                         title: "Erro de Permissão",
+//                         text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+//                         type: "warning"
+//                     });
+//                 }
+//             },
+//             success: function (data) {
+//                 if (data.operacao){
+//                     validaEquipamentoCircuito(data.id_equipamento).done(function(valida){
+//                         if (valida) {
+//                             $("#lid_fabricante").val(null);
+//                             $("#lid_modelo").val(null);
+//                             $("#lid_equipamento").val(null);
+//                             $("#id_fabricante").val(null);
+//                             $("#id_modelo").val(null);
+//                             $("#id_equipamento").val(null);
+//                             $("#lid_modelo").attr("disabled", "true");
+//                             $("#lid_equipamento").attr("disabled", "true");
+//                             swal("Atenção","Esse equipamento já foi cadastrado para outro circuito!","info");
+//                         } else {
+//                             $("#lid_fabricante").val(data.nome_fabricante);
+//                             $("#lid_modelo").val(data.nome_modelo);
+//                             $("#lid_equipamento").val(data.nome_equipamento + " (" + numero_serie + " / " + data.numero_patrimonio + ")");
+//                             $("#id_fabricante").val(data.id_fabricante);
+//                             $("#id_modelo").val(data.id_modelo);
+//                             $("#id_equipamento").val(data.id_equipamento);
+//                             $("#lid_modelo").removeAttr("disabled");
+//                             $("#lid_equipamento").removeAttr("disabled");
+//                         }
+//                     });
+//                 } else {
+//                     $("#lid_fabricante").val(null);
+//                     $("#lid_modelo").val(null);
+//                     $("#lid_equipamento").val(null);
+//                     $("#id_fabricante").val(null);
+//                     $("#id_modelo").val(null);
+//                     $("#id_equipamento").val(null);
+//                     $("#lid_modelo").attr("disabled", "true");
+//                     $("#lid_equipamento").attr("disabled", "true");
+//                     swal("Atenção","Não existem equipamentos para esse número de série!","info");
+//                 }
+//             }
+//         });
+//     }
+// });
 //Validar vinculo de equipamento e circuito
 function validaEquipamentoCircuito(id_equipamento)
 {
@@ -799,6 +799,115 @@ function validaEquipamentoCircuito(id_equipamento)
         }
     });
 }
+
+$(".auto_serie_patrimonio").on("click", function(){
+    "use strict";
+    //Autocomplete de Cidade Digital
+    var ac_serie_patrimonio = $("#lnumero_serie");
+    var listSeriePatrimonio = [];
+    var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoSeriePatrimonio");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        beforeSend: function () {
+            $("#numero_serie").val("");
+            $("#lnumero_serie").val("");
+            listSeriePatrimonio = [];
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao){
+                $.each(data.dados, function (key, value) {
+                    listSeriePatrimonio.push({value: value, data: value});
+                });
+            } else {
+                $("#numero_serie").val("");
+                $("#lnumero_serie").val("");
+            }
+            //Autocomplete de Equipamento
+            ac_serie_patrimonio.autocomplete({
+                lookup: listSeriePatrimonio,
+                noCache: true,
+                minChars: 1,
+                triggerSelectOnValidInput: false,
+                showNoSuggestionNotice: true,
+                noSuggestionNotice: "Não existem resultados para essa consulta!",
+                onSelect: function (suggestion) {
+                    $("#numero_serie").val(suggestion.data);
+                    var numero_serie = suggestion.data;
+                    if (numero_serie !== ""){
+                        var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoNumeroSerie");
+                        $.ajax({
+                            type: "GET",
+                            dataType: "JSON",
+                            url: action,
+                            data: {numero_serie: numero_serie},
+                            error: function (data) {
+                                if (data.status && data.status === 401)
+                                {
+                                    swal({
+                                        title: "Erro de Permissão",
+                                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                        type: "warning"
+                                    });
+                                }
+                            },
+                            success: function (data) {
+                                if (data.operacao){
+                                    validaEquipamentoCircuito(data.id_equipamento).done(function(valida){
+                                        if (valida) {
+                                            $("#lid_fabricante").val(null);
+                                            $("#lid_modelo").val(null);
+                                            $("#lid_equipamento").val(null);
+                                            $("#id_fabricante").val(null);
+                                            $("#id_modelo").val(null);
+                                            $("#id_equipamento").val(null);
+                                            $("#lid_modelo").attr("disabled", "true");
+                                            $("#lid_equipamento").attr("disabled", "true");
+                                            swal("Atenção","Esse equipamento já foi cadastrado para outro circuito!","info");
+                                        } else {
+                                            $("#lid_fabricante").val(data.nome_fabricante);
+                                            $("#lid_modelo").val(data.nome_modelo);
+                                            $("#lid_equipamento").val(data.nome_equipamento + " (" + numero_serie + " / " + data.numero_patrimonio + ")");
+                                            $("#id_fabricante").val(data.id_fabricante);
+                                            $("#id_modelo").val(data.id_modelo);
+                                            $("#id_equipamento").val(data.id_equipamento);
+                                            $("#lid_modelo").removeAttr("disabled");
+                                            $("#lid_equipamento").removeAttr("disabled");
+                                        }
+                                    });
+                                } else {
+                                    $("#lid_fabricante").val(null);
+                                    $("#lid_modelo").val(null);
+                                    $("#lid_equipamento").val(null);
+                                    $("#id_fabricante").val(null);
+                                    $("#id_modelo").val(null);
+                                    $("#id_equipamento").val(null);
+                                    $("#lid_modelo").attr("disabled", "true");
+                                    $("#lid_equipamento").attr("disabled", "true");
+                                    swal("Atenção","Não existem equipamentos para esse número de série!","info");
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    });
+});
+
 $(".bt_novo").on("click", function(){
     "use strict";
     $("#modalcircuitos").modal();
@@ -2540,65 +2649,174 @@ $("#lid_equipamentomov").on("change", function(){
     });
 });
 //Campo Número de Série
-$("#numero_seriemov").on("change", function () {
+// $("#numero_seriemov").on("change", function () {
+//     "use strict";
+//     var numero_serie = $(this).val();
+//     if (numero_serie !== ""){
+//         var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoNumeroSerie");
+//         $.ajax({
+//             type: "GET",
+//             dataType: "JSON",
+//             url: action,
+//             data: {numero_serie: numero_serie},
+//             error: function (data) {
+//                 if (data.status && data.status === 401)
+//                 {
+//                     swal({
+//                         title: "Erro de Permissão",
+//                         text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+//                         type: "warning"
+//                     });
+//                 }
+//             },
+//             success: function (data) {
+//                 if (data.operacao){
+//                     validaEquipamentoCircuito(data.id_equipamento).done(function(valida){
+//                         if (valida) {
+//                             $("#lid_fabricantemov").val(null);
+//                             $("#lid_modelomov").val(null);
+//                             $("#lid_equipamentomov").val(null);
+//                             $("#id_fabricantemov").val(null);
+//                             $("#id_modelomov").val(null);
+//                             $("#id_equipamentomov").val(null);
+//                             $("#lid_modelomov").attr("disabled", "true");
+//                             $("#lid_equipamentomov").attr("disabled", "true");
+//                             swal("Atenção","Esse equipamento já foi cadastrado para outro circuito!","info");
+//                         } else {
+//                             $("#lid_fabricantemov").val(data.nome_fabricante);
+//                             $("#lid_modelomov").val(data.nome_modelo);
+//                             $("#lid_equipamentomov").val(data.nome_equipamento + " (" + numero_serie + " / " + data.numero_patrimonio + ")");
+//                             $("#id_fabricantemov").val(data.id_fabricante);
+//                             $("#id_modelomov").val(data.id_modelo);
+//                             $("#id_equipamentomov").val(data.id_equipamento);
+//                             $("#lid_modelomov").removeAttr("disabled");
+//                             $("#lid_equipamentomov").removeAttr("disabled");
+//                         }
+//                     });
+//                 } else {
+//                     $("#lid_fabricantemov").val(null);
+//                     $("#lid_modelomov").val(null);
+//                     $("#lid_equipamentomov").val(null);
+//                     $("#id_fabricantemov").val(null);
+//                     $("#id_modelomov").val(null);
+//                     $("#id_equipamentomov").val(null);
+//                     $("#lid_modelomov").attr("disabled", "true");
+//                     $("#lid_equipamentomov").attr("disabled", "true");
+//                     swal("Atenção","Não existem equipamentos para esse número de série!","info");
+//                 }
+//             }
+//         });
+//     }
+// });
+
+$(".auto_serie_patrimoniomov").on("click", function(){
     "use strict";
-    var numero_serie = $(this).val();
-    if (numero_serie !== ""){
-        var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoNumeroSerie");
-        $.ajax({
-            type: "GET",
-            dataType: "JSON",
-            url: action,
-            data: {numero_serie: numero_serie},
-            error: function (data) {
-                if (data.status && data.status === 401)
-                {
-                    swal({
-                        title: "Erro de Permissão",
-                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                        type: "warning"
-                    });
-                }
-            },
-            success: function (data) {
-                if (data.operacao){
-                    validaEquipamentoCircuito(data.id_equipamento).done(function(valida){
-                        if (valida) {
-                            $("#lid_fabricantemov").val(null);
-                            $("#lid_modelomov").val(null);
-                            $("#lid_equipamentomov").val(null);
-                            $("#id_fabricantemov").val(null);
-                            $("#id_modelomov").val(null);
-                            $("#id_equipamentomov").val(null);
-                            $("#lid_modelomov").attr("disabled", "true");
-                            $("#lid_equipamentomov").attr("disabled", "true");
-                            swal("Atenção","Esse equipamento já foi cadastrado para outro circuito!","info");
-                        } else {
-                            $("#lid_fabricantemov").val(data.nome_fabricante);
-                            $("#lid_modelomov").val(data.nome_modelo);
-                            $("#lid_equipamentomov").val(data.nome_equipamento + " (" + numero_serie + " / " + data.numero_patrimonio + ")");
-                            $("#id_fabricantemov").val(data.id_fabricante);
-                            $("#id_modelomov").val(data.id_modelo);
-                            $("#id_equipamentomov").val(data.id_equipamento);
-                            $("#lid_modelomov").removeAttr("disabled");
-                            $("#lid_equipamentomov").removeAttr("disabled");
-                        }
-                    });
-                } else {
-                    $("#lid_fabricantemov").val(null);
-                    $("#lid_modelomov").val(null);
-                    $("#lid_equipamentomov").val(null);
-                    $("#id_fabricantemov").val(null);
-                    $("#id_modelomov").val(null);
-                    $("#id_equipamentomov").val(null);
-                    $("#lid_modelomov").attr("disabled", "true");
-                    $("#lid_equipamentomov").attr("disabled", "true");
-                    swal("Atenção","Não existem equipamentos para esse número de série!","info");
-                }
+    //Autocomplete de Cidade Digital
+    var ac_serie_patrimoniomov = $("#lnumero_seriemov");
+    var listSeriePatrimoniomov = [];
+    var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoSeriePatrimonio");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        beforeSend: function () {
+            $("#numero_seriemov").val("");
+            $("#lnumero_seriemov").val("");
+            listSeriePatrimoniomov = [];
+        },
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
             }
-        });
-    }
+        },
+        success: function (data) {
+            if (data.operacao){
+                $.each(data.dados, function (key, value) {
+                    listSeriePatrimoniomov.push({value: value, data: value});
+                });
+            } else {
+                $("#numero_seriemov").val("");
+                $("#lnumero_seriemov").val("");
+            }
+            //Autocomplete de Equipamento
+            ac_serie_patrimoniomov.autocomplete({
+                lookup: listSeriePatrimoniomov,
+                noCache: true,
+                minChars: 1,
+                triggerSelectOnValidInput: false,
+                showNoSuggestionNotice: true,
+                noSuggestionNotice: "Não existem resultados para essa consulta!",
+                onSelect: function (suggestion) {
+                    $("#numero_seriemov").val(suggestion.data);
+                    var numero_serie = suggestion.data;
+                    if (numero_serie !== ""){
+                        var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoNumeroSerie");
+                        $.ajax({
+                            type: "GET",
+                            dataType: "JSON",
+                            url: action,
+                            data: {numero_serie: numero_serie},
+                            error: function (data) {
+                                if (data.status && data.status === 401)
+                                {
+                                    swal({
+                                        title: "Erro de Permissão",
+                                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                                        type: "warning"
+                                    });
+                                }
+                            },
+                            success: function (data) {
+                                if (data.operacao){
+                                    validaEquipamentoCircuito(data.id_equipamento).done(function(valida){
+                                        if (valida) {
+                                            $("#lid_fabricantemov").val(null);
+                                            $("#lid_modelomov").val(null);
+                                            $("#lid_equipamentomov").val(null);
+                                            $("#id_fabricantemov").val(null);
+                                            $("#id_modelomov").val(null);
+                                            $("#id_equipamentomov").val(null);
+                                            $("#lid_modelomov").attr("disabled", "true");
+                                            $("#lid_equipamentomov").attr("disabled", "true");
+                                            swal("Atenção","Esse equipamento já foi cadastrado para outro circuito!","info");
+                                        } else {
+                                            $("#lid_fabricantemov").val(data.nome_fabricante);
+                                            $("#lid_modelomov").val(data.nome_modelo);
+                                            $("#lid_equipamentomov").val(data.nome_equipamento + " (" + numero_serie + " / " + data.numero_patrimonio + ")");
+                                            $("#id_fabricantemov").val(data.id_fabricante);
+                                            $("#id_modelomov").val(data.id_modelo);
+                                            $("#id_equipamentomov").val(data.id_equipamento);
+                                            $("#lid_modelomov").removeAttr("disabled");
+                                            $("#lid_equipamentomov").removeAttr("disabled");
+                                        }
+                                    });
+                                } else {
+                                    $("#lid_fabricantemov").val(null);
+                                    $("#lid_modelomov").val(null);
+                                    $("#lid_equipamentomov").val(null);
+                                    $("#id_fabricantemov").val(null);
+                                    $("#id_modelomov").val(null);
+                                    $("#id_equipamentomov").val(null);
+                                    $("#lid_modelomov").attr("disabled", "true");
+                                    $("#lid_equipamentomov").attr("disabled", "true");
+                                    swal("Atenção","Não existem equipamentos para esse número de série!","info");
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    });
 });
+
 // $(function () {
 //     "use strict";
 //     var listEquip2 = [];

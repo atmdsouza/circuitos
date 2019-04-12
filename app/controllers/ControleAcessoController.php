@@ -228,7 +228,7 @@ class ControleAcessoController extends ControllerBase
             "error"             => ["show401", "show404"],
             "index"             => ["index"],
             "cidade_digital"    => ["formCidadeDigital"],
-            "circuitos"         => ["formCircuitos", "clienteAll", "getCidadeDigitalCircuito", "getClienteCircuito", "fabricanteAll", "cidadedigitalAll", "cidadedigitalConectividade", "equipamentoModelo", "equipamentoNumeroSerie", "modeloFabricante", "unidadeCliente", "validarEquipamentoCircuito", "visualizaCircuitos"],
+            "circuitos"         => ["equipamentoSeriePatrimonio", "formCircuitos", "clienteAll", "getCidadeDigitalCircuito", "getClienteCircuito", "fabricanteAll", "cidadedigitalAll", "cidadedigitalConectividade", "equipamentoModelo", "equipamentoNumeroSerie", "modeloFabricante", "unidadeCliente", "validarEquipamentoCircuito", "visualizaCircuitos"],
             "cliente"           => ["formCliente"],
             "cliente_unidade"   => ["formClienteUnidade"],
             "empresa"           => ["formEmpresa"],

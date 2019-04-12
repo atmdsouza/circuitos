@@ -229,8 +229,9 @@ use Util\Util;
                                     ?>
                                 </div>
                                 <div class="form-group col-md-3 botoes_forms_alinhamento">
-                                    <label for="numero_serie">Número de Série</label>
-                                    <?php echo $this->tag->textField(["numero_serie", "size" => 60, "class" => "form-control", "id" => "numero_serie", "placeholder" => "Número de Série"]) ?>
+                                    <label for="lnumero_serie">Número de Série / Patrimônio</label>
+                                    <?php echo $this->tag->textField(["lnumero_serie", "size" => 60, "class" => "form-control", "id" => "lnumero_serie", "placeholder" => "Número de Série / Patrimônio"]) ?>
+                                    <?php echo $this->tag->hiddenField(["numero_serie", "size" => 60, "class" => "form-control", "id" => "numero_serie"]) ?>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <!--                                    <label for="id_fabricante">Fabricante <span class="required">*</span></label>-->
@@ -659,8 +660,9 @@ use Util\Util;
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4 equip botoes_forms_alinhamento" style="display: none;">
-                                    <label for="numero_seriemov">Número de Série</label>
-                                    <?php echo $this->tag->textField(["numero_seriemov", "size" => 60, "class" => "form-control", "id" => "numero_seriemov", "placeholder" => "Número de Série"]) ?>
+                                    <label for="lnumero_seriemov">Número de Série / Patrimônio</label>
+                                    <?php echo $this->tag->textField(["lnumero_seriemov", "size" => 60, "class" => "form-control", "id" => "lnumero_seriemov", "placeholder" => "Número de Série / Patrimônio"]) ?>
+                                    <?php echo $this->tag->hiddenField(["numero_seriemov", "size" => 60, "class" => "form-control", "id" => "numero_seriemov"]) ?>
                                 </div>
                                 <div class="form-group col-md-4 equip" style="display: none;">
                                     <!--                                    <label for="id_fabricantemov">Fabricante <span class="required">*</span></label>-->

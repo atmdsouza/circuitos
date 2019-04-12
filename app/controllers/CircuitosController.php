@@ -996,7 +996,7 @@ class CircuitosController extends ControllerBase
         $response = new Response();
         $dados = filter_input_array(INPUT_GET);
         if ($dados["numero_serie"]) {
-            $equipamentos = Equipamento::findFirst("numserie={$dados["numero_serie"]}");
+            $equipamentos = Equipamento::findFirst("numserie='{$dados['numero_serie']}' OR numpatrimonio='{$dados['numero_serie']}'");
             if ($equipamentos) {
                 $response->setContent(json_encode(array(
                     "operacao" => True,
@@ -1004,9 +1004,9 @@ class CircuitosController extends ControllerBase
                     "nome_equipamento" => $equipamentos->getNome(),
                     "numero_patrimonio" => $equipamentos->getNumpatrimonio(),
                     "id_fabricante" => $equipamentos->getIdFabricante(),
-                    "nome_fabricante" => $equipamentos->Fabricante->Pessoa->nome,
+                    "nome_fabricante" => $equipamentos->getNomeFabricante(),
                     "id_modelo" => $equipamentos->getIdModelo(),
-                    "nome_modelo" => $equipamentos->Modelo->modelo
+                    "nome_modelo" => $equipamentos->getNomeModelo()
                 )));
             } else {
                 $response->setContent(json_encode(array(
@@ -1018,6 +1018,25 @@ class CircuitosController extends ControllerBase
                 "operacao" => False
             )));
         }
+        return $response;
+    }
+
+    public function equipamentoSeriePatrimonioAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $equipamentos = Equipamento::find("ativo=1");
+        $dados_serie_patrimonio = array();
+        foreach($equipamentos as $equipamento)
+        {
+            array_push($dados_serie_patrimonio, $equipamento->getNumserie());
+            array_push($dados_serie_patrimonio, $equipamento->getNumpatrimonio());
+        }
+        $response->setContent(json_encode(array(
+            "operacao" => True,
+            "dados" => $dados_serie_patrimonio
+        )));
         return $response;
     }
 
