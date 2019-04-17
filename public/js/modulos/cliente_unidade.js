@@ -619,7 +619,6 @@ $(".bt_edit").on("click", function(){
                     $("#tb_email").show();
                 });
             }
-            $("#cliente").attr("disabled", "true");
             $("#modalclienteunidades").modal();
         }
     });
