@@ -254,23 +254,4 @@ class EndCidade extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id' => 'id',
-            'id_cidade' => 'id_cidade',
-            'cidade' => 'cidade',
-            'uf' => 'uf',
-            'cod_ibge' => 'cod_ibge',
-            'area' => 'area',
-            'id_municipio_subordinado' => 'id_municipio_subordinado'
-        ];
-    }
-
 }

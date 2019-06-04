@@ -60,6 +60,18 @@ class PessoaContato extends \Phalcon\Mvc\Model
     protected $ativo;
 
     /**
+     *
+     * @var integer
+     */
+    protected $excluido;
+
+    /**
+     *
+     * @var string
+     */
+    protected $data_update;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -254,6 +266,38 @@ class PessoaContato extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return int
+     */
+    public function getExcluido()
+    {
+        return $this->excluido;
+    }
+
+    /**
+     * @param int $excluido
+     */
+    public function setExcluido($excluido)
+    {
+        $this->excluido = $excluido;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataUpdate()
+    {
+        return $this->data_update;
+    }
+
+    /**
+     * @param string $data_update
+     */
+    public function setDataUpdate($data_update)
+    {
+        $this->data_update = $data_update;
+    }
+
+    /**
      * Validations and business logic
      *
      * @return boolean
@@ -333,26 +377,6 @@ class PessoaContato extends \Phalcon\Mvc\Model
         $query->where("PessoaContato.id_pessoa = :id:", array("id" => $id_pessoa));
         $resultado = $query->getQuery()->execute()->setHydrateMode(Resultset::HYDRATE_ARRAYS);
         return $resultado;
-    }
-
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id' => 'id',
-            'id_pessoa' => 'id_pessoa',
-            'id_tipocontato' => 'id_tipocontato',
-            'principal' => 'principal',
-            'nome' => 'nome',
-            'telefone' => 'telefone',
-            'email' => 'email',
-            'ativo' => 'ativo'
-        ];
     }
 
 }

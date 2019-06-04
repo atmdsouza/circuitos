@@ -280,24 +280,4 @@ class EndEndereco extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            "id" => "id",
-            "cep" => "cep",
-            "logradouro" => "logradouro",
-            "tipo_logradouro" => "tipo_logradouro",
-            "complemento" => "complemento",
-            "local" => "local",
-            "id_cidade" => "id_cidade",
-            "id_bairro" => "id_bairro"
-        ];
-    }
-
 }

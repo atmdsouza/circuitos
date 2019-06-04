@@ -164,20 +164,4 @@ class EndBairro extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id' => 'id',
-            'id_bairro' => 'id_bairro',
-            'bairro' => 'bairro',
-            'id_cidade' => 'id_cidade'
-        ];
-    }
-
 }

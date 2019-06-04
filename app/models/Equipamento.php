@@ -63,6 +63,18 @@ class Equipamento extends \Phalcon\Mvc\Model
     protected $ativo;
 
     /**
+     *
+     * @var integer
+     */
+    protected $excluido;
+
+    /**
+     *
+     * @var string
+     */
+    protected $data_update;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -280,6 +292,38 @@ class Equipamento extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return int
+     */
+    public function getExcluido()
+    {
+        return $this->excluido;
+    }
+
+    /**
+     * @param int $excluido
+     */
+    public function setExcluido(int $excluido)
+    {
+        $this->excluido = $excluido;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataUpdate()
+    {
+        return $this->data_update;
+    }
+
+    /**
+     * @param string $data_update
+     */
+    public function setDataUpdate(string $data_update)
+    {
+        $this->data_update = $data_update;
+    }
+
+    /**
      * Returns the value of Nome Modelo
      *
      * @return string
@@ -367,27 +411,6 @@ class Equipamento extends \Phalcon\Mvc\Model
 
         $resultado = $query->getQuery()->execute();
         return $resultado;
-    }
-
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id' => 'id',
-            'id_fabricante' => 'id_fabricante',
-            'id_modelo' => 'id_modelo',
-            'id_tipoequipamento' => 'id_tipoequipamento',
-            'nome' => 'nome',
-            'numserie' => 'numserie',
-            'numpatrimonio' => 'numpatrimonio',
-            'descricao' => 'descricao',
-            'ativo' => 'ativo'
-        ];
     }
 
 }

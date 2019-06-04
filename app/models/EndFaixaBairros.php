@@ -223,22 +223,4 @@ class EndFaixaBairros extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id' => 'id',
-            'cep_inicial' => 'cep_inicial',
-            'cep_final' => 'cep_final',
-            'id_bairro' => 'id_bairro',
-            'id_cidade' => 'id_cidade',
-            'uf' => 'uf'
-        ];
-    }
-
 }

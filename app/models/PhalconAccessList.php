@@ -158,20 +158,4 @@ class PhalconAccessList extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'access_name' => 'access_name',
-            'roles_name' => 'roles_name',
-            'resources_name' => 'resources_name',
-            'allowed' => 'allowed'
-        ];
-    }
-
 }

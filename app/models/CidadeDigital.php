@@ -30,13 +30,19 @@ class CidadeDigital extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $excluido;
+    protected $ativo;
 
     /**
      *
      * @var integer
      */
-    protected $ativo;
+    protected $excluido;
+
+    /**
+     *
+     * @var string
+     */
+    protected $data_update;
 
     /**
      * Method to set the value of field id
@@ -154,6 +160,24 @@ class CidadeDigital extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return string
+     */
+    public function getDataUpdate()
+    {
+        return $this->data_update;
+    }
+
+    /**
+     * @param string $data_update
+     * @return CidadeDigital
+     */
+    public function setDataUpdate($data_update)
+    {
+        $this->data_update = $data_update;
+        return $this;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -255,23 +279,6 @@ class CidadeDigital extends \Phalcon\Mvc\Model
         $query->groupBy("CidadeDigital.ativo");
         $resultado = $query->getQuery()->execute();
         return $resultado;
-    }
-
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id' => 'id',
-            'id_cidade' => 'id_cidade',
-            'descricao' => 'descricao',
-            'excluido' => 'excluido',
-            'ativo' => 'ativo'
-        ];
     }
 
 }

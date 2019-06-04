@@ -313,25 +313,4 @@ class PessoaJuridica extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id' => 'id',
-            'id_tipoesfera' => 'id_tipoesfera',
-            'id_setor' => 'id_setor',
-            'cnpj' => 'cnpj',
-            'razaosocial' => 'razaosocial',
-            'inscricaoestadual' => 'inscricaoestadual',
-            'inscricaomunicipal' => 'inscricaomunicipal',
-            'datafund' => 'datafund',
-            'sigla' => 'sigla'
-        ];
-    }
-
 }

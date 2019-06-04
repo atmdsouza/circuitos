@@ -445,29 +445,4 @@ class PessoaEndereco extends \Phalcon\Mvc\Model
         return $resultado;
     }
 
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id' => 'id',
-            'id_pessoa' => 'id_pessoa',
-            'id_tipoendereco' => 'id_tipoendereco',
-            'principal' => 'principal',
-            'cep' => 'cep',
-            'endereco' => 'endereco',
-            'numero' => 'numero',
-            'bairro' => 'bairro',
-            'complemento' => 'complemento',
-            'cidade' => 'cidade',
-            'estado' => 'estado',
-            'sigla_estado' => 'sigla_estado',
-            'ativo' => 'ativo'
-        ];
-    }
-
 }

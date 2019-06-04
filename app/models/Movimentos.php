@@ -60,6 +60,24 @@ class Movimentos extends \Phalcon\Mvc\Model
     protected $observacao;
 
     /**
+     *
+     * @var integer
+     */
+    protected $ativo;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $excluido;
+
+    /**
+     *
+     * @var string
+     */
+    protected $data_update;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -287,6 +305,54 @@ class Movimentos extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return int
+     */
+    public function getAtivo()
+    {
+        return $this->ativo;
+    }
+
+    /**
+     * @param int $ativo
+     */
+    public function setAtivo($ativo)
+    {
+        $this->ativo = $ativo;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExcluido()
+    {
+        return $this->excluido;
+    }
+
+    /**
+     * @param int $excluido
+     */
+    public function setExcluido($excluido)
+    {
+        $this->excluido = $excluido;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataUpdate()
+    {
+        return $this->data_update;
+    }
+
+    /**
+     * @param string $data_update
+     */
+    public function setDataUpdate($data_update)
+    {
+        $this->data_update = $data_update;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -328,27 +394,6 @@ class Movimentos extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
-    }
-
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id' => 'id',
-            'id_circuitos' => 'id_circuitos',
-            'id_tipomovimento' => 'id_tipomovimento',
-            'id_usuario' => 'id_usuario',
-            'data_movimento' => 'data_movimento',
-            'osocomon' => 'osocomon',
-            'valoranterior' => 'valoranterior',
-            'valoratualizado' => 'valoratualizado',
-            'observacao' => 'observacao'
-        ];
     }
 
 }
