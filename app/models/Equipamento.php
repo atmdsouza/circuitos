@@ -60,6 +60,12 @@ class Equipamento extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
+    protected $propriedade_prodepa;
+
+    /**
+     *
+     * @var integer
+     */
     protected $ativo;
 
     /**
@@ -332,6 +338,24 @@ class Equipamento extends \Phalcon\Mvc\Model
     {
         return $this->Modelo->modelo;
     }
+
+    /**
+     * @return int
+     */
+    public function getPropriedadeProdepa()
+    {
+        return $this->propriedade_prodepa;
+    }
+
+    /**
+     * @param int $propriedade_prodepa
+     */
+    public function setPropriedadeProdepa(int $propriedade_prodepa)
+    {
+        $this->propriedade_prodepa = $propriedade_prodepa;
+    }
+
+
 
     /**
      * Initialize method for model.

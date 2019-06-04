@@ -141,19 +141,13 @@
                     <li><?php echo $this->tag->linkTo(["index", "<i class='fi-air-play'></i> <span> Dashboard </span>"]) ?></li>
 
                     <?php
-                    if ($acl->isAllowed($role, 'cidade_digital', 'index') || $acl->isAllowed($role, 'cliente', 'index') || $acl->isAllowed($role, 'cliente_unidade', 'index') || $acl->isAllowed($role, 'fabricante', 'index') || $acl->isAllowed($role, 'modelo', 'index') || $acl->isAllowed($role, 'equipamento', 'index'))
+                    if ($acl->isAllowed($role, 'unidade_consumidora', 'index') || $acl->isAllowed($role, 'cliente', 'index') || $acl->isAllowed($role, 'cliente_unidade', 'index') || $acl->isAllowed($role, 'fabricante', 'index') || $acl->isAllowed($role, 'modelo', 'index') || $acl->isAllowed($role, 'equipamento', 'index'))
                     {
                         ?>
                         <li>
                             <a href="javascript: void(0);"><i class="fi-layers"></i> <span> Cadastros </span> <span class="menu-arrow"></span></a>
                             <ul class="nav-second-level" aria-expanded="false">
                                 <?php
-                                if ($acl->isAllowed($role, 'cidade_digital', 'index'))
-                                {
-                                    ?>
-                                    <li><?php echo $this->tag->linkTo(["cidade_digital", "Cidade Digital"]) ?></li>
-                                    <?php
-                                }
                                 if ($acl->isAllowed($role, 'cliente', 'index'))
                                 {
                                     ?>
@@ -184,9 +178,114 @@
                                     <li><?php echo $this->tag->linkTo(["equipamento", "Equipamentos"]) ?></li>
                                     <?php
                                 }
+                                if ($acl->isAllowed($role, 'unidade_consumidora', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["unidade_consumidora", "Unidades Consumidoras"]) ?></li>
+                                    <?php
+                                }
                                 ?>
                             </ul>
                         </li>
+                        <?php
+                    }
+                    ?>
+
+                    <?php
+                    if ($acl->isAllowed($role, 'cidade_digital', 'index') || $acl->isAllowed($role, 'conectividade', 'index') || $acl->isAllowed($role, 'torre', 'index') || $acl->isAllowed($role, 'terreno', 'index') || $acl->isAllowed($role, 'set_seguranca', 'index') || $acl->isAllowed($role, 'set_equipamento', 'index'))
+                    {
+                        ?>
+                        <li>
+                            <a href="javascript: void(0);"><i class="fi-layers"></i> <span> Cidade Digital </span> <span class="menu-arrow"></span></a>
+                            <ul class="nav-second-level" aria-expanded="false">
+                                <?php
+                                if ($acl->isAllowed($role, 'cidade_digital', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["cidade_digital", "Cidade Digital"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'conectividade', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["conectividade", "Conectividade"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'torre', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["torre", "Torres"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'terreno', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["terreno", "Terrenos"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'set_seguranca', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["set_seguranca", "Set de Segurança"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'set_equipamento', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["set_equipamento", "Set de Equipamentos"]) ?></li>
+                                    <?php
+                                }
+                                ?>
+                            </ul>
+                        </li>
+                        <?php
+                    }
+                    ?>
+
+                    <?php
+                    if ($acl->isAllowed($role, 'proposta_comercial', 'index') || $acl->isAllowed($role, 'proposta_comercial_servico', 'index') || $acl->isAllowed($role, 'proposta_comercial_servico_grupo', 'index') || $acl->isAllowed($role, 'proposta_comercial_servico_unidade', 'index'))
+                    {
+                        ?>
+                        <li>
+                            <a href="javascript: void(0);"><i class="fi-layers"></i> <span> Gestão Comercial </span> <span class="menu-arrow"></span></a>
+                            <ul class="nav-second-level" aria-expanded="false">
+                                <?php
+                                if ($acl->isAllowed($role, 'proposta_comercial', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["proposta_comercial", "Propostas Comerciais"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'proposta_comercial_servico', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["proposta_comercial_servico", "Serviços"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'proposta_comercial_servico_grupo', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["proposta_comercial_servico_grupo", "Grupo de Serviços"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'proposta_comercial_servico_unidade', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["proposta_comercial_servico_unidade", "Unidades de Serviços"]) ?></li>
+                                    <?php
+                                }
+                                ?>
+                            </ul>
+                        </li>
+                        <?php
+                    }
+                    ?>
+
+                    <?php
+                    if ($acl->isAllowed($role, 'contrato', 'index'))
+                    {
+                        ?>
+                        <li><?php echo $this->tag->linkTo(["contrato", "<i class='fi-link'></i> <span> Gestão de Contratos </span>"]) ?></li>
                         <?php
                     }
                     ?>
@@ -196,12 +295,20 @@
                     {
                         ?>
                         <li><?php echo $this->tag->linkTo(["circuitos", "<i class='fi-link'></i> <span> Circuitos Navega Pará </span>"]) ?></li>
-                    <?php }
+                        <?php
+                    }
+                    ?>
+
+                    <?php
                     if ($acl->isAllowed($role, 'relatorios_gestao', 'index'))
                     {
                         ?>
                         <li><?php echo $this->tag->linkTo(["relatorios_gestao", "<i class='fi-printer'></i> <span> Relatórios </span>"]) ?></li>
-                    <?php }
+                        <?php
+                    }
+                    ?>
+
+                    <?php
                     if ($acl->isAllowed($role, 'usuario', 'index'))
                     {
                         ?>
@@ -226,7 +333,11 @@
                                 <?php } ?>
                             </ul>
                         </li>
-                    <?php }
+                        <?php
+                    }
+                    ?>
+
+                    <?php
                     if ($acl->isAllowed($role, 'empresa', 'index') || $acl->isAllowed($role, 'lov', 'index'))
                     {
                         ?>
@@ -251,7 +362,9 @@
                                 <?php } ?>
                             </ul>
                         </li>
-                    <?php } ?>
+                        <?php
+                    }
+                    ?>
                 </ul>
 
             </div>

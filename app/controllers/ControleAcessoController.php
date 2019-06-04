@@ -222,23 +222,37 @@ class ControleAcessoController extends ControllerBase
         $manager = new TxManager();
         $transaction = $manager->get();
         $permissoes = array(
-            "session"           => ["login", "logout", "sair", "recuperar", "inativo"],
-            "usuario"           => ["gerarSenha", "resetarSenha", "alterarSenha", "primeiro", "redirecionaUsuario", "recuperarSenha", "trocar", "validarLogin", "formUsuario"],
-            "core"              => ["ativarPessoa", "inativarPessoa", "deletarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail", "upload"],
-            "error"             => ["show401", "show404"],
-            "index"             => ["index"],
-            "cidade_digital"    => ["formCidadeDigital"],
-            "circuitos"         => ["equipamentoSeriePatrimonio", "formCircuitos", "clienteAll", "getCidadeDigitalCircuito", "getClienteCircuito", "fabricanteAll", "cidadedigitalAll", "cidadedigitalConectividade", "equipamentoModelo", "equipamentoNumeroSerie", "modeloFabricante", "unidadeCliente", "validarEquipamentoCircuito", "visualizaCircuitos"],
-            "cliente"           => ["formCliente"],
-            "cliente_unidade"   => ["formClienteUnidade"],
-            "empresa"           => ["formEmpresa"],
-            "lov"               => ["formLov"],
-            "controle_acesso"   => ["buscarPermissoes"],
-            "equipamento"       => ["formEquipamento", "carregaModelos", "validaNumeroPatrimonio", "validaNumeroSerie"],
-            "fabricante"        => ["formFabricante"],
-            "modelo"            => ["formModelo"],
+            "session"                                       => ["login", "logout", "sair", "recuperar", "inativo"],
+            "usuario"                                       => ["gerarSenha", "resetarSenha", "alterarSenha", "primeiro", "redirecionaUsuario", "recuperarSenha", "trocar", "validarLogin", "formUsuario"],
+            "core"                                          => ["ativarPessoa", "inativarPessoa", "deletarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail", "upload"],
+            "error"                                         => ["show401", "show404"],
+            "index"                                         => ["index"],
+            "cidade_digital"                                => ["formCidadeDigital"],
+            "circuitos"                                     => ["equipamentoSeriePatrimonio", "formCircuitos", "clienteAll", "getCidadeDigitalCircuito", "getClienteCircuito", "fabricanteAll", "cidadedigitalAll", "cidadedigitalConectividade", "equipamentoModelo", "equipamentoNumeroSerie", "modeloFabricante", "unidadeCliente", "validarEquipamentoCircuito", "visualizaCircuitos"],
+            "cliente"                                       => ["formCliente"],
+            "cliente_unidade"                               => ["formClienteUnidade"],
+            "empresa"                                       => ["formEmpresa"],
+            "lov"                                           => ["formLov"],
+            "controle_acesso"                               => ["buscarPermissoes"],
+            "equipamento"                                   => ["formEquipamento", "carregaModelos", "validaNumeroPatrimonio", "validaNumeroSerie"],
+            "fabricante"                                    => ["formFabricante"],
+            "modelo"                                        => ["formModelo"],
+            "conectividade"                                 => [""],
+            "contrato"                                      => [""],
+            "estacao_telecon"                               => [""],
+            "proposta_comercial"                            => [""],
+            "proposta_comercial_servico"                    => [""],
+            "proposta_comercial_servico_grupo"              => [""],
+            "proposta_comercial_servico_unidade"            => [""],
+            "set_seguranca"                                 => [""],
+            "set_esquipamento"                              => [""],
+            "terreno"                                       => [""],
+            "torre"                                         => [""],
+            "unidade_consumidora"                           => [""],
         );
-        $modulos = ["session", "usuario", "core", "error", "index", "cidade_digital", "circuitos", "cliente", "cliente_unidade", "empresa", "lov", "controle_acesso", "equipamento", "fabricante", "modelo"];
+        $modulos = ["session", "usuario", "core", "error", "index", "cidade_digital", "circuitos", "cliente", "cliente_unidade", "empresa", "lov", "controle_acesso", "equipamento", "fabricante", "modelo",
+                    "conectividade", "contrato", "estacao_telecon", "proposta_comercial", "proposta_comercial_servico", "proposta_comercial_servico_grupo", "proposta_comercial_servico_unidade", "set_seguranca",
+                    "set_esquipamento", "terreno", "torre", "unidade_consumidora"];
         //Permissões Padrão
         foreach ($modulos as $modulo)
         {
