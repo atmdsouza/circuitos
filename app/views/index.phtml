@@ -196,7 +196,7 @@
                     {
                         ?>
                         <li>
-                            <a href="javascript: void(0);"><i class="fi-layers"></i> <span> Cidade Digital </span> <span class="menu-arrow"></span></a>
+                            <a href="javascript: void(0);"><i class="mdi mdi-city"></i> <span> Cidade Digital </span> <span class="menu-arrow"></span></a>
                             <ul class="nav-second-level" aria-expanded="false">
                                 <?php
                                 if ($acl->isAllowed($role, 'cidade_digital', 'index'))
@@ -209,6 +209,12 @@
                                 {
                                     ?>
                                     <li><?php echo $this->tag->linkTo(["conectividade", "Conectividade"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'estacao_telecon', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["estacao_telecon", "Estação Telecon"]) ?></li>
                                     <?php
                                 }
                                 if ($acl->isAllowed($role, 'torre', 'index'))
@@ -247,7 +253,7 @@
                     {
                         ?>
                         <li>
-                            <a href="javascript: void(0);"><i class="fi-layers"></i> <span> Gestão Comercial </span> <span class="menu-arrow"></span></a>
+                            <a href="javascript: void(0);"><i class="mdi mdi-sale"></i> <span> Gestão Comercial </span> <span class="menu-arrow"></span></a>
                             <ul class="nav-second-level" aria-expanded="false">
                                 <?php
                                 if ($acl->isAllowed($role, 'proposta_comercial', 'index'))
@@ -285,7 +291,7 @@
                     if ($acl->isAllowed($role, 'contrato', 'index'))
                     {
                         ?>
-                        <li><?php echo $this->tag->linkTo(["contrato", "<i class='fi-link'></i> <span> Gestão de Contratos </span>"]) ?></li>
+                        <li><?php echo $this->tag->linkTo(["contrato", "<i class='mdi mdi-book-plus'></i> <span> Gestão de Contratos </span>"]) ?></li>
                         <?php
                     }
                     ?>
