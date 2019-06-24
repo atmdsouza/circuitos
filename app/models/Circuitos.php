@@ -1440,42 +1440,4 @@ class Circuitos extends \Phalcon\Mvc\Model
         return $resultado;
     }
 
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id' => 'id',
-            'id_cliente' => 'id_cliente',
-            'id_cliente_unidade' => 'id_cliente_unidade',
-            'id_equipamento' => 'id_equipamento',
-            'id_contrato' => 'id_contrato',
-            'id_status' => 'id_status',
-            'id_cluster' => 'id_cluster',
-            'id_tipoacesso' => 'id_tipoacesso',
-            'id_tipolink' => 'id_tipolink',
-            'id_cidadedigital' => 'id_cidadedigital',
-            'id_conectividade' => 'id_conectividade',
-            'id_funcao' => 'id_funcao',
-            'id_banda' => 'id_banda',
-            'designacao' => 'designacao',
-            'designacao_anterior' => 'designacao_anterior',
-            'uf' => 'uf',
-            'cidade' => 'cidade',
-            'ssid' => 'ssid',
-            'chamado' => 'chamado',
-            'ip_redelocal' => 'ip_redelocal',
-            'ip_gerencia' => 'ip_gerencia',
-            'tag' => 'tag',
-            'observacao' => 'observacao',
-            'data_ativacao' => 'data_ativacao',
-            'data_atualizacao' => 'data_atualizacao',
-            'excluido' => 'excluido'
-        ];
-    }
-
 }

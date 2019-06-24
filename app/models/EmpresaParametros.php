@@ -279,24 +279,4 @@ class EmpresaParametros extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id' => 'id',
-            'id_empresa' => 'id_empresa',
-            'mail_host' => 'mail_host',
-            'mail_smtp' => 'mail_smtp',
-            'mail_user' => 'mail_user',
-            'mail_passwrd' => 'mail_passwrd',
-            'mail_port' => 'mail_port',
-            'mail_smtpssl' => 'mail_smtpssl'
-        ];
-    }
-
 }

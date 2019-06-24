@@ -330,25 +330,4 @@ class Movimentos extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id' => 'id',
-            'id_circuitos' => 'id_circuitos',
-            'id_tipomovimento' => 'id_tipomovimento',
-            'id_usuario' => 'id_usuario',
-            'data_movimento' => 'data_movimento',
-            'osocomon' => 'osocomon',
-            'valoranterior' => 'valoranterior',
-            'valoratualizado' => 'valoratualizado',
-            'observacao' => 'observacao'
-        ];
-    }
-
 }

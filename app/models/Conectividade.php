@@ -282,23 +282,4 @@ class Conectividade extends \Phalcon\Mvc\Model
         return $resultado;
     }
 
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id' => 'id',
-            'id_cidade_digital' => 'id_cidade_digital',
-            'id_tipo' => 'id_tipo',
-            'descricao' => 'descricao',
-            'endereco' => 'endereco',
-            'ativo' => 'ativo',
-            'excluido' => 'excluido'
-        ];
-    }
-
 }

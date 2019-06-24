@@ -214,6 +214,16 @@ class Usuario extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field Nome Pessoa
+     *
+     * @return string
+     */
+    public function getNomePessoaUsuario()
+    {
+        return $this->Pessoa->nome;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -285,25 +295,6 @@ class Usuario extends \Phalcon\Mvc\Model
 
         $resultado = $query->getQuery()->execute();
         return $resultado;
-    }
-
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id' => 'id',
-            'id_pessoa' => 'id_pessoa',
-            'roles_name' => 'roles_name',
-            'login' => 'login',
-            'senha' => 'senha',
-            'data_ultimoacesso' => 'data_ultimoacesso',
-            'primeiroacesso' => 'primeiroacesso'
-        ];
     }
 
 }
