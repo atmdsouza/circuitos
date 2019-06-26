@@ -7,8 +7,9 @@
  */
 
 //Constantes de Caminho para Arquivos
-define("CAMINHO_PADRAO_RELATORIOS", "/circuitos/public/relatorios/");
-//define("CAMINHO_PADRAO_RELATORIOS", "/public/relatorios/");
+//define("CAMINHO_PADRAO_RELATORIOS", "/circuitos/public/relatorios/");
+define("CAMINHO_PADRAO_RELATORIOS", "/public/relatorios/");
 
 //Versão do sistema
-define("VERSAO", "1.04.08");//Versão em 16/04/2019
+define("VERSAO", "1.04.09");//Versão em 17/06/2019
+//Hotfix de reunião em 10/06/2019

@@ -1,3 +1,38 @@
+/**
+ * Trabalhando com o ajustse da Action Correta em chamadas Ajax
+ * @url string URL que origina a chamada e será modificada
+ * @action string Action que será usada na chamada, semrpe deve estar formatada como 'controller/action'
+ * */
+function actionCorreta(url, action) {
+    var novaAction;
+    var urls = url.split("/");
+    //Pasta raiz sendo "/circuitos"
+    // novaAction = urls[0] + "//" + urls[2] + "/" + urls[3] + "/" + action;
+    //Pasta raiz sendo "/"
+    novaAction = urls[0] + "//" + urls[2] + "/" + action;
+    return novaAction;
+}
+
+//Processo para fazer funcionar o CSRF_Token
+function getCookie(c_name) {
+    if (document.cookie.length > 0) {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if (c_start != -1) {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if (c_end == -1) c_end = document.cookie.length;
+            return unescape(document.cookie.substring(c_start, c_end));
+        }
+    }
+    return "";
+}
+$(function () {
+    $.ajaxSetup({
+        headers: { "X-CSRFToken": getCookie("csrftoken") }
+    });
+});
+//Fim
+
 // Select2
 $(".select2").select2({
     language: "pt-BR"
@@ -99,41 +134,6 @@ $.extend( $.fn.dataTable.defaults, {
 $('.modal').on('hidden.bs.modal', function(){
     $(this).find('form')[0].reset();
 });
-
-//Processo para fazer funcionar o CSRF_Token
-function getCookie(c_name) {
-    if (document.cookie.length > 0) {
-        c_start = document.cookie.indexOf(c_name + "=");
-        if (c_start != -1) {
-            c_start = c_start + c_name.length + 1;
-            c_end = document.cookie.indexOf(";", c_start);
-            if (c_end == -1) c_end = document.cookie.length;
-            return unescape(document.cookie.substring(c_start, c_end));
-        }
-    }
-    return "";
-}
-$(function () {
-    $.ajaxSetup({
-        headers: { "X-CSRFToken": getCookie("csrftoken") }
-    });
-});
-//Fim
-
-/**
- * Trabalhando com o ajustse da Action Correta em chamadas Ajax
- * @url string URL que origina a chamada e será modificada
- * @action string Action que será usada na chamada, semrpe deve estar formatada como 'controller/action'
- * */
-function actionCorreta(url, action) {
-    var novaAction;
-    var urls = url.split("/");
-    //Pasta raiz sendo "/circuitos"
-    novaAction = urls[0] + "//" + urls[2] + "/" + urls[3] + "/" + action;
-    //Pasta raiz sendo "/"
-    // novaAction = urls[0] + "//" + urls[2] + "/" + action;
-    return novaAction;
-}
 
 /**
  * Trabalhando com Datas e Horas

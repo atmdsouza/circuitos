@@ -214,6 +214,16 @@ class Usuario extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field Nome Pessoa
+     *
+     * @return string
+     */
+    public function getNomePessoaUsuario()
+    {
+        return $this->Pessoa->nome;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()

@@ -9,9 +9,9 @@ use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Phalcon\Http\Response as Response;
 
-use Circuitos\Controllers\ControllerBase;
 use Circuitos\Controllers\CoreController as Core;
-use Circuitos\Models\Usuario as Usuario;
+use Circuitos\Models\Usuario;
+use Circuitos\Models\Operations\UsuarioOP;
 use Circuitos\Models\PhalconRoles;
 use Circuitos\Models\Pessoa;
 use Circuitos\Models\PessoaEmail;
@@ -241,17 +241,17 @@ class UsuarioController extends ControllerBase
     }
 
     /**
-    * Função para gerar senhas aleatórias
-    *
-    * @author    Thiago Belem <contato@thiagobelem.net>
-    *
-    * @param integer $tamanho Tamanho da senha a ser gerada
-    * @param boolean $maiusculas Se terá letras maiúsculas
-    * @param boolean $numeros Se terá números
-    * @param boolean $simbolos Se terá símbolos
-    *
-    * @return string A senha gerada
-    */
+     * Função para gerar senhas aleatórias
+     *
+     * @author    Thiago Belem <contato@thiagobelem.net>
+     *
+     * @param integer $tamanho Tamanho da senha a ser gerada
+     * @param boolean $maiusculas Se terá letras maiúsculas
+     * @param boolean $numeros Se terá números
+     * @param boolean $simbolos Se terá símbolos
+     *
+     * @return string A senha gerada
+     */
     function gerarSenhaAction($tamanho = 8, $maiusculas = true, $numeros = true, $simbolos = false)
     {
         $lmin = 'abcdefghijklmnopqrstuvwxyz';
@@ -426,8 +426,10 @@ class UsuarioController extends ControllerBase
             }
             //Commita a transação
             $transaction->commit();
+            return true;
         } catch (TxFailed $e) {
             throw new Exception('Erro ao tentar alterar a senha!');
+            return false;
         }
 
     }
@@ -437,9 +439,12 @@ class UsuarioController extends ControllerBase
         $this->view->setRenderLevel(View::LEVEL_ACTION_VIEW);
         //Pegar o login na session auth;
         $auth = new Autentica();
+        $manager = new TxManager();
+        $transaction = $manager->get();
         $identity = $auth->getIdentity();
         $user = Usuario::findFirst("id={$identity["id"]}");
-        $this->view->nome = $user->Pessoa->nome;
+        $pessoa = Pessoa::findFirst("id={$user->getIdPessoa()}");
+        $this->view->nome = $user->getNomePessoaUsuario();
         if ($this->request->isPost()) {
             if ($this->security->checkToken()) {
                 if (!$this->request->getPost('password') && !$this->request->getPost('password2')){
@@ -462,10 +467,28 @@ class UsuarioController extends ControllerBase
                     ]);
                 } else {
                     if($this->request->getPost('password') === $this->request->getPost('password2')) {
-                        $this->alterarSenhaAction($identity["id"], $this->request->getPost('password'));
-                        $user->setPrimeiroacesso(1);
-                        $user->save();
-                        return $this->response->redirect("index/index");
+                        try {
+                            $pessoa->setTransaction($transaction);
+                            $pessoa->setUpdateAt(date("Y-m-d H:i:s"));
+                            if ($pessoa->save() == false) {
+                                $transaction->rollback("Não foi possível salvar a pessoa!");
+                            }
+                            $user->setTransaction($transaction);
+                            $user->setSenha($this->security->hash($this->request->getPost('password')));
+                            $user->setPrimeiroacesso(1);
+                            if ($user->save() == false) {
+                                $transaction->rollback("Não foi possível salvar o usuário!");
+                            }
+                            //Commita a transação
+                            $transaction->commit();
+                            return $this->response->redirect("index/index");
+                        } catch (TxFailed $e) {
+                            $this->flash->error("Erro ao tentar trocar a senha! Por favor, tente novamente!");
+                            $this->dispatcher->forward([
+                                "controller" => "usuario",
+                                "action" => "primeiro"
+                            ]);
+                        }
                     } else {
                         $this->flash->error("As senhas não conferem! Por favor, tente novamente!");
                         $this->dispatcher->forward([
@@ -489,11 +512,11 @@ class UsuarioController extends ControllerBase
         } else {
             switch ($usuario->getPrimeiroacesso()) {
                 case '1':
-                $redirect = "index/index";
-                break;
+                    $redirect = "index/index";
+                    break;
                 case '0':
-                $redirect = "usuario/primeiro";
-                break;
+                    $redirect = "usuario/primeiro";
+                    break;
             }
         }
         return $redirect;

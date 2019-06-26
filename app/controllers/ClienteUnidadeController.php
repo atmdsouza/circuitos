@@ -328,6 +328,11 @@ class ClienteUnidadeController extends ControllerBase
                         }
                     }
                 }
+                $cliente->setTransaction($transaction);
+                $cliente->setIdCliente($params["cliente"]);
+                if ($cliente->save() == false) {
+                    $transaction->rollback("Não foi possível salvar a unidade!");
+                }
                 //Commita a transação
                 $transaction->commit();
                 $response->setContent(json_encode(array(
