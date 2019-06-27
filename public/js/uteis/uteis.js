@@ -7,9 +7,9 @@ function actionCorreta(url, action) {
     var novaAction;
     var urls = url.split("/");
     //Pasta raiz sendo "/circuitos"
-    // novaAction = urls[0] + "//" + urls[2] + "/" + urls[3] + "/" + action;
+    novaAction = urls[0] + "//" + urls[2] + "/" + urls[3] + "/" + action;
     //Pasta raiz sendo "/"
-    novaAction = urls[0] + "//" + urls[2] + "/" + action;
+    // novaAction = urls[0] + "//" + urls[2] + "/" + action;
     return novaAction;
 }
 
@@ -87,6 +87,7 @@ $(".input-daterange-datepicker").on('cancel.daterangepicker', function(ev, picke
 
 //Configuração padrão de datatables
 $.extend( $.fn.dataTable.defaults, {
+    fixedHeader: true,
     language: {
         sEmptyTable: "Nenhum registro encontrado",
         sInfo: "Mostrando de _START_ até _END_ de _TOTAL_ registros",

@@ -5,10 +5,9 @@ namespace Circuitos\Models\Operations;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 
-use Circuitos\Models\Pessoa;
-use Circuitos\Models\Usuario;
+use Circuitos\Models\Conectividade;
 
-class UsuarioOP
+class ConectividadeOP extends \Phalcon\Mvc\Model
 {
 
     public function __construct ()
@@ -16,11 +15,16 @@ class UsuarioOP
         parent::__construct ();
     }
 
-    public function cadastrar(Usuario $objUsuario)
+    public function listar(Conectividade $objConectividade)
+    {
+
+    }
+
+    public function cadastrar(Conectividade $objConectividade)
     {
         $manager = new TxManager();
         $transaction = $manager->get();
-        $usuario = new Usuario();
+        $usuario = new Conectividade();
 
         $transaction->commit();
         $transaction->roolback('mensagem');
@@ -33,27 +37,27 @@ class UsuarioOP
 
     }
 
-    public function alterar(Usuario $objUsuario)
+    public function alterar(Conectividade $objConectividade)
     {
 
     }
 
-    public function consultar(Usuario $objUsuario)
+    public function consultar(Conectividade $objConectividade)
     {
 
     }
 
-    public function ativar(Usuario $objUsuario)
+    public function ativar(Conectividade $objConectividade)
     {
 
     }
 
-    public function inativar(Usuario $objUsuario)
+    public function inativar(Conectividade $objConectividade)
     {
 
     }
 
-    public function excluir(Usuario $objUsuario)
+    public function excluir(Conectividade $objConectividade)
     {
 
     }

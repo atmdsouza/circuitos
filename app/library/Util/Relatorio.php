@@ -9,9 +9,8 @@ use Circuitos\Models\Empresa;
 use Spipu\Html2Pdf\Html2Pdf;
 
 require APP_PATH . '/library/HTML2PDF/autoload.php';
-require APP_PATH . '/config/constantes.php';
 
-class Relatorio
+class Relatorio extends Infra
 {
     /**
      * Função para gerar o relatório com os dados do circuito
@@ -20,6 +19,7 @@ class Relatorio
      */
     public function gerarPDFCircuito($id_circuito) {
         $util = new Util();
+        $infra = new Infra();
         //Coleta de Dados
         $empresa = Empresa::findFirst();
         $circuito = Circuitos::findFirst("id={$id_circuito}");
@@ -286,7 +286,7 @@ class Relatorio
             $html2pdf->pdf->SetDisplayMode('fullpage');
             $html2pdf->writeHTML($corpo_html);
             $nome_arquivo = "Circuito_" . date("HisYmd") . ".pdf";
-            $nome_caminho = CAMINHO_PADRAO_RELATORIOS . $nome_arquivo;
+            $nome_caminho = $infra->getCaminhoRelatorios() . $nome_arquivo;
             $html2pdf->Output($nome_caminho, 'F');
             return $nome_caminho;
         } catch (HTML2PDF_exception $e) {
@@ -305,6 +305,7 @@ class Relatorio
      */
     public function gerarPDFRelatório($dados_colunas, $dados_relatorio, $orientacao) {
         $util = new Util();
+        $infra = new Infra();
         //Coleta de Dados
         $empresa = Empresa::findFirst();
         $hoje = date('d/m/Y H:i:s');
@@ -446,7 +447,7 @@ class Relatorio
             $html2pdf->pdf->SetDisplayMode('fullpage');
             $html2pdf->writeHTML($corpo_html);
             $nome_arquivo = "RelatorioCircuito_" . date("HisYmd") . ".pdf";
-            $nome_caminho = CAMINHO_PADRAO_RELATORIOS . $nome_arquivo;
+            $nome_caminho = $infra->getCaminhoRelatorios() . $nome_arquivo;
             $html2pdf->Output($nome_caminho, 'F');
             return $nome_caminho;
         } catch (HTML2PDF_exception $e) {

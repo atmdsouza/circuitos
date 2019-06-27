@@ -5,10 +5,9 @@ namespace Circuitos\Models\Operations;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 
-use Circuitos\Models\Pessoa;
-use Circuitos\Models\Usuario;
+use Circuitos\Models\CidadeDigital;
 
-class UsuarioOP
+class CidadeDigitalOP extends \Phalcon\Mvc\Model
 {
 
     public function __construct ()
@@ -16,11 +15,16 @@ class UsuarioOP
         parent::__construct ();
     }
 
-    public function cadastrar(Usuario $objUsuario)
+    public function listar(CidadeDigital $objCidadeDigital)
+    {
+
+    }
+
+    public function cadastrar(CidadeDigital $objCidadeDigital)
     {
         $manager = new TxManager();
         $transaction = $manager->get();
-        $usuario = new Usuario();
+        $usuario = new CidadeDigital();
 
         $transaction->commit();
         $transaction->roolback('mensagem');
@@ -33,27 +37,27 @@ class UsuarioOP
 
     }
 
-    public function alterar(Usuario $objUsuario)
+    public function alterar(CidadeDigital $objCidadeDigital)
     {
 
     }
 
-    public function consultar(Usuario $objUsuario)
+    public function consultar(CidadeDigital $objCidadeDigital)
     {
 
     }
 
-    public function ativar(Usuario $objUsuario)
+    public function ativar(CidadeDigital $objCidadeDigital)
     {
 
     }
 
-    public function inativar(Usuario $objUsuario)
+    public function inativar(CidadeDigital $objCidadeDigital)
     {
 
     }
 
-    public function excluir(Usuario $objUsuario)
+    public function excluir(CidadeDigital $objCidadeDigital)
     {
 
     }
