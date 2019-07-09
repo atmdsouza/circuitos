@@ -123,7 +123,7 @@ $.extend( $.fn.dataTable.defaults, {
     select: {
         style: 'multi'
     },
-    responsive: false,
+    responsive: true,
     search: {
         caseInsensitive: true
     },

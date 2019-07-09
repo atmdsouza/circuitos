@@ -1,5 +1,7 @@
 //Inicializar datatable
-$("#tb_conectividade").DataTable();
+$("#tb_conectividade").DataTable({
+    select: false
+});
 
 //Limpar Linhas da Tabela
 (function ($) {
@@ -45,24 +47,24 @@ $("#add_conectividade").on("click", function(){
 
     // if ($.inArray(conectividade, valCID) == -1) {
     //     valCID.push(conectividade);
-        if (id_tipo && conectividade) {
-            var linhas = null;
-            linhas += "<tr class='tr_remove'>";
-            linhas += "<td>"+ id_tipo_desc +"<input name='tipo_conectividade[]' type='hidden' value='"+ id_tipo +"' /></td>";
-            linhas += "<td>"+ conectividade +"<input name='conectividade[]' type='hidden' value='"+ conectividade +"' /></td>";
-            linhas += "<td>"+ endereco +"<input name='endereco[]' type='hidden' value='"+ endereco +"' /></td>";
-            linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
-            linhas += "</tr>";
-            $("#tb_conectividade").append(linhas);
-            $('#tb_conectividade').show();
-            limpaConectividade();
-        } else {
-            swal({
-                title: "Conectividade",
-                text: "Você precisa preencher corretamente os campos obrigatórios!",
-                type: "warning"
-            });
-        }
+    if (id_tipo && conectividade) {
+        var linhas = null;
+        linhas += "<tr class='tr_remove'>";
+        linhas += "<td>"+ id_tipo_desc +"<input name='tipo_conectividade[]' type='hidden' value='"+ id_tipo +"' /></td>";
+        linhas += "<td>"+ conectividade +"<input name='conectividade[]' type='hidden' value='"+ conectividade +"' /></td>";
+        linhas += "<td>"+ endereco +"<input name='endereco[]' type='hidden' value='"+ endereco +"' /></td>";
+        linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
+        linhas += "</tr>";
+        $("#tb_conectividade").append(linhas);
+        $('#tb_conectividade').show();
+        limpaConectividade();
+    } else {
+        swal({
+            title: "Conectividade",
+            text: "Você precisa preencher corretamente os campos obrigatórios!",
+            type: "warning"
+        });
+    }
     // } else {
     //     swal({
     //         title: "Conectividade",

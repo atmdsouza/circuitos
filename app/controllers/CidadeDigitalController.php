@@ -13,7 +13,6 @@ use Circuitos\Models\EndCidade;
 use Circuitos\Models\Lov;
 
 use Auth\Autentica;
-use Util\Util;
 use Util\TokenManager;
 
 class CidadeDigitalController extends ControllerBase

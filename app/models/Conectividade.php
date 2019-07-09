@@ -304,4 +304,27 @@ class Conectividade extends \Phalcon\Mvc\Model
         return $resultado;
     }
 
+    /**
+     * Consulta completa de Conectividades, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return Conectividades|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarConectividade($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("Conectividade" => "Circuitos\Models\Conectividade"));
+        $query->columns("Conectividade.*");
+        $query->leftJoin("Circuitos\Models\Lov", "Lov.id = Conectividade.id_tipo", "Lov");
+        $query->leftJoin("Circuitos\Models\CidadeDigital", "CidadeDigital.id = Conectividade.id_cidade_digital", "CidadeDigital");
+        $query->where("Conectividade.excluido = 0 AND (CONVERT(Conectividade.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Conectividade.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(CidadeDigital.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov.descricao USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("Conectividade.id");
+        $query->orderBy("Conectividade.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
 }

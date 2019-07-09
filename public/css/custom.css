@@ -1,55 +1,31 @@
-.error {
-    color:red
-}
+.error {color:red}
 
-.modal-xl {
-    max-width: 70% !important;
-}
+.modal-xl {max-width: 80% !important;}
 
-.required {
-    text-align: center;
-    color: red;
-    font-weight: bold;
-    font-size: 16px;
-}
+.modal-sg {max-width: 50% !important;}
 
-.texto_rodape {
-    float: left;
-}
+.td_acoes {width: 20%; text-align: center;}
 
-.botoes_rodape {
-    text-align: right;
-}
+.required {text-align: center;color: red;font-weight: bold;font-size: 16px;}
 
-.bt_inserir {
-    margin-top: 30px;
-}
+.texto_rodape {float: left;}
 
-.bt_menu_tabela {
-    margin-top: 30px;
-}
+.botoes_rodape {text-align: right;}
 
-.posicao_unitaria{
-    margin-left: 50px;
-}
-.title{
-    text-align: center;
-}
+.btn_novo_item_modal{margin: 2px 0px 15px 0px;}
 
-#dropzone{
-    width: 100%;
-    height: 100px;
-    border: 2px solid green;
-    text-align: center;
-    line-height: 50px;
-    margin-bottom: 20px;
-}
+.bt_inserir {margin-top: 30px;}
 
-.tdth_class {
-    width: 30%;
-}
+.bt_menu_tabela {margin-top: 30px;}
 
-.botoes_forms_alinhamento
-{
-    margin-top: 3px;
-}
+.posicao_unitaria{margin-left: 50px;}
+
+.title{text-align: center;}
+
+#dropzone{width: 100%;height: 100px;border: 2px solid green;text-align: center;line-height: 50px;margin-bottom: 20px;}
+
+.tdth_class {width: 30%;}
+
+.botoes_forms_alinhamento {margin-top: 3px;}
+
+.botoes_acao{margin-left: 3px;margin-right: 3px;}

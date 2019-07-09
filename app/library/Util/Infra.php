@@ -15,6 +15,16 @@ class Infra
 
     }
 
+    public function getLimitePaginacao()
+    {
+        return 100;
+    }
+
+    public function getPaginaInicial()
+    {
+        return 1;
+    }
+
     public function getDiretorioGlobalImagens()
     {
         return DIR_STATICS . 'public/images';
@@ -27,7 +37,7 @@ class Infra
 
     public function getVersao()
     {
-        return '1.04.09';
+        return '2.00.00';
     }
 
     public function getCaminhoRelatorios()

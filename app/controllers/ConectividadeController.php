@@ -2,7 +2,18 @@
 
 namespace Circuitos\Controllers;
 
+use Phalcon\Paginator\Adapter\Model as Paginator;
+use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
+use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
+use Phalcon\Http\Response as Response;
+
+use Circuitos\Models\Conectividade;
+use Circuitos\Models\CidadeDigital;
+use Circuitos\Models\EndCidade;
+use Circuitos\Models\Lov;
+
 use Auth\Autentica;
+use Util\Infra;
 use Util\TokenManager;
 
 class ConectividadeController extends ControllerBase
@@ -32,7 +43,20 @@ class ConectividadeController extends ControllerBase
 
     public function indexAction()
     {
-
+        $infra = new Infra();
+        $dados = filter_input_array(INPUT_POST);
+        $conectividade = Conectividade::pesquisarConectividade($dados["pesquisa"]);
+        $tipocd = Lov::find(array(
+            "tipo=18",
+            "order" => "descricao"
+        ));
+        $paginator = new Paginator([
+            'data' => $conectividade,
+            'limit'=> $infra->getLimitePaginacao(),
+            'page' => $infra->getPaginaInicial()
+        ]);
+        $this->view->page = $paginator->getPaginate();
+        $this->view->tipocd = $tipocd;
     }
 
 }
