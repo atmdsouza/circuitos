@@ -5,18 +5,16 @@ var URLImagensSistema = "public/images";
 //Variáveis Globais
 var mudou = false;
 
-//Inicializar datatable
-$("#tb_conectividade").DataTable({
-    select: false,
-    language: {
-        select: false
-    }
-});
-
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos)
 function inicializar()
 {
     'use strict';
+    $("#datatable_listar").DataTable({
+        select: false,
+        language: {
+            select: false
+        }
+    });
     autocompletarCidadeDigital();
     autocompletarTipoCidadeDigital();
 }
@@ -71,13 +69,39 @@ function criar()
 function editar(id)
 {
     'use strict';
-    $("#formCadastro input").removeAttr('readonly', 'readonly');
-    $("#formCadastro select").removeAttr('readonly', 'readonly');
-    $("#formCadastro textarea").removeAttr('readonly', 'readonly');
-    $("#salvarCadastro").val('editar');
-    $("#salvarCadastro").show();
-    $("#modalCadastro").modal();
-
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'visualizarConectividade', id: id},
+        complete: function () {
+            $("#formCadastro input").removeAttr('readonly', 'readonly');
+            $("#formCadastro select").removeAttr('readonly', 'readonly');
+            $("#formCadastro textarea").removeAttr('readonly', 'readonly');
+            $("#salvarCadastro").val('editar');
+            $("#salvarCadastro").show();
+            $("#modalCadastro").modal();
+        },
+        error: function (data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            $('#id').val(data.dados.id);
+            $('#lid_cidade_digital').val(data.dados.desc_cidade_digital);
+            $('#id_cidade_digital').val(data.dados.id_cidade_digital);
+            $('#lid_tipo').val(data.dados.desc_tipo);
+            $('#id_tipo').val(data.dados.id_tipo);
+            $('#descricao').val(data.dados.descricao);
+            $('#endereco').val(data.dados.endereco);
+        }
+    });
 }
 
 function ativar(id, descr)
@@ -254,12 +278,38 @@ function excluir(id, descr)
 function visualizar(id)
 {
     'use strict';
-    $("#formCadastro input").attr('readonly', 'readonly');
-    $("#formCadastro select").attr('readonly', 'readonly');
-    $("#formCadastro textarea").attr('readonly', 'readonly');
-    $("#salvarCadastro").hide();
-    $("#modalCadastro").modal();
-
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'visualizarConectividade', id: id},
+        complete: function () {
+            $("#formCadastro input").attr('readonly', 'readonly');
+            $("#formCadastro select").attr('readonly', 'readonly');
+            $("#formCadastro textarea").attr('readonly', 'readonly');
+            $("#salvarCadastro").hide();
+            $("#modalCadastro").modal();
+        },
+        error: function (data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            $('#id').val(data.dados.id);
+            $('#lid_cidade_digital').val(data.dados.desc_cidade_digital);
+            $('#id_cidade_digital').val(data.dados.id_cidade_digital);
+            $('#lid_tipo').val(data.dados.desc_tipo);
+            $('#id_tipo').val(data.dados.id_tipo);
+            $('#descricao').val(data.dados.descricao);
+            $('#endereco').val(data.dados.endereco);
+        }
+    });
 }
 
 function limpar()
@@ -373,7 +423,6 @@ function salvar()
 {
     'use strict';
     var acao = $('#salvarCadastro').val();
-    //Validação de formulário
     $("#formCadastro").validate({
         rules : {
             lid_cidade_digital:{
@@ -422,8 +471,8 @@ function salvar()
                 success: function (data) {
                     if (data.operacao){
                         swal({
-                            title: "Cadastro de Conectividade",
-                            text: "Cadastro da conectividade concluído!",
+                            title: data.titulo,
+                            text: data.mensagem,
                             type: "success",
                             showCancelButton: false,
                             confirmButtonColor: "#3085d6",
@@ -434,7 +483,7 @@ function salvar()
                         });
                     } else {
                         swal({
-                            title: "Cadastro de Conectividade",
+                            title: data.titulo,
                             text: data.mensagem,
                             type: "error"
                         });

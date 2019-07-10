@@ -461,6 +461,10 @@ class CoreController extends ControllerBase
                 $objeto = new ConectividadeOP();
                 return $objeto->tiposCidadesDigitaisAtivas();
                 break;
+            case 'visualizarConectividade':
+                $objeto = new ConectividadeOP();
+                return $objeto->visualizarConectividade($dados['id']);
+                break;
         }
     }
 

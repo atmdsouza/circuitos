@@ -43,7 +43,24 @@ class ConectividadeOP extends Conectividade
 
     public function alterar(Conectividade $objArray)
     {
-
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        try {
+            $objeto = Conectividade::findFirst($objArray->getId());
+            $objeto->setIdCidadeDigital($objArray->getIdCidadeDigital());
+            $objeto->setIdTipo($objArray->getIdTipo());
+            $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
+            $objeto->setEndereco(mb_strtoupper($objArray->getEndereco(), $this->encode));
+            $objeto->setDataUpdate(date('Y-m-d H:i:s'));
+            if ($objeto->save() == false) {
+                $transaction->rollback("Não foi possível alterar a conectividade!");
+            }
+            $transaction->commit();
+            return $objeto;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
     }
 
     public function ativar(Conectividade $objArray)
@@ -103,32 +120,41 @@ class ConectividadeOP extends Conectividade
         }
     }
 
-    public function consultar(Conectividade $objArray)
-    {
-
-    }
-
     public function cidadesDigitaisAtivas()
     {
-        //Desabilita o layout para o ajax
         $response = new Response();
         $cidadedigital = CidadeDigital::find("excluido=0 AND ativo=1");
-        $response->setContent(json_encode(array(
-            "operacao" => True,
-            "dados" => $cidadedigital
-        )));
+        $response->setContent(json_encode(array("operacao" => True,"dados" => $cidadedigital)));
         return $response;
     }
 
     public function tiposCidadesDigitaisAtivas()
     {
-        //Desabilita o layout para o ajax
         $response = new Response();
         $tipo = Lov::find("tipo=18 AND excluido=0 AND ativo=1");
-        $response->setContent(json_encode(array(
-            "operacao" => True,
-            "dados" => $tipo
-        )));
+        $response->setContent(json_encode(array("operacao" => True,"dados" => $tipo)));
         return $response;
+    }
+
+    public function visualizarConectividade($id)
+    {
+        try {
+            $objeto = Conectividade::findFirst("id={$id}");
+            $objetoArray = array(
+                'id' => $objeto->getId(),
+                'id_cidade_digital' => $objeto->getIdCidadeDigital(),
+                'desc_cidade_digital' => $objeto->getNomeCidadeDigital(),
+                'id_tipo' => $objeto->getIdTipo(),
+                'desc_tipo' => $objeto->getTipoConectividade(),
+                'descricao' => $objeto->getDescricao(),
+                'endereco' => $objeto->getEndereco()
+            );
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoArray)));
+            return $response;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
     }
 }
