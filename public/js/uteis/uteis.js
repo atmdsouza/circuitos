@@ -131,10 +131,13 @@ $.extend( $.fn.dataTable.defaults, {
     orderMulti: true,
     order: [[ 0, "desc" ]]
 });
+
 //Limpar modal bootstrap
-$('.modal').on('hidden.bs.modal', function(){
-    $(this).find('form')[0].reset();
-});
+function limparModalBootstrap(modal)
+{
+    'use strict';
+    $('#'+modal).find('form')[0].reset();
+}
 
 /**
  * Trabalhando com Datas e Horas
@@ -558,16 +561,16 @@ $(document).ready(function () {
     $(".valor_percentual").maskMoney({ allowNegative: true, thousands: '', decimal: ',', affixesStay: false }); //Valor Decimal
     $('.ip').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
         translation: {
-          'Z': {
-            pattern: /[0-9]/, optional: true
-          }
+            'Z': {
+                pattern: /[0-9]/, optional: true
+            }
         }
     });
     $('.ip2').mask('0ZZ.0ZZ.0ZZ.0ZZ/00', {
         translation: {
-          'Z': {
-            pattern: /[0-9]/, optional: true
-          }
+            'Z': {
+                pattern: /[0-9]/, optional: true
+            }
         }
     });
 });

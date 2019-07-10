@@ -1,3 +1,9 @@
+//Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos
+function inicializar()
+{
+
+}
+
 /**
  Template Name: Abstack - Bootstrap 4 Web App kit
  Author: CoderThemes

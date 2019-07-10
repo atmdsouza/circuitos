@@ -20,6 +20,8 @@ use Circuitos\Models\EndEndereco;
 use Circuitos\Models\EndEstado;
 use Circuitos\Models\EndCidade;
 
+use Circuitos\Models\Operations\ConectividadeOP;
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -441,6 +443,24 @@ class CoreController extends ControllerBase
         } catch (Exception $e) {
             $logger->error('Mensagem não enviada. Mailer Error: ' . $mail->ErrorInfo);
             return False;
+        }
+    }
+
+    public function processarAjaxAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $dados = filter_input_array(INPUT_GET);
+        switch ($dados['metodo'])
+        {
+            case 'cidadesDigitaisAtivas':
+                $objeto = new ConectividadeOP();
+                return $objeto->cidadesDigitaisAtivas();
+                break;
+            case 'tiposCidadesDigitaisAtivas':
+                $objeto = new ConectividadeOP();
+                return $objeto->tiposCidadesDigitaisAtivas();
+                break;
         }
     }
 

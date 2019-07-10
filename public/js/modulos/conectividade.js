@@ -1,10 +1,380 @@
+//Load de tela
+$(document).ajaxStop($.unblockUI);
+var URLImagensSistema = "public/images";
+
+//Variáveis Globais
+var mudou = false;
+var RemoveTableRow;
+
 //Inicializar datatable
 $("#tb_conectividade").DataTable({
-    select: false
+    select: false,
+    language: {
+        select: false
+    }
 });
+
+//Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos)
+function inicializar()
+{
+    'use strict';
+    autocompletarCidadeDigital();
+    autocompletarTipoCidadeDigital();
+}
+
+function verificarAlteracao()
+{
+    'use strict';
+    $('form').on('change paste', 'input, select, textarea', function(){
+        mudou = true;
+    });
+}
+
+function confirmaCancelar(modal)
+{
+    'use strict';
+    verificarAlteracao();
+    if (mudou)
+    {
+        swal({
+            title: "Sair sem Salvar",
+            text: "Deseja realmente sair sem salvar?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sim",
+            cancelButtonText: "Não"
+        }).then(() => {
+            $("#"+modal).modal('hide');
+            limparModalBootstrap(modal);
+            mudou = false;
+        }).catch(swal.noop);
+    }
+    else
+    {
+        $("#"+modal).modal('hide');
+        limparModalBootstrap(modal);
+    }
+}
+
+function criar()
+{
+    'use strict';
+    $("#formCadastro input").removeAttr('readonly', 'readonly');
+    $("#formCadastro select").removeAttr('readonly', 'readonly');
+    $("#formCadastro textarea").removeAttr('readonly', 'readonly');
+    $("#salvarCadastro").removeClass("acao_editar").addClass("acao_criar");
+    $("#salvarCadastro").show();
+    $("#modalCadastro").modal();
+}
+
+function visualizar(id)
+{
+    'use strict';
+    $("#formCadastro input").attr('readonly', 'readonly');
+    $("#formCadastro select").attr('readonly', 'readonly');
+    $("#formCadastro textarea").attr('readonly', 'readonly');
+    $("#salvarCadastro").hide();
+    $("#modalCadastro").modal();
+
+}
+
+function editar(id)
+{
+    'use strict';
+    $("#formCadastro input").removeAttr('readonly', 'readonly');
+    $("#formCadastro select").removeAttr('readonly', 'readonly');
+    $("#formCadastro textarea").removeAttr('readonly', 'readonly');
+    $("#salvarCadastro").removeClass("acao_criar").addClass("acao_editar");
+    $("#salvarCadastro").show();
+    $("#modalCadastro").modal();
+
+}
+
+function ativar(id, descr)
+{
+    'use strict';
+    swal({
+        title: "Tem certeza que deseja ativar o registro \""+ descr +"\"?",
+        text: "O sistema irá ativar o registro \""+ descr +"\" com essa ação.",
+        type: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, ativar!"
+    }).then((result) => {
+        var action = actionCorreta(window.location.href.toString(), "conectividade/ativar");
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: action,
+            data: {
+                tokenKey: $("#token").attr("name"),
+                tokenValue: $("#token").attr("value"),
+                ids: id
+            },
+            error: function (data) {
+                if (data.status && data.status === 401)
+                {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            },
+            success: function (data) {
+                if (data.operacao){
+                    swal({
+                        title: "Ativado!",
+                        text: "O registro \""+ descr +"\" foi ativado com sucesso.",
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Ok"
+                    }).then((result) => {
+                        window.location.reload(true);
+                    });
+                } else {
+                    swal({
+                        title: "Ativar",
+                        text: data.mensagem,
+                        type: "error"
+                    });
+                }
+            }
+        });
+    });
+}
+
+function inativar(id, descr)
+{
+    'use strict';
+    swal({
+        title: "Tem certeza que deseja inativar o registro \""+ descr +"\"?",
+        text: "O sistema irá inativar o registro \""+ descr +"\" com essa ação.",
+        type: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, inativar!"
+    }).then((result) => {
+        var action = actionCorreta(window.location.href.toString(), "conectividade/inativar");
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: action,
+            data: {
+                tokenKey: $("#token").attr("name"),
+                tokenValue: $("#token").attr("value"),
+                ids: id
+            },
+            error: function (data) {
+                if (data.status && data.status === 401)
+                {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            },
+            success: function (data) {
+                if (data.operacao){
+                    swal({
+                        title: "Inativado!",
+                        text: "O registro \""+ descr +"\" foi inativado com sucesso.",
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Ok"
+                    }).then((result) => {
+                        window.location.reload(true);
+                    });
+                } else {
+                    swal({
+                        title: "Inativar",
+                        text: data.mensagem,
+                        type: "error"
+                    });
+                }
+            }
+        });
+    });
+}
+
+function excluir(id, descr)
+{
+    'use strict';
+    swal({
+        title: "Tem certeza que deseja excluir o registro \""+ descr +"\"?",
+        text: "O sistema irá excluir o registro \""+ descr +"\" com essa ação. Essa é uma ação irreversível!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, excluir!"
+    }).then((result) => {
+        var action = actionCorreta(window.location.href.toString(), "conectividade/excluir");
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: action,
+            data: {
+                tokenKey: $("#token").attr("name"),
+                tokenValue: $("#token").attr("value"),
+                ids: id
+            },
+            error: function (data) {
+                if (data.status && data.status === 401)
+                {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            },
+            success: function (data) {
+                if (data.operacao){
+                    swal({
+                        title: "Excluído!",
+                        text: "O registro \""+ descr +"\" foi excluído com sucesso.",
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Ok"
+                    }).then((result) => {
+                        window.location.reload(true);
+                    });
+                } else {
+                    swal({
+                        title: "Excluir",
+                        text: data.mensagem,
+                        type: "error"
+                    });
+                }
+            }
+        });
+    });
+}
+
+function limpar()
+{
+    'use strict';
+    $('#fieldPesquisa').val('');
+    $('#formPesquisa').submit();
+}
+
+function autocompletarCidadeDigital()
+{
+    //Autocomplete de Conectividade
+    "use strict";
+    var ac_cidadedigital = $("#lid_cidade_digital");
+    var listCidadeDigital = [];
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'cidadesDigitaisAtivas'},
+        beforeSend: function () {
+            $("#id_cidade_digital").val("");
+            $("#lid_cidade_digital").val("");
+            listCidadeDigital = [];
+        },
+        error: function (data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao) {
+                $.each(data.dados, function (key, value) {
+                    listCidadeDigital.push({value: value.descricao, data: value.id});
+                });
+            } else {
+                $("#id_cidade_digital").val("");
+                $("#lid_cidade_digital").val("");
+            }
+            //Autocomplete de Equipamento
+            ac_cidadedigital.autocomplete({
+                lookup: listCidadeDigital,
+                noCache: true,
+                minChars: 1,
+                triggerSelectOnValidInput: false,
+                showNoSuggestionNotice: true,
+                noSuggestionNotice: "Não existem resultados para essa consulta!",
+                onSelect: function (suggestion) {
+                    $("#id_cidade_digital").val(suggestion.data);
+                }
+            });
+        }
+    });
+}
+
+function autocompletarTipoCidadeDigital()
+{
+    //Autocomplete de Conectividade
+    "use strict";
+    var ac_tipo_cidade = $("#lid_tipo");
+    var listTipoCidade = [];
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'tiposCidadesDigitaisAtivas'},
+        beforeSend: function () {
+            $("#id_tipo").val("");
+            $("#lid_tipo").val("");
+            listTipoCidade = [];
+        },
+        error: function (data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao) {
+                $.each(data.dados, function (key, value) {
+                    listTipoCidade.push({value: value.descricao, data: value.id});
+                });
+            } else {
+                $("#id_tipo").val("");
+                $("#lid_tipo").val("");
+            }
+            //Autocomplete de Equipamento
+            ac_tipo_cidade.autocomplete({
+                lookup: listTipoCidade,
+                noCache: true,
+                minChars: 1,
+                triggerSelectOnValidInput: false,
+                showNoSuggestionNotice: true,
+                noSuggestionNotice: "Não existem resultados para essa consulta!",
+                onSelect: function (suggestion) {
+                    $("#id_tipo").val(suggestion.data);
+                }
+            });
+        }
+    });
+}
 
 //Limpar Linhas da Tabela
 (function ($) {
+    'use strict';
     RemoveTableRow = function (handler) {
         var tr = $(handler).closest("tr");
         tr.fadeOut(400, function () {
@@ -14,98 +384,15 @@ $("#tb_conectividade").DataTable({
     };
 })(jQuery);
 
-function limpaConectividade()
-{
-    $("#id_tipo_t").val(null).selected = "true";
-    $("#descricao_t").val(null);
-    $("#endereco_t").val(null);
-    $("#descricao_t").focus();
-}
-
-$(".bt_novo").on("click", function(){
-    $("#modalconectividade").modal();
-    $("#formCidadeDigital input").removeAttr('readonly', 'readonly');
-    $("#formCidadeDigital select").removeAttr('readonly', 'readonly');
-    $("#formCidadeDigital textarea").removeAttr('readonly', 'readonly');
-    $(".tr_remove").remove();
-    $("#tb_conectividade").hide();
-    $("#salvarCidadeDigital").removeClass("editar_conectividade").addClass("criar_conectividade");
-});
-
-$("#id_cidade").on("change", function(){
-    var cidade_desc = document.getElementById("id_cidade").options[document.getElementById("id_cidade").selectedIndex].text;
-    $("#descricao").val(null);
-    $("#descricao").val("CIDADE DIGITAL " + cidade_desc);
-});
-
-// var valCID = [];
-$("#add_conectividade").on("click", function(){
-    var id_tipo = $("#id_tipo_t").val();
-    var id_tipo_desc = document.getElementById("id_tipo_t").options[document.getElementById("id_tipo_t").selectedIndex].text;
-    var conectividade = $("#descricao_t").val();
-    var endereco = $("#endereco_t").val();
-
-    // if ($.inArray(conectividade, valCID) == -1) {
-    //     valCID.push(conectividade);
-    if (id_tipo && conectividade) {
-        var linhas = null;
-        linhas += "<tr class='tr_remove'>";
-        linhas += "<td>"+ id_tipo_desc +"<input name='tipo_conectividade[]' type='hidden' value='"+ id_tipo +"' /></td>";
-        linhas += "<td>"+ conectividade +"<input name='conectividade[]' type='hidden' value='"+ conectividade +"' /></td>";
-        linhas += "<td>"+ endereco +"<input name='endereco[]' type='hidden' value='"+ endereco +"' /></td>";
-        linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
-        linhas += "</tr>";
-        $("#tb_conectividade").append(linhas);
-        $('#tb_conectividade').show();
-        limpaConectividade();
-    } else {
-        swal({
-            title: "Conectividade",
-            text: "Você precisa preencher corretamente os campos obrigatórios!",
-            type: "warning"
-        });
-    }
-    // } else {
-    //     swal({
-    //         title: "Conectividade",
-    //         text: "Essa conectividade já existe na tabela abaixo!",
-    //         type: "warning"
-    //     });
-    // }
-});
-
-// $("#id_tipo").on("change", function() {
-//     $("#descricao").val("");
-//     var tipocidade_desc = document.getElementById("id_tipo").options[document.getElementById("id_tipo").selectedIndex].text;
-//     var cidade = null;
-//     if ($("#id_cidade").val() != "") {
-//         cidade = document.getElementById("id_cidade").options[document.getElementById("id_cidade").selectedIndex].text;
-//     } else {
-//         cidade = "";
-//     }
-//     $("#descricao").val(tipocidade_desc + " " + cidade);
-// });
-//
-// $("#id_cidade").on("change", function(){
-//     $("#descricao").val("");
-//     var tipocidade_desc = null;
-//     var cidade = document.getElementById("id_cidade").options[document.getElementById("id_cidade").selectedIndex].text;
-//     if ($("#id_cidade").val() != "") {
-//         tipocidade_desc = document.getElementById("id_tipo").options[document.getElementById("id_tipo").selectedIndex].text;
-//     } else {
-//         tipocidade_desc = "";
-//     }
-//     $("#descricao").val(tipocidade_desc + " " + cidade);
-// });
-
-$(document).on("click", ".criar_conectividade", function(){
+$(document).on("click", ".acao_criar", function(){
+    'use strict';
     //Validação de formulário
-    $("#formCidadeDigital").validate({
+    $("#formCadastro").validate({
         rules : {
-            id_cidade:{
+            lid_cidade_digital:{
                 required: true
             },
-            id_tipo:{
+            lid_tipo:{
                 required: true
             },
             descricao:{
@@ -113,19 +400,19 @@ $(document).on("click", ".criar_conectividade", function(){
             }
         },
         messages:{
-            id_cidade:{
-                required:"É necessário informar uma cidade"
+            lid_cidade_digital:{
+                required:"É necessário informar uma Cidade Digital"
             },
-            id_tipo:{
-                required:"É necessário informar um tipo"
+            lid_tipo:{
+                required:"É necessário informar um Tipo de Conectividade"
             },
             descricao:{
-                required:"É necessário informar uma descrição"
+                required:"É necessário informar uma Descrição"
             }
         },
         submitHandler: function(form) {
-            var dados = $("#formCidadeDigital").serialize();
-            var action = actionCorreta(window.location.href.toString(), "cidade_digital/criarCidadeDigital");
+            var dados = $("#formCadastro").serialize();
+            var action = actionCorreta(window.location.href.toString(), "conectividade/criar");
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
@@ -134,10 +421,6 @@ $(document).on("click", ".criar_conectividade", function(){
                     tokenKey: $("#token").attr("name"),
                     tokenValue: $("#token").attr("value"),
                     dados: dados
-                },
-                beforeSend: function () {
-                },
-                complete: function () {
                 },
                 error: function (data) {
                     if (data.status && data.status === 401)
@@ -152,8 +435,8 @@ $(document).on("click", ".criar_conectividade", function(){
                 success: function (data) {
                     if (data.operacao){
                         swal({
-                            title: "Cadastro de Cidade Digital",
-                            text: "Cadastro do cidade digital concluído!",
+                            title: "Cadastro de Conectividade",
+                            text: "Cadastro da conectividade concluído!",
                             type: "success",
                             showCancelButton: false,
                             confirmButtonColor: "#3085d6",
@@ -164,7 +447,7 @@ $(document).on("click", ".criar_conectividade", function(){
                         });
                     } else {
                         swal({
-                            title: "Cadastro de Cidade Digital",
+                            title: "Cadastro de Conectividade",
                             text: data.mensagem,
                             type: "error"
                         });
@@ -175,34 +458,14 @@ $(document).on("click", ".criar_conectividade", function(){
     });
 });
 
-//Coletando os ids das linhas selecionadas na tabela
-var ids = [];
-$("#tb_conectividade").on("click", "tr", function () {
-    "use strict";
-    var valr = $(this)[0].cells[0].innerText;
-    if (valr !== "Código")
-    {
-        if (!ids.includes(valr)) {
-            ids.push(valr);
-        } else {
-            var index = ids.indexOf(valr);
-            ids.splice(index, 1);
-        }
-    }
-});
-
 $(".bt_edit").on("click", function(){
     var id_conectividade = ids[0];
-    var action = actionCorreta(window.location.href.toString(), "cidade_digital/formCidadeDigital");
+    var action = actionCorreta(window.location.href.toString(), "conectividade/formCadastro");
     $.ajax({
         type: "GET",
         dataType: "JSON",
         url: action,
         data: {id_conectividade: id_conectividade},
-        beforeSend: function () {
-        },
-        complete: function () {
-        },
         error: function (data) {
             if (data.status && data.status === 401)
             {
@@ -214,9 +477,9 @@ $(".bt_edit").on("click", function(){
             }
         },
         success: function (data) {
-            $("#formCidadeDigital input").removeAttr('readonly', 'readonly');
-            $("#formCidadeDigital select").removeAttr('readonly', 'readonly');
-            $("#formCidadeDigital textarea").removeAttr('readonly', 'readonly');
+            $("#formCadastro input").removeAttr('readonly', 'readonly');
+            $("#formCadastro select").removeAttr('readonly', 'readonly');
+            $("#formCadastro textarea").removeAttr('readonly', 'readonly');
             $(".tr_remove").remove();
             $("#tb_conectividade").hide();
             $("#id").val(data.dados.id);
@@ -235,7 +498,7 @@ $(".bt_edit").on("click", function(){
                     $("#tb_conectividade").show();
                 });
             }
-            $("#modalconectividade").modal();
+            $("#modalCadastro").modal();
         }
     });
     $("#salvarCidadeDigital").removeClass("criar_conectividade").addClass("editar_conectividade");
@@ -243,16 +506,12 @@ $(".bt_edit").on("click", function(){
 
 $(".bt_visual").on("click", function(){
     var id_conectividade = ids[0];
-    var action = actionCorreta(window.location.href.toString(), "cidade_digital/formCidadeDigital");
+    var action = actionCorreta(window.location.href.toString(), "conectividade/formCadastro");
     $.ajax({
         type: "GET",
         dataType: "JSON",
         url: action,
         data: {id_conectividade: id_conectividade},
-        beforeSend: function () {
-        },
-        complete: function () {
-        },
         error: function (data) {
             if (data.status && data.status === 401)
             {
@@ -264,9 +523,9 @@ $(".bt_visual").on("click", function(){
             }
         },
         success: function (data) {
-            $("#formCidadeDigital input").attr('readonly', 'readonly');
-            $("#formCidadeDigital select").attr('readonly', 'readonly');
-            $("#formCidadeDigital textarea").attr('readonly', 'readonly');
+            $("#formCadastro input").attr('readonly', 'readonly');
+            $("#formCadastro select").attr('readonly', 'readonly');
+            $("#formCadastro textarea").attr('readonly', 'readonly');
             $(".tr_remove").remove();
             $("#id").val(data.dados.id);
             $("#id_cidade").val(data.dados.id_cidade).selected = "true";
@@ -284,7 +543,7 @@ $(".bt_visual").on("click", function(){
                     $("#tb_conectividade").show();
                 });
             }
-            $("#modalconectividade").modal();
+            $("#modalCadastro").modal();
         }
     });
     $("#salvarCidadeDigital").removeClass("criar_conectividade").addClass("editar_conectividade");
@@ -292,7 +551,7 @@ $(".bt_visual").on("click", function(){
 
 $(document).on("click", ".editar_conectividade", function(){
     //Validação de formulário
-    $("#formCidadeDigital").validate({
+    $("#formCadastro").validate({
         rules : {
             id_cidade:{
                 required: true
@@ -316,8 +575,8 @@ $(document).on("click", ".editar_conectividade", function(){
             }
         },
         submitHandler: function(form) {
-            var dados = $("#formCidadeDigital").serialize();
-            var action = actionCorreta(window.location.href.toString(), "cidade_digital/editarCidadeDigital");
+            var dados = $("#formCadastro").serialize();
+            var action = actionCorreta(window.location.href.toString(), "conectividade/editarCidadeDigital");
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
@@ -326,10 +585,6 @@ $(document).on("click", ".editar_conectividade", function(){
                     tokenKey: $("#token").attr("name"),
                     tokenValue: $("#token").attr("value"),
                     dados: dados
-                },
-                beforeSend: function () {
-                },
-                complete: function () {
                 },
                 error: function (data) {
                     if (data.status && data.status === 401)
@@ -344,7 +599,7 @@ $(document).on("click", ".editar_conectividade", function(){
                 success: function (data) {
                     if (data.operacao){
                         swal({
-                            title: "Cadastro de Cidade Digital",
+                            title: "Cadastro de Conectividade",
                             text: "Edição de cidade digital concluída!",
                             type: "success",
                             showCancelButton: false,
@@ -356,7 +611,7 @@ $(document).on("click", ".editar_conectividade", function(){
                         });
                     } else {
                         swal({
-                            title: "Cadastro de Cidade Digital",
+                            title: "Cadastro de Conectividade",
                             text: data.mensagem,
                             type: "error"
                         });
@@ -379,7 +634,7 @@ $(".bt_del").on("click", function(){
             cancelButtonColor: "#d33",
             confirmButtonText: "Sim, apagar!"
         }).then((result) => {
-            var action = actionCorreta(window.location.href.toString(), "cidade_digital/editarCidadeDigital");
+            var action = actionCorreta(window.location.href.toString(), "conectividade/editarCidadeDigital");
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
@@ -388,10 +643,6 @@ $(".bt_del").on("click", function(){
                     tokenKey: $("#token").attr("name"),
                     tokenValue: $("#token").attr("value"),
                     ids: ids
-                },
-                beforeSend: function () {
-                },
-                complete: function () {
                 },
                 error: function (data) {
                     if (data.status && data.status === 401)
@@ -442,7 +693,7 @@ $(".bt_del").on("click", function(){
             cancelButtonColor: "#d33",
             confirmButtonText: "Sim, apagar!"
         }).then((result) => {
-            var action = actionCorreta(window.location.href.toString(), "cidade_digital/deletarCidadeDigital");
+            var action = actionCorreta(window.location.href.toString(), "conectividade/deletarCidadeDigital");
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
@@ -451,10 +702,6 @@ $(".bt_del").on("click", function(){
                     tokenKey: $("#token").attr("name"),
                     tokenValue: $("#token").attr("value"),
                     ids: ids
-                },
-                beforeSend: function () {
-                },
-                complete: function () {
                 },
                 error: function (data) {
                     if (data.status && data.status === 401)
@@ -504,7 +751,7 @@ $(".bt_ativo").on("click", function(){
             cancelButtonColor: "#d33",
             confirmButtonText: "Sim, ativar!"
         }).then((result) => {
-            var action = actionCorreta(window.location.href.toString(), "cidade_digital/ativarCidadeDigital");
+            var action = actionCorreta(window.location.href.toString(), "conectividade/ativarCidadeDigital");
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
@@ -513,10 +760,6 @@ $(".bt_ativo").on("click", function(){
                     tokenKey: $("#token").attr("name"),
                     tokenValue: $("#token").attr("value"),
                     ids: ids
-                },
-                beforeSend: function () {
-                },
-                complete: function () {
                 },
                 error: function (data) {
                     if (data.status && data.status === 401)
@@ -553,7 +796,7 @@ $(".bt_ativo").on("click", function(){
         });
     } else if (nm_rows == 0) {
         swal({
-            title: "Ativar Cidade Digital",
+            title: "Ativar Conectividade",
             text: "Você precisa selecionar um ou mais registros para serem ativados!",
             type: "warning"
         });
@@ -567,7 +810,7 @@ $(".bt_ativo").on("click", function(){
             cancelButtonColor: "#d33",
             confirmButtonText: "Sim, ativar!"
         }).then((result) => {
-            var action = actionCorreta(window.location.href.toString(), "cidade_digital/ativarCidadeDigital");
+            var action = actionCorreta(window.location.href.toString(), "conectividade/ativarCidadeDigital");
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
@@ -576,10 +819,6 @@ $(".bt_ativo").on("click", function(){
                     tokenKey: $("#token").attr("name"),
                     tokenValue: $("#token").attr("value"),
                     ids: ids
-                },
-                beforeSend: function () {
-                },
-                complete: function () {
                 },
                 error: function (data) {
                     if (data.status && data.status === 401)
@@ -629,7 +868,7 @@ $(".bt_inativo").on("click", function(){
             cancelButtonColor: "#d33",
             confirmButtonText: "Sim, inativar!"
         }).then((result) => {
-            var action = actionCorreta(window.location.href.toString(), "cidade_digital/inativarCidadeDigital");
+            var action = actionCorreta(window.location.href.toString(), "conectividade/inativarCidadeDigital");
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
@@ -638,10 +877,6 @@ $(".bt_inativo").on("click", function(){
                     tokenKey: $("#token").attr("name"),
                     tokenValue: $("#token").attr("value"),
                     ids: ids
-                },
-                beforeSend: function () {
-                },
-                complete: function () {
                 },
                 error: function (data) {
                     if (data.status && data.status === 401)
@@ -678,7 +913,7 @@ $(".bt_inativo").on("click", function(){
         });
     } else if (nm_rows == 0) {
         swal({
-            title: "Inativar Cidade Digital",
+            title: "Inativar Conectividade",
             text: "Você precisa selecionar um ou mais registros para serem inativados!",
             type: "warning"
         });
@@ -692,7 +927,7 @@ $(".bt_inativo").on("click", function(){
             cancelButtonColor: "#d33",
             confirmButtonText: "Sim, inativar!"
         }).then((result) => {
-            var action = actionCorreta(window.location.href.toString(), "cidade_digital/inativarCidadeDigital");
+            var action = actionCorreta(window.location.href.toString(), "conectividade/inativarCidadeDigital");
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
@@ -701,10 +936,6 @@ $(".bt_inativo").on("click", function(){
                     tokenKey: $("#token").attr("name"),
                     tokenValue: $("#token").attr("value"),
                     ids: ids
-                },
-                beforeSend: function () {
-                },
-                complete: function () {
                 },
                 error: function (data) {
                     if (data.status && data.status === 401)
@@ -753,16 +984,12 @@ $("#tb_conectividade").on("click", ".del_conec", function(){
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, apagar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "cidade_digital/deletarConectividade");
+        var action = actionCorreta(window.location.href.toString(), "conectividade/deletarConectividade");
         $.ajax({
             type: "POST",
             dataType: "JSON",
             url: action,
             data: {id: id},
-            beforeSend: function () {
-            },
-            complete: function () {
-            },
             error: function (data) {
                 if (data.status && data.status === 401)
                 {

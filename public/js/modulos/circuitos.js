@@ -2,6 +2,12 @@
 $(document).ajaxStop($.unblockUI);
 var URLImagensSistema = "public/images";
 
+//Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos
+function inicializar()
+{
+
+}
+
 //Datatable
 var table = $("#tb_circuitos").DataTable({
     buttons: [

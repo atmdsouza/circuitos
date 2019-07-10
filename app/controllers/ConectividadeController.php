@@ -2,25 +2,17 @@
 
 namespace Circuitos\Controllers;
 
-use Phalcon\Paginator\Adapter\Model as Paginator;
-use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
-use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Phalcon\Http\Response as Response;
 
 use Circuitos\Models\Conectividade;
-use Circuitos\Models\CidadeDigital;
-use Circuitos\Models\EndCidade;
-use Circuitos\Models\Lov;
+use Circuitos\Models\Operations\ConectividadeOP;
 
 use Auth\Autentica;
-use Util\Infra;
 use Util\TokenManager;
 
 class ConectividadeController extends ControllerBase
 {
     public $tokenManager;
-
-    private $encode = "UTF-8";
 
     public function initialize()
     {
@@ -43,20 +35,72 @@ class ConectividadeController extends ControllerBase
 
     public function indexAction()
     {
-        $infra = new Infra();
         $dados = filter_input_array(INPUT_POST);
-        $conectividade = Conectividade::pesquisarConectividade($dados["pesquisa"]);
-        $tipocd = Lov::find(array(
-            "tipo=18",
-            "order" => "descricao"
-        ));
-        $paginator = new Paginator([
-            'data' => $conectividade,
-            'limit'=> $infra->getLimitePaginacao(),
-            'page' => $infra->getPaginaInicial()
-        ]);
-        $this->view->page = $paginator->getPaginate();
-        $this->view->tipocd = $tipocd;
+        $conectividadeOP = new ConectividadeOP();
+        $conectividade = $conectividadeOP->listar($dados["pesquisa"]);
+        $this->view->page = $conectividade;
+    }
+
+    public function criarAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_POST);
+        $params = array();
+        parse_str($dados["dados"], $params);
+        //CSRF Token Check
+        if ($this->tokenManager->checkToken("User", $dados["tokenKey"], $dados["tokenValue"])) {//Formulário Válido
+            //Gerando Objeto
+            $objConectividade = new Conectividade();
+            $objConectividade->setIdCidadeDigital($params['id_cidade_digital']);
+            $objConectividade->setIdTipo($params['id_tipo']);
+            $objConectividade->setDescricao($params['descricao']);
+            $objConectividade->setEndereco($params['endereco']);
+            //Gravando Objeto
+            $conectividadeOP = new ConectividadeOP();
+            if($conectividadeOP->cadastrar($objConectividade)){
+                $response->setContent(json_encode(array(
+                    "operacao" => True
+                )));
+            } else {
+                $response->setContent(json_encode(array(
+                    "operacao" => False,
+                    "mensagem" => "Erro ao cadastrar uma conectividade!"
+                )));
+            }
+        } else {//Formulário Inválido
+            $response->setContent(json_encode(array(
+                "operacao" => False,
+                "mensagem" => "Check de formulário inválido!"
+            )));
+        }
+        return $response;
+    }
+
+    public function editarAction()
+    {
+
+    }
+
+    public function visualizarAction()
+    {
+
+    }
+
+    public function ativarAction()
+    {
+
+    }
+
+    public function inativarAction()
+    {
+
+    }
+
+    public function excluirAction()
+    {
+
     }
 
 }

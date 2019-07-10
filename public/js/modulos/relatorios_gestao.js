@@ -1,6 +1,13 @@
 //Load de tela
 $(document).ajaxStop($.unblockUI);
 var URLImagensSistema = "public/images";
+
+//Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos
+function inicializar()
+{
+
+}
+
 //Gerar o relatório Customizado
 $("#gerar_relatorio").on("click", function(){
     var eixo_x = $("#eixo_x").val();

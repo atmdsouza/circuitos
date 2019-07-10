@@ -11,6 +11,11 @@ $router->add("/cidade_digital", [
     "action" => "index"
 ]);
 
+$router->add("/conectividade", [
+    "controller" => "conectividade",
+    "action" => "index"
+]);
+
 $router->add("/circuitos", [
     "controller" => "circuitos",
     "action" => "index"
