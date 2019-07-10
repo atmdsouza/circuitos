@@ -228,6 +228,16 @@ class Conectividade extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of tipo de conectividade
+     *
+     * @return string
+     */
+    public function getNomeCidadeDigital()
+    {
+        return $this->CidadeDigital->descricao;
+    }
+
+    /**
      * @return string
      */
     public function getDataUpdate()

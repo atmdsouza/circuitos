@@ -19,48 +19,91 @@ class ConectividadeOP extends Conectividade
         return Conectividade::pesquisarConectividade($dados);
     }
 
-    public function cadastrar(Conectividade $objConectividade)
+    public function cadastrar(Conectividade $objArray)
     {
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $conectividade = new Conectividade();
-            $conectividade->setIdCidadeDigital($objConectividade->getIdCidadeDigital());
-            $conectividade->setIdTipo($objConectividade->getIdTipo());
-            $conectividade->setDescricao(mb_strtoupper($objConectividade->getDescricao(), $this->encode));
-            $conectividade->setEndereco(mb_strtoupper($objConectividade->getEndereco(), $this->encode));
-            $conectividade->setDataUpdate(date('Y-m-d H:i:s'));
-            if ($conectividade->save() == false) {
-                $transaction->rollback("Não foi possível salvar a pessoa!");
+            $objeto = new Conectividade();
+            $objeto->setIdCidadeDigital($objArray->getIdCidadeDigital());
+            $objeto->setIdTipo($objArray->getIdTipo());
+            $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
+            $objeto->setEndereco(mb_strtoupper($objArray->getEndereco(), $this->encode));
+            $objeto->setDataUpdate(date('Y-m-d H:i:s'));
+            if ($objeto->save() == false) {
+                $transaction->rollback("Não foi possível salvar a conectividade!");
             }
             $transaction->commit();
-            return true;
+            return $objeto;
         } catch (TxFailed $e) {
+            var_dump($e->getMessage());
             return false;
         }
     }
 
-    public function alterar(Conectividade $objConectividade)
+    public function alterar(Conectividade $objArray)
     {
 
     }
 
-    public function consultar(Conectividade $objConectividade)
+    public function ativar(Conectividade $objArray)
     {
-
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        try {
+            $objeto = Conectividade::findFirst($objArray->getId());
+            $objeto->setAtivo(1);
+            $objeto->setDataUpdate(date('Y-m-d H:i:s'));
+            if ($objeto->save() == false) {
+                $transaction->rollback("Não foi possível alterar a conectividade!");
+            }
+            $transaction->commit();
+            return $objeto;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
     }
 
-    public function ativar(Conectividade $objConectividade)
+    public function inativar(Conectividade $objArray)
     {
-
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        try {
+            $objeto = Conectividade::findFirst($objArray->getId());
+            $objeto->setAtivo(0);
+            $objeto->setDataUpdate(date('Y-m-d H:i:s'));
+            if ($objeto->save() == false) {
+                $transaction->rollback("Não foi possível alterar a conectividade!");
+            }
+            $transaction->commit();
+            return $objeto;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
     }
 
-    public function inativar(Conectividade $objConectividade)
+    public function excluir(Conectividade $objArray)
     {
-
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        try {
+            $objeto = Conectividade::findFirst($objArray->getId());
+            $objeto->setExcluido(1);
+            $objeto->setDataUpdate(date('Y-m-d H:i:s'));
+            if ($objeto->save() == false) {
+                $transaction->rollback("Não foi possível excluir a conectividade!");
+            }
+            $transaction->commit();
+            return $objeto;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
     }
 
-    public function excluir(Conectividade $objConectividade)
+    public function consultar(Conectividade $objArray)
     {
 
     }

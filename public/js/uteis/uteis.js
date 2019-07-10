@@ -4,6 +4,7 @@
  * @action string Action que será usada na chamada, semrpe deve estar formatada como 'controller/action'
  * */
 function actionCorreta(url, action) {
+    'use strict';
     var novaAction;
     var urls = url.split("/");
     //Pasta raiz sendo "/circuitos"
@@ -15,28 +16,49 @@ function actionCorreta(url, action) {
 
 //Processo para fazer funcionar o CSRF_Token
 function getCookie(c_name) {
+    'use strict';
+    var c_start;
+    var c_end;
     if (document.cookie.length > 0) {
         c_start = document.cookie.indexOf(c_name + "=");
-        if (c_start != -1) {
+        if (c_start !== -1) {
             c_start = c_start + c_name.length + 1;
             c_end = document.cookie.indexOf(";", c_start);
-            if (c_end == -1) c_end = document.cookie.length;
+            if (c_end === -1){
+                c_end = document.cookie.length;
+            }
             return unescape(document.cookie.substring(c_start, c_end));
         }
     }
     return "";
 }
 $(function () {
+    'use strict';
     $.ajaxSetup({
         headers: { "X-CSRFToken": getCookie("csrftoken") }
     });
 });
 //Fim
 
+var RemoveTableRow;
+
+//Limpar Linhas da Tabela
+(function ($) {
+    'use strict';
+    RemoveTableRow = function (handler) {
+        var tr = $(handler).closest("tr");
+        tr.fadeOut(400, function () {
+            tr.remove();
+        });
+        return false;
+    };
+})(jQuery);
+
 // Select2
 $(".select2").select2({
     language: "pt-BR"
 });
+
 //Date range picker
 $(".input-daterange-datepicker").daterangepicker({
     autoApply: true,

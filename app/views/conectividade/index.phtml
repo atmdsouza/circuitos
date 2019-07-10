@@ -53,6 +53,7 @@ $module = $this->router->getControllerName();
             <thead>
             <tr>
                 <th>Código</th>
+                <th>Cidade Digital</th>
                 <th>Tipo</th>
                 <th>Conectividade</th>
                 <th>Endereço</th>
@@ -77,6 +78,7 @@ $module = $this->router->getControllerName();
                 ?>
                 <tr <?= $class_tr; ?>>
                     <td><?= $conectividade->getId() ?></td>
+                    <td><?= $conectividade->getNomeCidadeDigital() ?></td>
                     <td><?= $conectividade->getTipoConectividade() ?></td>
                     <td><?= $conectividade->getDescricao() ?></td>
                     <td><?= $conectividade->getEndereco() ?></td>
@@ -150,7 +152,7 @@ $module = $this->router->getControllerName();
                     <div class="form-group col-md-6 botoes_rodape">
                         <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
                         <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="confirmaCancelar('modalCadastro');">Fechar</button>
-                        <button id="salvarCadastro" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
+                        <button id="salvarCadastro" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light" onclick="salvar();" value="">Salvar</button>
                     </div>
                 </div><!-- /.modal-footer -->
             </form>

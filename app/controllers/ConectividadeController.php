@@ -16,7 +16,7 @@ class ConectividadeController extends ControllerBase
 
     public function initialize()
     {
-        $this->tag->setTitle("Conectividade");
+        $this->tag->setTitle('Conectividade');
         parent::initialize();
         //Voltando o usuário não autenticado para a página de login
         $auth = new Autentica();
@@ -24,7 +24,7 @@ class ConectividadeController extends ControllerBase
         if (!is_array($identity)) {
             return $this->response->redirect('session/login');
         }
-        $this->view->user = $identity["nome"];
+        $this->view->user = $identity['nome'];
         //CSRFToken
         $this->tokenManager = new TokenManager();
         if (!$this->tokenManager->doesUserHaveToken('User')) {
@@ -37,7 +37,7 @@ class ConectividadeController extends ControllerBase
     {
         $dados = filter_input_array(INPUT_POST);
         $conectividadeOP = new ConectividadeOP();
-        $conectividade = $conectividadeOP->listar($dados["pesquisa"]);
+        $conectividade = $conectividadeOP->listar($dados['pesquisa']);
         $this->view->page = $conectividade;
     }
 
@@ -48,32 +48,18 @@ class ConectividadeController extends ControllerBase
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
         $params = array();
-        parse_str($dados["dados"], $params);
+        parse_str($dados['dados'], $params);
         //CSRF Token Check
-        if ($this->tokenManager->checkToken("User", $dados["tokenKey"], $dados["tokenValue"])) {//Formulário Válido
-            //Gerando Objeto
-            $objConectividade = new Conectividade();
-            $objConectividade->setIdCidadeDigital($params['id_cidade_digital']);
-            $objConectividade->setIdTipo($params['id_tipo']);
-            $objConectividade->setDescricao($params['descricao']);
-            $objConectividade->setEndereco($params['endereco']);
-            //Gravando Objeto
+        if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             $conectividadeOP = new ConectividadeOP();
-            if($conectividadeOP->cadastrar($objConectividade)){
-                $response->setContent(json_encode(array(
-                    "operacao" => True
-                )));
-            } else {
-                $response->setContent(json_encode(array(
-                    "operacao" => False,
-                    "mensagem" => "Erro ao cadastrar uma conectividade!"
-                )));
+            $conectividade = new Conectividade($params);
+            if($conectividadeOP->cadastrar($conectividade)){//Cadastrou com sucesso
+                $response->setContent(json_encode(array('operacao' => True)));
+            } else {//Erro no cadastro
+                $response->setContent(json_encode(array('operacao' => False,'mensagem' => 'Erro ao cadastrar uma Conectividade!')));
             }
         } else {//Formulário Inválido
-            $response->setContent(json_encode(array(
-                "operacao" => False,
-                "mensagem" => "Check de formulário inválido!"
-            )));
+            $response->setContent(json_encode(array('operacao' => False,'mensagem' => 'Check de formulário inválido!')));
         }
         return $response;
     }
@@ -83,22 +69,70 @@ class ConectividadeController extends ControllerBase
 
     }
 
-    public function visualizarAction()
-    {
-
-    }
-
     public function ativarAction()
     {
-
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_POST);
+        //CSRF Token Check
+        if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
+            $conectividadeOP = new ConectividadeOP();
+            $conectividade = new Conectividade($dados['dados']);
+            if($conectividadeOP->ativar($conectividade)){//Cadastrou com sucesso
+                $response->setContent(json_encode(array('operacao' => True)));
+            } else {//Erro no cadastro
+                $response->setContent(json_encode(array('operacao' => False,'mensagem' => 'Erro ao cadastrar uma Conectividade!')));
+            }
+        } else {//Formulário Inválido
+            $response->setContent(json_encode(array('operacao' => False,'mensagem' => 'Check de formulário inválido!')));
+        }
+        return $response;
     }
 
     public function inativarAction()
     {
-
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_POST);
+        //CSRF Token Check
+        if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
+            $conectividadeOP = new ConectividadeOP();
+            $conectividade = new Conectividade($dados['dados']);
+            if($conectividadeOP->inativar($conectividade)){//Cadastrou com sucesso
+                $response->setContent(json_encode(array('operacao' => True)));
+            } else {//Erro no cadastro
+                $response->setContent(json_encode(array('operacao' => False,'mensagem' => 'Erro ao cadastrar uma Conectividade!')));
+            }
+        } else {//Formulário Inválido
+            $response->setContent(json_encode(array('operacao' => False,'mensagem' => 'Check de formulário inválido!')));
+        }
+        return $response;
     }
 
     public function excluirAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_POST);
+        //CSRF Token Check
+        if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
+            $conectividadeOP = new ConectividadeOP();
+            $conectividade = new Conectividade($dados['dados']);
+            if($conectividadeOP->excluir($conectividade)){//Cadastrou com sucesso
+                $response->setContent(json_encode(array('operacao' => True)));
+            } else {//Erro no cadastro
+                $response->setContent(json_encode(array('operacao' => False,'mensagem' => 'Erro ao cadastrar uma Conectividade!')));
+            }
+        } else {//Formulário Inválido
+            $response->setContent(json_encode(array('operacao' => False,'mensagem' => 'Check de formulário inválido!')));
+        }
+        return $response;
+    }
+
+    public function visualizarAction()
     {
 
     }
