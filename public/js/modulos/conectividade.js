@@ -4,16 +4,20 @@ var URLImagensSistema = "public/images";
 
 //Variáveis Globais
 var mudou = false;
+var listCidadeDigital = [];
+var i = 0;
 
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos)
 function inicializar()
 {
     'use strict';
+    //Configuração Específica do Datatable
     $("#datatable_listar").DataTable({
         select: false,
         language: {
             select: false
-        }
+        },
+        order: [[5, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
     });
     autocompletarCidadeDigital();
     autocompletarTipoCidadeDigital();
@@ -100,6 +104,81 @@ function editar(id)
             $('#id_tipo').val(data.dados.id_tipo);
             $('#descricao').val(data.dados.descricao);
             $('#endereco').val(data.dados.endereco);
+        }
+    });
+}
+
+function salvar()
+{
+    'use strict';
+    var acao = $('#salvarCadastro').val();
+    $("#formCadastro").validate({
+        rules : {
+            lid_cidade_digital:{
+                required: true
+            },
+            lid_tipo:{
+                required: true
+            },
+            descricao:{
+                required: true
+            }
+        },
+        messages:{
+            lid_cidade_digital:{
+                required:"É necessário informar uma Cidade Digital"
+            },
+            lid_tipo:{
+                required:"É necessário informar um Tipo de Conectividade"
+            },
+            descricao:{
+                required:"É necessário informar uma Descrição"
+            }
+        },
+        submitHandler: function(form) {
+            var dados = $("#formCadastro").serialize();
+            var action = actionCorreta(window.location.href.toString(), "conectividade/" + acao);
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: action,
+                data: {
+                    tokenKey: $("#token").attr("name"),
+                    tokenValue: $("#token").attr("value"),
+                    dados: dados
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        swal({
+                            title: data.titulo,
+                            text: data.mensagem,
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Ok"
+                        }).then((result) => {
+                            window.location.reload(true);
+                        });
+                    } else {
+                        swal({
+                            title: data.titulo,
+                            text: data.mensagem,
+                            type: "error"
+                        });
+                    }
+                }
+            });
         }
     });
 }
@@ -323,171 +402,79 @@ function autocompletarCidadeDigital()
 {
     "use strict";
     var ac_cidadedigital = $("#lid_cidade_digital");
-    var listCidadeDigital = [];
+    var cidade_digital = ac_cidadedigital.val();
     var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
     $.ajax({
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'cidadesDigitaisAtivas'},
-        beforeSend: function () {
-            $("#id_cidade_digital").val("");
-            $("#lid_cidade_digital").val("");
-            listCidadeDigital = [];
-        },
-        error: function (data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
+        data: {metodo: 'cidadesDigitaisAtivas', string: cidade_digital},
         success: function (data) {
             if (data.operacao) {
+                listCidadeDigital = [];
                 $.each(data.dados, function (key, value) {
                     listCidadeDigital.push({value: value.descricao, data: value.id});
                 });
+                if(i === 0) {
+                    //Autocomplete
+                    ac_cidadedigital.autocomplete({
+                        lookup: listCidadeDigital,
+                        onSelect: function (suggestion) {
+                            $("#id_cidade_digital").val(suggestion.data);
+                        }
+                    });
+                    i++;
+                } else {
+                    //Autocomplete
+                    ac_cidadedigital.autocomplete().setOptions( {
+                        lookup: listCidadeDigital
+                    });
+                }
             } else {
                 $("#id_cidade_digital").val("");
                 $("#lid_cidade_digital").val("");
             }
-            //Autocomplete de Equipamento
-            ac_cidadedigital.autocomplete({
-                lookup: listCidadeDigital,
-                noCache: true,
-                minChars: 1,
-                triggerSelectOnValidInput: false,
-                showNoSuggestionNotice: true,
-                noSuggestionNotice: "Não existem resultados para essa consulta!",
-                onSelect: function (suggestion) {
-                    $("#id_cidade_digital").val(suggestion.data);
-                }
-            });
         }
     });
 }
+
+/**
+ * Pesquisar por Busca Fonética:
+ * http://clubedosgeeks.com.br/artigos/busca-fonetica-com-javascript-e-buscabr
+ * https://github.com/JayrAlencar/buscaBR.js
+ * https://materialmixer.co/#FAFAFA/B9F6CA
+ * https://www.materialpalette.com/light-blue/green
+ */
+
 
 function autocompletarTipoCidadeDigital()
 {
     "use strict";
     var ac_tipo_cidade = $("#lid_tipo");
-    var listTipoCidade = [];
     var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var listTipoCidadeDigital = [];
     $.ajax({
         type: "GET",
         dataType: "JSON",
         url: action,
         data: {metodo: 'tiposCidadesDigitaisAtivas'},
         beforeSend: function () {
-            $("#id_tipo").val("");
-            $("#lid_tipo").val("");
-            listTipoCidade = [];
-        },
-        error: function (data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
+            listTipoCidadeDigital = [];
         },
         success: function (data) {
             if (data.operacao) {
                 $.each(data.dados, function (key, value) {
-                    listTipoCidade.push({value: value.descricao, data: value.id});
+                    listTipoCidadeDigital.push({value: value.descricao, data: value.id});
                 });
             } else {
-                $("#id_tipo").val("");
-                $("#lid_tipo").val("");
+                $("#id_cidade_digital").val("");
+                $("#lid_cidade_digital").val("");
             }
-            //Autocomplete de Equipamento
+            //Autocomplete
             ac_tipo_cidade.autocomplete({
-                lookup: listTipoCidade,
-                noCache: true,
-                minChars: 1,
-                triggerSelectOnValidInput: false,
-                showNoSuggestionNotice: true,
-                noSuggestionNotice: "Não existem resultados para essa consulta!",
+                lookup: listTipoCidadeDigital,
                 onSelect: function (suggestion) {
                     $("#id_tipo").val(suggestion.data);
-                }
-            });
-        }
-    });
-}
-
-function salvar()
-{
-    'use strict';
-    var acao = $('#salvarCadastro').val();
-    $("#formCadastro").validate({
-        rules : {
-            lid_cidade_digital:{
-                required: true
-            },
-            lid_tipo:{
-                required: true
-            },
-            descricao:{
-                required: true
-            }
-        },
-        messages:{
-            lid_cidade_digital:{
-                required:"É necessário informar uma Cidade Digital"
-            },
-            lid_tipo:{
-                required:"É necessário informar um Tipo de Conectividade"
-            },
-            descricao:{
-                required:"É necessário informar uma Descrição"
-            }
-        },
-        submitHandler: function(form) {
-            var dados = $("#formCadastro").serialize();
-            var action = actionCorreta(window.location.href.toString(), "conectividade/" + acao);
-            $.ajax({
-                type: "POST",
-                dataType: "JSON",
-                url: action,
-                data: {
-                    tokenKey: $("#token").attr("name"),
-                    tokenValue: $("#token").attr("value"),
-                    dados: dados
-                },
-                error: function (data) {
-                    if (data.status && data.status === 401)
-                    {
-                        swal({
-                            title: "Erro de Permissão",
-                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                            type: "warning"
-                        });
-                    }
-                },
-                success: function (data) {
-                    if (data.operacao){
-                        swal({
-                            title: data.titulo,
-                            text: data.mensagem,
-                            type: "success",
-                            showCancelButton: false,
-                            confirmButtonColor: "#3085d6",
-                            cancelButtonColor: "#d33",
-                            confirmButtonText: "Ok"
-                        }).then((result) => {
-                            window.location.reload(true);
-                        });
-                    } else {
-                        swal({
-                            title: data.titulo,
-                            text: data.mensagem,
-                            type: "error"
-                        });
-                    }
                 }
             });
         }

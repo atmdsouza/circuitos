@@ -107,8 +107,19 @@ $(".input-daterange-datepicker").on('cancel.daterangepicker', function(ev, picke
     $(this).val('');
 });
 
+//Configuração padrão do autocomplete
+$.extend($.Autocomplete.defaults, {
+    autoSelectFirst: true,
+    deferRequestBy: 500,
+    noCache: true,
+    minChars: 1,
+    triggerSelectOnValidInput: false,
+    showNoSuggestionNotice: true,
+    noSuggestionNotice: "Não existem resultados para essa consulta!"
+});
+
 //Configuração padrão de datatables
-$.extend( $.fn.dataTable.defaults, {
+$.extend($.fn.dataTable.defaults, {
     fixedHeader: true,
     language: {
         sEmptyTable: "Nenhum registro encontrado",
