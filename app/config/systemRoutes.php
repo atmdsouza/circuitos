@@ -41,6 +41,11 @@ $router->add("/controle_acesso", [
     "action" => "index"
 ]);
 
+$router->add("/contrato", [
+    "controller" => "contrato",
+    "action" => "index"
+]);
+
 $router->add("/empresa", [
     "controller" => "empresa",
     "action" => "index"
@@ -48,6 +53,11 @@ $router->add("/empresa", [
 
 $router->add("/equipamento", [
     "controller" => "equipamento",
+    "action" => "index"
+]);
+
+$router->add("/estacao_telecon", [
+    "controller" => "estacao_telecon",
     "action" => "index"
 ]);
 
@@ -76,17 +86,62 @@ $router->add("/modelo", [
     "action" => "index"
 ]);
 
+$router->add("/proposta_comercial", [
+    "controller" => "proposta_comercial",
+    "action" => "index"
+]);
+
+$router->add("/proposta_comercial_servico", [
+    "controller" => "proposta_comercial_servico",
+    "action" => "index"
+]);
+
+$router->add("/proposta_comercial_servico_grupo", [
+    "controller" => "proposta_comercial_servico_grupo",
+    "action" => "index"
+]);
+
+$router->add("/proposta_comercial_servico_unidade", [
+    "controller" => "proposta_comercial_servico_unidade",
+    "action" => "index"
+]);
+
 $router->add("/relatorios_gestao", [
     "controller" => "relatorios_gestao",
     "action" => "index"
 ]);
 
-$router->add("/usuario", [
-    "controller" => "usuario",
+$router->add("/set_seguranca", [
+    "controller" => "set_seguranca",
+    "action" => "index"
+]);
+
+$router->add("/set_equipamento", [
+    "controller" => "set_equipamento",
     "action" => "index"
 ]);
 
 $router->add("/session", [
     "controller" => "session",
     "action" => "login"
+]);
+
+$router->add("/terreno", [
+    "controller" => "terreno",
+    "action" => "index"
+]);
+
+$router->add("/torre", [
+    "controller" => "torre",
+    "action" => "index"
+]);
+
+$router->add("/unidade_consumidora", [
+    "controller" => "unidade_consumidora",
+    "action" => "index"
+]);
+
+$router->add("/usuario", [
+    "controller" => "usuario",
+    "action" => "index"
 ]);

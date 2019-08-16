@@ -164,7 +164,19 @@ $.extend($.fn.dataTable.defaults, {
     orderMulti: true,
     order: [[ 0, "desc" ]]
 });
+//Header do datatable
+function floatHeader()
+{
+    $(window).scroll(function() {
+        var floatingHeader = $('table.table.table-striped.table-bordered.table-hover.dataTable.no-footer.dtr-inline.fixedHeader-floating');
 
+        if(floatingHeader[0] != null) {
+            floatingHeader.css('top', '65px');
+            floatingHeader.css('left', ($('.left.side-menu').width() + 60 )+ 'px');
+            floatingHeader.css('width', ($('.container-fluid').width() - 120)+ 'px');local
+        }
+    });
+}
 //Limpar modal bootstrap
 function limparModalBootstrap(modal)
 {

@@ -7,24 +7,24 @@ use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Phalcon\Http\Response as Response;
 
 use Circuitos\Models\CidadeDigital;
-use Circuitos\Models\Conectividade;
+use Circuitos\Models\SetSeguranca;
 use Circuitos\Models\Lov;
 
-class ConectividadeOP extends Conectividade
+class SetSegurancaOP extends SetSeguranca
 {
     private $encode = "UTF-8";
 
     public function listar($dados)
     {
-        return Conectividade::pesquisarConectividade($dados);
+        return SetSeguranca::pesquisarSetSeguranca($dados);
     }
 
-    public function cadastrar(Conectividade $objArray)
+    public function cadastrar(SetSeguranca $objArray)
     {
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = new Conectividade();
+            $objeto = new SetSeguranca();
             $objeto->setIdCidadeDigital($objArray->getIdCidadeDigital());
             $objeto->setIdTipo($objArray->getIdTipo());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
@@ -41,12 +41,12 @@ class ConectividadeOP extends Conectividade
         }
     }
 
-    public function alterar(Conectividade $objArray)
+    public function alterar(SetSeguranca $objArray)
     {
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = Conectividade::findFirst($objArray->getId());
+            $objeto = SetSeguranca::findFirst($objArray->getId());
             $objeto->setIdCidadeDigital($objArray->getIdCidadeDigital());
             $objeto->setIdTipo($objArray->getIdTipo());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
@@ -63,12 +63,12 @@ class ConectividadeOP extends Conectividade
         }
     }
 
-    public function ativar(Conectividade $objArray)
+    public function ativar(SetSeguranca $objArray)
     {
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = Conectividade::findFirst($objArray->getId());
+            $objeto = SetSeguranca::findFirst($objArray->getId());
             $objeto->setAtivo(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
@@ -82,12 +82,12 @@ class ConectividadeOP extends Conectividade
         }
     }
 
-    public function inativar(Conectividade $objArray)
+    public function inativar(SetSeguranca $objArray)
     {
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = Conectividade::findFirst($objArray->getId());
+            $objeto = SetSeguranca::findFirst($objArray->getId());
             $objeto->setAtivo(0);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
@@ -101,12 +101,12 @@ class ConectividadeOP extends Conectividade
         }
     }
 
-    public function excluir(Conectividade $objArray)
+    public function excluir(SetSeguranca $objArray)
     {
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = Conectividade::findFirst($objArray->getId());
+            $objeto = SetSeguranca::findFirst($objArray->getId());
             $objeto->setExcluido(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
@@ -120,10 +120,10 @@ class ConectividadeOP extends Conectividade
         }
     }
 
-    public function visualizarConectividade($id)
+    public function visualizarSetSeguranca($id)
     {
         try {
-            $objeto = Conectividade::findFirst("id={$id}");
+            $objeto = SetSeguranca::findFirst("id={$id}");
             $objetoArray = array(
                 'id' => $objeto->getId(),
                 'id_cidade_digital' => $objeto->getIdCidadeDigital(),

@@ -1,0 +1,247 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+
+use Auth\Autentica;
+use Phalcon\Tag;
+use Util\Infra;
+
+$infra = new Infra();
+$auth = new Autentica();
+$security_plugin = new SecurityPlugin();
+$acl = $security_plugin->getAcl();
+$role = $auth->getRoles();
+$module = $this->router->getControllerName();
+
+?>
+
+<?= $this->getContent(); ?>
+
+<div class="col-12">
+    <?= $this->tag->form(
+        [
+            "setseguranca/index",
+            "autocomplete" => "off",
+            "id" => "formPesquisa"
+        ]
+    );
+    ?>
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            <label for="fieldPesquisa" class="col-sm-2 control-label">Pesquisa</label>
+            <div class="col-sm-10">
+                <?= $this->tag->textField(["pesquisa", "size" => 60, "class" => "form-control", "id" => "fieldPesquisa"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            <div class="bt_menu_tabela">
+                <?= $this->tag->submitButton(["Pesquisar", "class" => "btn btn-info btn-rounded waves-light w-md"]) ?>
+                <button type="button" name="bt_limpar" id="bt_limpar" class="btn btn-warning btn-rounded waves-light w-md" onclick="limpar();">Limpar</button>
+                <?php if($acl->isAllowed($role,$module, 'criar')): ?>
+                    <button type="button" name="bt_novo" id="bt_novo" class="btn btn-success btn-rounded waves-light w-md" onclick="criar();">Novo</button>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+    <?= $this->tag->endForm(); ?>
+</div>
+
+<div class="col-12">
+    <div class="card-box">
+        <table id="datatable_listar" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>Código</th>
+                <th>Set de Segurança</th>
+                <th>Ativo</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($page as $setseguranca): ?>
+                <?php
+                switch($setseguranca->getAtivo())
+                {
+                    case '0'://Inativo (False)
+                        $ativo = "Inativo";
+                        $class_tr = 'class="table-danger"';
+                        break;
+                    case '1'://Ativo (True)
+                        $ativo = "Ativo";
+                        $class_tr = null;
+                        break;
+                }
+                ?>
+                <tr <?= $class_tr; ?>>
+                    <td><?= $setseguranca->getId() ?></td>
+                    <td><?= $setseguranca->getDescricao() ?></td>
+                    <td><?= $ativo ?></td>
+                    <td class="td_acoes">
+                        <?php if($acl->isAllowed($role,$module, 'visualizar')): ?>
+                            <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $setseguranca->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a>
+                        <?php endif; ?>
+                        <?php if($setseguranca->getAtivo() == '0'): ?>
+                            <?php if($acl->isAllowed($role, $module, 'ativar')): ?>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="ativar(<?= $setseguranca->getId() ?>, '<?= $setseguranca->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/reativar.png" title="Ativar" alt="Ativar" height="25" width="25"></a>
+                            <?php endif; ?>
+                        <?php else: ?>
+                            <?php if($acl->isAllowed($role, $module, 'editar')): ?>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="editar(<?= $setseguranca->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
+                            <?php endif; ?>
+                            <?php if($acl->isAllowed($role, $module, 'inativar')): ?>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="inativar(<?= $setseguranca->getId() ?>, '<?= $setseguranca->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/desativar.png" title="Desativar" alt="Desativar" height="25" width="25"></a>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if($acl->isAllowed($role, $module, 'excluir')): ?>
+                            <a href="javascript:void(0)" class="botoes_acao" onclick="excluir(<?= $setseguranca->getId() ?>, '<?= $setseguranca->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--  Modal Cadastro -->
+<div id="modalCadastro" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalCadastro" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-sg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" onclick="confirmaCancelar('modalCadastro');">×</button>
+                <h5 class="modal-title" id="modalCadastro">Dados do Set de Segurança</h5>
+            </div>
+            <form id="formCadastro">
+                <input type="hidden" id="token" name="<?= $token['tokenKey'] ?>" value="<?= $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
+                <div class="modal-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a href="#tab_set_seguranca" data-toggle="tab" aria-expanded="true" class="nav-link active">
+                                Set de Segurança
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#tab_compenente" data-toggle="tab" aria-expanded="false" class="nav-link">
+                                Componentes
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="tab_set_seguranca">
+                            <div class="form-row">
+                                <div class="col-12">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-12">
+                                            <label for="descricao">Descrição <span class="required">*</span></label>
+                                            <?= $this->tag->textField(["descricao", "size" => 200, "class" => "form-control result", "id" => "descricao", "placeholder" => "Descrição do Set de Segurança"]) ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab_compenente">
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <button type="button" name="bt_novo_componente" id="bt_novo_componente" class="btn btn-success btn-rounded waves-light w-md" onclick="criarComponente();">Novo</button>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12" id="div_tabela_componentes" style="display: none;">
+                                    <table id="tabela_componentes" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+                                        <thead>
+                                        <tr style="text-align: center;">
+                                            <td>Fornecedor</td>
+                                            <td>Tipo de Set</td>
+                                            <td>Propriedade PRODEPA</td>
+                                            <td>Nome Contato</td>
+                                            <td>Telefone Contato</td>
+                                            <td>Ações</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="dados_componente" style="display: none;">
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label for="i_lid_fornecedor">Fornecedor <span class="required">*</span></label>
+                                        <?php echo $this->tag->textField(["i_lid_fornecedor", "size" => 120, "class" => "form-control", "id" => "i_lid_fornecedor", "placeholder" => "Fornecedor", "onkeyup" => "autocompletarContrato();"]) ?>
+                                        <?php echo $this->tag->hiddenField(["i_id_fornecedor", "size" => 120, "class" => "form-control", "id" => "i_id_fornecedor"]) ?>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="i_lid_contrato">Contrato </label>
+                                        <?php echo $this->tag->textField(["i_lid_contrato", "size" => 120, "class" => "form-control", "id" => "i_lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato();"]) ?>
+                                        <?php echo $this->tag->hiddenField(["i_id_contrato", "size" => 120, "class" => "form-control", "id" => "i_id_contrato"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="i_id_tipo">Tipo Set de Segurança <span class="required">*</span></label>
+                                        <?php echo $this->tag->select(["i_id_tipo", $tipos, "class" => "form-control", "id" => "i_id_tipo",
+                                            "using" => ["id", "descricao",],
+                                            "useEmpty" => true,
+                                            "emptyText" => "Selecione o tipo de Set",
+                                            "emptyValue" => ""])
+                                        ?>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="i_propriedade_prodepa">Propriedade PRODEPA? <span class="required">*</span></label>
+                                        <select id="i_propriedade_prodepa" name="i_propriedade_prodepa" class="form-control">
+                                            <option value="1" selected>Sim</option>
+                                            <option value="0">Não</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
+                                        <label for="i_endereco_chave">Endereço da Chave </label>
+                                        <?= $this->tag->textField(["i_endereco_chave", "size" => 200, "class" => "form-control", "id" => "i_endereco_chave", "placeholder" => "Endereço da Chave"]) ?>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="i_senha">Senha </label>
+                                        <?= $this->tag->textField(["i_senha", "size" => 200, "class" => "form-control", "id" => "i_senha", "placeholder" => "Senha"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="i_validade">Validade </label>
+                                        <?= $this->tag->textField(["i_validade", "size" => 200, "class" => "form-control data", "id" => "i_validade", "placeholder" => "Validade"]) ?>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="i_nome">Nome Contato </label>
+                                        <?= $this->tag->textField(["i_nome", "size" => 200, "class" => "form-control", "id" => "i_nome", "placeholder" => "Nome do Contato"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="i_email">E-mail </label>
+                                        <?= $this->tag->emailField(["i_email", "size" => 200, "class" => "form-control", "id" => "i_email", "placeholder" => "E-mail do Contato"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="i_telefone">Telefone </label>
+                                        <?= $this->tag->textField(["i_telefone", "size" => 200, "class" => "form-control celular", "id" => "i_telefone", "placeholder" => "Telefone do Contato"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <button type="button" name="bt_inserir_componente" id="bt_inserir_componente" class="btn btn-info btn-rounded waves-light w-md bt_menu_tabela" onclick="inserirComponente();">Inserir</button>
+                                        <button type="button" name="bt_cancelar_componente" id="bt_cancelar_componente" class="btn btn-danger btn-rounded waves-light w-md bt_menu_tabela" onclick="cancelarComponente();">Cancelar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group col-md-6">
+                        <p class="texto_rodape">Os campos com <span class="required">*</span> são obrigatórios!</p>
+                    </div>
+                    <div class="form-group col-md-6 botoes_rodape">
+                        <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
+                        <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="limparDadosFormComponente();confirmaCancelar('modalCadastro');">Fechar</button>
+                        <button id="salvarCadastro" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light" onclick="salvar();" value="">Salvar</button>
+                    </div>
+                </div><!-- /.modal-footer -->
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

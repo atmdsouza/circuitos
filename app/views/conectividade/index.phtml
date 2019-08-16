@@ -129,9 +129,13 @@ $module = $this->router->getControllerName();
                                     <?php echo $this->tag->hiddenField(["id_cidade_digital", "size" => 120, "class" => "form-control", "id" => "id_cidade_digital"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="lid_tipo">Tipo Conectividade <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["lid_tipo", "size" => 120, "class" => "form-control", "id" => "lid_tipo", "placeholder" => "Tipo de Conectividade"]) ?>
-                                    <?php echo $this->tag->hiddenField(["id_tipo", "size" => 120, "class" => "form-control", "id" => "id_tipo"]) ?>
+                                    <label for="id_tipo">Tipo Conectividade <span class="required">*</span></label>
+                                    <?php echo $this->tag->select(["id_tipo", $tipos, "class" => "form-control", "id" => "id_tipo",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione o tipo de Conectividade",
+                                        "emptyValue" => ""])
+                                    ?>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="descricao">Conectividade <span class="required">*</span></label>

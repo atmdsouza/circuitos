@@ -2,6 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
+
 class SetSeguranca extends \Phalcon\Mvc\Model
 {
 
@@ -222,6 +225,35 @@ class SetSeguranca extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de SetSeguranca, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return SetSeguranca|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarSetSeguranca($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("SetSeguranca" => "Circuitos\Models\SetSeguranca"));
+        $query->columns("SetSeguranca.*");
+        $query->leftJoin("Circuitos\Models\SetSegurancaComponentes", "SetSegurancaComponentes.id_set_seguranca = SetSeguranca.id", "SetSegurancaComponentes");
+        $query->leftJoin("Circuitos\Models\SetSegurancaContato", "SetSegurancaContato.id_set_seguranca_componente = SetSegurancaComponentes.id", "SetSegurancaContato");
+        $query->leftJoin("Circuitos\Models\Lov", "Lov.id = SetSegurancaComponentes.id_tipo", "Lov");
+        $query->leftJoin("Circuitos\Models\Fornecedor", "Fornecedor.id = SetSegurancaComponentes.id_fornecedor", "Fornecedor");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa.id = Fornecedor.id_pessoa", "Pessoa");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Pessoa.id", "PessoaJuridica");
+        $query->where("SetSeguranca.excluido = 0 AND (CONVERT(SetSeguranca.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(SetSeguranca.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(SetSegurancaContato.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica.razaosocial USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov.descricao USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("SetSeguranca.id");
+        $query->orderBy("SetSeguranca.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
 }

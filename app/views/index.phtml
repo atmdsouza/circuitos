@@ -60,7 +60,7 @@
 
 </head>
 
-<body onload="inicializar()">
+<body onload="inicializar();floatHeader();">
 
 <!-- Begin page -->
 <div id="wrapper">
@@ -228,16 +228,16 @@
                                     <li><?php echo $this->tag->linkTo(["terreno", "Terrenos"]) ?></li>
                                     <?php
                                 }
-                                if ($acl->isAllowed($role, 'set_seguranca', 'index'))
-                                {
-                                    ?>
-                                    <li><?php echo $this->tag->linkTo(["set_seguranca", "Set de Segurança"]) ?></li>
-                                    <?php
-                                }
                                 if ($acl->isAllowed($role, 'set_equipamento', 'index'))
                                 {
                                     ?>
                                     <li><?php echo $this->tag->linkTo(["set_equipamento", "Set de Equipamentos"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'set_seguranca', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["set_seguranca", "Set de Segurança"]) ?></li>
                                     <?php
                                 }
                                 ?>
@@ -506,6 +506,9 @@ case "cidade_digital":?>
 <?php break;
 case "conectividade":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/conectividade.js" type="text/javascript"></script>
+<?php break;
+case "set_seguranca":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/setseguranca.js" type="text/javascript"></script>
 <?php break;
 case "cliente_unidade":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/cliente_unidade.js" type="text/javascript"></script>

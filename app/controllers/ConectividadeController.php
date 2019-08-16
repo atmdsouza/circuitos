@@ -6,6 +6,7 @@ use Phalcon\Http\Response as Response;
 
 use Circuitos\Models\Conectividade;
 use Circuitos\Models\Operations\ConectividadeOP;
+use Circuitos\Models\Lov;
 
 use Auth\Autentica;
 use Util\TokenManager;
@@ -38,6 +39,8 @@ class ConectividadeController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $conectividadeOP = new ConectividadeOP();
         $conectividade = $conectividadeOP->listar($dados['pesquisa']);
+        $tipos = Lov::find("tipo=18 AND excluido=0 AND ativo=1");
+        $this->view->tipos = $tipos;
         $this->view->page = $conectividade;
     }
 
@@ -170,4 +173,3 @@ class ConectividadeController extends ControllerBase
         return $response;
     }
 }
-
