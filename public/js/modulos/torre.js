@@ -467,3 +467,18 @@ function limparDadosFormComponente()
     $('#dados_componente').removeAttr('style', 'display: block;');
     $('#dados_componente').attr('style','display: none;');
 }
+
+function habilitaFornecedor()
+{
+
+}
+
+function autocompletarFornecedor()
+{
+
+}
+
+function autocompletarContrato()
+{
+
+}

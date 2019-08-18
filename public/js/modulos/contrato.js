@@ -467,3 +467,28 @@ function limparDadosFormComponente()
     $('#dados_componente').removeAttr('style', 'display: block;');
     $('#dados_componente').attr('style','display: none;');
 }
+
+function vincularContrato() //Vincula um contrato existente ao contrato atual habilitando o campo e o autocomplete
+{
+
+}
+
+function autocompletarContratoVinculado()
+{
+
+}
+
+function autocompletarFornecedor()
+{
+    
+}
+
+function autocompletarCliente()
+{
+    
+}
+
+function contratoClienteFornecedor() //Alternar entre o campo Cliente e Fornecedor dependendo do tipo de Contrato
+{
+
+}

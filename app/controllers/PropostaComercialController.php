@@ -39,6 +39,8 @@ class PropostaComercialController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $propostacomercialOP = new PropostaComercialOP();
         $propostacomercial = $propostacomercialOP->listar($dados['pesquisa']);
+        $tipos = Lov::find("tipo=23 AND excluido=0 AND ativo=1");
+        $this->view->tipos = $tipos;
         $this->view->page = $propostacomercial;
     }
 

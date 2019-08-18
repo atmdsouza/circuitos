@@ -112,11 +112,11 @@ $module = $this->router->getControllerName();
 </div>
 <!--  Modal Cadastro -->
 <div id="modalCadastro" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalCadastro" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-sg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" aria-hidden="true" onclick="confirmaCancelar('modalCadastro');">×</button>
-                <h5 class="modal-title" id="modalCadastro">Dados da Terreno</h5>
+                <h5 class="modal-title" id="modalCadastro">Dados do Terreno</h5>
             </div>
             <form id="formCadastro">
                 <input type="hidden" id="token" name="<?= $token['tokenKey'] ?>" value="<?= $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
@@ -124,18 +124,82 @@ $module = $this->router->getControllerName();
                     <div class="form-row">
                         <div class="col-12">
                             <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="propriedade_prodepa">Propriedade PRODEPA? <span class="required">*</span></label>
+                                    <select id="propriedade_prodepa" name="propriedade_prodepa" class="form-control" onchange="habilitaFornecedor();">
+                                        <option value="1" selected>Sim</option>
+                                        <option value="0">Não</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="lid_fornecedor">Fornecedor </label>
+                                    <?php echo $this->tag->textField(["lid_fornecedor", "size" => 120, "class" => "form-control", "disabled" => "true", "id" => "lid_fornecedor", "placeholder" => "Fornecedor", "onkeyup" => "autocompletarFornecedor();"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_fornecedor", "size" => 120, "class" => "form-control", "id" => "id_fornecedor"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="lid_contrato">Contrato </label>
+                                    <?php echo $this->tag->textField(["lid_contrato", "size" => 120, "class" => "form-control", "id" => "lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato();"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_contrato", "size" => 120, "class" => "form-control", "id" => "id_contrato"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="descricao">Descrição <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["descricao", "size" => 200, "class" => "form-control", "id" => "descricao", "placeholder" => "Descrição do Terreno"]) ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
                                 <div class="form-group col-md-4">
-                                    <label for="lid_cidade_digital">Cidade Digital <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["lid_cidade_digital", "size" => 120, "class" => "form-control", "id" => "lid_cidade_digital", "placeholder" => "Cidade Digital", "onkeyup" => "autocompletarCidadeDigital();"]) ?>
-                                    <?php echo $this->tag->hiddenField(["id_cidade_digital", "size" => 120, "class" => "form-control", "id" => "id_cidade_digital"]) ?>
+                                    <label for="comprimento">Comprimento </label>
+                                    <?= $this->tag->textField(["comprimento", "size" => 200, "class" => "form-control valor_percentual", "id" => "comprimento", "placeholder" => "Comprimento do Terreno"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="descricao">Terreno <span class="required">*</span></label>
-                                    <?= $this->tag->textField(["descricao", "size" => 200, "class" => "form-control result", "id" => "descricao", "placeholder" => "Descrição da Terreno"]) ?>
+                                    <label for="largura">Largura </label>
+                                    <?= $this->tag->textField(["largura", "size" => 200, "class" => "form-control valor_percentual", "id" => "largura", "placeholder" => "Largura do Terreno"]) ?>
                                 </div>
-                                <div class="form-group col-md-12">
-                                    <label for="endereco">Endereço da Terreno</label>
-                                    <?= $this->tag->textField(["endereco", "size" => 200, "class" => "form-control", "id" => "endereco", "placeholder" => "Endereço da Terreno"]) ?>
+                                <div class="form-group col-md-4">
+                                    <label for="area">Área </label>
+                                    <?= $this->tag->textField(["area", "size" => 200, "class" => "form-control valor_percentual", "id" => "area", "placeholder" => "Área do Terreno"]) ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="cep">CEP <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["cep", "size" => 200, "class" => "form-control cep", "id" => "cep", "onchange" => "preencherEndereco();", "placeholder" => "CEP do Terreno"]) ?>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="endereco">Endereço <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["endereco", "size" => 200, "class" => "form-control", "id" => "endereco", "placeholder" => "Endereço do Terreno"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="numero">Número <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["numero", "size" => 200, "class" => "form-control", "id" => "numero", "placeholder" => "Número do Terreno"]) ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="bairro">Bairro <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["bairro", "size" => 200, "class" => "form-control", "id" => "bairro", "placeholder" => "Bairro do Terreno"]) ?>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="complemento">Complemento </label>
+                                    <?= $this->tag->textField(["complemento", "size" => 200, "class" => "form-control", "id" => "complemento", "placeholder" => "Complemento do Terreno"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="cidade">Cidade <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["cidade", "size" => 200, "class" => "form-control", "id" => "cidade", "placeholder" => "Cidade do Terreno"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="estado">Estado <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["estado", "size" => 200, "class" => "form-control", "id" => "estado", "placeholder" => "Estado do Terreno"]) ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="latitude">Latitude </label>
+                                    <?= $this->tag->textField(["latitude", "size" => 200, "class" => "form-control", "id" => "latitude", "placeholder" => "Latitude do Terreno"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="longitude">Longitude </label>
+                                    <?= $this->tag->textField(["longitude", "size" => 200, "class" => "form-control", "id" => "longitude", "placeholder" => "Longitude do Terreno"]) ?>
                                 </div>
                             </div>
                         </div>

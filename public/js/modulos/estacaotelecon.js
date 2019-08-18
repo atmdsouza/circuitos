@@ -467,3 +467,38 @@ function limparDadosFormComponente()
     $('#dados_componente').removeAttr('style', 'display: block;');
     $('#dados_componente').attr('style','display: none;');
 }
+
+function autocompletarCidadeDigital()
+{
+
+}
+
+function autocompletarContrato()
+{
+
+}
+
+function autocompletarTerreno()
+{
+
+}
+
+function autocompletarTorre()
+{
+
+}
+
+function autocompletarSetEquipamento()
+{
+
+}
+
+function autocompletarSetSeguranca()
+{
+
+}
+
+function autocompletarUnidadeConsumidora()
+{
+
+}

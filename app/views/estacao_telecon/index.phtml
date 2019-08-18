@@ -115,7 +115,7 @@ $module = $this->router->getControllerName();
 </div>
 <!--  Modal Cadastro -->
 <div id="modalCadastro" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalCadastro" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-sg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" aria-hidden="true" onclick="confirmaCancelar('modalCadastro');">×</button>
@@ -127,18 +127,46 @@ $module = $this->router->getControllerName();
                     <div class="form-row">
                         <div class="col-12">
                             <div class="form-row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-3">
+                                    <label for="descricao">Descrição <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["descricao", "size" => 200, "class" => "form-control", "id" => "descricao", "placeholder" => "Descrição do Terreno"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
                                     <label for="lid_cidade_digital">Cidade Digital <span class="required">*</span></label>
                                     <?php echo $this->tag->textField(["lid_cidade_digital", "size" => 120, "class" => "form-control", "id" => "lid_cidade_digital", "placeholder" => "Cidade Digital", "onkeyup" => "autocompletarCidadeDigital();"]) ?>
                                     <?php echo $this->tag->hiddenField(["id_cidade_digital", "size" => 120, "class" => "form-control", "id" => "id_cidade_digital"]) ?>
                                 </div>
-                                <div class="form-group col-md-4">
-                                    <label for="descricao">Terreno <span class="required">*</span></label>
-                                    <?= $this->tag->textField(["descricao", "size" => 200, "class" => "form-control result", "id" => "descricao", "placeholder" => "Descrição da Terreno"]) ?>
+                                <div class="form-group col-md-3">
+                                    <label for="lid_contrato">Contrato </label>
+                                    <?php echo $this->tag->textField(["lid_contrato", "size" => 120, "class" => "form-control", "id" => "lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato();"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_contrato", "size" => 120, "class" => "form-control", "id" => "id_contrato"]) ?>
                                 </div>
-                                <div class="form-group col-md-12">
-                                    <label for="endereco">Endereço da Terreno</label>
-                                    <?= $this->tag->textField(["endereco", "size" => 200, "class" => "form-control", "id" => "endereco", "placeholder" => "Endereço da Terreno"]) ?>
+                                <div class="form-group col-md-3">
+                                    <label for="lterreno">Terreno </label>
+                                    <?php echo $this->tag->textField(["lterreno", "size" => 120, "class" => "form-control", "id" => "lterreno", "placeholder" => "Terreno", "onkeyup" => "autocompletarTerreno();"]) ?>
+                                    <?php echo $this->tag->hiddenField(["terreno", "size" => 120, "class" => "form-control", "id" => "terreno"]) ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="ltorre">Torre </label>
+                                    <?php echo $this->tag->textField(["ltorre", "size" => 120, "class" => "form-control", "id" => "ltorre", "placeholder" => "Torre", "onkeyup" => "autocompletarTorre();"]) ?>
+                                    <?php echo $this->tag->hiddenField(["torre", "size" => 120, "class" => "form-control", "id" => "torre"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="lid_set_equipamento">Set de Equipamento </label>
+                                    <?php echo $this->tag->textField(["lid_set_equipamento", "size" => 120, "class" => "form-control", "id" => "lid_set_equipamento", "placeholder" => "Set de Equipamento", "onkeyup" => "autocompletarSetEquipamento();"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_set_equipamento", "size" => 120, "class" => "form-control", "id" => "id_set_equipamento"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="lid_set_seguranca">Set de Segurança </label>
+                                    <?php echo $this->tag->textField(["lid_set_seguranca", "size" => 120, "class" => "form-control", "id" => "lid_set_seguranca", "placeholder" => "Set de Segurança", "onkeyup" => "autocompletarSetSeguranca();"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_set_seguranca", "size" => 120, "class" => "form-control", "id" => "id_set_seguranca"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="lid_unidade_consumidora">Unidade Consumidora </label>
+                                    <?php echo $this->tag->textField(["lid_unidade_consumidora", "size" => 120, "class" => "form-control", "id" => "lid_unidade_consumidora", "placeholder" => "Unidade Consumidora", "onkeyup" => "autocompletarUnidadeConsumidora();"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_unidade_consumidora", "size" => 120, "class" => "form-control", "id" => "id_unidade_consumidora"]) ?>
                                 </div>
                             </div>
                         </div>

@@ -111,7 +111,7 @@ $module = $this->router->getControllerName();
 </div>
 <!--  Modal Cadastro -->
 <div id="modalCadastro" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalCadastro" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-sg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" aria-hidden="true" onclick="confirmaCancelar('modalCadastro');">×</button>
@@ -124,12 +124,7 @@ $module = $this->router->getControllerName();
                         <div class="col-12">
                             <div class="form-row">
                                 <div class="form-group col-md-4">
-                                    <label for="lid_cidade_digital">Cidade Digital <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["lid_cidade_digital", "size" => 120, "class" => "form-control", "id" => "lid_cidade_digital", "placeholder" => "Cidade Digital", "onkeyup" => "autocompletarCidadeDigital();"]) ?>
-                                    <?php echo $this->tag->hiddenField(["id_cidade_digital", "size" => 120, "class" => "form-control", "id" => "id_cidade_digital"]) ?>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="id_tipo">Tipo Torre <span class="required">*</span></label>
+                                    <label for="id_tipo">Tipo de Torre <span class="required">*</span></label>
                                     <?php echo $this->tag->select(["id_tipo", $tipos, "class" => "form-control", "id" => "id_tipo",
                                         "using" => ["id", "descricao",],
                                         "useEmpty" => true,
@@ -138,12 +133,31 @@ $module = $this->router->getControllerName();
                                     ?>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="descricao">Torre <span class="required">*</span></label>
-                                    <?= $this->tag->textField(["descricao", "size" => 200, "class" => "form-control result", "id" => "descricao", "placeholder" => "Descrição da Torre"]) ?>
+                                    <label for="lid_contrato">Contrato </label>
+                                    <?php echo $this->tag->textField(["lid_contrato", "size" => 120, "class" => "form-control", "id" => "lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato();"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_contrato", "size" => 120, "class" => "form-control", "id" => "id_contrato"]) ?>
                                 </div>
-                                <div class="form-group col-md-12">
-                                    <label for="endereco">Endereço da Torre</label>
-                                    <?= $this->tag->textField(["endereco", "size" => 200, "class" => "form-control", "id" => "endereco", "placeholder" => "Endereço da Torre"]) ?>
+                                <div class="form-group col-md-4">
+                                    <label for="descricao">Descrição <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["descricao", "size" => 200, "class" => "form-control", "id" => "descricao", "placeholder" => "Descrição da Torre"]) ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="propriedade_prodepa">Propriedade PRODEPA? <span class="required">*</span></label>
+                                    <select id="propriedade_prodepa" name="propriedade_prodepa" class="form-control" onchange="habilitaFornecedor();">
+                                        <option value="1" selected>Sim</option>
+                                        <option value="0">Não</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="lid_fornecedor">Fornecedor </label>
+                                    <?php echo $this->tag->textField(["lid_fornecedor", "size" => 120, "class" => "form-control", "disabled" => "true", "id" => "lid_fornecedor", "placeholder" => "Fornecedor", "onkeyup" => "autocompletarFornecedor();"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_fornecedor", "size" => 120, "class" => "form-control", "id" => "id_fornecedor"]) ?>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="altura">Altura </label>
+                                    <?= $this->tag->textField(["altura", "size" => 200, "class" => "form-control valor_percentual", "id" => "altura", "placeholder" => "Altura da Torre"]) ?>
                                 </div>
                             </div>
                         </div>
