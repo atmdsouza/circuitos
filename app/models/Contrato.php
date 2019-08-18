@@ -2,6 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
+
 class Contrato extends \Phalcon\Mvc\Model
 {
 
@@ -731,31 +734,81 @@ class Contrato extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field cliente
+     *
+     * @return string
+     */
+    public function getCliente()
+    {
+        return $this->Cliente->Pessoa->nome;
+    }
+
+    /**
+     * Returns the value of field Fornecedor
+     *
+     * @return string
+     */
+    public function getFornecedor()
+    {
+        return $this->Fornecedor->Pessoa->nome;
+    }
+
+    /**
+     * Returns the value of field Tipo Contrato
+     *
+     * @return string
+     */
+    public function getTipoContrato()
+    {
+        return $this->Lov1->descricao;
+    }
+
+    /**
+     * Returns the value of field Status
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->Lov2->descricao;
+    }
+
+    /**
+     * Returns the value of field Número Processo Contratação
+     *
+     * @return string
+     */
+    public function getNumeroProcessoContratacao()
+    {
+        return $this->ContratoProcesso->numero_processo;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("contrato");
-        $this->hasMany('id', 'CircuitosModels\Contrato', 'id_contrato_principal', ['alias' => 'Contrato']);
-        $this->hasMany('id', 'CircuitosModels\ContratoAnexo', 'id_contrato', ['alias' => 'ContratoAnexo']);
-        $this->hasMany('id', 'CircuitosModels\ContratoArquivoFisico', 'id_contrato', ['alias' => 'ContratoArquivoFisico']);
-        $this->hasMany('id', 'CircuitosModels\ContratoExercicio', 'id_contrato', ['alias' => 'ContratoExercicio']);
-        $this->hasMany('id', 'CircuitosModels\ContratoFiscalHasContrato', 'id_contrato', ['alias' => 'ContratoFiscalHasContrato']);
-        $this->hasMany('id', 'CircuitosModels\ContratoHasContratoGarantia', 'id_contrato', ['alias' => 'ContratoHasContratoGarantia']);
-        $this->hasMany('id', 'CircuitosModels\ContratoMovimento', 'id_contrato', ['alias' => 'ContratoMovimento']);
-        $this->hasMany('id', 'CircuitosModels\ContratoOrcamento', 'id_contrato', ['alias' => 'ContratoOrcamento']);
-        $this->hasMany('id', 'CircuitosModels\EstacaoTelecon', 'id_contrato', ['alias' => 'EstacaoTelecon']);
-        $this->hasMany('id', 'CircuitosModels\SetEquipamento', 'id_contrato', ['alias' => 'SetEquipamento']);
-        $this->hasMany('id', 'CircuitosModels\SetSegurancaComponentes', 'id_contrato', ['alias' => 'SetSegurancaComponentes']);
-        $this->hasMany('id', 'CircuitosModels\Terreno', 'id_contrato', ['alias' => 'Terreno']);
-        $this->hasMany('id', 'CircuitosModels\Torre', 'id_contrato', ['alias' => 'Torre']);
-        $this->belongsTo('id_cliente', 'CircuitosModels\Cliente', 'id', ['alias' => 'Cliente']);
-        $this->belongsTo('id_contrato_principal', 'CircuitosModels\Contrato', 'id', ['alias' => 'Contrato']);
-        $this->belongsTo('id_fornecedor', 'CircuitosModels\Fornecedor', 'id', ['alias' => 'Fornecedor']);
-        $this->belongsTo('id_tipo_contrato', 'CircuitosModels\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_status', 'CircuitosModels\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_processo_contratacao', 'CircuitosModels\ContratoProcesso', 'id', ['alias' => 'ContratoProcesso']);
+        $this->hasMany('id', 'Circuitos\Models\Contrato', 'id_contrato_principal', ['alias' => 'Contrato']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoAnexo', 'id_contrato', ['alias' => 'ContratoAnexo']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoArquivoFisico', 'id_contrato', ['alias' => 'ContratoArquivoFisico']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoExercicio', 'id_contrato', ['alias' => 'ContratoExercicio']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoFiscalHasContrato', 'id_contrato', ['alias' => 'ContratoFiscalHasContrato']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoHasContratoGarantia', 'id_contrato', ['alias' => 'ContratoHasContratoGarantia']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoMovimento', 'id_contrato', ['alias' => 'ContratoMovimento']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoOrcamento', 'id_contrato', ['alias' => 'ContratoOrcamento']);
+        $this->hasMany('id', 'Circuitos\Models\EstacaoTelecon', 'id_contrato', ['alias' => 'EstacaoTelecon']);
+        $this->hasMany('id', 'Circuitos\Models\SetEquipamento', 'id_contrato', ['alias' => 'SetEquipamento']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoComponentes', 'id_contrato', ['alias' => 'ContratoComponentes']);
+        $this->hasMany('id', 'Circuitos\Models\Terreno', 'id_contrato', ['alias' => 'Terreno']);
+        $this->hasMany('id', 'Circuitos\Models\Torre', 'id_contrato', ['alias' => 'Torre']);
+        $this->belongsTo('id_cliente', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Cliente']);
+        $this->belongsTo('id_contrato_principal', 'Circuitos\Models\Contrato', 'id', ['alias' => 'ContratoVinculado']);
+        $this->belongsTo('id_fornecedor', 'Circuitos\Models\Fornecedor', 'id', ['alias' => 'Fornecedor']);
+        $this->belongsTo('id_tipo_contrato', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov1']);
+        $this->belongsTo('id_status', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov2']);
+        $this->belongsTo('id_processo_contratacao', 'Circuitos\Models\ContratoProcesso', 'id', ['alias' => 'ContratoProcesso']);
     }
 
     /**
@@ -788,6 +841,44 @@ class Contrato extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de Contrato, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return Contrato|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarContrato($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("Contrato" => "Circuitos\Models\Contrato"));
+        $query->columns("Contrato.*");
+        $query->leftJoin("Circuitos\Models\Lov", "Lov1.id = Contrato.id_tipo_contrato", "Lov1");
+        $query->leftJoin("Circuitos\Models\Lov", "Lov2.id = Contrato.id_status", "Lov2");
+        $query->leftJoin("Circuitos\Models\ContratoProcesso", "ContratoProcesso.id = Contrato.id_processo_contratacao", "ContratoProcesso");
+        $query->leftJoin("Circuitos\Models\Fornecedor", "Fornecedor.id = Contrato.id_fornecedor", "Fornecedor");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa1.id = Fornecedor.id_pessoa", "Pessoa1");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica1.id = Pessoa1.id", "PessoaJuridica1");
+        $query->leftJoin("Circuitos\Models\Cliente", "Cliente.id = Contrato.id_Cliente", "Cliente");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa2.id = Cliente.id_pessoa", "Pessoa2");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica2.id = Pessoa2.id", "PessoaJuridica2");
+        $query->where("Contrato.excluido = 0 AND (CONVERT(Contrato.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Contrato.numero USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Contrato.ano USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Contrato.exercicio USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(ContratoProcesso.codigo_processo USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(ContratoProcesso.numero_processo USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa1.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica1.razaosocial USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa2.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica2.razaosocial USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov1.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov2.descricao USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("Contrato.id");
+        $query->orderBy("Contrato.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
 }

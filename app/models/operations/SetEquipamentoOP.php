@@ -6,23 +6,26 @@ use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Phalcon\Http\Response as Response;
 
-use Circuitos\Models\Conectividade;
+use Circuitos\Models\SetEquipamento;
+use Circuitos\Models\Fabricante;
+use Circuitos\Models\Modelo;
+use Circuitos\Models\Equipamento;
 
-class ConectividadeOP extends Conectividade
+class SetEquipamentoOP extends SetEquipamento
 {
     private $encode = "UTF-8";
 
     public function listar($dados)
     {
-        return Conectividade::pesquisarConectividade($dados);
+        return SetEquipamento::pesquisarSetEquipamento($dados);
     }
 
-    public function cadastrar(Conectividade $objArray)
+    public function cadastrar(SetEquipamento $objArray)
     {
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = new Conectividade();
+            $objeto = new SetEquipamento();
             $objeto->setIdCidadeDigital($objArray->getIdCidadeDigital());
             $objeto->setIdTipo($objArray->getIdTipo());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
@@ -39,12 +42,12 @@ class ConectividadeOP extends Conectividade
         }
     }
 
-    public function alterar(Conectividade $objArray)
+    public function alterar(SetEquipamento $objArray)
     {
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = Conectividade::findFirst($objArray->getId());
+            $objeto = SetEquipamento::findFirst($objArray->getId());
             $objeto->setIdCidadeDigital($objArray->getIdCidadeDigital());
             $objeto->setIdTipo($objArray->getIdTipo());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
@@ -61,12 +64,12 @@ class ConectividadeOP extends Conectividade
         }
     }
 
-    public function ativar(Conectividade $objArray)
+    public function ativar(SetEquipamento $objArray)
     {
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = Conectividade::findFirst($objArray->getId());
+            $objeto = SetEquipamento::findFirst($objArray->getId());
             $objeto->setAtivo(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
@@ -80,12 +83,12 @@ class ConectividadeOP extends Conectividade
         }
     }
 
-    public function inativar(Conectividade $objArray)
+    public function inativar(SetEquipamento $objArray)
     {
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = Conectividade::findFirst($objArray->getId());
+            $objeto = SetEquipamento::findFirst($objArray->getId());
             $objeto->setAtivo(0);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
@@ -99,12 +102,12 @@ class ConectividadeOP extends Conectividade
         }
     }
 
-    public function excluir(Conectividade $objArray)
+    public function excluir(SetEquipamento $objArray)
     {
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = Conectividade::findFirst($objArray->getId());
+            $objeto = SetEquipamento::findFirst($objArray->getId());
             $objeto->setExcluido(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
@@ -118,10 +121,10 @@ class ConectividadeOP extends Conectividade
         }
     }
 
-    public function visualizarConectividade($id)
+    public function visualizarSetEquipamento($id)
     {
         try {
-            $objeto = Conectividade::findFirst("id={$id}");
+            $objeto = SetEquipamento::findFirst("id={$id}");
             $objetoArray = array(
                 'id' => $objeto->getId(),
                 'id_cidade_digital' => $objeto->getIdCidadeDigital(),

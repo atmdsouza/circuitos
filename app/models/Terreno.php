@@ -2,6 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
+
 class Terreno extends \Phalcon\Mvc\Model
 {
 
@@ -615,6 +618,16 @@ class Terreno extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field Nome do Fornecedor
+     *
+     * @return string
+     */
+    public function getFornecedor()
+    {
+        return $this->Fornecedor->Pessoa->nome;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -656,6 +669,30 @@ class Terreno extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de Terreno, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return Terreno|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarTerreno($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("Terreno" => "Circuitos\Models\Terreno"));
+        $query->columns("Terreno.*");
+        $query->leftJoin("Circuitos\Models\Fornecedor", "Fornecedor.id = Terreno.id_fornecedor", "Fornecedor");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa.id = Fornecedor.id_pessoa", "Pessoa");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Fornecedor.id_pessoa", "PessoaJuridica");
+        $query->where("Terreno.excluido = 0 AND Terreno.ativo = 1 AND(CONVERT(Terreno.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Terreno.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica.razaosocial USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("Terreno.id");
+        $query->orderBy("Terreno.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
 }

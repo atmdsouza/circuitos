@@ -2,6 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
+
 class Torre extends \Phalcon\Mvc\Model
 {
 
@@ -28,6 +31,12 @@ class Torre extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $id_fornecedor;
+
+    /**
+     *
+     * @var string
+     */
+    protected $descricao;
 
     /**
      *
@@ -109,6 +118,14 @@ class Torre extends \Phalcon\Mvc\Model
         $this->id_fornecedor = $id_fornecedor;
 
         return $this;
+    }
+
+    /**
+     * @param string $descricao
+     */
+    public function setDescricao($descricao)
+    {
+        $this->descricao = $descricao;
     }
 
     /**
@@ -217,6 +234,14 @@ class Torre extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return string
+     */
+    public function getDescricao()
+    {
+        return $this->descricao;
+    }
+
+    /**
      * Returns the value of field altura
      *
      * @return double
@@ -267,6 +292,26 @@ class Torre extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field descrição tipo
+     *
+     * @return string
+     */
+    public function getTipoTorre()
+    {
+        return $this->Lov->descricao;
+    }
+
+    /**
+     * Returns the value of field nome do Fornecedor
+     *
+     * @return string
+     */
+    public function getFornecedor()
+    {
+        return $this->Fornecedor->Pessoa->nome;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -309,6 +354,33 @@ class Torre extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de Torre, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return Torre|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarTorre($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("Torre" => "Circuitos\Models\Torre"));
+        $query->columns("Torre.*");
+        $query->leftJoin("Circuitos\Models\Lov", "Lov.id = Torre.id_tipo", "Lov");
+        $query->leftJoin("Circuitos\Models\Fornecedor", "Fornecedor.id = Torre.id_fornecedor", "Fornecedor");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa.id = Fornecedor.id_pessoa", "Pessoa");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Fornecedor.id_pessoa", "PessoaJuridica");
+        $query->where("Torre.excluido = 0 AND Torre.ativo = 1 AND(CONVERT(Torre.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Torre.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Torre.altura USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica.razaosocial USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov.descricao USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("Torre.id");
+        $query->orderBy("Torre.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
 }

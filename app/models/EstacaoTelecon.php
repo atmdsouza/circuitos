@@ -2,6 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
+
 class EstacaoTelecon extends \Phalcon\Mvc\Model
 {
 
@@ -161,7 +164,7 @@ class EstacaoTelecon extends \Phalcon\Mvc\Model
      * @param integer $id_set_seguranca
      * @return $this
      */
-    public function setIdSetSeguranca($id_set_seguranca)
+    public function setIdEstacaoTelecon($id_set_seguranca)
     {
         $this->id_set_seguranca = $id_set_seguranca;
 
@@ -298,7 +301,7 @@ class EstacaoTelecon extends \Phalcon\Mvc\Model
      *
      * @return integer
      */
-    public function getIdSetSeguranca()
+    public function getIdEstacaoTelecon()
     {
         return $this->id_set_seguranca;
     }
@@ -354,6 +357,56 @@ class EstacaoTelecon extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field cidade digital
+     *
+     * @return string
+     */
+    public function getCidadeDigital()
+    {
+        return $this->CidadeDigital->descricao;
+    }
+
+    /**
+     * Returns the value of field set equipamento
+     *
+     * @return string
+     */
+    public function getSetEquipamento()
+    {
+        return $this->SetEquipamento->descricao;
+    }
+
+    /**
+     * Returns the value of field Set Seguranca
+     *
+     * @return string
+     */
+    public function getSetSeguranca()
+    {
+        return $this->SetSeguranca->descricao;
+    }
+
+    /**
+     * Returns the value of field Terreno
+     *
+     * @return string
+     */
+    public function getTerreno()
+    {
+        return $this->Terreno->descricao;
+    }
+
+    /**
+     * Returns the value of field Torre
+     *
+     * @return string
+     */
+    public function getTorre()
+    {
+        return $this->Torre->descricao;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -399,6 +452,36 @@ class EstacaoTelecon extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de EstacaoTelecon, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return EstacaoTelecon|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarEstacaoTelecon($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("EstacaoTelecon" => "Circuitos\Models\EstacaoTelecon"));
+        $query->columns("EstacaoTelecon.*");
+        $query->leftJoin("Circuitos\Models\CidadeDigital", "CidadeDigital.id = EstacaoTelecon.id_cidade_digital", "CidadeDigital");
+        $query->leftJoin("Circuitos\Models\Contrato", "Contrato.id = EstacaoTelecon.id_contrato", "Contrato");
+        $query->leftJoin("Circuitos\Models\Terreno", "Terreno.id = EstacaoTelecon.id_terreno", "Terreno");
+        $query->leftJoin("Circuitos\Models\Torre", "Torre.id = EstacaoTelecon.id_torre", "Torre");
+        $query->leftJoin("Circuitos\Models\SetSeguranca", "SetSeguranca.id = EstacaoTelecon.id_set_seguranca", "SetSeguranca");
+        $query->leftJoin("Circuitos\Models\SetEquipamento", "SetEquipamento.id = EstacaoTelecon.id_set_equipamento", "SetEquipamento");
+        $query->where("EstacaoTelecon.excluido = 0 AND (CONVERT(EstacaoTelecon.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(EstacaoTelecon.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(CidadeDigital.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Terreno.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Torre.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(SetSeguranca.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(SetEquipamento.descricao USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("EstacaoTelecon.id");
+        $query->orderBy("EstacaoTelecon.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
 }

@@ -1,0 +1,391 @@
+<?php
+/**
+ * @var \Phalcon\Mvc\View\Engine\Php $this
+ */
+
+use Phalcon\Tag;
+use Util\Util;
+
+?>
+
+<?php echo $this->getContent(); ?>
+
+<div class="col-12">
+    <?php
+    echo $this->tag->form(
+        [
+            "fornecedor/index",
+            "autocomplete" => "off"
+        ]
+    );
+    ?>
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            <label for="fieldPesquisa" class="col-sm-2 control-label">Pesquisa</label>
+            <div class="col-sm-10">
+                <?php echo $this->tag->textField(["pesquisa", "size" => 60, "class" => "form-control", "id" => "fieldPesquisa"]) ?>
+            </div>
+        </div>
+        <div class="form-group col-md-2">
+            <div class="bt_menu_tabela">
+                <?php echo $this->tag->submitButton(["Pesquisar", "class" => "btn btn-info btn-rounded waves-light w-md"]) ?>
+            </div>
+        </div>
+    </div>
+    <?php echo $this->tag->endForm(); ?>
+</div>
+
+<div class="col-12">
+    <div class="card-box">
+        <table id="tb_fornecedor" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Tipo</th>
+                    <th>CNPJ/CPF</th>
+                    <th>Nome</th>
+                    <th>Esfera</th>
+                    <th>Data Cadastro</th>
+                    <th>Data Alteração</th>
+                    <th>Ativo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($page->items as $fornecedor): ?>
+                <?php            
+                $util = new Util();
+                
+                switch($fornecedor->id_tipofornecedor){
+                    case '44'://Pessoa Física
+                    $cnpjcfp = ($fornecedor->Pessoa->PessoaFisica->cpf) ?  $util->mask($fornecedor->Pessoa->PessoaFisica->cpf,'###.###.###-##') : null;
+                    $esfera_cli = null;
+                    break;
+                    case '43'://Pessoa Juridica
+                    $cnpjcfp = ($fornecedor->Pessoa->PessoaJuridica->cnpj) ? $util->mask($fornecedor->Pessoa->PessoaJuridica->cnpj,'##.###.###/####-##') : null;
+                    $esfera_cli = ($fornecedor->Pessoa->PessoaJuridica->Lov->descricao) ? $fornecedor->Pessoa->PessoaJuridica->Lov->descricao : null;;
+                    break;
+                }
+                switch($fornecedor->Pessoa->ativo){
+                    case '0'://Inativo (False)
+                    $ativo = "Inativo";
+                    break;
+                    case '1'://Ativo (True)
+                    $ativo = "Ativo";
+                    break;
+                }
+                $data_cadastro = ($fornecedor->Pessoa->create_at) ? $util->converterDataHoraParaBr($fornecedor->Pessoa->create_at) : null;
+                $data_atualizacao = ($fornecedor->Pessoa->update_at) ? $util->converterDataHoraParaBr($fornecedor->Pessoa->update_at) : null;
+            ?>
+                <tr>
+                    <td>
+                        <?php echo $fornecedor->id ?>
+                    </td>
+                    <td>
+                        <?php echo $fornecedor->Lov->descricao ?>
+                    </td>
+                    <td>
+                        <?php echo $cnpjcfp ?>
+                    </td>
+                    <td>
+                        <?php echo $fornecedor->Pessoa->nome ?>
+                    </td>
+                    <td>
+                        <?php echo $esfera_cli ?>
+                    </td>
+                    <td>
+                        <?php echo $data_cadastro ?>
+                    </td>
+                    <td>
+                        <?php echo $data_atualizacao ?>
+                    </td>
+                    <td>
+                        <?php echo $ativo ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--  Modal Fornecedor -->
+<div id="modalfornecedor" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalfornecedor" aria-hidden="true"
+    style="display: none;" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h5 class="modal-title" id="modalfornecedor">Dados do Fornecedor</h5>
+            </div>
+            <form id="formFornecedor">
+                <input type="hidden" id="token" name="<?php echo $token['tokenKey'] ?>" value="<?php echo $token['tokenValue'] ?>">
+                <!-- CSRFToken Control -->
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="col-12">
+                            <h6>Tipo de Fornecedor</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="descrtipofornecedoricao">Tipo <span class="required">*</span></label>
+                                    <?php echo $this->tag->select(["tipofornecedor", $tipofornecedor, "class" => "form-control", "id" => "tipofornecedor",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione um tipo",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="form_jur" style="display: none;">
+                                <h6>Dados do Fornecedor Jurídico</h6>
+                                <div class="form-row">
+                                    <div class="form-group col-md-5">
+                                    <label for="nome_pessoa">Nome Fantasia <span class="required">*</span></label>
+                                        <?php echo $this->tag->textField(["nome_pessoa", "size" => 200, "class" => "form-control", "id" => "nome_pessoa", "placeholder" => "Nome Fantasia"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-5">
+                                    <label for="rzsocial">Razão Social <span class="required">*</span></label>
+                                        <?php echo $this->tag->textField(["rzsocial", "size" => 200, "class" => "form-control", "id" => "rzsocial", "placeholder" => "Razão Social"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                    <label for="sigla">Sigla</label>
+                                        <?php echo $this->tag->textField(["sigla", "size" => 200, "class" => "form-control", "id" => "sigla", "placeholder" => "Sigla"]) ?>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                    <label for="cnpj">CNPJ <span class="required">*</span></label>
+                                        <?php echo $this->tag->textField(["cnpj", "size" => 120, "class" => "form-control cnpj", "id" => "cnpj", "placeholder" => "CNPJ"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                    <label for="inscricaoestadual">Inscrição Estadual</label>
+                                        <?php echo $this->tag->textField(["inscricaoestadual", "size" => 120, "class" => "form-control", "id" => "inscricaoestadual", "placeholder" => "Inscrição Estadual"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                    <label for="inscricaomunicipal">Inscrição Municipal</label>
+                                        <?php echo $this->tag->textField(["inscricaomunicipal", "size" => 120, "class" => "form-control", "id" => "inscricaomunicipal", "placeholder" => "Inscrição Municipal"]) ?>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                    <label for="esfera">Esfera <span class="required">*</span></label>
+                                        <?php echo $this->tag->select(["esfera", $esfera, "class" => "form-control", "id" => "esfera",
+                                            "using" => ["id", "descricao",],
+                                            "useEmpty" => true,
+                                            "emptyText" => "Selecione uma esfera",
+                                            "emptyValue" => ""])
+                                        ?>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                    <label for="setor">Setor <span class="required">*</span></label>
+                                        <?php echo $this->tag->select(["setor", $setor, "class" => "form-control", "id" => "setor",
+                                            "using" => ["id", "descricao",],
+                                            "useEmpty" => true,
+                                            "emptyText" => "Selecione um setor",
+                                            "emptyValue" => ""])
+                                        ?>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                    <label for="datafund">Data Fundação</label>
+                                        <?php echo $this->tag->textField(["datafund", "size" => 120, "class" => "form-control data", "id" => "datafund", "placeholder" => "Data Fundação"]) ?>
+                                    </div>
+                                </div>
+                                <p><strong>Todos fornecedores jurídicos</strong> devem ter seu cadastro completo através da
+                                    criação de uma <strong>unidade de atuação</strong> (podendo um fornecedor possuir mais
+                                    de uma unidade). Esta unidade possui os dados de endereço e contatos.
+                                    Obrigatóriamente, todo fornecedor deve ao menos ter uma unidade (<strong>SEDE</strong>
+                                    por exemplo).</p>
+                            </div>
+                            <div class="form_fis" style="display: none;">
+                                <h6>Dados do Fornecedor Físico</h6>
+                                <div class="form-row">
+                                    <div class="form-group col-md-8">
+                                    <label for="nome_pessoa2">Nome Completo <span class="required">*</span></label>
+                                        <?php echo $this->tag->textField(["nome_pessoa2", "size" => 200, "class" => "form-control", "id" => "nome_pessoa2", "placeholder" => "Nome Completo"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                    <label for="cpf">CPF <span class="required">*</span></label>
+                                        <?php echo $this->tag->textField(["cpf", "size" => 200, "class" => "form-control cpf", "id" => "cpf", "placeholder" => "CPF"]) ?>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                    <label for="sexo">Sexo</label>
+                                        <?php echo $this->tag->select(["sexo", $sexo, "class" => "form-control", "id" => "sexo",
+                                            "using" => ["id", "descricao",],
+                                            "useEmpty" => true,
+                                            "emptyText" => "Selecione o sexo",
+                                            "emptyValue" => ""])
+                                        ?>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                    <label for="rg">R.G.</label>
+                                        <?php echo $this->tag->textField(["rg", "size" => 200, "class" => "form-control", "id" => "rg", "placeholder" => "R.G."]) ?>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                    <label for="datanasc">Data de Nascimento</label>
+                                        <?php echo $this->tag->textField(["datanasc", "size" => 200, "class" => "form-control data", "id" => "datanasc", "placeholder" => "Data de Nascimento"]) ?>
+                                    </div>
+                                </div>
+                                <h6>Dados do Endereço</h6>
+                                <div class="form-row">
+                                    <input type="hidden" id="sigla_uf_t" name="sigla_uf_t" value=""><!-- Manter como hidden -->
+                                    <div class="form-group col-md-3">
+                                        <label for="tipoendereco_t">Tipo</label>
+                                        <?php echo $this->tag->select(["tipoendereco_t", $tipoendereco, "class" => "form-control", "id" => "tipoendereco_t",
+                                            "using" => ["id", "descricao",],
+                                            "useEmpty" => true,
+                                            "emptyText" => "Selecione um tipo",
+                                            "emptyValue" => ""])
+                                        ?>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                    <label for="cep_t">CEP</label>
+                                        <?php echo $this->tag->textField(["cep_t", "size" => 200, "class" => "form-control cep", "id" => "cep_t", "placeholder" => "CEP"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                    <label for="endereco_t">Endereço</label>
+                                        <?php echo $this->tag->textField(["endereco_t", "size" => 200, "class" => "form-control", "id" => "endereco_t", "placeholder" => "Endereço"]) ?>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                    <label for="numero_t">Número</label>
+                                        <?php echo $this->tag->textField(["numero_t", "size" => 120, "class" => "form-control", "id" => "numero_t", "placeholder" => "Número"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                    <label for="bairro_t">Bairro</label>
+                                        <?php echo $this->tag->textField(["bairro_t", "size" => 120, "class" => "form-control", "id" => "bairro_t", "placeholder" => "Bairro"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                    <label for="cidade_t">Cidade</label>
+                                        <?php echo $this->tag->textField(["cidade_t", "size" => 120, "class" => "form-control", "id" => "cidade_t", "placeholder" => "Cidade"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                    <label for="estado_t">Estado</label>
+                                        <?php echo $this->tag->textField(["estado_t", "size" => 120, "class" => "form-control", "id" => "estado_t", "placeholder" => "Estado"]) ?>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                    <label for="complemento_t">Complemento</label>
+                                        <?php echo $this->tag->textField(["complemento_t", "size" => 120, "class" => "form-control", "id" => "complemento_t", "placeholder" => "Complemento"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                    <label for="principal_t">Principal</label>
+                                        <?php echo $this->tag->select(["principal_t", ["0" => "Não", "1" => "Sim"], "class" => "form-control", "id" => "principal_t", "useEmpty" => true, "emptyText" => "Principal?", "emptyValue" => ""]) ?>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <button id="insert_endereco" name="insert_endereco" type="button" class="btn btn-sucess btn-rounded waves-light waves-effect bt_inserir">Inserir</button>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <table id="tb_endereco" class="table table-hover" style="display: none;">
+                                        <thead>
+                                            <tr>
+                                                <th>Principal?</th>
+                                                <th>Tipo</th>
+                                                <th>CEP</th>
+                                                <th>Endereço</th>
+                                                <th>Cidade</th>
+                                                <th>Estado</th>
+                                                <th>Excluir?</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <h6>Dados do Contato</h6>
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <label for="tipotelefone_t">Tipo</label>
+                                        <?php echo $this->tag->select(["tipotelefone_t", $tipotelefone, "class" => "form-control", "id" => "tipotelefone_t",
+                                            "using" => ["id", "descricao",],
+                                            "useEmpty" => true,
+                                            "emptyText" => "Selecione um tipo",
+                                            "emptyValue" => ""])
+                                        ?>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="telefone_t">Número Telefone</label>
+                                        <?php echo $this->tag->textField(["telefone_t", "size" => 200, "class" => "form-control celular", "id" => "telefone_t", "placeholder" => "Número Telefone"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label for="princtel_t">Principal</label>
+                                        <?php echo $this->tag->select(["princtel_t", ["0" => "Não", "1" => "Sim"], "class" => "form-control", "id" => "princtel_t", "useEmpty" => true, "emptyText" => "Principal?", "emptyValue" => ""]) ?>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <button id="insert_telefone" name="insert_telefone" type="button" class="btn btn-sucess btn-rounded waves-light waves-effect bt_inserir">Inserir</button>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <table id="tb_telefone" class="table table-hover" style="display: none;">
+                                            <thead>
+                                                <tr>
+                                                    <th>Principal?</th>
+                                                    <th>Tipo</th>
+                                                    <th>Telefone</th>
+                                                    <th>Excluir?</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <label for="tipoemail_t">Tipo</label>
+                                        <?php echo $this->tag->select(["tipoemail_t", $tipoemail, "class" => "form-control", "id" => "tipoemail_t",
+                                            "using" => ["id", "descricao",],
+                                            "useEmpty" => true,
+                                            "emptyText" => "Selecione um tipo",
+                                            "emptyValue" => ""])
+                                        ?>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="descricao">Descrição</label>
+                                        <?php echo $this->tag->emailField(["email_t", "size" => 200, "class" => "form-control", "id" => "email_t", "placeholder" => "Endereço de E-mail"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label for="princemail_t">Principal</label>
+                                        <?php echo $this->tag->select(["princemail_t", ["0" => "Não", "1" => "Sim"], "class" => "form-control", "id" => "princemail_t", "useEmpty" => true, "emptyText" => "Principal?", "emptyValue" => ""]) ?>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <button id="insert_email" name="insert_email" type="button" class="btn btn-sucess btn-rounded waves-light waves-effect bt_inserir">Inserir</button>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <table id="tb_email" class="table table-hover" style="display: none;">
+                                            <thead>
+                                                <tr>
+                                                    <th>Principal?</th>
+                                                    <th>Tipo</th>
+                                                    <th>E-mail</th>
+                                                    <th>Excluir?</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group col-md-6">
+                        <p class="texto_rodape">Os campos com <span class="required">*</span> são obrigatórios!</p>
+                    </div>
+                    <div class="form-group col-md-6 botoes_rodape">
+                        <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
+                        <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="limparModal()" data-dismiss="modal">Fechar</button>
+                        <button id="salvaFornecedor" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
+                    </div>
+                </div><!-- /.modal-footer -->
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

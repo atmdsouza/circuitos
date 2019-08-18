@@ -2,6 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
+
 class SetEquipamento extends \Phalcon\Mvc\Model
 {
 
@@ -221,6 +224,31 @@ class SetEquipamento extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de SetEquipamento, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return SetEquipamento|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarSetEquipamento($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("SetEquipamento" => "Circuitos\Models\SetEquipamento"));
+        $query->columns("SetEquipamento.*");
+        $query->leftJoin("Circuitos\Models\SetEquipamentoComponentes", "SetEquipamentoComponentes.id_set_equipamento = SetEquipamento.id", "SetEquipamentoComponentes");
+        $query->leftJoin("Circuitos\Models\Fornecedor", "Fornecedor.id = SetEquipamentoComponentes.id_fornecedor", "Fornecedor");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa.id = Fornecedor.id_pessoa", "Pessoa");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Pessoa.id", "PessoaJuridica");
+        $query->where("SetEquipamento.excluido = 0 AND (CONVERT(SetEquipamento.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(SetEquipamento.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica.razaosocial USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("SetEquipamento.id");
+        $query->orderBy("SetEquipamento.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
 }

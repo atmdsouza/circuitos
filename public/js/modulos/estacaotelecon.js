@@ -4,8 +4,6 @@ var URLImagensSistema = "public/images";
 
 //Variáveis Globais
 var mudou = false;
-var listCidadeDigital = [];
-var i = 0;
 
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos)
 function inicializar()
@@ -14,13 +12,11 @@ function inicializar()
     //Configuração Específica do Datatable
     $("#datatable_listar").DataTable({
         select: false,
-        fixedHeader: true,
         language: {
             select: false
         },
-        order: [[5, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
+        order: [[7, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
     });
-    autocompletarCidadeDigital();
 }
 
 function verificarAlteracao()
@@ -114,30 +110,18 @@ function salvar()
     var acao = $('#salvarCadastro').val();
     $("#formCadastro").validate({
         rules : {
-            lid_cidade_digital:{
-                required: true
-            },
-            lid_tipo:{
-                required: true
-            },
             descricao:{
                 required: true
             }
         },
         messages:{
-            lid_cidade_digital:{
-                required:"É necessário informar uma Cidade Digital"
-            },
-            lid_tipo:{
-                required:"É necessário informar um Tipo de Conectividade"
-            },
             descricao:{
                 required:"É necessário informar uma Descrição"
             }
         },
         submitHandler: function(form) {
             var dados = $("#formCadastro").serialize();
-            var action = actionCorreta(window.location.href.toString(), "conectividade/" + acao);
+            var action = actionCorreta(window.location.href.toString(), "set_seguranca/" + acao);
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
@@ -397,84 +381,89 @@ function limpar()
     $('#formPesquisa').submit();
 }
 
-function autocompletarCidadeDigital()
+function autocompletarContrato()
 {
-    "use strict";
-    var ac_cidadedigital = $("#lid_cidade_digital");
-    var string = ac_cidadedigital.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: {metodo: 'cidadesDigitaisAtivas', string: string},
-        success: function (data) {
-            if (data.operacao) {
-                listCidadeDigital = [];
-                $.each(data.dados, function (key, value) {
-                    listCidadeDigital.push({value: value.descricao, data: value.id});
-                });
-                if(i === 0) {
-                    //Autocomplete
-                    ac_cidadedigital.autocomplete({
-                        lookup: listCidadeDigital,
-                        onSelect: function (suggestion) {
-                            $("#id_cidade_digital").val(suggestion.data);
-                        }
-                    });
-                    i++;
-                } else {
-                    //Autocomplete
-                    ac_cidadedigital.autocomplete().setOptions( {
-                        lookup: listCidadeDigital
-                    });
-                }
-            } else {
-                $("#id_cidade_digital").val("");
-                $("#lid_cidade_digital").val("");
-            }
-        }
-    });
+
 }
 
-/**
- * Pesquisar por Busca Fonética:
- * http://clubedosgeeks.com.br/artigos/busca-fonetica-com-javascript-e-buscabr
- * https://github.com/JayrAlencar/buscaBR.js
- * https://materialmixer.co/#FAFAFA/B9F6CA
- * https://www.materialpalette.com/light-blue/green
- */
+function criarComponente()
+{
+    'use strict';
+    limparDadosFormComponente();
+    $('#bt_inserir_componente').val('Inserir');
+    $('#dados_componente').removeAttr('style','display: none;');
+    $('#dados_componente').attr('style', 'display: block;');
+    $('#i_lid_fornecedor').focus();
+}
 
-// function autocompletarTipoCidadeDigital()
-// {
-//     "use strict";
-//     var ac_tipo_cidade = $("#lid_tipo");
-//     var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
-//     var listTipoCidadeDigital = [];
-//     $.ajax({
-//         type: "GET",
-//         dataType: "JSON",
-//         url: action,
-//         data: {metodo: 'tiposCidadesDigitaisAtivas'},
-//         beforeSend: function () {
-//             listTipoCidadeDigital = [];
-//         },
-//         success: function (data) {
-//             if (data.operacao) {
-//                 $.each(data.dados, function (key, value) {
-//                     listTipoCidadeDigital.push({value: value.descricao, data: value.id});
-//                 });
-//             } else {
-//                 $("#id_cidade_digital").val("");
-//                 $("#lid_cidade_digital").val("");
-//             }
-//             //Autocomplete
-//             ac_tipo_cidade.autocomplete({
-//                 lookup: listTipoCidadeDigital,
-//                 onSelect: function (suggestion) {
-//                     $("#id_tipo").val(suggestion.data);
-//                 }
-//             });
-//         }
-//     });
-// }
+function inserirComponente()
+{
+    'use strict';
+    //Dados
+    var lid_fornecedor = $('#i_lid_fornecedor').val();
+    var id_fornecedor = $('#i_id_fornecedor').val();
+    var lid_contrato = $('#i_lid_contrato').val();
+    var id_contrato = $('#i_id_contrato').val();
+    var endereco = $('#i_endereco_chave').val();
+    var desc_id_tipo = document.getElementById("i_id_tipo").options[document.getElementById("i_id_tipo").selectedIndex].text;
+    var id_tipo = $('#i_id_tipo').val();
+    var propriedade_prodepa = $('#i_propriedade_prodepa').val();
+    var desc_propriedade_prodepa = (propriedade_prodepa === '1') ? 'Sim' : 'Não';
+    var senha = $('#i_senha').val();
+    var validade = $('#i_validade').val();
+    var nome = $('#i_nome').val();
+    var email = $('#i_email').val();
+    var telefone = $('#i_telefone').val();
+    if(id_tipo !== '' && lid_fornecedor !== ''){//Campos Obrigatórios
+        var linhas = null;
+        linhas += '<tr class="tr_remove">';
+        linhas += '<td style="display: none;">' + lid_contrato + '<input name="id_contrato[]" type="hidden" value="' + id_contrato + '" /></td>';
+        linhas += '<td style="display: none;">'+ endereco +'<input name="endereco_chave[]" type="hidden" value="'+ endereco +'" /></td>';
+        linhas += '<td style="display: none;">'+ senha +'<input name="senha[]" type="hidden" value="'+ senha +'" /></td>';
+        linhas += '<td style="display: none;">'+ validade +'<input name="validade[]" type="hidden" value="'+ validade +'" /></td>';
+        linhas += '<td style="display: none;">'+ email +'<input name="email[]" type="hidden" value="'+ email +'" /></td>';
+        linhas += '<td>'+ lid_fornecedor +'<input name="id_fornecedor[]" type="hidden" value="'+ id_fornecedor +'" /></td>';
+        linhas += '<td>'+ desc_id_tipo +'<input name="id_tipo[]" type="hidden" value="'+ id_tipo +'" /></td>';
+        linhas += '<td>'+ desc_propriedade_prodepa +'<input name="propriedade_prodepa[]" type="hidden" value="'+ propriedade_prodepa +'" /></td>';
+        linhas += '<td>'+ nome +'<input name="nome[]" type="hidden" value="'+ nome +'" /></td>';
+        linhas += '<td>'+ telefone +'<input name="telefone[]" type="hidden" value="'+ telefone +'" /></td>';
+        linhas += '<td><a href="javascript:void(0)" onclick="RemoveTableRow(this)" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+        linhas += '</tr>';
+        $("#tabela_componentes").append(linhas);
+        $('#tabela_componentes').removeAttr('style','display: none;');
+        $('#tabela_componentes').attr('style', 'display: table;');
+        limparDadosFormComponente();
+    } else {
+        swal({
+            title: "Campos Obrigatórios!",
+            text: "Você precisa preencher todos os campos obrigatórios no formulário!",
+            type: "warning"
+        });
+    }
+}
+
+function cancelarComponente()
+{
+    'use strict';
+    verificarAlteracao();
+    limparDadosFormComponente();
+}
+
+function limparDadosFormComponente()
+{
+    'use strict';
+    $('#i_id_contrato').val('');
+    $('#i_lid_contrato').val('');
+    $('#i_id_fornecedor').val('');
+    $('#i_lid_fornecedor').val('');
+    $('#i_senha').val('');
+    $('#i_validade').val('');
+    $('#i_endereco_chave').val('');
+    $('#i_nome').val('');
+    $('#i_telefone').val('');
+    $('#i_email').val('');
+    $('#i_id_tipo').val(null).selected = 'true';
+    $('#i_propriedade_prodepa').val('1').selected = 'true';
+    $('#dados_componente').removeAttr('style', 'display: block;');
+    $('#dados_componente').attr('style','display: none;');
+}

@@ -140,21 +140,4 @@ class SetSegurancaOP extends SetSeguranca
             return false;
         }
     }
-
-    public function cidadesDigitaisAtivas()
-    {
-        $dados = filter_input_array(INPUT_GET);
-        $cidadedigital = CidadeDigital::find("excluido=0 AND ativo=1 AND descricao LIKE '%{$dados['string']}%'");
-        $response = new Response();
-        $response->setContent(json_encode(array("operacao" => True, "dados" => $cidadedigital)));
-        return $response;
-    }
-
-    public function tiposCidadesDigitaisAtivas()
-    {
-        $tipos = Lov::find("tipo=18 AND excluido=0 AND ativo=1");
-        $response = new Response();
-        $response->setContent(json_encode(array("operacao" => True, "dados" => $tipos)));
-        return $response;
-    }
 }

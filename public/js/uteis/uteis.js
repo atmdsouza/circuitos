@@ -48,8 +48,13 @@ var RemoveTableRow;
     RemoveTableRow = function (handler) {
         var tr = $(handler).closest("tr");
         tr.fadeOut(400, function () {
+            var el = tr.closest('table');
             tr.remove();
+            if($('.tr_remove').length === 0) {
+                el.attr('style','display: none;');
+            }
         });
+
         return false;
     };
 })(jQuery);

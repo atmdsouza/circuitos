@@ -2,6 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
+
 class PropostaComercial extends \Phalcon\Mvc\Model
 {
 
@@ -702,6 +705,46 @@ class PropostaComercial extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field Cliente
+     *
+     * @return string
+     */
+    public function getCliente()
+    {
+        return $this->Cliente->Pessoa->nome;
+    }
+
+    /**
+     * Returns the value of field Tipo Proposta
+     *
+     * @return string
+     */
+    public function getTipoProposta()
+    {
+        return $this->Lov1->descricao;
+    }
+
+    /**
+     * Returns the value of field Localizacao
+     *
+     * @return string
+     */
+    public function getLocalizacao()
+    {
+        return $this->Lov2->descricao;
+    }
+
+    /**
+     * Returns the value of field Status
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->Lov3->descricao;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -712,9 +755,9 @@ class PropostaComercial extends \Phalcon\Mvc\Model
         $this->hasMany('id', 'Circuitos\Models\PropostaComercialItem', 'id_proposta_comercial', ['alias' => 'PropostaComercialItem']);
         $this->hasMany('id', 'Circuitos\Models\PropostaComercialValorMensal', 'id_proposta_comercial', ['alias' => 'PropostaComercialValorMensal']);
         $this->belongsTo('id_cliente', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Cliente']);
-        $this->belongsTo('id_tipo_proposta', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_localizacao', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_status', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
+        $this->belongsTo('id_tipo_proposta', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov1']);
+        $this->belongsTo('id_localizacao', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov2']);
+        $this->belongsTo('id_status', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov3']);
     }
 
     /**
@@ -747,6 +790,38 @@ class PropostaComercial extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de PropostaComercial, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return PropostaComercial|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarPropostaComercial($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("PropostaComercial" => "Circuitos\Models\PropostaComercial"));
+        $query->columns("PropostaComercial.*");
+        $query->leftJoin("Circuitos\Models\Cliente", "Cliente.id = PropostaComercial.id_cliente", "Cliente");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa.id = Cliente.id_pessoa", "Pessoa");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Cliente.id_pessoa", "PessoaJuridica");
+        $query->leftJoin("Circuitos\Models\Lov", "Lov1.id = PropostaComercial.id_tipo_proposta", "Lov1");
+        $query->leftJoin("Circuitos\Models\Lov", "Lov2.id = PropostaComercial.id_localizacao", "Lov2");
+        $query->leftJoin("Circuitos\Models\Lov", "Lov3.id = PropostaComercial.id_status", "Lov3");
+        $query->where("PropostaComercial.excluido = 0 AND (CONVERT(PropostaComercial.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercial.data_proposta USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercial.numero USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercial.vencimento USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica.razaosocial USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov1.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov2.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov3.descricao USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("PropostaComercial.id");
+        $query->orderBy("PropostaComercial.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
 }

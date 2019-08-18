@@ -5,19 +5,19 @@ namespace Circuitos\Controllers;
 use Phalcon\Http\Response as Response;
 
 use Circuitos\Models\Lov;
-use Circuitos\Models\SetSeguranca;
-use Circuitos\Models\Operations\SetSegurancaOP;
+use Circuitos\Models\Operations\FornecedorOP;
+use Circuitos\Models\Fornecedor;
 
 use Auth\Autentica;
 use Util\TokenManager;
 
-class SetSegurancaController extends ControllerBase
+class FornecedorController extends ControllerBase
 {
     public $tokenManager;
 
     public function initialize()
     {
-        $this->tag->setTitle("Set's de Segurança");
+        $this->tag->setTitle("Gestão de Fornecedores");
         parent::initialize();
         //Voltando o usuário não autenticado para a página de login
         $auth = new Autentica();
@@ -37,11 +37,11 @@ class SetSegurancaController extends ControllerBase
     public function indexAction()
     {
         $dados = filter_input_array(INPUT_POST);
-        $setsegurancaOP = new SetSegurancaOP();
-        $setseguranca = $setsegurancaOP->listar($dados['pesquisa']);
+        $fornecedorOP = new FornecedorOP();
+        $fornecedor = $fornecedorOP->listar($dados['pesquisa']);
         $tipos = Lov::find("tipo=21 AND excluido=0 AND ativo=1");
         $this->view->tipos = $tipos;
-        $this->view->page = $setseguranca;
+        $this->view->page = $fornecedor;
     }
 
     public function criarAction()
@@ -52,15 +52,15 @@ class SetSegurancaController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-        $titulo = 'Cadastro de SetSeguranca';
-        $msg = 'SetSeguranca cadastrada com sucesso!';
-        $error_msg = 'Erro ao cadastrar uma SetSeguranca!';
+        $titulo = 'Cadastro de Fornecedor';
+        $msg = 'Fornecedor cadastrada com sucesso!';
+        $error_msg = 'Erro ao cadastrar uma Fornecedor!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
-            $setsegurancaOP = new SetSegurancaOP();
-            $setseguranca = new SetSeguranca($params);
-            if($setsegurancaOP->cadastrar($setseguranca)){//Cadastrou com sucesso
+            $fornecedorOP = new FornecedorOP();
+            $fornecedor = new Fornecedor($params);
+            if($fornecedorOP->cadastrar($fornecedor)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -79,15 +79,15 @@ class SetSegurancaController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-        $titulo = 'Alteração de SetSeguranca';
-        $msg = 'SetSeguranca alterada com sucesso!';
-        $error_msg = 'Erro ao alterar uma SetSeguranca!';
+        $titulo = 'Alteração de Fornecedor';
+        $msg = 'Fornecedor alterada com sucesso!';
+        $error_msg = 'Erro ao alterar uma Fornecedor!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
-            $setsegurancaOP = new SetSegurancaOP();
-            $setseguranca = new SetSeguranca($params);
-            if($setsegurancaOP->alterar($setseguranca)){//Altera com sucesso
+            $fornecedorOP = new FornecedorOP();
+            $fornecedor = new Fornecedor($params);
+            if($fornecedorOP->alterar($fornecedor)){//Altera com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -104,15 +104,15 @@ class SetSegurancaController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Reativação de SetSeguranca';
-        $msg = 'SetSeguranca reativada com sucesso!';
-        $error_msg = 'Erro ao reativar uma SetSeguranca!';
+        $titulo = 'Reativação de Fornecedor';
+        $msg = 'Fornecedor reativada com sucesso!';
+        $error_msg = 'Erro ao reativar uma Fornecedor!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
-            $setsegurancaOP = new SetSegurancaOP();
-            $setseguranca = new SetSeguranca($dados['dados']);
-            if($setsegurancaOP->ativar($setseguranca)){//Cadastrou com sucesso
+            $fornecedorOP = new FornecedorOP();
+            $fornecedor = new Fornecedor($dados['dados']);
+            if($fornecedorOP->ativar($fornecedor)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -129,15 +129,15 @@ class SetSegurancaController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Desativação de SetSeguranca';
-        $msg = 'SetSeguranca desativada com sucesso!';
-        $error_msg = 'Erro ao desativar uma SetSeguranca!';
+        $titulo = 'Desativação de Fornecedor';
+        $msg = 'Fornecedor desativada com sucesso!';
+        $error_msg = 'Erro ao desativar uma Fornecedor!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
-            $setsegurancaOP = new SetSegurancaOP();
-            $setseguranca = new SetSeguranca($dados['dados']);
-            if($setsegurancaOP->inativar($setseguranca)){//Cadastrou com sucesso
+            $fornecedorOP = new FornecedorOP();
+            $fornecedor = new Fornecedor($dados['dados']);
+            if($fornecedorOP->inativar($fornecedor)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -154,15 +154,15 @@ class SetSegurancaController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Exclusão de SetSeguranca';
-        $msg = 'SetSeguranca excluída com sucesso!';
-        $error_msg = 'Erro ao excluir a SetSeguranca!';
+        $titulo = 'Exclusão de Fornecedor';
+        $msg = 'Fornecedor excluída com sucesso!';
+        $error_msg = 'Erro ao excluir a Fornecedor!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
-            $setsegurancaOP = new SetSegurancaOP();
-            $setseguranca = new SetSeguranca($dados['dados']);
-            if($setsegurancaOP->excluir($setseguranca)){//Cadastrou com sucesso
+            $fornecedorOP = new FornecedorOP();
+            $fornecedor = new Fornecedor($dados['dados']);
+            if($fornecedorOP->excluir($fornecedor)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));

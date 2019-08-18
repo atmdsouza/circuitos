@@ -67,6 +67,26 @@ class Fabricante extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field nome fabricante
+     *
+     * @return integer
+     */
+    public function getNomeFabricante()
+    {
+        return $this->Pessoa->nome;
+    }
+
+    /**
+     * Returns the value of field razão social pessoa
+     *
+     * @return integer
+     */
+    public function getRazaoFabricante()
+    {
+        return $this->PessoaJuridica->razaosocial;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -76,6 +96,7 @@ class Fabricante extends \Phalcon\Mvc\Model
         $this->hasMany('id', 'Circuitos\Models\Equipamento', 'id_fabricante', ['alias' => 'Equipamento']);
         $this->hasMany('id', 'Circuitos\Models\Modelo', 'id_fabricante', ['alias' => 'Modelo']);
         $this->hasOne('id_pessoa', 'Circuitos\Models\Pessoa', 'id', ['alias' => 'Pessoa']);
+        $this->hasOne('id_pessoa', 'Circuitos\Models\PessoaJuridica', 'id', ['alias' => 'PessoaJuridica']);
     }
 
     /**
@@ -126,7 +147,38 @@ class Fabricante extends \Phalcon\Mvc\Model
         $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa2.id = PessoaJuridica2.id", "PessoaJuridica2");
         $query->leftJoin("Circuitos\Models\PessoaEndereco", "Pessoa2.id = PessoaEndereco2.id_pessoa", "PessoaEndereco2");
 
-        $query->where("(CONVERT(Fabricante.id USING utf8) LIKE '%{$parameters}%'
+        $query->where("(Pessoa2.excluido = 0 AND CONVERT(Fabricante.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa2.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica2.cnpj USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica2.razaosocial USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica2.sigla USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaEndereco2.cidade USING utf8) LIKE '%{$parameters}%')");
+
+        $query->groupBy("Fabricante.id, Fabricante.id_pessoa");
+
+        $query->orderBy("Fabricante.id DESC");
+
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta completa de fabricantes, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return Fabricante|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarFabricantesAtivos($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("Fabricante" => "Circuitos\Models\Fabricante"));
+        $query->columns("Fabricante.*");
+
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa2.id = Fabricante.id_pessoa", "Pessoa2");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa2.id = PessoaJuridica2.id", "PessoaJuridica2");
+        $query->leftJoin("Circuitos\Models\PessoaEndereco", "Pessoa2.id = PessoaEndereco2.id_pessoa", "PessoaEndereco2");
+
+        $query->where("(Pessoa2.excluido = 0 AND Pessoa2.ativo = 1 AND CONVERT(Fabricante.id USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Pessoa2.nome USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(PessoaJuridica2.cnpj USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(PessoaJuridica2.razaosocial USING utf8) LIKE '%{$parameters}%'
