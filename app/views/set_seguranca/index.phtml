@@ -164,19 +164,26 @@ $module = $this->router->getControllerName();
                             </div>
                             <div id="dados_componente" style="display: none;">
                                 <div class="form-row">
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-4">
+                                        <label for="i_propriedade_prodepa">Propriedade PRODEPA? <span class="required">*</span></label>
+                                        <select id="i_propriedade_prodepa" name="i_propriedade_prodepa" class="form-control" onchange="habilitarFornecedor();">
+                                            <option value="1" selected>Sim</option>
+                                            <option value="0">Não</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-8">
                                         <label for="i_lid_fornecedor">Fornecedor <span class="required">*</span></label>
-                                        <?php echo $this->tag->textField(["i_lid_fornecedor", "size" => 120, "class" => "form-control", "id" => "i_lid_fornecedor", "placeholder" => "Fornecedor", "onkeyup" => "autocompletarFornecedor();"]) ?>
+                                        <?php echo $this->tag->textField(["i_lid_fornecedor", "size" => 120, "class" => "form-control", "id" => "i_lid_fornecedor", "onkeyup" => "autocompletarFornecedor();", "disabled" => "true"]) ?>
                                         <?php echo $this->tag->hiddenField(["i_id_fornecedor", "size" => 120, "class" => "form-control", "id" => "i_id_fornecedor"]) ?>
                                     </div>
                                 </div>
                                 <div class="form-row">
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-6">
                                         <label for="i_lid_contrato">Contrato </label>
                                         <?php echo $this->tag->textField(["i_lid_contrato", "size" => 120, "class" => "form-control", "id" => "i_lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato();"]) ?>
                                         <?php echo $this->tag->hiddenField(["i_id_contrato", "size" => 120, "class" => "form-control", "id" => "i_id_contrato"]) ?>
                                     </div>
-                                    <div class="form-group col-md-4">
+                                    <div class="form-group col-md-6">
                                         <label for="i_id_tipo">Tipo Set de Segurança <span class="required">*</span></label>
                                         <?php echo $this->tag->select(["i_id_tipo", $tipos, "class" => "form-control", "id" => "i_id_tipo",
                                             "using" => ["id", "descricao",],
@@ -184,13 +191,6 @@ $module = $this->router->getControllerName();
                                             "emptyText" => "Selecione o tipo de Set",
                                             "emptyValue" => ""])
                                         ?>
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="i_propriedade_prodepa">Propriedade PRODEPA? <span class="required">*</span></label>
-                                        <select id="i_propriedade_prodepa" name="i_propriedade_prodepa" class="form-control">
-                                            <option value="1" selected>Sim</option>
-                                            <option value="0">Não</option>
-                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-row">

@@ -238,7 +238,7 @@ class SetEquipamento extends \Phalcon\Mvc\Model
         $query->from(array("SetEquipamento" => "Circuitos\Models\SetEquipamento"));
         $query->columns("SetEquipamento.*");
         $query->leftJoin("Circuitos\Models\SetEquipamentoComponentes", "SetEquipamentoComponentes.id_set_equipamento = SetEquipamento.id", "SetEquipamentoComponentes");
-        $query->leftJoin("Circuitos\Models\Fornecedor", "Fornecedor.id = SetEquipamentoComponentes.id_fornecedor", "Fornecedor");
+        $query->leftJoin("Circuitos\Models\Cliente", "Fornecedor.id = SetEquipamentoComponentes.id_fornecedor", "Fornecedor");
         $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa.id = Fornecedor.id_pessoa", "Pessoa");
         $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Pessoa.id", "PessoaJuridica");
         $query->where("SetEquipamento.excluido = 0 AND (CONVERT(SetEquipamento.id USING utf8) LIKE '%{$parameters}%'

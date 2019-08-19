@@ -462,6 +462,10 @@ class CoreController extends ControllerBase
         $dados = filter_input_array(INPUT_GET);
         switch ($dados['metodo'])
         {
+            case 'completarEndereco':
+                $objeto = new CoreOP();
+                return $objeto->completarEndereco();
+                break;
             case 'cidadesDigitaisAtivas':
                 $objeto = new CoreOP();
                 return $objeto->cidadesDigitaisAtivas();
@@ -481,6 +485,10 @@ class CoreController extends ControllerBase
             case 'fabricantesAtivos':
                 $objeto = new CoreOP();
                 return $objeto->fabricantesAtivos();
+                break;
+            case 'fornecedoresAtivos':
+                $objeto = new CoreOP();
+                return $objeto->fornecedoresAtivos();
                 break;
             case 'modelosAtivos':
                 $objeto = new CoreOP();

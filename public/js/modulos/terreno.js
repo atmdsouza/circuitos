@@ -4,6 +4,8 @@ var URLImagensSistema = "public/images";
 
 //Variáveis Globais
 var mudou = false;
+var listFornecedor = [];
+var f = 0;
 
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos)
 function inicializar()
@@ -17,6 +19,11 @@ function inicializar()
         },
         order: [[5, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
     });
+    if ($('#propriedade_prodepa').val() === '1'){
+        $('#lid_fornecedor').val('PRODEPA');
+        $('#id_fornecedor').val(0);
+    }
+    autocompletarFornecedor();
 }
 
 function verificarAlteracao()
@@ -468,17 +475,145 @@ function limparDadosFormComponente()
     $('#dados_componente').attr('style','display: none;');
 }
 
-function habilitaFornecedor()
+function habilitarFornecedor()
 {
-
+    'use strict';
+    var propriedade_prodepa = $('#propriedade_prodepa').val();
+    if (propriedade_prodepa !== '1'){
+        $('#lid_fornecedor').removeAttr('disabled');
+        $('#lid_fornecedor').val('');
+        $('#id_fornecedor').val('');
+    } else {
+        $('#lid_fornecedor').attr('disabled', 'true');
+        $('#lid_fornecedor').val('PRODEPA');
+        $('#id_fornecedor').val(0);
+    }
 }
 
 function autocompletarFornecedor()
 {
-
+    "use strict";
+    //Autocomplete de Fabricante
+    var ac_fornecedor = $("#lid_fornecedor");
+    var vl_fornecedor = $("#id_fornecedor");
+    var string = ac_fornecedor.val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'fornecedoresAtivos', string: string},
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao) {
+                listFornecedor = [];
+                $.each(data.dados, function (key, value) {
+                    listFornecedor.push({value: value.nome, data: value.id});
+                });
+                if(f === 0) {
+                    //Autocomplete
+                    ac_fornecedor.autocomplete({
+                        lookup: listFornecedor,
+                        onSelect: function (suggestion) {
+                            vl_fornecedor.val(suggestion.data);
+                        }
+                    });
+                    f++;
+                } else {
+                    //Autocomplete
+                    ac_fornecedor.autocomplete().setOptions( {
+                        lookup: listFornecedor
+                    });
+                }
+            } else {
+                vl_fornecedor.val("");
+                ac_fornecedor.val("");
+            }
+        }
+    });
 }
 
 function preencherEndereco()
 {
-
+    "use strict";
+    var cep_t = $("#cep").val();
+    if (cep_t) {
+        var cep = formata_cep(cep_t);
+        var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+        $.ajax({
+            type: "GET",
+            dataType: "JSON",
+            url: action,
+            data: {metodo: 'completarEndereco', cep: cep},
+            error: function (data) {
+                if (data.status && data.status === 401)
+                {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            },
+            success: function (data) {
+                if (data.operacao){
+                    var logradouro = $("#endereco").val();
+                    if (logradouro){
+                        swal({
+                            title: "Deseja substituir o endereço existente?",
+                            text: "O sistema pode substituir o endereço atual pelo resultando que ele encontrou com base no CEP. O endereço é: " + data.endereco.logradouro + ", " + data.endereco["bairro"] + ", " + data.endereco.cidade + ".",
+                            type: "info",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Sim, vou substituir!",
+                            cancelButtonText: "Cancelar"
+                        }).then((result) => {
+                            //Limpa
+                            $("#bairro").val(null);
+                            $("#cidade").val(null);
+                            $("#endereco").val(null);
+                            $("#sigla_estado").val(null);
+                            $("#estado").val(null);
+                            $("#latitude").val(null);
+                            $("#longitude").val(null);
+                            //Preenche novamente
+                            $("#bairro").val(data.endereco.bairro);
+                            $("#cidade").val(data.endereco.cidade);
+                            $("#endereco").val(data.endereco.logradouro);
+                            $("#sigla_estado").val(data.endereco.sigla_estado);
+                            $("#estado").val(data.endereco.uf);
+                            $("#latitude").val(data.endereco.latitude);
+                            $("#longitude").val(data.endereco.longitude);
+                            $("#numero").focus();
+                        });
+                    }else{
+                        $("#bairro").val(data.endereco.bairro);
+                        $("#cidade").val(data.endereco.cidade);
+                        $("#endereco").val(data.endereco.logradouro);
+                        $("#sigla_estado").val(data.endereco.sigla_estado);
+                        $("#estado").val(data.endereco.uf);
+                        $("#latitude").val(data.endereco.latitude);
+                        $("#longitude").val(data.endereco.longitude);
+                        $("#numero").focus();
+                    }
+                } else {
+                    swal({
+                        title: "Atenção",
+                        text: "O CEP digitado não retorno nenhum endereço válido! Por favor, insira o endereço de forma manual.",
+                        type: "warning"
+                    });
+                }
+            }
+        });
+    }
 }

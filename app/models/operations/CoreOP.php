@@ -5,9 +5,11 @@ namespace Circuitos\Models\Operations;
 use Phalcon\Http\Response as Response;
 
 use Circuitos\Models\CidadeDigital;
-use Circuitos\Models\Lov;
+use Circuitos\Models\Cliente;
+use Circuitos\Models\EndEndereco;
 use Circuitos\Models\Equipamento;
 use Circuitos\Models\Fabricante;
+use Circuitos\Models\Lov;
 use Circuitos\Models\Modelo;
 
 /**
@@ -21,6 +23,47 @@ use Circuitos\Models\Modelo;
  */
 class CoreOP
 {
+
+    public function completarEndereco()
+    {
+        $response = new Response();
+        $dados = filter_input_array(INPUT_GET);
+        $endereco = EndEndereco::findFirst("cep='{$dados["cep"]}'");
+        $end = [
+            "cep" => $endereco->getCep(),
+            "logradouro" => $endereco->getTipoLogradouro() . " " . $endereco->getLogradouro(),
+            "bairro" => $endereco->getNomeBairro(),
+            "cidade" => $endereco->getNomeCidade(),
+            "uf" => $endereco->getNomeEstado(),
+            "sigla_estado" => $endereco->getSiglaEstado(),
+            "latitude" => $endereco->getLatitude(),
+            "longitude" => $endereco->getLongitude()
+        ];
+        if ($endereco) {
+            $response->setContent(json_encode(array(
+                "endereco" => $end,
+                "operacao" => True
+            )));
+        } else {
+            $response->setContent(json_encode(array(
+                "operacao" => False
+            )));
+        }
+        return $response;
+    }
+    public function fornecedoresAtivos()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $fornecedores = Cliente::pesquisarFornecedoresAtivos($dados['string']);
+        $array_dados = array();
+        foreach ($fornecedores as $fornecedor){
+            array_push($array_dados, ['id' => $fornecedor->getId(), 'nome' => $fornecedor->getClienteNome()]);
+        }
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $array_dados)));
+        return $response;
+    }
+
     public function cidadesDigitaisAtivas()
     {
         $dados = filter_input_array(INPUT_GET);

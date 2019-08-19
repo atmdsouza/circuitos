@@ -126,7 +126,7 @@ $module = $this->router->getControllerName();
                             <div class="form-row">
                                 <div class="form-group col-md-3">
                                     <label for="propriedade_prodepa">Propriedade PRODEPA? <span class="required">*</span></label>
-                                    <select id="propriedade_prodepa" name="propriedade_prodepa" class="form-control" onchange="habilitaFornecedor();">
+                                    <select id="propriedade_prodepa" name="propriedade_prodepa" class="form-control" onchange="habilitarFornecedor();">
                                         <option value="1" selected>Sim</option>
                                         <option value="0">Não</option>
                                     </select>
@@ -190,6 +190,7 @@ $module = $this->router->getControllerName();
                                 <div class="form-group col-md-2">
                                     <label for="estado">Estado <span class="required">*</span></label>
                                     <?= $this->tag->textField(["estado", "size" => 200, "class" => "form-control", "id" => "estado", "placeholder" => "Estado do Terreno"]) ?>
+                                    <input type="hidden" id="sigla_estado" name="sigla_estado" value=""><!-- Manter como hidden -->
                                 </div>
                             </div>
                             <div class="form-row">
