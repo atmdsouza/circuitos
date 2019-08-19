@@ -374,4 +374,9 @@ class CidadeDigitalController extends ControllerBase
             return $response;
         }
     }
+
+    public function localizarAction()
+    {
+
+    }
 }

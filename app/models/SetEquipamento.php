@@ -189,9 +189,9 @@ class SetEquipamento extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("set_equipamento");
-        $this->hasMany('id', 'CircuitosModels\EstacaoTelecon', 'id_set_equipamento', ['alias' => 'EstacaoTelecon']);
-        $this->hasMany('id', 'CircuitosModels\SetEquipamentoComponentes', 'id_set_equipamento', ['alias' => 'SetEquipamentoComponentes']);
-        $this->belongsTo('id_contrato', 'CircuitosModels\Contrato', 'id', ['alias' => 'Contrato']);
+        $this->hasMany('id', 'Circuitos\Models\EstacaoTelecon', 'id_set_equipamento', ['alias' => 'EstacaoTelecon']);
+        $this->hasMany('id', 'Circuitos\Models\SetEquipamentoComponentes', 'id_set_equipamento', ['alias' => 'SetEquipamentoComponentes']);
+        $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
     }
 
     /**

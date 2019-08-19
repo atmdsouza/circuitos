@@ -244,9 +244,9 @@ class ContratoProcesso extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("contrato_processo");
-        $this->hasMany('id', 'CircuitosModels\Contrato', 'id_processo_contratacao', ['alias' => 'Contrato']);
-        $this->belongsTo('id_proposta_comercial', 'CircuitosModels\PropostaComercial', 'id', ['alias' => 'PropostaComercial']);
-        $this->belongsTo('id_tipo_processo', 'CircuitosModels\Lov', 'id', ['alias' => 'Lov']);
+        $this->hasMany('id', 'Circuitos\Models\Contrato', 'id_processo_contratacao', ['alias' => 'Contrato']);
+        $this->belongsTo('id_proposta_comercial', 'Circuitos\Models\PropostaComercial', 'id', ['alias' => 'PropostaComercial']);
+        $this->belongsTo('id_tipo_processo', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
     }
 
     /**

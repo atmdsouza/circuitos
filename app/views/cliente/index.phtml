@@ -41,6 +41,7 @@ use Util\Util;
             <thead>
                 <tr>
                     <th>Código</th>
+                    <th>Classificação</th>
                     <th>Tipo</th>
                     <th>CNPJ/CPF</th>
                     <th>Nome</th>
@@ -73,12 +74,26 @@ use Util\Util;
                     $ativo = "Ativo";
                     break;
                 }
+                    switch($cliente->getClassificacao()){
+                        case '0':
+                            $classificacao = "CLIENTE";
+                            break;
+                        case '1':
+                            $classificacao = "FORNECEDOR";
+                            break;
+                        case '2':
+                            $classificacao = "PARCEIRO";
+                            break;
+                    }
                 $data_cadastro = ($cliente->Pessoa->create_at) ? $util->converterDataHoraParaBr($cliente->Pessoa->create_at) : null;
                 $data_atualizacao = ($cliente->Pessoa->update_at) ? $util->converterDataHoraParaBr($cliente->Pessoa->update_at) : null;
             ?>
                 <tr>
                     <td>
                         <?php echo $cliente->id ?>
+                    </td>
+                    <td>
+                        <?php echo $classificacao ?>
                     </td>
                     <td>
                         <?php echo $cliente->Lov->descricao ?>
@@ -124,6 +139,14 @@ use Util\Util;
                         <div class="col-12">
                             <h6>Tipo de Cliente</h6>
                             <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label for="classificacao">Classificação <span class="required">*</span></label>
+                                    <select id="classificacao" name="classificacao" class="form-control">
+                                        <option value="0" selected>CLIENTE</option>
+                                        <option value="1">FORNECEDOR</option>
+                                        <option value="2">PARCEIRO</option>
+                                    </select>
+                                </div>
                                 <div class="form-group col-md-3">
                                     <label for="descrtipoclienteicao">Tipo <span class="required">*</span></label>
                                     <?php echo $this->tag->select(["tipocliente", $tipocliente, "class" => "form-control", "id" => "tipocliente",

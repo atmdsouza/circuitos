@@ -805,7 +805,7 @@ class Contrato extends \Phalcon\Mvc\Model
         $this->hasMany('id', 'Circuitos\Models\Torre', 'id_contrato', ['alias' => 'Torre']);
         $this->belongsTo('id_cliente', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Cliente']);
         $this->belongsTo('id_contrato_principal', 'Circuitos\Models\Contrato', 'id', ['alias' => 'ContratoVinculado']);
-        $this->belongsTo('id_fornecedor', 'Circuitos\Models\Fornecedor', 'id', ['alias' => 'Fornecedor']);
+        $this->belongsTo('id_fornecedor', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Fornecedor']);
         $this->belongsTo('id_tipo_contrato', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov1']);
         $this->belongsTo('id_status', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov2']);
         $this->belongsTo('id_processo_contratacao', 'Circuitos\Models\ContratoProcesso', 'id', ['alias' => 'ContratoProcesso']);
@@ -857,7 +857,7 @@ class Contrato extends \Phalcon\Mvc\Model
         $query->leftJoin("Circuitos\Models\Lov", "Lov1.id = Contrato.id_tipo_contrato", "Lov1");
         $query->leftJoin("Circuitos\Models\Lov", "Lov2.id = Contrato.id_status", "Lov2");
         $query->leftJoin("Circuitos\Models\ContratoProcesso", "ContratoProcesso.id = Contrato.id_processo_contratacao", "ContratoProcesso");
-        $query->leftJoin("Circuitos\Models\Fornecedor", "Fornecedor.id = Contrato.id_fornecedor", "Fornecedor");
+        $query->leftJoin("Circuitos\Models\Cliente", "Fornecedor.id = Contrato.id_fornecedor", "Fornecedor");
         $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa1.id = Fornecedor.id_pessoa", "Pessoa1");
         $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica1.id = Pessoa1.id", "PessoaJuridica1");
         $query->leftJoin("Circuitos\Models\Cliente", "Cliente.id = Contrato.id_Cliente", "Cliente");

@@ -269,7 +269,7 @@ class SetSegurancaContato extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("set_seguranca_contato");
-        $this->belongsTo('id_set_seguranca', 'CircuitosModels\SetSeguranca', 'id', ['alias' => 'SetSeguranca']);
+        $this->belongsTo('id_set_seguranca', 'Circuitos\Models\SetSeguranca', 'id', ['alias' => 'SetSeguranca']);
     }
 
     /**

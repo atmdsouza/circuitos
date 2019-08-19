@@ -7,7 +7,6 @@ use Phalcon\Mvc\Model\Resultset;
 
 class Cliente extends \Phalcon\Mvc\Model
 {
-
     /**
      *
      * @var integer
@@ -25,6 +24,12 @@ class Cliente extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $id_tipocliente;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $classificacao;
 
     /**
      * Method to set the value of field id
@@ -103,6 +108,22 @@ class Cliente extends \Phalcon\Mvc\Model
     public function getClienteNome()
     {
         return $this->Pessoa->nome;
+    }
+
+    /**
+     * @return int
+     */
+    public function getClassificacao()
+    {
+        return $this->classificacao;
+    }
+
+    /**
+     * @param int $classificacao
+     */
+    public function setClassificacao($classificacao)
+    {
+        $this->classificacao = $classificacao;
     }
 
     /**

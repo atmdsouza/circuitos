@@ -150,7 +150,7 @@
                                 if ($acl->isAllowed($role, 'cliente', 'index'))
                                 {
                                     ?>
-                                    <li><?php echo $this->tag->linkTo(["cliente", "Clientes"]) ?></li>
+                                    <li><?php echo $this->tag->linkTo(["cliente", "Clientes / Fornecedores"]) ?></li>
                                     <?php
                                 }
                                 if ($acl->isAllowed($role, 'cliente_unidade', 'index'))
@@ -202,6 +202,12 @@
                                 {
                                     ?>
                                     <li><?php echo $this->tag->linkTo(["cidade_digital", "Cidade Digital"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'cidade_digital', 'localizar'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["cidade_digital/localizar", "Localização Geo"]) ?></li>
                                     <?php
                                 }
                                 if ($acl->isAllowed($role, 'conectividade', 'index'))
@@ -481,8 +487,10 @@
 <!-- DateRangePicker -->
 <script src="<?= DIR_STATICS ?>public/plugins/bootstrap-daterangepicker/daterangepicker.js" type="text/javascript"></script>
 
-<!-- Charts.js -->
-<script src="<?= DIR_STATICS ?>public/plugins/chart.js/chart.min.js" type="text/javascript"></script>
+<!-- Higthcharts -->
+<script src="<?= DIR_STATICS ?>public/plugins/higthcharts/highcharts.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/higthcharts/modules/exporting.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/higthcharts/modules/export-data.js" type="text/javascript"></script>
 
 <!-- Plugins -->
 <script src="<?= DIR_STATICS ?>public/js/uteis/accounting.js" type="text/javascript"></script>

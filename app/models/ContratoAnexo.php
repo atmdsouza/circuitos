@@ -273,8 +273,8 @@ class ContratoAnexo extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("contrato_anexo");
-        $this->belongsTo('id_contrato', 'CircuitosModels\Contrato', 'id', ['alias' => 'Contrato']);
-        $this->belongsTo('id_tipo_anexo', 'CircuitosModels\Lov', 'id', ['alias' => 'Lov']);
+        $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
+        $this->belongsTo('id_tipo_anexo', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
     }
 
     /**

@@ -70,8 +70,8 @@ class ContratoFiscalHasContrato extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("contrato_fiscal_has_contrato");
-        $this->belongsTo('id_contrato', 'CircuitosModels\Contrato', 'id', ['alias' => 'Contrato']);
-        $this->belongsTo('id_contrato_fiscal', 'CircuitosModels\ContratoFiscal', 'id', ['alias' => 'ContratoFiscal']);
+        $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
+        $this->belongsTo('id_contrato_fiscal', 'Circuitos\Models\ContratoFiscal', 'id', ['alias' => 'ContratoFiscal']);
     }
 
     /**

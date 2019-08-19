@@ -730,6 +730,7 @@ $(".bt_edit").on("click", function(){
             {
                 case "44"://Pessoa Física
                     $("#id").val(data.dados.id);
+                    $("#classificacao").val(data.dados.classificacao).selected = "true";
                     $("#tipocliente").val(data.dados.tipo).selected = "true";
                     $("#nome_pessoa2").val(data.dados.nome);
                     $("#cpf").val(data.dados.cpf);
@@ -790,6 +791,7 @@ $(".bt_edit").on("click", function(){
                     break;
                 case "43"://Pessoa Jurídica
                     $("#id").val(data.dados.id);
+                    $("#classificacao").val(data.dados.classificacao).selected = "true";
                     $("#tipocliente").val(data.dados.tipo).selected = "true";
                     $("#nome_pessoa").val(data.dados.nome);
                     $("#rzsocial").val(data.dados.razaosocial);
@@ -840,6 +842,7 @@ $(".bt_visual").on("click", function(){
             {
                 case "44"://Pessoa Física
                     $("#id").val(data.dados.id);
+                    $("#classificacao").val(data.dados.classificacao).selected = "true";
                     $("#tipocliente").val(data.dados.tipo).selected = "true";
                     $("#nome_pessoa2").val(data.dados.nome);
                     $("#cpf").val(data.dados.cpf);
@@ -900,6 +903,7 @@ $(".bt_visual").on("click", function(){
                     break;
                 case "43"://Pessoa Jurídica
                     $("#id").val(data.dados.id);
+                    $("#classificacao").val(data.dados.classificacao).selected = "true";
                     $("#tipocliente").val(data.dados.tipo).selected = "true";
                     $("#nome_pessoa").val(data.dados.nome);
                     $("#rzsocial").val(data.dados.razaosocial);

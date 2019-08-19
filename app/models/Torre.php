@@ -318,10 +318,10 @@ class Torre extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("torre");
-        $this->hasMany('id', 'CircuitosModels\EstacaoTelecon', 'id_torre', ['alias' => 'EstacaoTelecon']);
-        $this->belongsTo('id_contrato', 'CircuitosModels\Contrato', 'id', ['alias' => 'Contrato']);
-        $this->belongsTo('id_fornecedor', 'CircuitosModels\Fornecedor', 'id', ['alias' => 'Fornecedor']);
-        $this->belongsTo('id_tipo', 'CircuitosModels\Lov', 'id', ['alias' => 'Lov']);
+        $this->hasMany('id', 'Circuitos\Models\EstacaoTelecon', 'id_torre', ['alias' => 'EstacaoTelecon']);
+        $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
+        $this->belongsTo('id_fornecedor', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Fornecedor']);
+        $this->belongsTo('id_tipo', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
     }
 
     /**
@@ -368,7 +368,7 @@ class Torre extends \Phalcon\Mvc\Model
         $query->from(array("Torre" => "Circuitos\Models\Torre"));
         $query->columns("Torre.*");
         $query->leftJoin("Circuitos\Models\Lov", "Lov.id = Torre.id_tipo", "Lov");
-        $query->leftJoin("Circuitos\Models\Fornecedor", "Fornecedor.id = Torre.id_fornecedor", "Fornecedor");
+        $query->leftJoin("Circuitos\Models\Cliente", "Fornecedor.id = Torre.id_fornecedor", "Fornecedor");
         $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa.id = Fornecedor.id_pessoa", "Pessoa");
         $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Fornecedor.id_pessoa", "PessoaJuridica");
         $query->where("Torre.excluido = 0 AND Torre.ativo = 1 AND(CONVERT(Torre.id USING utf8) LIKE '%{$parameters}%'

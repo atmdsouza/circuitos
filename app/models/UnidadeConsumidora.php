@@ -215,7 +215,7 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("unidade_consumidora");
-        $this->hasMany('id', 'CircuitosModels\EstacaoTelecon', 'id_unidade_consumidora', ['alias' => 'EstacaoTelecon']);
+        $this->hasMany('id', 'Circuitos\Models\EstacaoTelecon', 'id_unidade_consumidora', ['alias' => 'EstacaoTelecon']);
     }
 
     /**

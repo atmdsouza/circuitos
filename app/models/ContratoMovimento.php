@@ -273,9 +273,9 @@ class ContratoMovimento extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("contrato_movimento");
-        $this->belongsTo('id_contrato', 'CircuitosModels\Contrato', 'id', ['alias' => 'Contrato']);
-        $this->belongsTo('id_tipo_movimento', 'CircuitosModels\Lov', 'id', ['alias' => 'Lov']);
-        $this->belongsTo('id_usuario', 'CircuitosModels\Usuario', 'id', ['alias' => 'Usuario']);
+        $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
+        $this->belongsTo('id_tipo_movimento', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
+        $this->belongsTo('id_usuario', 'Circuitos\Models\Usuario', 'id', ['alias' => 'Usuario']);
     }
 
     /**

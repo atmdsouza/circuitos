@@ -182,6 +182,38 @@ function floatHeader()
         }
     });
 }
+//Opções Globais Highcharts
+Highcharts.setOptions({
+    global: {
+        Date: undefined,
+        VMLRadialGradientURL: "http://code.highcharts.com/{version}/gfx/vml-radial-gradient.png",
+        canvasToolsURL: "http://code.highcharts.com/{version}/modules/canvas-tools.js",
+        getTimezoneOffset: null,
+        timezoneOffset: 0,
+        useUTC: true
+    },
+    lang: {
+        contextButtonTitle: "Opções",
+        decimalPoint: ",",
+        downloadJPEG: "Download Imagem JPEG",
+        downloadPDF: "Download Imagem PDF",
+        downloadPNG: "Download Imagem PNG",
+        downloadSVG: "Download Imagem Vetor SVG",
+        drillUpText: "Voltar para {series.name}",
+        invalidDate: null,
+        loading: "Carregando...",
+        months: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+        noData: "Sem dados para visualizar",
+        numericSymbols: ["k", "M", "G", "T", "P", "E"],
+        printChart: "Imprimir Gráfico",
+        resetZoom: "Resetar Zoom",
+        resetZoomTitle: "Resetar Zoom para Nível 1:1",
+        shortMonths: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+        shortWeekdays: undefined,
+        thousandsSep: ".",
+        weekdays: ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"]
+    }
+});
 //Limpar modal bootstrap
 function limparModalBootstrap(modal)
 {

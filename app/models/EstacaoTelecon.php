@@ -413,13 +413,13 @@ class EstacaoTelecon extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("estacao_telecon");
-        $this->belongsTo('id_cidade_digital', 'CircuitosModels\CidadeDigital', 'id', ['alias' => 'CidadeDigital']);
-        $this->belongsTo('id_contrato', 'CircuitosModels\Contrato', 'id', ['alias' => 'Contrato']);
-        $this->belongsTo('id_set_equipamento', 'CircuitosModels\SetEquipamento', 'id', ['alias' => 'SetEquipamento']);
-        $this->belongsTo('id_set_seguranca', 'CircuitosModels\SetSeguranca', 'id', ['alias' => 'SetSeguranca']);
-        $this->belongsTo('id_terreno', 'CircuitosModels\Terreno', 'id', ['alias' => 'Terreno']);
-        $this->belongsTo('id_torre', 'CircuitosModels\Torre', 'id', ['alias' => 'Torre']);
-        $this->belongsTo('id_unidade_consumidora', 'CircuitosModels\UnidadeConsumidora', 'id', ['alias' => 'UnidadeConsumidora']);
+        $this->belongsTo('id_cidade_digital', 'Circuitos\Models\CidadeDigital', 'id', ['alias' => 'CidadeDigital']);
+        $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
+        $this->belongsTo('id_set_equipamento', 'Circuitos\Models\SetEquipamento', 'id', ['alias' => 'SetEquipamento']);
+        $this->belongsTo('id_set_seguranca', 'Circuitos\Models\SetSeguranca', 'id', ['alias' => 'SetSeguranca']);
+        $this->belongsTo('id_terreno', 'Circuitos\Models\Terreno', 'id', ['alias' => 'Terreno']);
+        $this->belongsTo('id_torre', 'Circuitos\Models\Torre', 'id', ['alias' => 'Torre']);
+        $this->belongsTo('id_unidade_consumidora', 'Circuitos\Models\UnidadeConsumidora', 'id', ['alias' => 'UnidadeConsumidora']);
     }
 
     /**

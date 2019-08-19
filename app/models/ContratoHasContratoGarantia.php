@@ -70,8 +70,8 @@ class ContratoHasContratoGarantia extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("contrato_has_contrato_garantia");
-        $this->belongsTo('id_contrato', 'CircuitosModels\Contrato', 'id', ['alias' => 'Contrato']);
-        $this->belongsTo('id_contrato_garantia', 'CircuitosModels\ContratoGarantia', 'id', ['alias' => 'ContratoGarantia']);
+        $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
+        $this->belongsTo('id_contrato_garantia', 'Circuitos\Models\ContratoGarantia', 'id', ['alias' => 'ContratoGarantia']);
     }
 
     /**

@@ -241,7 +241,7 @@ class SetSeguranca extends \Phalcon\Mvc\Model
         $query->leftJoin("Circuitos\Models\SetSegurancaComponentes", "SetSegurancaComponentes.id_set_seguranca = SetSeguranca.id", "SetSegurancaComponentes");
         $query->leftJoin("Circuitos\Models\SetSegurancaContato", "SetSegurancaContato.id_set_seguranca_componente = SetSegurancaComponentes.id", "SetSegurancaContato");
         $query->leftJoin("Circuitos\Models\Lov", "Lov.id = SetSegurancaComponentes.id_tipo", "Lov");
-        $query->leftJoin("Circuitos\Models\Fornecedor", "Fornecedor.id = SetSegurancaComponentes.id_fornecedor", "Fornecedor");
+        $query->leftJoin("Circuitos\Models\Cliente", "Fornecedor.id = SetSegurancaComponentes.id_fornecedor", "Fornecedor");
         $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa.id = Fornecedor.id_pessoa", "Pessoa");
         $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Pessoa.id", "PessoaJuridica");
         $query->where("SetSeguranca.excluido = 0 AND (CONVERT(SetSeguranca.id USING utf8) LIKE '%{$parameters}%'

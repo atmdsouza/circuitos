@@ -634,9 +634,9 @@ class Terreno extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("terreno");
-        $this->hasMany('id', 'CircuitosModels\EstacaoTelecon', 'id_terreno', ['alias' => 'EstacaoTelecon']);
-        $this->belongsTo('id_contrato', 'CircuitosModels\Contrato', 'id', ['alias' => 'Contrato']);
-        $this->belongsTo('id_fornecedor', 'CircuitosModels\Fornecedor', 'id', ['alias' => 'Fornecedor']);
+        $this->hasMany('id', 'Circuitos\Models\EstacaoTelecon', 'id_terreno', ['alias' => 'EstacaoTelecon']);
+        $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
+        $this->belongsTo('id_fornecedor', 'Circuitos\Models\Fornecedor', 'id', ['alias' => 'Fornecedor']);
     }
 
     /**
@@ -682,7 +682,7 @@ class Terreno extends \Phalcon\Mvc\Model
         $query = new Builder();
         $query->from(array("Terreno" => "Circuitos\Models\Terreno"));
         $query->columns("Terreno.*");
-        $query->leftJoin("Circuitos\Models\Fornecedor", "Fornecedor.id = Terreno.id_fornecedor", "Fornecedor");
+        $query->leftJoin("Circuitos\Models\Cliente", "Fornecedor.id = Terreno.id_fornecedor", "Fornecedor");
         $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa.id = Fornecedor.id_pessoa", "Pessoa");
         $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Fornecedor.id_pessoa", "PessoaJuridica");
         $query->where("Terreno.excluido = 0 AND Terreno.ativo = 1 AND(CONVERT(Terreno.id USING utf8) LIKE '%{$parameters}%'
