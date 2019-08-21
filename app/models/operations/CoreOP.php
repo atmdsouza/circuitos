@@ -51,6 +51,7 @@ class CoreOP
         }
         return $response;
     }
+
     public function fornecedoresAtivos()
     {
         $dados = filter_input_array(INPUT_GET);

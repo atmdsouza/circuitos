@@ -545,6 +545,14 @@ function autocompletarFornecedor()
 function preencherEndereco()
 {
     "use strict";
+    var bairro = $("#bairro");
+    var cidade = $("#cidade");
+    var endereco = $("#endereco");
+    var sigla_estado = $("#sigla_estado");
+    var estado = $("#estado");
+    var latitude = $("#latitude");
+    var longitude = $("#longitude");
+    var numero = $("#numero");
     var cep_t = $("#cep").val();
     if (cep_t) {
         var cep = formata_cep(cep_t);
@@ -566,11 +574,11 @@ function preencherEndereco()
             },
             success: function (data) {
                 if (data.operacao){
-                    var logradouro = $("#endereco").val();
+                    var logradouro = endereco.val();
                     if (logradouro){
                         swal({
                             title: "Deseja substituir o endereço existente?",
-                            text: "O sistema pode substituir o endereço atual pelo resultando que ele encontrou com base no CEP. O endereço é: " + data.endereco.logradouro + ", " + data.endereco["bairro"] + ", " + data.endereco.cidade + ".",
+                            text: "O sistema pode substituir o endereço atual pelo resultando que ele encontrou com base no CEP. O endereço é: " + data.endereco.logradouro + ", " + data.endereco.bairro + ", " + data.endereco.cidade + ".",
                             type: "info",
                             showCancelButton: true,
                             confirmButtonColor: "#3085d6",
@@ -579,32 +587,32 @@ function preencherEndereco()
                             cancelButtonText: "Cancelar"
                         }).then((result) => {
                             //Limpa
-                            $("#bairro").val(null);
-                            $("#cidade").val(null);
-                            $("#endereco").val(null);
-                            $("#sigla_estado").val(null);
-                            $("#estado").val(null);
-                            $("#latitude").val(null);
-                            $("#longitude").val(null);
+                            bairro.val(null);
+                            cidade.val(null);
+                            endereco.val(null);
+                            sigla_estado.val(null);
+                            estado.val(null);
+                            latitude.val(null);
+                            longitude.val(null);
                             //Preenche novamente
-                            $("#bairro").val(data.endereco.bairro);
-                            $("#cidade").val(data.endereco.cidade);
-                            $("#endereco").val(data.endereco.logradouro);
-                            $("#sigla_estado").val(data.endereco.sigla_estado);
-                            $("#estado").val(data.endereco.uf);
-                            $("#latitude").val(data.endereco.latitude);
-                            $("#longitude").val(data.endereco.longitude);
-                            $("#numero").focus();
+                            bairro.val(data.endereco.bairro);
+                            cidade.val(data.endereco.cidade);
+                            endereco.val(data.endereco.logradouro);
+                            sigla_estado.val(data.endereco.sigla_estado);
+                            estado.val(data.endereco.uf);
+                            latitude.val(data.endereco.latitude);
+                            longitude.val(data.endereco.longitude);
+                            numero.focus();
                         });
                     }else{
-                        $("#bairro").val(data.endereco.bairro);
-                        $("#cidade").val(data.endereco.cidade);
-                        $("#endereco").val(data.endereco.logradouro);
-                        $("#sigla_estado").val(data.endereco.sigla_estado);
-                        $("#estado").val(data.endereco.uf);
-                        $("#latitude").val(data.endereco.latitude);
-                        $("#longitude").val(data.endereco.longitude);
-                        $("#numero").focus();
+                        bairro.val(data.endereco.bairro);
+                        cidade.val(data.endereco.cidade);
+                        endereco.val(data.endereco.logradouro);
+                        sigla_estado.val(data.endereco.sigla_estado);
+                        estado.val(data.endereco.uf);
+                        latitude.val(data.endereco.latitude);
+                        longitude.val(data.endereco.longitude);
+                        numero.focus();
                     }
                 } else {
                     swal({
