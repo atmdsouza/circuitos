@@ -23,6 +23,7 @@ class TorreOP extends Torre
         $transaction = $manager->get();
         try {
             $objeto = new Torre();
+            $objeto->setTransaction($transaction);
             $objeto->setIdCidadeDigital($objArray->getIdCidadeDigital());
             $objeto->setIdTipo($objArray->getIdTipo());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
@@ -45,6 +46,7 @@ class TorreOP extends Torre
         $transaction = $manager->get();
         try {
             $objeto = Torre::findFirst($objArray->getId());
+            $objeto->setTransaction($transaction);
             $objeto->setIdCidadeDigital($objArray->getIdCidadeDigital());
             $objeto->setIdTipo($objArray->getIdTipo());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
@@ -67,6 +69,7 @@ class TorreOP extends Torre
         $transaction = $manager->get();
         try {
             $objeto = Torre::findFirst($objArray->getId());
+            $objeto->setTransaction($transaction);
             $objeto->setAtivo(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
@@ -86,6 +89,7 @@ class TorreOP extends Torre
         $transaction = $manager->get();
         try {
             $objeto = Torre::findFirst($objArray->getId());
+            $objeto->setTransaction($transaction);
             $objeto->setAtivo(0);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
@@ -105,6 +109,7 @@ class TorreOP extends Torre
         $transaction = $manager->get();
         try {
             $objeto = Torre::findFirst($objArray->getId());
+            $objeto->setTransaction($transaction);
             $objeto->setExcluido(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {

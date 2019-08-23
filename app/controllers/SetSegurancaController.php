@@ -2,6 +2,8 @@
 
 namespace Circuitos\Controllers;
 
+use Circuitos\Models\SetSegurancaComponentes;
+use Circuitos\Models\SetSegurancaContato;
 use Phalcon\Http\Response as Response;
 
 use Circuitos\Models\Lov;
@@ -10,6 +12,7 @@ use Circuitos\Models\Operations\SetSegurancaOP;
 
 use Auth\Autentica;
 use Util\TokenManager;
+use Util\Util;
 
 class SetSegurancaController extends ControllerBase
 {
@@ -49,18 +52,44 @@ class SetSegurancaController extends ControllerBase
         //Desabilita o layout para o ajax
         $this->view->disable();
         $response = new Response();
+        $util = new Util();
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-        $titulo = 'Cadastro de SetSeguranca';
-        $msg = 'SetSeguranca cadastrada com sucesso!';
-        $error_msg = 'Erro ao cadastrar uma SetSeguranca!';
+        $titulo = 'Cadastro de Set de Seguranca';
+        $msg = 'Set Seguranca cadastrado com sucesso!';
+        $error_msg = 'Erro ao cadastrar um Set Seguranca!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             $setsegurancaOP = new SetSegurancaOP();
-            $setseguranca = new SetSeguranca($params);
-            if($setsegurancaOP->cadastrar($setseguranca)){//Cadastrou com sucesso
+            $setseguranca = new SetSeguranca();
+            $setseguranca->setDescricao($params['descricao']);
+            $arrayComponente = array();
+            $arrayComponenteContato = array();
+            foreach ($params['id_contrato'] as $key => $id_contrato){
+                $validade = ($params['validade'][$key]) ? $util->converterDataUSA($params['validade'][$key]) : null;
+                $contrato = ($id_contrato) ? $id_contrato : null;
+                $tipo = ($params['id_tipo'][$key]) ? $params['id_tipo'][$key] : null;
+                $fornecedor = ($params['id_fornecedor'][$key]) ? $params['id_fornecedor'][$key] : null;
+                $componente = new SetSegurancaComponentes();
+                $componente->setIdContrato($contrato);
+                $componente->setEnderecoChave($params['endereco_chave'][$key]);
+                $componente->setSenha($params['senha'][$key]);
+                $componente->setValidade($validade);
+                $componente->setIdFornecedor($fornecedor);
+                $componente->setIdTipo($tipo);
+                $componente->setPropriedadeProdepa($params['propriedade_prodepa'][$key]);
+                array_push($arrayComponente, $componente);
+                $componenteContato = new SetSegurancaContato();
+                $tel1 = ($params["telefone"][$key]) ? $util->formataFone($params["telefone"][$key]) : null;
+                $tel = ($tel1) ? $tel1["ddd"] . $tel1["fone"] : null;
+                $componenteContato->setNome($params['nome'][$key]);
+                $componenteContato->setTelefone($tel);
+                $componenteContato->setEmail($params['email'][$key]);
+                array_push($arrayComponenteContato, $componenteContato);
+            }
+            if($setsegurancaOP->cadastrar($setseguranca, $arrayComponente, $arrayComponenteContato)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));

@@ -18,7 +18,7 @@ class SetSegurancaContato extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $id_set_seguranca;
+    protected $id_set_seguranca_componente;
 
     /**
      *
@@ -75,9 +75,9 @@ class SetSegurancaContato extends \Phalcon\Mvc\Model
      * @param integer $id_set_seguranca
      * @return $this
      */
-    public function setIdSetSeguranca($id_set_seguranca)
+    public function setIdSetSegurancaComponente($id_set_seguranca_componente)
     {
-        $this->id_set_seguranca = $id_set_seguranca;
+        $this->id_set_seguranca_componente = $id_set_seguranca_componente;
 
         return $this;
     }
@@ -175,9 +175,9 @@ class SetSegurancaContato extends \Phalcon\Mvc\Model
      *
      * @return integer
      */
-    public function getIdSetSeguranca()
+    public function getIdSetSegurancaComponente()
     {
-        return $this->id_set_seguranca;
+        return $this->id_set_seguranca_componente;
     }
 
     /**
@@ -245,22 +245,22 @@ class SetSegurancaContato extends \Phalcon\Mvc\Model
      *
      * @return boolean
      */
-    public function validation()
-    {
-        $validator = new Validation();
-
-        $validator->add(
-            'email',
-            new EmailValidator(
-                [
-                    'model'   => $this,
-                    'message' => 'Please enter a correct email address',
-                ]
-            )
-        );
-
-        return $this->validate($validator);
-    }
+//    public function validation()
+//    {
+//        $validator = new Validation();
+//
+//        $validator->add(
+//            'email',
+//            new EmailValidator(
+//                [
+//                    'model'   => $this,
+//                    'message' => 'Please enter a correct email address',
+//                ]
+//            )
+//        );
+//
+//        return $this->validate($validator);
+//    }
 
     /**
      * Initialize method for model.
@@ -269,7 +269,7 @@ class SetSegurancaContato extends \Phalcon\Mvc\Model
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("set_seguranca_contato");
-        $this->belongsTo('id_set_seguranca', 'Circuitos\Models\SetSeguranca', 'id', ['alias' => 'SetSeguranca']);
+        $this->belongsTo('id_set_seguranca_componente', 'Circuitos\Models\SetSegurancaComponente', 'id', ['alias' => 'SetSegurancaComponente']);
     }
 
     /**

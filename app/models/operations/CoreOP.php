@@ -40,14 +40,9 @@ class CoreOP
             "longitude" => $endereco->getLongitude()
         ];
         if ($endereco) {
-            $response->setContent(json_encode(array(
-                "endereco" => $end,
-                "operacao" => True
-            )));
+            $response->setContent(json_encode(array("endereco" => $end,"operacao" => True)));
         } else {
-            $response->setContent(json_encode(array(
-                "operacao" => False
-            )));
+            $response->setContent(json_encode(array("operacao" => False)));
         }
         return $response;
     }

@@ -448,9 +448,9 @@ function criarComponente()
     $('#bt_inserir_componente').val('Inserir');
     $('#dados_componente').removeAttr('style','display: none;');
     $('#dados_componente').attr('style', 'display: block;');
-    if ($('#i_propriedade_prodepa').val() === '1'){
+    if ($('#i_propriedade_prodepa').val() === '-1'){
         $('#i_lid_fornecedor').val('PRODEPA');
-        $('#i_id_fornecedor').val(0);
+        $('#i_id_fornecedor').val(-1);
     }
     $('#i_lid_fornecedor').focus();
 }
@@ -459,14 +459,14 @@ function habilitarFornecedor()
 {
     'use strict';
     var propriedade_prodepa = $('#i_propriedade_prodepa').val();
-    if (propriedade_prodepa !== '1'){
+    if (propriedade_prodepa !== '-1'){
         $('#i_lid_fornecedor').removeAttr('disabled');
         $('#i_lid_fornecedor').val('');
         $('#i_id_fornecedor').val('');
     } else {
         $('#i_lid_fornecedor').attr('disabled', 'true');
         $('#i_lid_fornecedor').val('PRODEPA');
-        $('#i_id_fornecedor').val(0);
+        $('#i_id_fornecedor').val(-1);
     }
 }
 
@@ -482,7 +482,7 @@ function inserirComponente()
     var desc_id_tipo = document.getElementById("i_id_tipo").options[document.getElementById("i_id_tipo").selectedIndex].text;
     var id_tipo = $('#i_id_tipo').val();
     var propriedade_prodepa = $('#i_propriedade_prodepa').val();
-    var desc_propriedade_prodepa = (propriedade_prodepa === '1') ? 'Sim' : 'Não';
+    var desc_propriedade_prodepa = (propriedade_prodepa === '-1') ? 'Sim' : 'Não';
     var senha = $('#i_senha').val();
     var validade = $('#i_validade').val();
     var nome = $('#i_nome').val();
@@ -537,7 +537,7 @@ function limparDadosFormComponente()
     $('#i_telefone').val('');
     $('#i_email').val('');
     $('#i_id_tipo').val(null).selected = 'true';
-    $('#i_propriedade_prodepa').val('1').selected = 'true';
+    $('#i_propriedade_prodepa').val('-1').selected = 'true';
     $('#dados_componente').removeAttr('style', 'display: block;');
     $('#dados_componente').attr('style','display: none;');
 }
