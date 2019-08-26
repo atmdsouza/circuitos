@@ -4,6 +4,7 @@ namespace Circuitos\Controllers;
 
 use Phalcon\Http\Response as Response;
 
+use Circuitos\Models\Terreno;
 use Circuitos\Models\Operations\TerrenoOP;
 
 use Auth\Autentica;
@@ -48,13 +49,9 @@ class TerrenoController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-
-        var_dump($params);
-        exit;
-
         $titulo = 'Cadastro de Terreno';
-        $msg = 'Terreno cadastrada com sucesso!';
-        $error_msg = 'Erro ao cadastrar uma Terreno!';
+        $msg = 'Terreno cadastrado com sucesso!';
+        $error_msg = 'Erro ao cadastrar um Terreno!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido

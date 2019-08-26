@@ -52,10 +52,6 @@ class TorreController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-
-        var_dump($params);
-        exit;
-
         $titulo = 'Cadastro de Torre';
         $msg = 'Torre cadastrada com sucesso!';
         $error_msg = 'Erro ao cadastrar uma Torre!';

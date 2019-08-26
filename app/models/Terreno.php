@@ -636,7 +636,7 @@ class Terreno extends \Phalcon\Mvc\Model
         $this->setSource("terreno");
         $this->hasMany('id', 'Circuitos\Models\EstacaoTelecon', 'id_terreno', ['alias' => 'EstacaoTelecon']);
         $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
-        $this->belongsTo('id_fornecedor', 'Circuitos\Models\Fornecedor', 'id', ['alias' => 'Fornecedor']);
+        $this->belongsTo('id_fornecedor', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Fornecedor']);
     }
 
     /**
@@ -685,7 +685,7 @@ class Terreno extends \Phalcon\Mvc\Model
         $query->leftJoin("Circuitos\Models\Cliente", "Fornecedor.id = Terreno.id_fornecedor", "Fornecedor");
         $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa.id = Fornecedor.id_pessoa", "Pessoa");
         $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Fornecedor.id_pessoa", "PessoaJuridica");
-        $query->where("Terreno.excluido = 0 AND Terreno.ativo = 1 AND(CONVERT(Terreno.id USING utf8) LIKE '%{$parameters}%'
+        $query->where("Terreno.excluido = 0 AND (CONVERT(Terreno.id USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Terreno.descricao USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Pessoa.nome USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(PessoaJuridica.razaosocial USING utf8) LIKE '%{$parameters}%')");

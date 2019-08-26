@@ -371,7 +371,7 @@ class Torre extends \Phalcon\Mvc\Model
         $query->leftJoin("Circuitos\Models\Cliente", "Fornecedor.id = Torre.id_fornecedor", "Fornecedor");
         $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa.id = Fornecedor.id_pessoa", "Pessoa");
         $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Fornecedor.id_pessoa", "PessoaJuridica");
-        $query->where("Torre.excluido = 0 AND Torre.ativo = 1 AND(CONVERT(Torre.id USING utf8) LIKE '%{$parameters}%'
+        $query->where("Torre.excluido = 0 AND (CONVERT(Torre.id USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Torre.descricao USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Torre.altura USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Pessoa.nome USING utf8) LIKE '%{$parameters}%'

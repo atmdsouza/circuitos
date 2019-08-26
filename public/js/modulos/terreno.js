@@ -19,9 +19,9 @@ function inicializar()
         },
         order: [[5, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
     });
-    if ($('#propriedade_prodepa').val() === '1'){
+    if ($('#propriedade_prodepa').val() === '-1'){
         $('#lid_fornecedor').val('PRODEPA');
-        $('#id_fornecedor').val(0);
+        $('#id_fornecedor').val(-1);
     }
     autocompletarFornecedor();
 }
@@ -128,7 +128,7 @@ function salvar()
         },
         submitHandler: function(form) {
             var dados = $("#formCadastro").serialize();
-            var action = actionCorreta(window.location.href.toString(), "set_seguranca/" + acao);
+            var action = actionCorreta(window.location.href.toString(), "terreno/" + acao);
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
@@ -186,7 +186,7 @@ function ativar(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, ativar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "conectividade/ativar");
+        var action = actionCorreta(window.location.href.toString(), "terreno/ativar");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -243,7 +243,7 @@ function inativar(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, inativar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "conectividade/inativar");
+        var action = actionCorreta(window.location.href.toString(), "terreno/inativar");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -300,7 +300,7 @@ function excluir(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, excluir!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "conectividade/excluir");
+        var action = actionCorreta(window.location.href.toString(), "terreno/excluir");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -479,14 +479,14 @@ function habilitarFornecedor()
 {
     'use strict';
     var propriedade_prodepa = $('#propriedade_prodepa').val();
-    if (propriedade_prodepa !== '1'){
+    if (propriedade_prodepa !== '-1'){
         $('#lid_fornecedor').removeAttr('disabled');
         $('#lid_fornecedor').val('');
         $('#id_fornecedor').val('');
     } else {
         $('#lid_fornecedor').attr('disabled', 'true');
         $('#lid_fornecedor').val('PRODEPA');
-        $('#id_fornecedor').val(0);
+        $('#id_fornecedor').val(-1);
     }
 }
 

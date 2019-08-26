@@ -8,6 +8,8 @@ use Phalcon\Http\Response as Response;
 
 use Circuitos\Models\Terreno;
 
+use Util\Util;
+
 class TerrenoOP extends Terreno
 {
     private $encode = "UTF-8";
@@ -19,18 +21,34 @@ class TerrenoOP extends Terreno
 
     public function cadastrar(Terreno $objArray)
     {
+        $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
             $objeto = new Terreno();
+            $fornecedor = ($objArray->getIdFornecedor()) ? $objArray->getIdFornecedor() : null;
+            $contrato = ($objArray->getIdContrato()) ? $objArray->getIdContrato() : null;
             $objeto->setTransaction($transaction);
-            $objeto->setIdCidadeDigital($objArray->getIdCidadeDigital());
-            $objeto->setIdTipo($objArray->getIdTipo());
+            $objeto->setIdFornecedor($fornecedor);
+            $objeto->setIdContrato($contrato);
+            $objeto->setPropriedadeProdepa($objArray->getPropriedadeProdepa());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
+            $objeto->setComprimento($util->formataNumero($objArray->getComprimento()));
+            $objeto->setLargura($util->formataNumero($objArray->getLargura()));
+            $objeto->setArea($util->formataNumero($objArray->getArea()));
+            $objeto->setCep($util->formataCpfCnpj($objArray->getCep()));
             $objeto->setEndereco(mb_strtoupper($objArray->getEndereco(), $this->encode));
+            $objeto->setNumero(mb_strtoupper($objArray->getNumero(), $this->encode));
+            $objeto->setBairro(mb_strtoupper($objArray->getBairro(), $this->encode));
+            $objeto->setComplemento(mb_strtoupper($objArray->getComplemento(), $this->encode));
+            $objeto->setCidade(mb_strtoupper($objArray->getCidade(), $this->encode));
+            $objeto->setEstado(mb_strtoupper($objArray->getEstado(), $this->encode));
+            $objeto->setSiglaEstado(mb_strtoupper($objArray->getSiglaEstado(), $this->encode));
+            $objeto->setLatitude($objArray->getLatitude());
+            $objeto->setLongitude($objArray->getLongitude());
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível salvar a conectividade!");
+                $transaction->rollback("Não foi possível salvar o terreno!");
             }
             $transaction->commit();
             return $objeto;
@@ -53,7 +71,7 @@ class TerrenoOP extends Terreno
             $objeto->setEndereco(mb_strtoupper($objArray->getEndereco(), $this->encode));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $transaction->rollback("Não foi possível alterar o terreno!");
             }
             $transaction->commit();
             return $objeto;
@@ -73,7 +91,7 @@ class TerrenoOP extends Terreno
             $objeto->setAtivo(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $transaction->rollback("Não foi possível alterar o terreno!");
             }
             $transaction->commit();
             return $objeto;
@@ -93,7 +111,7 @@ class TerrenoOP extends Terreno
             $objeto->setAtivo(0);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $transaction->rollback("Não foi possível alterar o terreno!");
             }
             $transaction->commit();
             return $objeto;
@@ -113,7 +131,7 @@ class TerrenoOP extends Terreno
             $objeto->setExcluido(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível excluir a conectividade!");
+                $transaction->rollback("Não foi possível excluir o terreno!");
             }
             $transaction->commit();
             return $objeto;

@@ -88,7 +88,7 @@ class SetSegurancaOP extends SetSeguranca
             $objeto->setEndereco(mb_strtoupper($objArray->getEndereco(), $this->encode));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $transaction->rollback("Não foi possível alterar o set de segurança!");
             }
             $transaction->commit();
             return $objeto;
@@ -108,7 +108,7 @@ class SetSegurancaOP extends SetSeguranca
             $objeto->setAtivo(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $transaction->rollback("Não foi possível alterar o set de segurança!");
             }
             $transaction->commit();
             return $objeto;
@@ -128,7 +128,7 @@ class SetSegurancaOP extends SetSeguranca
             $objeto->setAtivo(0);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $transaction->rollback("Não foi possível alterar o set de segurança!");
             }
             $transaction->commit();
             return $objeto;
@@ -148,7 +148,7 @@ class SetSegurancaOP extends SetSeguranca
             $objeto->setExcluido(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível excluir a conectividade!");
+                $transaction->rollback("Não foi possível excluir o set de segurança!");
             }
             $transaction->commit();
             return $objeto;

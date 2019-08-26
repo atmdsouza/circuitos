@@ -6,6 +6,7 @@ use Phalcon\Http\Response as Response;
 
 use Circuitos\Models\Operations\SetEquipamentoOP;
 use Circuitos\Models\SetEquipamento;
+use Circuitos\Models\SetEquipamentoComponentes;
 
 use Util\TokenManager;
 use Auth\Autentica;
@@ -49,19 +50,27 @@ class SetEquipamentoController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-
-        var_dump($params);
-        exit;
-
-        $titulo = 'Cadastro de SetEquipamento';
-        $msg = 'SetEquipamento cadastrada com sucesso!';
-        $error_msg = 'Erro ao cadastrar uma SetEquipamento!';
+        $titulo = 'Cadastro de Set de Equipamento';
+        $msg = 'Set de Equipamento cadastrado com sucesso!';
+        $error_msg = 'Erro ao cadastrar um Set de Equipamento!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             $setequipamentoOP = new SetEquipamentoOP();
-            $setequipamento = new SetEquipamento($params);
-            if($setequipamentoOP->cadastrar($setequipamento)){//Cadastrou com sucesso
+            $setequipamento = new SetEquipamento();
+            $setequipamento->setDescricao($params['descricao']);
+            $arrayComponente = array();
+            foreach ($params['id_contrato'] as $key => $id_contrato){
+                $contrato = ($id_contrato) ? $id_contrato : null;
+                $equipamento = ($params['id_equipamento'][$key]) ? $params['id_equipamento'][$key] : null;
+                $fornecedor = ($params['id_fornecedor'][$key]) ? $params['id_fornecedor'][$key] : null;
+                $componente = new SetEquipamentoComponentes();
+                $componente->setIdContrato($contrato);
+                $componente->setIdFornecedor($fornecedor);
+                $componente->setIdEquipamento($equipamento);
+                array_push($arrayComponente, $componente);
+            }
+            if($setequipamentoOP->cadastrar($setequipamento, $arrayComponente)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));

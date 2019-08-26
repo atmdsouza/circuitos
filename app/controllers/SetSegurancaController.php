@@ -57,8 +57,8 @@ class SetSegurancaController extends ControllerBase
         $params = array();
         parse_str($dados['dados'], $params);
         $titulo = 'Cadastro de Set de Seguranca';
-        $msg = 'Set Seguranca cadastrado com sucesso!';
-        $error_msg = 'Erro ao cadastrar um Set Seguranca!';
+        $msg = 'Set de Seguranca cadastrado com sucesso!';
+        $error_msg = 'Erro ao cadastrar um Set de Seguranca!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -108,9 +108,9 @@ class SetSegurancaController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-        $titulo = 'Alteração de SetSeguranca';
-        $msg = 'SetSeguranca alterada com sucesso!';
-        $error_msg = 'Erro ao alterar uma SetSeguranca!';
+        $titulo = 'Alteração de Set de Seguranca';
+        $msg = 'Set de Seguranca alterada com sucesso!';
+        $error_msg = 'Erro ao alterar uma Set de Seguranca!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -133,9 +133,9 @@ class SetSegurancaController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Reativação de SetSeguranca';
-        $msg = 'SetSeguranca reativada com sucesso!';
-        $error_msg = 'Erro ao reativar uma SetSeguranca!';
+        $titulo = 'Reativação de Set de Seguranca';
+        $msg = 'Set de Seguranca reativado com sucesso!';
+        $error_msg = 'Erro ao reativar uma Set de Seguranca!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -158,9 +158,9 @@ class SetSegurancaController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Desativação de SetSeguranca';
-        $msg = 'SetSeguranca desativada com sucesso!';
-        $error_msg = 'Erro ao desativar uma SetSeguranca!';
+        $titulo = 'Desativação de Set de Seguranca';
+        $msg = 'Set de Seguranca desativado com sucesso!';
+        $error_msg = 'Erro ao desativar uma Set de Seguranca!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -183,9 +183,9 @@ class SetSegurancaController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Exclusão de SetSeguranca';
-        $msg = 'SetSeguranca excluída com sucesso!';
-        $error_msg = 'Erro ao excluir a SetSeguranca!';
+        $titulo = 'Exclusão de Set de Seguranca';
+        $msg = 'Set de Seguranca excluído com sucesso!';
+        $error_msg = 'Erro ao excluir a Set de Seguranca!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido

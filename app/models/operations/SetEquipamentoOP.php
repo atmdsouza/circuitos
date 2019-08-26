@@ -7,9 +7,7 @@ use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Phalcon\Http\Response as Response;
 
 use Circuitos\Models\SetEquipamento;
-use Circuitos\Models\Fabricante;
-use Circuitos\Models\Modelo;
-use Circuitos\Models\Equipamento;
+use Circuitos\Models\SetEquipamentoComponentes;
 
 class SetEquipamentoOP extends SetEquipamento
 {
@@ -20,20 +18,29 @@ class SetEquipamentoOP extends SetEquipamento
         return SetEquipamento::pesquisarSetEquipamento($dados);
     }
 
-    public function cadastrar(SetEquipamento $objArray)
+    public function cadastrar(SetEquipamento $objArray, $arrayObjComponente)
     {
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
             $objeto = new SetEquipamento();
             $objeto->setTransaction($transaction);
-            $objeto->setIdCidadeDigital($objArray->getIdCidadeDigital());
-            $objeto->setIdTipo($objArray->getIdTipo());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
-            $objeto->setEndereco(mb_strtoupper($objArray->getEndereco(), $this->encode));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível salvar a conectividade!");
+                $transaction->rollback("Não foi possível salvar o SetEquipamento!");
+            }
+            foreach($arrayObjComponente as $key => $objComponente){
+                $objetoComponente = new SetEquipamentoComponentes();
+                $objetoComponente->setTransaction($transaction);
+                $objetoComponente->setIdSetEquipamento($objeto->getId());
+                $objetoComponente->setIdContrato($objComponente->getIdContrato());
+                $objetoComponente->setIdEquipamento($objComponente->getIdEquipamento());
+                $objetoComponente->setIdFornecedor($objComponente->getIdFornecedor());
+                $objetoComponente->setDataUpdate(date('Y-m-d H:i:s'));
+                if ($objetoComponente->save() == false) {
+                    $transaction->rollback("Não foi possível salvar o SetEquipamentoComponente!");
+                }
             }
             $transaction->commit();
             return $objeto;
@@ -56,7 +63,7 @@ class SetEquipamentoOP extends SetEquipamento
             $objeto->setEndereco(mb_strtoupper($objArray->getEndereco(), $this->encode));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $transaction->rollback("Não foi possível alterar o SetEquipamento!");
             }
             $transaction->commit();
             return $objeto;
@@ -76,7 +83,7 @@ class SetEquipamentoOP extends SetEquipamento
             $objeto->setAtivo(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $transaction->rollback("Não foi possível alterar o SetEquipamento!");
             }
             $transaction->commit();
             return $objeto;
@@ -96,7 +103,7 @@ class SetEquipamentoOP extends SetEquipamento
             $objeto->setAtivo(0);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $transaction->rollback("Não foi possível alterar o SetEquipamento!");
             }
             $transaction->commit();
             return $objeto;
@@ -116,7 +123,7 @@ class SetEquipamentoOP extends SetEquipamento
             $objeto->setExcluido(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível excluir a conectividade!");
+                $transaction->rollback("Não foi possível excluir o SetEquipamento!");
             }
             $transaction->commit();
             return $objeto;

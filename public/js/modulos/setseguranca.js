@@ -182,7 +182,7 @@ function ativar(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, ativar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "conectividade/ativar");
+        var action = actionCorreta(window.location.href.toString(), "set_seguranca/ativar");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -239,7 +239,7 @@ function inativar(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, inativar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "conectividade/inativar");
+        var action = actionCorreta(window.location.href.toString(), "set_seguranca/inativar");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -296,7 +296,7 @@ function excluir(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, excluir!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "conectividade/excluir");
+        var action = actionCorreta(window.location.href.toString(), "set_seguranca/excluir");
         $.ajax({
             type: "POST",
             dataType: "JSON",

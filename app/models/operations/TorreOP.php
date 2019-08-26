@@ -8,6 +8,8 @@ use Phalcon\Http\Response as Response;
 
 use Circuitos\Models\Torre;
 
+use Util\Util;
+
 class TorreOP extends Torre
 {
     private $encode = "UTF-8";
@@ -19,15 +21,20 @@ class TorreOP extends Torre
 
     public function cadastrar(Torre $objArray)
     {
+        $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
             $objeto = new Torre();
+            $fornecedor = ($objArray->getIdFornecedor()) ? $objArray->getIdFornecedor() : null;
+            $contrato = ($objArray->getIdContrato()) ? $objArray->getIdContrato() : null;
             $objeto->setTransaction($transaction);
-            $objeto->setIdCidadeDigital($objArray->getIdCidadeDigital());
+            $objeto->setIdFornecedor($fornecedor);
+            $objeto->setIdContrato($contrato);
             $objeto->setIdTipo($objArray->getIdTipo());
+            $objeto->setPropriedadeProdepa($objArray->getPropriedadeProdepa());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
-            $objeto->setEndereco(mb_strtoupper($objArray->getEndereco(), $this->encode));
+            $objeto->setAltura($util->formataNumero($objArray->getAltura()));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
                 $transaction->rollback("Não foi possível salvar a conectividade!");

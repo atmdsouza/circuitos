@@ -131,7 +131,7 @@ function salvar()
         },
         submitHandler: function(form) {
             var dados = $("#formCadastro").serialize();
-            var action = actionCorreta(window.location.href.toString(), "set_seguranca/" + acao);
+            var action = actionCorreta(window.location.href.toString(), "set_equipamento/" + acao);
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
@@ -189,7 +189,7 @@ function ativar(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, ativar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "conectividade/ativar");
+        var action = actionCorreta(window.location.href.toString(), "set_equipamento/ativar");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -246,7 +246,7 @@ function inativar(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, inativar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "conectividade/inativar");
+        var action = actionCorreta(window.location.href.toString(), "set_equipamento/inativar");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -303,7 +303,7 @@ function excluir(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, excluir!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "conectividade/excluir");
+        var action = actionCorreta(window.location.href.toString(), "set_equipamento/excluir");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -698,7 +698,6 @@ function inserirComponente()
     'use strict';
     //Dados
     var id_contrato = $('#i_id_contrato').val();
-    var lid_contrato = $('#i_lid_contrato').val();
     var id_fornecedor = $('#i_id_fornecedor').val();
     var lid_fornecedor = $('#i_lid_fornecedor').val();
     var lnumero_serie = $('#i_lnumero_serie').val();
@@ -709,6 +708,7 @@ function inserirComponente()
     if(lid_fornecedor !== '' && lid_equipamento !== ''){//Campos Obrigatórios
         var linhas = null;
         linhas += '<tr class="tr_remove">';
+        linhas += '<td style="display: none;"><input name="id_contrato[]" type="hidden" value="'+ id_contrato +'" /></td>';
         linhas += '<td>'+ lid_fornecedor +'<input name="id_fornecedor[]" type="hidden" value="'+ id_fornecedor +'" /></td>';
         linhas += '<td>'+ lnumero_serie +'</td>';
         linhas += '<td>'+ lid_fabricante +'</td>';
