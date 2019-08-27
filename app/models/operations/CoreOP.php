@@ -8,9 +8,14 @@ use Circuitos\Models\CidadeDigital;
 use Circuitos\Models\Cliente;
 use Circuitos\Models\EndEndereco;
 use Circuitos\Models\Equipamento;
+use Circuitos\Models\EstacaoTelecon;
 use Circuitos\Models\Fabricante;
 use Circuitos\Models\Lov;
 use Circuitos\Models\Modelo;
+use Circuitos\Models\Terreno;
+use Circuitos\Models\Torre;
+use Circuitos\Models\SetEquipamento;
+use Circuitos\Models\SetSeguranca;
 
 /**
  * Class CoreOP
@@ -23,7 +28,6 @@ use Circuitos\Models\Modelo;
  */
 class CoreOP
 {
-
     public function completarEndereco()
     {
         $response = new Response();
@@ -66,6 +70,68 @@ class CoreOP
         $cidadedigital = CidadeDigital::find("excluido=0 AND ativo=1 AND descricao LIKE '%{$dados['string']}%'");
         $response = new Response();
         $response->setContent(json_encode(array("operacao" => True, "dados" => $cidadedigital)));
+        return $response;
+    }
+
+    public function estacoesTeleconAtivas()
+    {
+        $estacoestelecon = EstacaoTelecon::find("excluido=0 AND ativo=1");
+        $dados_estacoes = array();
+        foreach ($estacoestelecon as $estacaotelecon){
+            $dados_estacao = array(
+                'id' => $estacaotelecon->getId(),
+                'descricao' => $estacaotelecon->getDescricao(),
+                'cidade_digital' => $estacaotelecon->getCidadeDigital(),
+                'cep' => $estacaotelecon->getCep(),
+                'endereco' => $estacaotelecon->getEndereco(),
+                'numero' => $estacaotelecon->getNumero(),
+                'bairro' => $estacaotelecon->getBairro(),
+                'cidade' => $estacaotelecon->getCidade(),
+                'estado' => $estacaotelecon->getEstado(),
+                'sigla_estado' => $estacaotelecon->getSiglaEstado(),
+                'latitude' => $estacaotelecon->getLatitude(),
+                'longitude' => $estacaotelecon->getLongitude()
+            );
+            array_push($dados_estacoes,$dados_estacao);
+        }
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $dados_estacoes)));
+        return $response;
+    }
+
+    public function terrenosAtivos()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $terreno = Terreno::find("excluido=0 AND ativo=1 AND descricao LIKE '%{$dados['string']}%'");
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $terreno)));
+        return $response;
+    }
+
+    public function torresAtivas()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $torre = Torre::find("excluido=0 AND ativo=1 AND descricao LIKE '%{$dados['string']}%'");
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $torre)));
+        return $response;
+    }
+
+    public function setsSegurancaAtivos()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $setseguranca = SetSeguranca::find("excluido=0 AND ativo=1 AND descricao LIKE '%{$dados['string']}%'");
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $setseguranca)));
+        return $response;
+    }
+
+    public function setsEquipamentosAtivos()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $setequipamento = SetEquipamento::find("excluido=0 AND ativo=1 AND descricao LIKE '%{$dados['string']}%'");
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $setequipamento)));
         return $response;
     }
 

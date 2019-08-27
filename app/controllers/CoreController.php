@@ -470,6 +470,10 @@ class CoreController extends ControllerBase
                 $objeto = new CoreOP();
                 return $objeto->cidadesDigitaisAtivas();
                 break;
+            case 'estacoesTeleconAtivas':
+                $objeto = new CoreOP();
+                return $objeto->estacoesTeleconAtivas();
+                break;
             case 'tiposCidadesDigitaisAtivas':
                 $objeto = new CoreOP();
                 return $objeto->tiposCidadesDigitaisAtivas();
@@ -493,6 +497,22 @@ class CoreController extends ControllerBase
             case 'modelosAtivos':
                 $objeto = new CoreOP();
                 return $objeto->modelosAtivos();
+                break;
+            case 'terrenosAtivos':
+                $objeto = new CoreOP();
+                return $objeto->terrenosAtivos();
+                break;
+            case 'torresAtivas':
+                $objeto = new CoreOP();
+                return $objeto->torresAtivas();
+                break;
+            case 'setsEquipamentosAtivos':
+                $objeto = new CoreOP();
+                return $objeto->setsEquipamentosAtivos();
+                break;
+            case 'setsSegurancaAtivos':
+                $objeto = new CoreOP();
+                return $objeto->setsSegurancaAtivos();
                 break;
             case 'equipamentosAtivos':
                 $objeto = new CoreOP();

@@ -50,9 +50,9 @@ class EstacaoTeleconController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-        $titulo = 'Cadastro de EstacaoTelecon';
-        $msg = 'EstacaoTelecon cadastrada com sucesso!';
-        $error_msg = 'Erro ao cadastrar uma EstacaoTelecon!';
+        $titulo = 'Cadastro de Estação Telecon';
+        $msg = 'Estação Telecon cadastrada com sucesso!';
+        $error_msg = 'Erro ao cadastrar uma Estação Telecon!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido

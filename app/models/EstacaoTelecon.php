@@ -164,7 +164,7 @@ class EstacaoTelecon extends \Phalcon\Mvc\Model
      * @param integer $id_set_seguranca
      * @return $this
      */
-    public function setIdEstacaoTelecon($id_set_seguranca)
+    public function setIdSetSeguranca($id_set_seguranca)
     {
         $this->id_set_seguranca = $id_set_seguranca;
 
@@ -301,7 +301,7 @@ class EstacaoTelecon extends \Phalcon\Mvc\Model
      *
      * @return integer
      */
-    public function getIdEstacaoTelecon()
+    public function getIdSetSeguranca()
     {
         return $this->id_set_seguranca;
     }
@@ -404,6 +404,96 @@ class EstacaoTelecon extends \Phalcon\Mvc\Model
     public function getTorre()
     {
         return $this->Torre->descricao;
+    }
+
+    /**
+     * Returns the value of field CEP
+     *
+     * @return string
+     */
+    public function getCep()
+    {
+        return $this->Terreno->cep;
+    }
+
+    /**
+     * Returns the value of field Endereço
+     *
+     * @return string
+     */
+    public function getEndereco()
+    {
+        return $this->Terreno->endereco;
+    }
+
+    /**
+     * Returns the value of field numero
+     *
+     * @return string
+     */
+    public function getNumero()
+    {
+        return $this->Terreno->numero;
+    }
+
+    /**
+     * Returns the value of field bairro
+     *
+     * @return string
+     */
+    public function getBairro()
+    {
+        return $this->Terreno->bairro;
+    }
+
+    /**
+     * Returns the value of field cidade
+     *
+     * @return string
+     */
+    public function getCidade()
+    {
+        return $this->Terreno->cidade;
+    }
+
+    /**
+     * Returns the value of field estado
+     *
+     * @return string
+     */
+    public function getEstado()
+    {
+        return $this->Terreno->estado;
+    }
+
+    /**
+     * Returns the value of field sigla_estado
+     *
+     * @return string
+     */
+    public function getSiglaEstado()
+    {
+        return $this->Terreno->sigla_estado;
+    }
+
+    /**
+     * Returns the value of field latitude
+     *
+     * @return string
+     */
+    public function getLatitude()
+    {
+        return $this->Terreno->latitude;
+    }
+
+    /**
+     * Returns the value of field longitude
+     *
+     * @return string
+     */
+    public function getLongitude()
+    {
+        return $this->Terreno->longitude;
     }
 
     /**

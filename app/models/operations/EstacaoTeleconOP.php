@@ -22,15 +22,26 @@ class EstacaoTeleconOP extends EstacaoTelecon
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
+            $cidadedigital = ($objArray->getIdCidadeDigital()) ? $objArray->getIdCidadeDigital() : null;
+            $contrato = ($objArray->getIdContrato()) ? $objArray->getIdContrato() : null;
+            $terreno = ($objArray->getIdTerreno()) ? $objArray->getIdTerreno() : null;
+            $torre = ($objArray->getIdTorre()) ? $objArray->getIdTorre() : null;
+            $setequipamento = ($objArray->getIdSetEquipamento()) ? $objArray->getIdSetEquipamento() : null;
+            $setseguranca = ($objArray->getIdSetSeguranca()) ? $objArray->getIdSetSeguranca() : null;
+            $unidadeconsumidora = ($objArray->getIdUnidadeConsumidora()) ? $objArray->getIdUnidadeConsumidora() : null;
             $objeto = new EstacaoTelecon();
             $objeto->setTransaction($transaction);
-            $objeto->setIdCidadeDigital($objArray->getIdCidadeDigital());
-            $objeto->setIdTipo($objArray->getIdTipo());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
-            $objeto->setEndereco(mb_strtoupper($objArray->getEndereco(), $this->encode));
+            $objeto->setIdCidadeDigital($cidadedigital);
+            $objeto->setIdContrato($contrato);
+            $objeto->setIdTerreno($terreno);
+            $objeto->setIdTorre($torre);
+            $objeto->setIdSetEquipamento($setequipamento);
+            $objeto->setIdSetSeguranca($setseguranca);
+            $objeto->setIdUnidadeConsumidora($unidadeconsumidora);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível salvar a conectividade!");
+                $transaction->rollback("Não foi possível salvar a estação telecon!");
             }
             $transaction->commit();
             return $objeto;
@@ -53,7 +64,7 @@ class EstacaoTeleconOP extends EstacaoTelecon
             $objeto->setEndereco(mb_strtoupper($objArray->getEndereco(), $this->encode));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $transaction->rollback("Não foi possível alterar a estação telecon!");
             }
             $transaction->commit();
             return $objeto;
@@ -73,7 +84,7 @@ class EstacaoTeleconOP extends EstacaoTelecon
             $objeto->setAtivo(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $transaction->rollback("Não foi possível alterar a estação telecon!");
             }
             $transaction->commit();
             return $objeto;
@@ -93,7 +104,7 @@ class EstacaoTeleconOP extends EstacaoTelecon
             $objeto->setAtivo(0);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $transaction->rollback("Não foi possível alterar a estação telecon!");
             }
             $transaction->commit();
             return $objeto;
@@ -113,7 +124,7 @@ class EstacaoTeleconOP extends EstacaoTelecon
             $objeto->setExcluido(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível excluir a conectividade!");
+                $transaction->rollback("Não foi possível excluir a estação telecon!");
             }
             $transaction->commit();
             return $objeto;

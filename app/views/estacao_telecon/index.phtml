@@ -143,15 +143,15 @@ $module = $this->router->getControllerName();
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="lterreno">Terreno </label>
-                                    <?php echo $this->tag->textField(["lterreno", "size" => 120, "class" => "form-control", "id" => "lterreno", "placeholder" => "Terreno", "onkeyup" => "autocompletarTerreno();"]) ?>
-                                    <?php echo $this->tag->hiddenField(["terreno", "size" => 120, "class" => "form-control", "id" => "terreno"]) ?>
+                                    <?php echo $this->tag->textField(["lid_terreno", "size" => 120, "class" => "form-control", "id" => "lid_terreno", "placeholder" => "Terreno", "onkeyup" => "autocompletarTerreno();"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_terreno", "size" => 120, "class" => "form-control", "id" => "id_terreno"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-3">
                                     <label for="ltorre">Torre </label>
-                                    <?php echo $this->tag->textField(["ltorre", "size" => 120, "class" => "form-control", "id" => "ltorre", "placeholder" => "Torre", "onkeyup" => "autocompletarTorre();"]) ?>
-                                    <?php echo $this->tag->hiddenField(["torre", "size" => 120, "class" => "form-control", "id" => "torre"]) ?>
+                                    <?php echo $this->tag->textField(["lid_torre", "size" => 120, "class" => "form-control", "id" => "lid_torre", "placeholder" => "Torre", "onkeyup" => "autocompletarTorre();"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_torre", "size" => 120, "class" => "form-control", "id" => "id_torre"]) ?>
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="lid_set_equipamento">Set de Equipamento </label>

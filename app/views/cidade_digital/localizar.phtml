@@ -9,234 +9,32 @@ use Phalcon\Tag;
 
 <?php echo $this->getContent(); ?>
 
-<div class="col-12">
-    <?php
-    echo $this->tag->form(
-        [
-            "cidade_digital/localizar",
-            "autocomplete" => "off"
-        ]
-    );
-    ?>
-    <div class="form-row">
-        <div class="form-group col-md-2">
-            <label for="fieldPesquisa" class="col-sm-2 control-label">Pesquisa</label>
-            <div class="col-sm-10">
-                <?php echo $this->tag->textField(["pesquisa", "size" => 60, "class" => "form-control", "id" => "fieldPesquisa"]) ?>
-            </div>
-        </div>
-        <div class="form-group col-md-2">
-            <div class="bt_menu_tabela">
-                <?php echo $this->tag->submitButton(["Pesquisar", "class" => "btn btn-info btn-rounded waves-light w-md"]) ?>
-            </div>
-        </div>
-    </div>
-    <?php echo $this->tag->endForm(); ?>
-</div>
+<!--<div class="col-12">-->
+<!--    --><?php
+//    echo $this->tag->form(
+//        [
+//            "cidade_digital/localizar",
+//            "autocomplete" => "off"
+//        ]
+//    );
+//    ?>
+<!--    <div class="form-row">-->
+<!--        <div class="form-group col-md-2">-->
+<!--            <label for="fieldPesquisa" class="col-sm-2 control-label">Pesquisa</label>-->
+<!--            <div class="col-sm-10">-->
+<!--                --><?php //echo $this->tag->textField(["pesquisa", "size" => 60, "class" => "form-control", "id" => "fieldPesquisa"]) ?>
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="form-group col-md-2">-->
+<!--            <div class="bt_menu_tabela">-->
+<!--                --><?php //echo $this->tag->submitButton(["Pesquisar", "class" => "btn btn-info btn-rounded waves-light w-md"]) ?>
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    --><?php //echo $this->tag->endForm(); ?>
+<!--</div>-->
 
 <div class="col-12">
-    <div class="card-box">
-        <table id="tb_cidadedigital" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
-            <thead>
-            <tr>
-                <th>Código</th>
-                <th>Cidade Digital</th>
-                <th>Cidade</th>
-                <th>Ativo</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($page->items as $cidadedigital): ?>
-                <?php
-                switch($cidadedigital->ativo){
-                    case '0'://Inativo (False)
-                        $ativo = "Inativo";
-                        break;
-                    case '1'://Ativo (True)
-                        $ativo = "Ativo";
-                        break;
-                }
-                ?>
-                <tr>
-                    <td><?php echo $cidadedigital->id ?></td>
-                    <td><?php echo $cidadedigital->descricao ?></td>
-                    <td><?php echo $cidadedigital->EndCidade->cidade ?></td>
-                    <td><?php echo $ativo ?></td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+    <div id="loader_mapa" style="text-align: center;"></div>
+    <div id="mapa"></div>
 </div>
-<!--  Modal CidadeDigital com Abas -->
-<div id="modalcidadedigital" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalcidadedigital" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-sg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h5 class="modal-title" id="modalcidadedigital">Dados da Cidade Digital</h5>
-            </div>
-            <form id="formCidadeDigital">
-                <input type="hidden" id="token" name="<?php echo $token['tokenKey'] ?>" value="<?php echo $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
-                <div class="modal-body">
-                    <ul class="nav nav-tabs">
-                        <li class="nav-item">
-                            <a href="#tab_cidade_digital" data-toggle="tab" aria-expanded="true" class="nav-link active" alt="Teste">
-                                Cidade Digital
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#tab_conectividade" data-toggle="tab" aria-expanded="false" class="nav-link">
-                                Conectividade
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#tab_estacao_telecon" data-toggle="tab" aria-expanded="false" class="nav-link">
-                                Estação Telecon
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane fade show active" id="tab_cidade_digital">
-                            <div class="form-row">
-                                <div class="col-12">
-                                    <!--                            <h6>Dados da Cidade Digital</h6>-->
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="id_cidade">Cidade <span class="required">*</span></label>
-                                            <?php echo $this->tag->select(["id_cidade", $cidades, "class" => "form-control concat", "id" => "id_cidade",
-                                                "using" => ["id", "cidade",],
-                                                "useEmpty" => true,
-                                                "emptyText" => "Selecione uma Cidade",
-                                                "emptyValue" => ""])
-                                            ?>
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="descricao">Cidade Digital <span class="required">*</span></label>
-                                            <?php echo $this->tag->textField(["descricao", "size" => 200, "class" => "form-control result", "id" => "descricao", "placeholder" => "Descrição da Cidade Digital"]) ?>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="tab_conectividade">
-                            <button id="nova_conectividade" name="nova_conectividade" type="button" class="btn btn-success btn-rounded waves-light w-md btn_novo_item_modal">Nova Conectividade</button>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="id_tipo">Tipo Conectividade <span class="required">*</span></label>
-                                    <?php echo $this->tag->select(["id_tipo_t", $tipocd, "class" => "form-control concat", "id" => "id_tipo_t",
-                                        "using" => ["id", "descricao",],
-                                        "useEmpty" => true,
-                                        "emptyText" => "Selecione um tipo",
-                                        "emptyValue" => ""])
-                                    ?>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="descricao">Conectividade <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["descricao_t", "size" => 200, "class" => "form-control result", "id" => "descricao_t", "placeholder" => "Descrição da Conectividade"]) ?>
-                                </div>
-                                <div class="form-group col-md-10">
-                                    <label for="endereco">Endereço da Conectividade</label>
-                                    <?php echo $this->tag->textField(["endereco_t", "size" => 200, "class" => "form-control", "id" => "endereco_t", "placeholder" => "Endereço da Conectividade"]) ?>
-                                </div>
-                                <div class="form-group col-md-1">
-                                    <button id="add_conectividade" name="add_conectividade" type="button" class="btn btn-sucess btn-rounded waves-light waves-effect bt_inserir">Inserir</button>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <table id="tb_conectividade" class="table table-hover" style="display: none;">
-                                    <thead>
-                                    <tr>
-                                        <th>Tipo</th>
-                                        <th>Conectividade</th>
-                                        <th>Endereço</th>
-                                        <th>Excluir?</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="tab_estacao_telecon">
-                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
-                            <p>Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="form-group col-md-6">
-                        <p class="texto_rodape">Os campos com <span class="required">*</span> são obrigatórios!</p>
-                    </div>
-                    <div class="form-group col-md-6 botoes_rodape">
-                        <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
-                        <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" data-dismiss="modal">Fechar</button>
-                        <button id="salvarCidadeDigital" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
-                    </div>
-                </div><!-- /.modal-footer -->
-            </form>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-<!--  Modal Conectividade -->
-<div id="modalcidadedigital_conectividade" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalcidadedigital_conectividade" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h5 class="modal-title" id="modalcidadedigital_conectividade_tit">Dados da Conectividade</h5>
-            </div>
-            <form id="formConectividade">
-                <input type="hidden" id="token" name="<?php echo $token['tokenKey'] ?>" value="<?php echo $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
-                <div class="modal-body">
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="id_tipo">Tipo Conectividade <span class="required">*</span></label>
-                            <?php echo $this->tag->select(["id_tipo_t", $tipocd, "class" => "form-control concat", "id" => "id_tipo_t",
-                                "using" => ["id", "descricao",],
-                                "useEmpty" => true,
-                                "emptyText" => "Selecione um tipo",
-                                "emptyValue" => ""])
-                            ?>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="descricao">Conectividade <span class="required">*</span></label>
-                            <?php echo $this->tag->textField(["descricao_t", "size" => 200, "class" => "form-control result", "id" => "descricao_t", "placeholder" => "Descrição da Conectividade"]) ?>
-                        </div>
-                        <div class="form-group col-md-10">
-                            <label for="endereco">Endereço da Conectividade</label>
-                            <?php echo $this->tag->textField(["endereco_t", "size" => 200, "class" => "form-control", "id" => "endereco_t", "placeholder" => "Endereço da Conectividade"]) ?>
-                        </div>
-                        <div class="form-group col-md-1">
-                            <button id="add_conectividade" name="add_conectividade" type="button" class="btn btn-sucess btn-rounded waves-light waves-effect bt_inserir">Inserir</button>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <table id="tb_conectividade" class="table table-hover" style="display: none;">
-                            <thead>
-                            <tr>
-                                <th>Tipo</th>
-                                <th>Conectividade</th>
-                                <th>Endereço</th>
-                                <th>Excluir?</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="form-group col-md-6">
-                        <p class="texto_rodape">Os campos com <span class="required">*</span> são obrigatórios!</p>
-                    </div>
-                    <div class="form-group col-md-6 botoes_rodape">
-                        <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
-                        <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" data-dismiss="modal">Fechar</button>
-                        <button id="salvarConectividade" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
-                    </div>
-                </div><!-- /.modal-footer -->
-            </form>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
