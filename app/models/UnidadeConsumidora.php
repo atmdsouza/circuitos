@@ -2,6 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+use Phalcon\Mvc\Model\Resultset;
+
 class UnidadeConsumidora extends \Phalcon\Mvc\Model
 {
 
@@ -19,9 +22,9 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
 
     /**
      *
-     * @var string
+     * @var integer
      */
-    protected $conta_agrupadora;
+    protected $id_conta_agrupadora;
 
     /**
      *
@@ -79,9 +82,9 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
      * @param string $conta_agrupadora
      * @return $this
      */
-    public function setContaAgrupadora($conta_agrupadora)
+    public function setIdContaAgrupadora($id_conta_agrupadora)
     {
-        $this->conta_agrupadora = $conta_agrupadora;
+        $this->id_conta_agrupadora = $id_conta_agrupadora;
 
         return $this;
     }
@@ -163,9 +166,9 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
      *
      * @return string
      */
-    public function getContaAgrupadora()
+    public function getIdContaAgrupadora()
     {
-        return $this->conta_agrupadora;
+        return $this->id_conta_agrupadora;
     }
 
     /**
@@ -209,6 +212,16 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field data_update
+     *
+     * @return string
+     */
+    public function getContaAgrupadora()
+    {
+        return $this->UnidadeConsumidora->codigo_conta_contrato;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -216,6 +229,7 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("unidade_consumidora");
         $this->hasMany('id', 'Circuitos\Models\EstacaoTelecon', 'id_unidade_consumidora', ['alias' => 'EstacaoTelecon']);
+        $this->hasMany('id', 'Circuitos\Models\UnidadeConsumidora', 'id_conta_agrupadora', ['alias' => 'UnidadeConsumidora']);
     }
 
     /**
@@ -248,6 +262,26 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de UnidadeConsumidora, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return UnidadeConsumidora|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarUnidadeConsumidora($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("UnidadeConsumidora" => "Circuitos\Models\UnidadeConsumidora"));
+        $query->columns("UnidadeConsumidora.*");
+        $query->where("UnidadeConsumidora.excluido = 0 AND (CONVERT(UnidadeConsumidora.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(UnidadeConsumidora.codigo_conta_contrato USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(UnidadeConsumidora.id_conta_agrupadora USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("UnidadeConsumidora.id");
+        $query->orderBy("UnidadeConsumidora.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
 }
