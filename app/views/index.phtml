@@ -508,6 +508,7 @@
 
 <!-- Módulos -->
 <?php $module = $this->router->getControllerName(); ?>
+<?php $action = $this->router->getActionName(); ?>
 <?php switch($module){
 case "index":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/index.js" type="text/javascript"></script>
@@ -516,8 +517,11 @@ case "cliente":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/cliente.js" type="text/javascript"></script>
 <?php break;
 case "cidade_digital":?>
+    <?php if($action == 'index'){ ?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/cidade_digital.js" type="text/javascript"></script>
+    <?php } else if($action == 'localizar'){ ?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/localizar.js" type="text/javascript"></script>
+    <?php } ?>
 <?php break;
 case "conectividade":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/conectividade.js" type="text/javascript"></script>

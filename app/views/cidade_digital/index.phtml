@@ -3,18 +3,27 @@
  * @var \Phalcon\Mvc\View\Engine\Php $this
  */
 
+use Auth\Autentica;
 use Phalcon\Tag;
+use Util\Infra;
+
+$infra = new Infra();
+$auth = new Autentica();
+$security_plugin = new SecurityPlugin();
+$acl = $security_plugin->getAcl();
+$role = $auth->getRoles();
+$module = $this->router->getControllerName();
 
 ?>
 
-<?php echo $this->getContent(); ?>
+<?= $this->getContent(); ?>
 
 <div class="col-12">
-    <?php
-    echo $this->tag->form(
+    <?= $this->tag->form(
         [
             "cidade_digital/index",
-            "autocomplete" => "off"
+            "autocomplete" => "off",
+            "id" => "formPesquisa"
         ]
     );
     ?>
@@ -22,62 +31,90 @@ use Phalcon\Tag;
         <div class="form-group col-md-2">
             <label for="fieldPesquisa" class="col-sm-2 control-label">Pesquisa</label>
             <div class="col-sm-10">
-                <?php echo $this->tag->textField(["pesquisa", "size" => 60, "class" => "form-control", "id" => "fieldPesquisa"]) ?>
+                <?= $this->tag->textField(["pesquisa", "size" => 60, "class" => "form-control", "id" => "fieldPesquisa"]) ?>
             </div>
         </div>
-        <div class="form-group col-md-2">
+        <div class="form-group col-md-4">
             <div class="bt_menu_tabela">
-                <?php echo $this->tag->submitButton(["Pesquisar", "class" => "btn btn-info btn-rounded waves-light w-md"]) ?>
+                <?= $this->tag->submitButton(["Pesquisar", "class" => "btn btn-info btn-rounded waves-light w-md"]) ?>
+                <button type="button" name="bt_limpar" id="bt_limpar" class="btn btn-warning btn-rounded waves-light w-md" onclick="limpar();">Limpar</button>
+                <?php if($acl->isAllowed($role,$module, 'criar')): ?>
+                    <button type="button" name="bt_novo" id="bt_novo" class="btn btn-success btn-rounded waves-light w-md" onclick="criar();">Novo</button>
+                <?php endif; ?>
             </div>
         </div>
     </div>
-    <?php echo $this->tag->endForm(); ?>
+    <?= $this->tag->endForm(); ?>
 </div>
 
 <div class="col-12">
     <div class="card-box">
-        <table id="tb_cidadedigital" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+        <table id="datatable_listar" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
             <thead>
             <tr>
                 <th>Código</th>
                 <th>Cidade Digital</th>
                 <th>Cidade</th>
                 <th>Ativo</th>
+                <th>Ações</th>
             </tr>
             </thead>
             <tbody>
             <?php foreach ($page->items as $cidadedigital): ?>
                 <?php
-                switch($cidadedigital->ativo){
+                switch($cidadedigital->getAtivo())
+                {
                     case '0'://Inativo (False)
                         $ativo = "Inativo";
+                        $class_tr = 'class="table-danger"';
                         break;
                     case '1'://Ativo (True)
                         $ativo = "Ativo";
+                        $class_tr = null;
                         break;
                 }
                 ?>
-                <tr>
-                    <td><?php echo $cidadedigital->id ?></td>
-                    <td><?php echo $cidadedigital->descricao ?></td>
-                    <td><?php echo $cidadedigital->EndCidade->cidade ?></td>
-                    <td><?php echo $ativo ?></td>
+                <tr <?= $class_tr; ?>>
+                    <td><?= $cidadedigital->getId() ?></td>
+                    <td><?= $cidadedigital->getDescricao() ?></td>
+                    <td><?= $cidadedigital->getCidade() ?></td>
+                    <td><?= $ativo ?></td>
+                    <td class="td_acoes">
+                        <?php if($acl->isAllowed($role,$module, 'visualizar')): ?>
+                            <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $cidadedigital->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a>
+                        <?php endif; ?>
+                        <?php if($cidadedigital->getAtivo() == '0'): ?>
+                            <?php if($acl->isAllowed($role, $module, 'ativar')): ?>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="ativar(<?= $cidadedigital->getId() ?>, '<?= $cidadedigital->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/reativar.png" title="Ativar" alt="Ativar" height="25" width="25"></a>
+                            <?php endif; ?>
+                        <?php else: ?>
+                            <?php if($acl->isAllowed($role, $module, 'editar')): ?>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="editar(<?= $cidadedigital->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
+                            <?php endif; ?>
+                            <?php if($acl->isAllowed($role, $module, 'inativar')): ?>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="inativar(<?= $cidadedigital->getId() ?>, '<?= $cidadedigital->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/desativar.png" title="Desativar" alt="Desativar" height="25" width="25"></a>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if($acl->isAllowed($role, $module, 'excluir')): ?>
+                            <a href="javascript:void(0)" class="botoes_acao" onclick="excluir(<?= $cidadedigital->getId() ?>, '<?= $cidadedigital->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a>
+                        <?php endif; ?>
+                    </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
         </table>
     </div>
 </div>
-<!--  Modal CidadeDigital com Abas -->
-<div id="modalcidadedigital" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalcidadedigital" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
+<!--  Modal Cadastro -->
+<div id="modalCadastro" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalCadastro" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sg">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h5 class="modal-title" id="modalcidadedigital">Dados da Cidade Digital</h5>
+                <button type="button" class="close" aria-hidden="true" onclick="confirmaCancelar('modalCadastro');">×</button>
+                <h5 class="modal-title" id="modalCadastro">Dados da Cidade Digital</h5>
             </div>
-            <form id="formCidadeDigital">
-                <input type="hidden" id="token" name="<?php echo $token['tokenKey'] ?>" value="<?php echo $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
+            <form id="formCadastro">
+                <input type="hidden" id="token" name="<?= $token['tokenKey'] ?>" value="<?= $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
                 <div class="modal-body">
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
@@ -100,51 +137,65 @@ use Phalcon\Tag;
                         <div class="tab-pane fade show active" id="tab_cidade_digital">
                             <div class="form-row">
                                 <div class="col-12">
-                                    <!--                            <h6>Dados da Cidade Digital</h6>-->
                                     <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="id_cidade">Cidade <span class="required">*</span></label>
-                                            <?php echo $this->tag->select(["id_cidade", $cidades, "class" => "form-control concat", "id" => "id_cidade",
-                                                "using" => ["id", "cidade",],
+                                        <div class="form-group col-md-4">
+                                            <label for="uf_estado">Estado </label>
+                                            <?= $this->tag->select(["uf_estado", $estado, "class" => "form-control", "id" => "uf_estado",
+                                                "using" => ["uf", "estado",],
                                                 "useEmpty" => true,
-                                                "emptyText" => "Selecione uma Cidade",
-                                                "emptyValue" => ""])
+                                                "emptyText" => "Selecione um Estado",
+                                                "emptyValue" => "",
+                                                'value' => 'PA']);
                                             ?>
                                         </div>
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-4">
+                                            <label for="lid_cidade">Cidade <span class="required">*</span></label>
+                                            <?php echo $this->tag->textField(["lid_cidade", "size" => 120, "class" => "form-control", "id" => "lid_cidade", "placeholder" => "Cidade", "onkeyup" => "autocompletarCidade();"]) ?>
+                                            <?php echo $this->tag->hiddenField(["id_cidade", "size" => 120, "class" => "form-control", "id" => "id_cidade"]) ?>
+                                        </div>
+                                        <div class="form-group col-md-4">
                                             <label for="descricao">Cidade Digital <span class="required">*</span></label>
-                                            <?php echo $this->tag->textField(["descricao", "size" => 200, "class" => "form-control result", "id" => "descricao", "placeholder" => "Descrição da Cidade Digital"]) ?>
+                                            <?= $this->tag->textField(["descricao", "size" => 200, "class" => "form-control result", "id" => "descricao", "placeholder" => "Descrição da Cidade Digital"]) ?>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="tab_conectividade">
-                            <button id="nova_conectividade" name="nova_conectividade" type="button" class="btn btn-success btn-rounded waves-light w-md btn_novo_item_modal">Nova Conectividade</button>
                             <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="id_tipo">Tipo Conectividade <span class="required">*</span></label>
-                                    <?php echo $this->tag->select(["id_tipo_t", $tipocd, "class" => "form-control concat", "id" => "id_tipo_t",
-                                        "using" => ["id", "descricao",],
-                                        "useEmpty" => true,
-                                        "emptyText" => "Selecione um tipo",
-                                        "emptyValue" => ""])
-                                    ?>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="descricao">Conectividade <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["descricao_t", "size" => 200, "class" => "form-control result", "id" => "descricao_t", "placeholder" => "Descrição da Conectividade"]) ?>
-                                </div>
-                                <div class="form-group col-md-10">
-                                    <label for="endereco">Endereço da Conectividade</label>
-                                    <?php echo $this->tag->textField(["endereco_t", "size" => 200, "class" => "form-control", "id" => "endereco_t", "placeholder" => "Endereço da Conectividade"]) ?>
-                                </div>
-                                <div class="form-group col-md-1">
-                                    <button id="add_conectividade" name="add_conectividade" type="button" class="btn btn-sucess btn-rounded waves-light waves-effect bt_inserir">Inserir</button>
+                                <div class="form-group col-md-12">
+                                    <button type="button" name="bt_novo_conectividade" id="bt_novo_conectividade" class="btn btn-success btn-rounded waves-light w-md" onclick="criarComponenteConectividade();">Novo</button>
                                 </div>
                             </div>
                             <div class="form-row">
-                                <table id="tb_conectividade" class="table table-hover" style="display: none;">
+                                <div class="hidden_conectividade" style="display: none;">
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="id_tipo">Tipo Conectividade <span class="required">*</span></label>
+                                            <?= $this->tag->select(["i_id_tipo", $tipocd, "class" => "form-control concat", "id" => "i_id_tipo",
+                                                "using" => ["id", "descricao",],
+                                                "useEmpty" => true,
+                                                "emptyText" => "Selecione um tipo",
+                                                "emptyValue" => ""])
+                                            ?>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="descricao">Conectividade <span class="required">*</span></label>
+                                            <?= $this->tag->textField(["i_descricao", "size" => 200, "class" => "form-control result", "id" => "i_descricao", "placeholder" => "Descrição da Conectividade"]) ?>
+                                        </div>
+                                        <div class="form-group col-md-9">
+                                            <label for="endereco">Endereço da Conectividade</label>
+                                            <?= $this->tag->textField(["i_endereco", "size" => 200, "class" => "form-control", "id" => "i_endereco", "placeholder" => "Endereço da Conectividade"]) ?>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <button id="bt_inserir_conectividade" name="bt_inserir_conectividade" type="button" class="btn btn-sucess btn-rounded waves-light w-sm bt_menu_tabela" onclick="inserirComponenteConectividade();">Inserir</button>
+                                            <button type="button" name="bt_cancelar_conectividade" id="bt_cancelar_conectividade" class="btn btn-danger btn-rounded waves-light w-sm bt_menu_tabela" onclick="cancelarComponenteConectividade();">Cancelar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <table id="tabela_conectividade" class="table table-hover" style="display: none;">
                                     <thead>
                                     <tr>
                                         <th>Tipo</th>
@@ -159,8 +210,70 @@ use Phalcon\Tag;
                             </div>
                         </div>
                         <div class="tab-pane fade" id="tab_estacao_telecon">
-                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
-                            <p>Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.</p>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <button type="button" name="bt_novo_estacaotelecon" id="bt_novo_estacaotelecon" class="btn btn-success btn-rounded waves-light w-md" onclick="criarComponenteETelecon();">Novo</button>
+                                </div>
+                            </div>
+                            <div class="form-row hidden_estacaotelecon" style="display: none;">
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <label for="i_descricao_et">Descrição <span class="required">*</span></label>
+                                        <?= $this->tag->textField(["i_descricao_et", "size" => 200, "class" => "form-control", "id" => "i_descricao_et", "placeholder" => "Descrição da Estação Telecon"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="lid_contrato">Contrato </label>
+                                        <?php echo $this->tag->textField(["lid_contrato", "size" => 120, "class" => "form-control", "id" => "lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato();"]) ?>
+                                        <?php echo $this->tag->hiddenField(["i_id_contrato", "size" => 120, "class" => "form-control", "id" => "i_id_contrato"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="lterreno">Terreno <span class="required">*</span></label>
+                                        <?php echo $this->tag->textField(["lid_terreno", "size" => 120, "class" => "form-control", "id" => "lid_terreno", "placeholder" => "Terreno", "onkeyup" => "autocompletarTerreno();"]) ?>
+                                        <?php echo $this->tag->hiddenField(["i_id_terreno", "size" => 120, "class" => "form-control", "id" => "i_id_terreno"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="ltorre">Torre <span class="required">*</span></label>
+                                        <?php echo $this->tag->textField(["lid_torre", "size" => 120, "class" => "form-control", "id" => "lid_torre", "placeholder" => "Torre", "onkeyup" => "autocompletarTorre();"]) ?>
+                                        <?php echo $this->tag->hiddenField(["i_id_torre", "size" => 120, "class" => "form-control", "id" => "i_id_torre"]) ?>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        <label for="lid_set_equipamento">Set de Equipamento <span class="required">*</span></label>
+                                        <?php echo $this->tag->textField(["lid_set_equipamento", "size" => 120, "class" => "form-control", "id" => "lid_set_equipamento", "placeholder" => "Set de Equipamento", "onkeyup" => "autocompletarSetEquipamento();"]) ?>
+                                        <?php echo $this->tag->hiddenField(["i_id_set_equipamento", "size" => 120, "class" => "form-control", "id" => "i_id_set_equipamento"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="lid_set_seguranca">Set de Segurança </label>
+                                        <?php echo $this->tag->textField(["lid_set_seguranca", "size" => 120, "class" => "form-control", "id" => "lid_set_seguranca", "placeholder" => "Set de Segurança", "onkeyup" => "autocompletarSetSeguranca();"]) ?>
+                                        <?php echo $this->tag->hiddenField(["i_id_set_seguranca", "size" => 120, "class" => "form-control", "id" => "i_id_set_seguranca"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="lid_unidade_consumidora">Unidade Consumidora </label>
+                                        <?php echo $this->tag->textField(["lid_unidade_consumidora", "size" => 120, "class" => "form-control", "id" => "lid_unidade_consumidora", "placeholder" => "Unidade Consumidora", "onkeyup" => "autocompletarUnidadeConsumidora();"]) ?>
+                                        <?php echo $this->tag->hiddenField(["i_id_unidade_consumidora", "size" => 120, "class" => "form-control", "id" => "i_id_unidade_consumidora"]) ?>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <button id="bt_inserir_estacaotelecon" name="bt_inserir_estacaotelecon" type="button" class="btn btn-sucess btn-rounded waves-light w-sm bt_menu_tabela" onclick="inserirComponenteETelecon();">Inserir</button>
+                                        <button type="button" name="bt_cancelar_estacaotelecon" id="bt_cancelar_estacaotelecon" class="btn btn-danger btn-rounded waves-light w-sm bt_menu_tabela" onclick="cancelarComponenteETelecon();">Cancelar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <table id="tabela_estacaotelecon" class="table table-hover" style="display: none;">
+                                    <thead>
+                                    <tr>
+                                        <th>Descrição</th>
+                                        <th>Terreno</th>
+                                        <th>Torre</th>
+                                        <th>Set Equipamento</th>
+                                        <th>Excluir?</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -170,70 +283,8 @@ use Phalcon\Tag;
                     </div>
                     <div class="form-group col-md-6 botoes_rodape">
                         <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
-                        <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" data-dismiss="modal">Fechar</button>
-                        <button id="salvarCidadeDigital" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
-                    </div>
-                </div><!-- /.modal-footer -->
-            </form>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-<!--  Modal Conectividade -->
-<div id="modalcidadedigital_conectividade" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalcidadedigital_conectividade" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h5 class="modal-title" id="modalcidadedigital_conectividade_tit">Dados da Conectividade</h5>
-            </div>
-            <form id="formConectividade">
-                <input type="hidden" id="token" name="<?php echo $token['tokenKey'] ?>" value="<?php echo $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
-                <div class="modal-body">
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="id_tipo">Tipo Conectividade <span class="required">*</span></label>
-                            <?php echo $this->tag->select(["id_tipo_t", $tipocd, "class" => "form-control concat", "id" => "id_tipo_t",
-                                "using" => ["id", "descricao",],
-                                "useEmpty" => true,
-                                "emptyText" => "Selecione um tipo",
-                                "emptyValue" => ""])
-                            ?>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="descricao">Conectividade <span class="required">*</span></label>
-                            <?php echo $this->tag->textField(["descricao_t", "size" => 200, "class" => "form-control result", "id" => "descricao_t", "placeholder" => "Descrição da Conectividade"]) ?>
-                        </div>
-                        <div class="form-group col-md-10">
-                            <label for="endereco">Endereço da Conectividade</label>
-                            <?php echo $this->tag->textField(["endereco_t", "size" => 200, "class" => "form-control", "id" => "endereco_t", "placeholder" => "Endereço da Conectividade"]) ?>
-                        </div>
-                        <div class="form-group col-md-1">
-                            <button id="add_conectividade" name="add_conectividade" type="button" class="btn btn-sucess btn-rounded waves-light waves-effect bt_inserir">Inserir</button>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <table id="tb_conectividade" class="table table-hover" style="display: none;">
-                            <thead>
-                            <tr>
-                                <th>Tipo</th>
-                                <th>Conectividade</th>
-                                <th>Endereço</th>
-                                <th>Excluir?</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="form-group col-md-6">
-                        <p class="texto_rodape">Os campos com <span class="required">*</span> são obrigatórios!</p>
-                    </div>
-                    <div class="form-group col-md-6 botoes_rodape">
-                        <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
-                        <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" data-dismiss="modal">Fechar</button>
-                        <button id="salvarConectividade" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
+                        <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="confirmaCancelar('modalCadastro');">Fechar</button>
+                        <button id="salvarCadastro" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light" onclick="salvar();" value="">Salvar</button>
                     </div>
                 </div><!-- /.modal-footer -->
             </form>

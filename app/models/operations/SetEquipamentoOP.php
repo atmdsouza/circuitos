@@ -30,16 +30,18 @@ class SetEquipamentoOP extends SetEquipamento
             if ($objeto->save() == false) {
                 $transaction->rollback("Não foi possível salvar o SetEquipamento!");
             }
-            foreach($arrayObjComponente as $key => $objComponente){
-                $objetoComponente = new SetEquipamentoComponentes();
-                $objetoComponente->setTransaction($transaction);
-                $objetoComponente->setIdSetEquipamento($objeto->getId());
-                $objetoComponente->setIdContrato($objComponente->getIdContrato());
-                $objetoComponente->setIdEquipamento($objComponente->getIdEquipamento());
-                $objetoComponente->setIdFornecedor($objComponente->getIdFornecedor());
-                $objetoComponente->setDataUpdate(date('Y-m-d H:i:s'));
-                if ($objetoComponente->save() == false) {
-                    $transaction->rollback("Não foi possível salvar o SetEquipamentoComponente!");
+            if (count($arrayObjComponente) > 0) {
+                foreach($arrayObjComponente as $objComponente){
+                    $objetoComponente = new SetEquipamentoComponentes();
+                    $objetoComponente->setTransaction($transaction);
+                    $objetoComponente->setIdSetEquipamento($objeto->getId());
+                    $objetoComponente->setIdContrato($objComponente->getIdContrato());
+                    $objetoComponente->setIdEquipamento($objComponente->getIdEquipamento());
+                    $objetoComponente->setIdFornecedor($objComponente->getIdFornecedor());
+                    $objetoComponente->setDataUpdate(date('Y-m-d H:i:s'));
+                    if ($objetoComponente->save() == false) {
+                        $transaction->rollback("Não foi possível salvar o SetEquipamentoComponente!");
+                    }
                 }
             }
             $transaction->commit();

@@ -89,9 +89,9 @@ class SetEquipamentoController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-        $titulo = 'Alteração de SetEquipamento';
-        $msg = 'SetEquipamento alterada com sucesso!';
-        $error_msg = 'Erro ao alterar uma SetEquipamento!';
+        $titulo = 'Alteração de Set de Equipamento';
+        $msg = 'Set de Equipamento alterada com sucesso!';
+        $error_msg = 'Erro ao alterar uma Set de Equipamento!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -114,9 +114,9 @@ class SetEquipamentoController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Reativação de SetEquipamento';
-        $msg = 'SetEquipamento reativada com sucesso!';
-        $error_msg = 'Erro ao reativar uma SetEquipamento!';
+        $titulo = 'Reativação de Set de Equipamento';
+        $msg = 'Set de Equipamento reativada com sucesso!';
+        $error_msg = 'Erro ao reativar uma Set de Equipamento!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -139,9 +139,9 @@ class SetEquipamentoController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Desativação de SetEquipamento';
-        $msg = 'SetEquipamento desativada com sucesso!';
-        $error_msg = 'Erro ao desativar uma SetEquipamento!';
+        $titulo = 'Desativação de Set de Equipamento';
+        $msg = 'Set de Equipamento desativada com sucesso!';
+        $error_msg = 'Erro ao desativar uma Set de Equipamento!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -164,9 +164,9 @@ class SetEquipamentoController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Exclusão de SetEquipamento';
-        $msg = 'SetEquipamento excluída com sucesso!';
-        $error_msg = 'Erro ao excluir a SetEquipamento!';
+        $titulo = 'Exclusão de Set de Equipamento';
+        $msg = 'Set de Equipamento excluída com sucesso!';
+        $error_msg = 'Erro ao excluir a Set de Equipamentos!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -182,6 +182,5 @@ class SetEquipamentoController extends ControllerBase
         }
         return $response;
     }
-
 }
 

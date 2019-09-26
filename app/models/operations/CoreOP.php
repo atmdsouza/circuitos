@@ -7,6 +7,7 @@ use Phalcon\Http\Response as Response;
 use Circuitos\Models\CidadeDigital;
 use Circuitos\Models\Cliente;
 use Circuitos\Models\EndEndereco;
+use Circuitos\Models\EndCidade;
 use Circuitos\Models\Equipamento;
 use Circuitos\Models\EstacaoTelecon;
 use Circuitos\Models\Fabricante;
@@ -48,6 +49,15 @@ class CoreOP
         } else {
             $response->setContent(json_encode(array("operacao" => False)));
         }
+        return $response;
+    }
+
+    public function completarCidades()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $array_dados = EndCidade::find('uf = "'.$dados["id_estado"] . '"');
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $array_dados)));
         return $response;
     }
 

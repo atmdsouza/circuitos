@@ -31,38 +31,40 @@ class SetSegurancaOP extends SetSeguranca
             if ($objeto->save() == false) {
                 $transaction->rollback("Não foi possível salvar o SetSeguranca!");
             }
-            foreach($arrayObjComponente as $key => $objComponente){
-                $objetoComponente = new SetSegurancaComponentes();
-                $objetoComponente->setTransaction($transaction);
-                $objetoComponente->setIdSetSeguranca($objeto->getId());
-                $objetoComponente->setIdTipo($objComponente->getIdTipo());
-                $objetoComponente->setIdContrato($objComponente->getIdContrato());
-                $objetoComponente->setIdFornecedor($objComponente->getIdFornecedor());
-                $objetoComponente->setPropriedadeProdepa($objComponente->getPropriedadeProdepa());
-                $objetoComponente->setSenha($objComponente->getSenha());
-                $objetoComponente->setValidade($objComponente->getValidade());
-                $objetoComponente->setEnderecoChave(mb_strtoupper($objComponente->getEnderecoChave(), $this->encode));
-                $objetoComponente->setDataUpdate(date('Y-m-d H:i:s'));
-                if ($objetoComponente->save() == false) {
-                    $transaction->rollback("Não foi possível salvar o SetSegurancaComponente!");
-                }
-                if ($arrayObjContato[$key]->getNome()){
-                    $objetoContato = new SetSegurancaContato();
-                    $objetoContato->setTransaction($transaction);
-                    $objetoContato->setIdSetSegurancaComponente($objetoComponente->getId());
-                    $objetoContato->setNome(mb_strtoupper($arrayObjContato[$key]->getNome(), $this->encode));
-                    $objetoContato->setTelefone(mb_strtoupper($arrayObjContato[$key]->getTelefone(), $this->encode));
-                    $objetoContato->setEmail($arrayObjContato[$key]->getEmail());
-                    $objetoContato->setDataUpdate(date('Y-m-d H:i:s'));
-                    if ($objetoContato->save() == false) {
-                        $messages = $objetoContato->getMessages();
-                        $errors = "";
-                        for ($i = 0; $i < count($messages); $i++) {
-                            $errors .= "[".$messages[$i]."] ";
+            if (count($arrayObjComponente) > 0) {
+                foreach($arrayObjComponente as $key => $objComponente){
+                    $objetoComponente = new SetSegurancaComponentes();
+                    $objetoComponente->setTransaction($transaction);
+                    $objetoComponente->setIdSetSeguranca($objeto->getId());
+                    $objetoComponente->setIdTipo($objComponente->getIdTipo());
+                    $objetoComponente->setIdContrato($objComponente->getIdContrato());
+                    $objetoComponente->setIdFornecedor($objComponente->getIdFornecedor());
+                    $objetoComponente->setPropriedadeProdepa($objComponente->getPropriedadeProdepa());
+                    $objetoComponente->setSenha($objComponente->getSenha());
+                    $objetoComponente->setValidade($objComponente->getValidade());
+                    $objetoComponente->setEnderecoChave(mb_strtoupper($objComponente->getEnderecoChave(), $this->encode));
+                    $objetoComponente->setDataUpdate(date('Y-m-d H:i:s'));
+                    if ($objetoComponente->save() == false) {
+                        $transaction->rollback("Não foi possível salvar o SetSegurancaComponente!");
+                    }
+                    if ($arrayObjContato[$key]->getNome()){
+                        $objetoContato = new SetSegurancaContato();
+                        $objetoContato->setTransaction($transaction);
+                        $objetoContato->setIdSetSegurancaComponente($objetoComponente->getId());
+                        $objetoContato->setNome(mb_strtoupper($arrayObjContato[$key]->getNome(), $this->encode));
+                        $objetoContato->setTelefone(mb_strtoupper($arrayObjContato[$key]->getTelefone(), $this->encode));
+                        $objetoContato->setEmail($arrayObjContato[$key]->getEmail());
+                        $objetoContato->setDataUpdate(date('Y-m-d H:i:s'));
+                        if ($objetoContato->save() == false) {
+                            $messages = $objetoContato->getMessages();
+                            $errors = "";
+                            for ($i = 0; $i < count($messages); $i++) {
+                                $errors .= "[".$messages[$i]."] ";
+                            }
+                            var_dump($messages);
+                            exit;
+                            $transaction->rollback("Não foi possível salvar o SetSegurancaContato!");
                         }
-                        var_dump($messages);
-                        exit;
-                        $transaction->rollback("Não foi possível salvar o SetSegurancaContato!");
                     }
                 }
             }

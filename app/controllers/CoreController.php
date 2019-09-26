@@ -466,6 +466,10 @@ class CoreController extends ControllerBase
                 $objeto = new CoreOP();
                 return $objeto->completarEndereco();
                 break;
+            case 'completarCidades':
+                $objeto = new CoreOP();
+                return $objeto->completarCidades();
+                break;
             case 'cidadesDigitaisAtivas':
                 $objeto = new CoreOP();
                 return $objeto->cidadesDigitaisAtivas();

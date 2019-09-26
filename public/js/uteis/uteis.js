@@ -178,7 +178,7 @@ function floatHeader()
         if(floatingHeader[0] != null) {
             floatingHeader.css('top', '65px');
             floatingHeader.css('left', ($('.left.side-menu').width() + 60 )+ 'px');
-            floatingHeader.css('width', ($('.container-fluid').width() - 120)+ 'px');local
+            floatingHeader.css('width', ($('.container-fluid').width() - 120)+ 'px');
         }
     });
 }
