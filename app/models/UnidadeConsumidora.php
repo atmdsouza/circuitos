@@ -30,6 +30,12 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
      *
      * @var string
      */
+    protected $descricao;
+
+    /**
+     *
+     * @var string
+     */
     protected $observacao;
 
     /**
@@ -222,6 +228,22 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return string
+     */
+    public function getDescricao()
+    {
+        return $this->descricao;
+    }
+
+    /**
+     * @param string $descricao
+     */
+    public function setDescricao(string $descricao)
+    {
+        $this->descricao = $descricao;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -229,7 +251,7 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("unidade_consumidora");
         $this->hasMany('id', 'Circuitos\Models\EstacaoTelecon', 'id_unidade_consumidora', ['alias' => 'EstacaoTelecon']);
-        $this->hasMany('id', 'Circuitos\Models\UnidadeConsumidora', 'id_conta_agrupadora', ['alias' => 'UnidadeConsumidora']);
+        $this->belongsTo('id', 'Circuitos\Models\UnidadeConsumidora', 'id_conta_agrupadora', ['alias' => 'UnidadeConsumidora']);
     }
 
     /**

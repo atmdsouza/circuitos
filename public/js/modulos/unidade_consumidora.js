@@ -4,7 +4,7 @@ var URLImagensSistema = "public/images";
 
 //Variáveis Globais
 var mudou = false;
-var listFornecedor = [];
+var listAgrupadora = [];
 var f = 0;
 
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos)
@@ -17,8 +17,9 @@ function inicializar()
         language: {
             select: false
         },
-        order: [[3, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
+        order: [[4, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
     });
+    autocompletarAgrupadora();
 }
 
 function verificarAlteracao()
@@ -114,11 +115,17 @@ function salvar()
         rules : {
             descricao:{
                 required: true
+            },
+            codigo_conta_contrato:{
+                required: true
             }
         },
         messages:{
             descricao:{
                 required:"É necessário informar uma Descrição"
+            },
+            codigo_conta_contrato:{
+                required:"É necessário informar um Código de Conta Contrato"
             }
         },
         submitHandler: function(form) {
@@ -470,34 +477,19 @@ function limparDadosFormComponente()
     $('#dados_componente').attr('style','display: none;');
 }
 
-function habilitarFornecedor()
-{
-    'use strict';
-    var propriedade_prodepa = $('#propriedade_prodepa').val();
-    if (propriedade_prodepa !== '-1'){
-        $('#lid_fornecedor').removeAttr('disabled');
-        $('#lid_fornecedor').val('');
-        $('#id_fornecedor').val('');
-    } else {
-        $('#lid_fornecedor').attr('disabled', 'true');
-        $('#lid_fornecedor').val('PRODEPA');
-        $('#id_fornecedor').val(-1);
-    }
-}
-
-function autocompletarFornecedor()
+function autocompletarAgrupadora()
 {
     "use strict";
-    //Autocomplete de Fabricante
-    var ac_fornecedor = $("#lid_fornecedor");
-    var vl_fornecedor = $("#id_fornecedor");
-    var string = ac_fornecedor.val();
+    //Autocomplete
+    var ac_agrupadora = $("#lid_conta_agrupadora");
+    var vl_agrupadora = $("#id_conta_agrupadora");
+    var string = ac_agrupadora.val();
     var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
     $.ajax({
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'fornecedoresAtivos', string: string},
+        data: {metodo: 'contasAgrupadorasAtivas', string: string},
         error: function (data) {
             if (data.status && data.status === 401)
             {
@@ -509,35 +501,31 @@ function autocompletarFornecedor()
             }
         },
         success: function (data) {
+            console.log(data.dados);
             if (data.operacao) {
-                listFornecedor = [];
+                listAgrupadora = [];
                 $.each(data.dados, function (key, value) {
-                    listFornecedor.push({value: value.nome, data: value.id});
+                    listAgrupadora.push({value: value.codigo_conta_contrato, data: value.id});
                 });
                 if(f === 0) {
                     //Autocomplete
-                    ac_fornecedor.autocomplete({
-                        lookup: listFornecedor,
+                    ac_agrupadora.autocomplete({
+                        lookup: listAgrupadora,
                         onSelect: function (suggestion) {
-                            vl_fornecedor.val(suggestion.data);
+                            vl_agrupadora.val(suggestion.data);
                         }
                     });
                     f++;
                 } else {
                     //Autocomplete
-                    ac_fornecedor.autocomplete().setOptions( {
-                        lookup: listFornecedor
+                    ac_agrupadora.autocomplete().setOptions( {
+                        lookup: listAgrupadora
                     });
                 }
             } else {
-                vl_fornecedor.val("");
-                ac_fornecedor.val("");
+                vl_agrupadora.val("");
+                ac_agrupadora.val("");
             }
         }
     });
-}
-
-function autocompletarContrato()
-{
-
 }

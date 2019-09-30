@@ -8,8 +8,6 @@ use Phalcon\Http\Response as Response;
 
 use Circuitos\Models\UnidadeConsumidora;
 
-use Util\Util;
-
 class UnidadeConsumidoraOP extends UnidadeConsumidora
 {
     private $encode = "UTF-8";
@@ -21,23 +19,24 @@ class UnidadeConsumidoraOP extends UnidadeConsumidora
 
     public function cadastrar(UnidadeConsumidora $objArray)
     {
-        $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
             $objeto = new UnidadeConsumidora();
-            $fornecedor = ($objArray->getIdFornecedor()) ? $objArray->getIdFornecedor() : null;
-            $contrato = ($objArray->getIdContrato()) ? $objArray->getIdContrato() : null;
+            $id_conta_agrupadora = ($objArray->getIdContaAgrupadora()) ? $objArray->getIdContaAgrupadora() : null;
             $objeto->setTransaction($transaction);
-            $objeto->setIdFornecedor($fornecedor);
-            $objeto->setIdContrato($contrato);
-            $objeto->setIdTipo($objArray->getIdTipo());
-            $objeto->setPropriedadeProdepa($objArray->getPropriedadeProdepa());
+            $objeto->setIdContaAgrupadora($id_conta_agrupadora);
+            $objeto->setCodigoContaContrato($objArray->getCodigoContaContrato());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
-            $objeto->setAltura($util->formataNumero($objArray->getAltura()));
+            $objeto->setObservacao(mb_strtoupper($objArray->getObservacao(), $this->encode));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível salvar a conectividade!");
+                $messages = $objeto->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao criar a Unidade Consumidora: " . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -60,7 +59,7 @@ class UnidadeConsumidoraOP extends UnidadeConsumidora
             $objeto->setEndereco(mb_strtoupper($objArray->getEndereco(), $this->encode));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $transaction->rollback("Não foi possível alterar a unidade consumidora!");
             }
             $transaction->commit();
             return $objeto;
@@ -80,7 +79,7 @@ class UnidadeConsumidoraOP extends UnidadeConsumidora
             $objeto->setAtivo(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $transaction->rollback("Não foi possível alterar a unidade consumidora!");
             }
             $transaction->commit();
             return $objeto;
@@ -100,7 +99,7 @@ class UnidadeConsumidoraOP extends UnidadeConsumidora
             $objeto->setAtivo(0);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $transaction->rollback("Não foi possível alterar a unidade consumidora!");
             }
             $transaction->commit();
             return $objeto;
@@ -120,7 +119,7 @@ class UnidadeConsumidoraOP extends UnidadeConsumidora
             $objeto->setExcluido(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível excluir a conectividade!");
+                $transaction->rollback("Não foi possível excluir a unidade consumidora!");
             }
             $transaction->commit();
             return $objeto;

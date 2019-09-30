@@ -522,6 +522,10 @@ class CoreController extends ControllerBase
                 $objeto = new CoreOP();
                 return $objeto->equipamentosAtivos();
                 break;
+            case 'contasAgrupadorasAtivas':
+                $objeto = new CoreOP();
+                return $objeto->contasAgrupadorasAtivas();
+                break;
             case 'visualizarConectividade':
                 $objeto = new ConectividadeOP();
                 return $objeto->visualizarConectividade($dados['id']);

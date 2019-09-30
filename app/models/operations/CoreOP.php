@@ -17,6 +17,7 @@ use Circuitos\Models\Terreno;
 use Circuitos\Models\Torre;
 use Circuitos\Models\SetEquipamento;
 use Circuitos\Models\SetSeguranca;
+use Circuitos\Models\UnidadeConsumidora;
 
 /**
  * Class CoreOP
@@ -56,6 +57,15 @@ class CoreOP
     {
         $dados = filter_input_array(INPUT_GET);
         $array_dados = EndCidade::find('uf = "'.$dados["id_estado"] . '"');
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $array_dados)));
+        return $response;
+    }
+
+    public function contasAgrupadorasAtivas()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $array_dados = UnidadeConsumidora::find('ativo = 1 AND excluido = 0 AND codigo_conta_contrato LIKE "' . $dados['string'] . '%"');
         $response = new Response();
         $response->setContent(json_encode(array("operacao" => True, "dados" => $array_dados)));
         return $response;
