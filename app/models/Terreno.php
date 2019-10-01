@@ -628,6 +628,16 @@ class Terreno extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field Nome do Fornecedor
+     *
+     * @return string
+     */
+    public function getContrato()
+    {
+        return $this->Contrato->numero;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()

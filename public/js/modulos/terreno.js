@@ -81,7 +81,7 @@ function editar(id)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarConectividade', id: id},
+        data: {metodo: 'visualizarTerreno', id: id},
         complete: function () {
             $("#formCadastro input").removeAttr('readonly', 'readonly');
             $("#formCadastro select").removeAttr('readonly', 'readonly');
@@ -101,12 +101,25 @@ function editar(id)
         },
         success: function (data) {
             $('#id').val(data.dados.id);
-            $('#lid_cidade_digital').val(data.dados.desc_cidade_digital);
-            $('#id_cidade_digital').val(data.dados.id_cidade_digital);
-            $('#lid_tipo').val(data.dados.desc_tipo);
-            $('#id_tipo').val(data.dados.id_tipo);
+            $('#lid_contrato').val(data.dados.desc_contrato);
+            $('#id_contrato').val(data.dados.id_contrato);
+            $('#lid_fornecedor').val(data.dados.desc_fornecedor);
+            $('#id_fornecedor').val(data.dados.id_fornecedor);
             $('#descricao').val(data.dados.descricao);
+            $('#comprimento').val(data.dados.comprimento);
+            $('#largura').val(data.dados.largura);
+            $('#area').val(data.dados.area);
+            $('#cep').val(data.dados.cep);
             $('#endereco').val(data.dados.endereco);
+            $('#numero').val(data.dados.numero);
+            $('#bairro').val(data.dados.bairro);
+            $('#complemento').val(data.dados.complemento);
+            $('#cidade').val(data.dados.cidade);
+            $('#estado').val(data.dados.estado);
+            $('#sigla_estado').val(data.dados.sigla_estado);
+            $('#latitude').val(data.dados.latitude);
+            $('#longitude').val(data.dados.longitude);
+            $('#propriedade_prodepa').val(data.dados.propriedade_prodepa).selected = "true";
         }
     });
 }
@@ -353,7 +366,7 @@ function visualizar(id)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarConectividade', id: id},
+        data: {metodo: 'visualizarTerreno', id: id},
         complete: function () {
             $("#formCadastro input").attr('readonly', 'readonly');
             $("#formCadastro select").attr('readonly', 'readonly');
@@ -372,11 +385,25 @@ function visualizar(id)
         },
         success: function (data) {
             $('#id').val(data.dados.id);
-            $('#lid_cidade_digital').val(data.dados.desc_cidade_digital);
-            $('#id_cidade_digital').val(data.dados.id_cidade_digital);
-            $('#id_tipo').val(data.dados.id_tipo).selected = "true";
+            $('#lid_contrato').val(data.dados.desc_contrato);
+            $('#id_contrato').val(data.dados.id_contrato);
+            $('#lid_fornecedor').val(data.dados.desc_fornecedor);
+            $('#id_fornecedor').val(data.dados.id_fornecedor);
             $('#descricao').val(data.dados.descricao);
+            $('#comprimento').val(data.dados.comprimento);
+            $('#largura').val(data.dados.largura);
+            $('#area').val(data.dados.area);
+            $('#cep').val(data.dados.cep);
             $('#endereco').val(data.dados.endereco);
+            $('#numero').val(data.dados.numero);
+            $('#bairro').val(data.dados.bairro);
+            $('#complemento').val(data.dados.complemento);
+            $('#cidade').val(data.dados.cidade);
+            $('#estado').val(data.dados.estado);
+            $('#sigla_estado').val(data.dados.sigla_estado);
+            $('#latitude').val(data.dados.latitude);
+            $('#longitude').val(data.dados.longitude);
+            $('#propriedade_prodepa').val(data.dados.propriedade_prodepa).selected = "true";
         }
     });
 }
