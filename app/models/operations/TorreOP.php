@@ -49,15 +49,20 @@ class TorreOP extends Torre
 
     public function alterar(Torre $objArray)
     {
+        $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
             $objeto = Torre::findFirst($objArray->getId());
+            $fornecedor = ($objArray->getIdFornecedor()) ? $objArray->getIdFornecedor() : null;
+            $contrato = ($objArray->getIdContrato()) ? $objArray->getIdContrato() : null;
             $objeto->setTransaction($transaction);
-            $objeto->setIdCidadeDigital($objArray->getIdCidadeDigital());
+            $objeto->setIdFornecedor($fornecedor);
+            $objeto->setIdContrato($contrato);
             $objeto->setIdTipo($objArray->getIdTipo());
+            $objeto->setPropriedadeProdepa($objArray->getPropriedadeProdepa());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
-            $objeto->setEndereco(mb_strtoupper($objArray->getEndereco(), $this->encode));
+            $objeto->setAltura($util->formataNumero($objArray->getAltura()));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
                 $transaction->rollback("Não foi possível alterar a conectividade!");
@@ -132,15 +137,19 @@ class TorreOP extends Torre
 
     public function visualizarTorre($id)
     {
+        $util = new Util();
         try {
             $objeto = Torre::findFirst("id={$id}");
             $objetoArray = array(
                 'id' => $objeto->getId(),
-                'id_cidade_digital' => $objeto->getIdCidadeDigital(),
-                'desc_cidade_digital' => $objeto->getNomeCidadeDigital(),
                 'id_tipo' => $objeto->getIdTipo(),
+                'id_contrato' => $objeto->getIdContrato(),
+                'desc_contrato' => $objeto->getContrato(),
+                'id_fornecedor' => $objeto->getIdFornecedor(),
+                'desc_fornecedor' => $objeto->getFornecedor(),
                 'descricao' => $objeto->getDescricao(),
-                'endereco' => $objeto->getEndereco()
+                'altura' => $util->formataMoedaReal($objeto->getAltura()),
+                'propriedade_prodepa' => $objeto->getPropriedadeProdepa()
             );
             $response = new Response();
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoArray)));

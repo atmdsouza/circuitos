@@ -159,6 +159,7 @@ class TerrenoOP extends Terreno
 
     public function visualizarTerreno($id)
     {
+        $util = new Util();
         try {
             $objeto = Terreno::findFirst("id={$id}");
             $objetoArray = array(
@@ -168,9 +169,9 @@ class TerrenoOP extends Terreno
                 'id_fornecedor' => $objeto->getIdFornecedor(),
                 'desc_fornecedor' => $objeto->getFornecedor(),
                 'descricao' => $objeto->getDescricao(),
-                'comprimento' => $objeto->getComprimento(),
-                'largura' => $objeto->getLargura(),
-                'area' => $objeto->getArea(),
+                'comprimento' => $util->formataMoedaReal($objeto->getComprimento()),
+                'largura' => $util->formataMoedaReal($objeto->getLargura()),
+                'area' => $util->formataMoedaReal($objeto->getArea()),
                 'cep' => $objeto->getCep(),
                 'endereco' => $objeto->getEndereco(),
                 'numero' => $objeto->getNumero(),
