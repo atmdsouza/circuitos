@@ -6,7 +6,9 @@
 use Auth\Autentica;
 use Phalcon\Tag;
 use Util\Infra;
+use Util\Util;
 
+$util = new Util();
 $infra = new Infra();
 $auth = new Autentica();
 $security_plugin = new SecurityPlugin();
@@ -81,7 +83,7 @@ $module = $this->router->getControllerName();
                     <td><?= $torre->getTipoTorre() ?></td>
                     <td><?= $torre->getDescricao() ?></td>
                     <td><?= $torre->getFornecedor() ?></td>
-                    <td><?= $torre->getAltura() ?></td>
+                    <td><?= $util->formataMoedaReal($torre->getAltura()) ?></td>
                     <td><?= $ativo ?></td>
                     <td class="td_acoes">
                         <?php if($acl->isAllowed($role,$module, 'visualizar')): ?>
