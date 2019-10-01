@@ -2,12 +2,6 @@
 
 namespace Circuitos\Controllers;
 
-use Circuitos\Models\Operations\ContratoOP;
-use Circuitos\Models\Operations\EstacaoTeleconOP;
-use Circuitos\Models\Operations\PropostaComercialOP;
-use Circuitos\Models\Operations\PropostaComercialServicoOP;
-use Circuitos\Models\Operations\TerrenoOP;
-use Circuitos\Models\Operations\TorreOP;
 use Phalcon\Logger;
 use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Http\Response as Response;
@@ -27,9 +21,16 @@ use Circuitos\Models\EndEstado;
 use Circuitos\Models\EndCidade;
 
 use Circuitos\Models\Operations\CoreOP;
+use Circuitos\Models\Operations\ConectividadeOP;
+use Circuitos\Models\Operations\ContratoOP;
+use Circuitos\Models\Operations\EstacaoTeleconOP;
+use Circuitos\Models\Operations\PropostaComercialOP;
+use Circuitos\Models\Operations\PropostaComercialServicoOP;
 use Circuitos\Models\Operations\SetSegurancaOP;
 use Circuitos\Models\Operations\SetEquipamentoOP;
-use Circuitos\Models\Operations\ConectividadeOP;
+use Circuitos\Models\Operations\TerrenoOP;
+use Circuitos\Models\Operations\TorreOP;
+use Circuitos\Models\Operations\UnidadeConsumidoraOP;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -455,7 +456,7 @@ class CoreController extends ControllerBase
         }
     }
 
-    public function processarAjaxAction()
+    public function processarAjaxAutocompleteAction()
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
@@ -526,9 +527,35 @@ class CoreController extends ControllerBase
                 $objeto = new CoreOP();
                 return $objeto->contasAgrupadorasAtivas();
                 break;
+        }
+    }
+
+    public function processarAjaxVisualizarAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $dados = filter_input_array(INPUT_GET);
+        switch ($dados['metodo'])
+        {
+            case 'visualizarContrato':
+                $objeto = new ContratoOP();
+                return $objeto->visualizarContrato($dados['id']);
+                break;
             case 'visualizarConectividade':
                 $objeto = new ConectividadeOP();
                 return $objeto->visualizarConectividade($dados['id']);
+                break;
+            case 'visualizarEstacaoTelecon':
+                $objeto = new EstacaoTeleconOP();
+                return $objeto->visualizarEstacaoTelecon($dados['id']);
+                break;
+            case 'visualizarPropostaComercial':
+                $objeto = new PropostaComercialOP();
+                return $objeto->visualizarPropostaComercial($dados['id']);
+                break;
+            case 'visualizarPropostaComercialServico':
+                $objeto = new PropostaComercialServicoOP();
+                return $objeto->visualizarPropostaComercialServico($dados['id']);
                 break;
             case 'visualizarSetSeguranca':
                 $objeto = new SetSegurancaOP();
@@ -546,21 +573,23 @@ class CoreController extends ControllerBase
                 $objeto = new TorreOP();
                 return $objeto->visualizarTorre($dados['id']);
                 break;
-            case 'visualizarEstacaoTelecon':
-                $objeto = new EstacaoTeleconOP();
-                return $objeto->visualizarEstacaoTelecon($dados['id']);
+            case 'visualizarUnidadeConsumidora':
+                $objeto = new UnidadeConsumidoraOP();
+                return $objeto->visualizarUnidadeConsumidora($dados['id']);
                 break;
-            case 'visualizarPropostaComercial':
-                $objeto = new PropostaComercialOP();
-                return $objeto->visualizarPropostaComercial($dados['id']);
-                break;
-            case 'visualizarPropostaComercialServico':
-                $objeto = new PropostaComercialServicoOP();
-                return $objeto->visualizarPropostaComercialServico($dados['id']);
-                break;
-            case 'visualizarContrato':
-                $objeto = new ContratoOP();
-                return $objeto->visualizarContrato($dados['id']);
+        }
+    }
+
+    public function processarAjaxAcaoAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $dados = filter_input_array(INPUT_GET);
+        switch ($dados['metodo'])
+        {
+            case 'visualizarConectividade':
+                $objeto = new ConectividadeOP();
+                return $objeto->visualizarConectividade($dados['id']);
                 break;
         }
     }

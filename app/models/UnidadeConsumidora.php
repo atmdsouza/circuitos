@@ -22,18 +22,6 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
 
     /**
      *
-     * @var integer
-     */
-    protected $id_conta_agrupadora;
-
-    /**
-     *
-     * @var string
-     */
-    protected $descricao;
-
-    /**
-     *
      * @var string
      */
     protected $observacao;
@@ -57,6 +45,18 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
     protected $data_update;
 
     /**
+     *
+     * @var integer
+     */
+    protected $id_conta_agrupadora;
+
+    /**
+     *
+     * @var string
+     */
+    protected $descricao;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -78,19 +78,6 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
     public function setCodigoContaContrato($codigo_conta_contrato)
     {
         $this->codigo_conta_contrato = $codigo_conta_contrato;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field conta_agrupadora
-     *
-     * @param string $conta_agrupadora
-     * @return $this
-     */
-    public function setIdContaAgrupadora($id_conta_agrupadora)
-    {
-        $this->id_conta_agrupadora = $id_conta_agrupadora;
 
         return $this;
     }
@@ -148,6 +135,32 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field id_conta_agrupadora
+     *
+     * @param integer $id_conta_agrupadora
+     * @return $this
+     */
+    public function setIdContaAgrupadora($id_conta_agrupadora)
+    {
+        $this->id_conta_agrupadora = $id_conta_agrupadora;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field descricao
+     *
+     * @param string $descricao
+     * @return $this
+     */
+    public function setDescricao($descricao)
+    {
+        $this->descricao = $descricao;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field id
      *
      * @return integer
@@ -165,16 +178,6 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
     public function getCodigoContaContrato()
     {
         return $this->codigo_conta_contrato;
-    }
-
-    /**
-     * Returns the value of field conta_agrupadora
-     *
-     * @return string
-     */
-    public function getIdContaAgrupadora()
-    {
-        return $this->id_conta_agrupadora;
     }
 
     /**
@@ -218,16 +221,18 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field data_update
+     * Returns the value of field id_conta_agrupadora
      *
-     * @return string
+     * @return integer
      */
-    public function getContaAgrupadora()
+    public function getIdContaAgrupadora()
     {
-        return $this->UnidadeConsumidora->codigo_conta_contrato;
+        return $this->id_conta_agrupadora;
     }
 
     /**
+     * Returns the value of field descricao
+     *
      * @return string
      */
     public function getDescricao()
@@ -236,11 +241,13 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
     }
 
     /**
-     * @param string $descricao
+     * Returns the value of field codigo_conta_contrato
+     *
+     * @return string
      */
-    public function setDescricao(string $descricao)
+    public function getContaAgrupadoraPai()
     {
-        $this->descricao = $descricao;
+        return $this->UnidadeConsumidora->codigo_conta_contrato;
     }
 
     /**
@@ -251,7 +258,8 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("unidade_consumidora");
         $this->hasMany('id', 'Circuitos\Models\EstacaoTelecon', 'id_unidade_consumidora', ['alias' => 'EstacaoTelecon']);
-        $this->belongsTo('id', 'Circuitos\Models\UnidadeConsumidora', 'id_conta_agrupadora', ['alias' => 'UnidadeConsumidora']);
+        $this->hasMany('id', 'Circuitos\Models\UnidadeConsumidora', 'id_conta_agrupadora', ['alias' => 'UnidadeConsumidora']);
+        $this->belongsTo('id_conta_agrupadora', 'Circuitos\Models\UnidadeConsumidora', 'id', ['alias' => 'UnidadeConsumidora']);
     }
 
     /**

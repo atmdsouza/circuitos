@@ -73,7 +73,7 @@ function criar()
 function editar(id)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -357,7 +357,7 @@ function excluir(id, descr)
 function visualizar(id)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -402,7 +402,7 @@ function autocompletarCidadeDigital()
     "use strict";
     var ac_cidadedigital = $("#lid_cidade_digital");
     var string = ac_cidadedigital.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -449,7 +449,7 @@ function autocompletarCidadeDigital()
 // {
 //     "use strict";
 //     var ac_tipo_cidade = $("#lid_tipo");
-//     var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+//     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
 //     var listTipoCidadeDigital = [];
 //     $.ajax({
 //         type: "GET",

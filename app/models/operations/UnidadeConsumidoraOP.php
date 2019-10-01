@@ -52,11 +52,12 @@ class UnidadeConsumidoraOP extends UnidadeConsumidora
         $transaction = $manager->get();
         try {
             $objeto = UnidadeConsumidora::findFirst($objArray->getId());
+            $id_conta_agrupadora = ($objArray->getIdContaAgrupadora()) ? $objArray->getIdContaAgrupadora() : null;
             $objeto->setTransaction($transaction);
-            $objeto->setIdCidadeDigital($objArray->getIdCidadeDigital());
-            $objeto->setIdTipo($objArray->getIdTipo());
+            $objeto->setIdContaAgrupadora($id_conta_agrupadora);
+            $objeto->setCodigoContaContrato($objArray->getCodigoContaContrato());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
-            $objeto->setEndereco(mb_strtoupper($objArray->getEndereco(), $this->encode));
+            $objeto->setObservacao(mb_strtoupper($objArray->getObservacao(), $this->encode));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
                 $transaction->rollback("Não foi possível alterar a unidade consumidora!");
@@ -135,11 +136,11 @@ class UnidadeConsumidoraOP extends UnidadeConsumidora
             $objeto = UnidadeConsumidora::findFirst("id={$id}");
             $objetoArray = array(
                 'id' => $objeto->getId(),
-                'id_cidade_digital' => $objeto->getIdCidadeDigital(),
-                'desc_cidade_digital' => $objeto->getNomeCidadeDigital(),
-                'id_tipo' => $objeto->getIdTipo(),
+                'id_conta_agrupadora' => $objeto->getIdContaAgrupadora(),
+                'desc_conta_agrupadora' => $objeto->getContaAgrupadoraPai(),
+                'codigo_conta_contrato' => $objeto->getCodigoContaContrato(),
                 'descricao' => $objeto->getDescricao(),
-                'endereco' => $objeto->getEndereco()
+                'observacao' => $objeto->getObservacao()
             );
             $response = new Response();
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoArray)));

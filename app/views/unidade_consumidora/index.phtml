@@ -79,7 +79,7 @@ $module = $this->router->getControllerName();
                     <td><?= $unidadeconsumidora->getId() ?></td>
                     <td><?= $unidadeconsumidora->getDescricao() ?></td>
                     <td><?= $unidadeconsumidora->getCodigoContaContrato() ?></td>
-                    <td><?= $unidadeconsumidora->getContaAgrupadora() ?></td>
+                    <td><?= $unidadeconsumidora->getContaAgrupadoraPai() ?></td>
                     <td><?= $ativo ?></td>
                     <td class="td_acoes">
                         <?php if($acl->isAllowed($role,$module, 'visualizar')): ?>

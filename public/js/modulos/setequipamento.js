@@ -79,7 +79,7 @@ function criar()
 function editar(id)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -351,7 +351,7 @@ function excluir(id, descr)
 function visualizar(id)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -424,7 +424,7 @@ function autocompletarNumeroSeriePatrimonio()
     var ac_serie_patrimonio = $("#i_lnumero_serie");
     var vl_serie_patrimonio = $("#i_numero_serie");
     var listSeriePatrimonio = [];
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -461,7 +461,7 @@ function autocompletarNumeroSeriePatrimonio()
                     vl_serie_patrimonio.val(suggestion.data);
                     var numero_serie = suggestion.data;
                     if (numero_serie !== ""){
-                        var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+                        var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
                         $.ajax({
                             type: "GET",
                             dataType: "JSON",
@@ -508,7 +508,7 @@ function autocompletarFabricante()
     var ac_equip = $("#i_lid_equipamento");
     var vl_equip = $("#i_id_equipamento");
     var string = ac_fabricante.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -577,7 +577,7 @@ function autocompletarModelo()
     var vl_equip = $("#i_id_equipamento");
     var string = ac_model.val();
     var id = vl_fabricante.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -638,7 +638,7 @@ function autocompletarEquipamento()
     var vl_equip = $("#i_id_equipamento");
     var id = vl_model.val();
     var string = ac_equip.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({
         type: "GET",
         dataType: "JSON",

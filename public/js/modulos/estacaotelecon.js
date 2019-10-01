@@ -86,7 +86,7 @@ function criar()
 function editar(id)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -358,7 +358,7 @@ function excluir(id, descr)
 function visualizar(id)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -403,7 +403,7 @@ function autocompletarCidadeDigital()
     "use strict";
     var ac_cidadedigital = $("#lid_cidade_digital");
     var string = ac_cidadedigital.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -449,7 +449,7 @@ function autocompletarTerreno()
     var input_autocomplete = $("#lid_terreno");
     var input_valor = $("#id_terreno");
     var string = input_autocomplete.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -490,7 +490,7 @@ function autocompletarTorre()
     var input_autocomplete = $("#lid_torre");
     var input_valor = $("#id_torre");
     var string = input_autocomplete.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -531,7 +531,7 @@ function autocompletarSetEquipamento()
     var input_autocomplete = $("#lid_set_equipamento");
     var input_valor = $("#id_set_equipamento");
     var string = input_autocomplete.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -572,7 +572,7 @@ function autocompletarSetSeguranca()
     var input_autocomplete = $("#lid_set_seguranca");
     var input_valor = $("#id_set_seguranca");
     var string = input_autocomplete.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({
         type: "GET",
         dataType: "JSON",

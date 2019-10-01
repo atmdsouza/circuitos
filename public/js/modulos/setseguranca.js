@@ -72,7 +72,7 @@ function criar()
 function editar(id)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -344,7 +344,7 @@ function excluir(id, descr)
 function visualizar(id)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -396,7 +396,7 @@ function autocompletarFornecedor()
     var ac_fornecedor = $("#i_lid_fornecedor");
     var vl_fornecedor = $("#i_id_fornecedor");
     var string = ac_fornecedor.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({
         type: "GET",
         dataType: "JSON",
