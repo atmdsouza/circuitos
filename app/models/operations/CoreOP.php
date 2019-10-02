@@ -163,6 +163,15 @@ class CoreOP
         return $response;
     }
 
+    public function unidadeConsumidorasAtivas()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $torre = UnidadeConsumidora::find("excluido=0 AND ativo=1 AND codigo_conta_contrato LIKE '%{$dados['string']}%'");
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $torre)));
+        return $response;
+    }
+
     public function equipamentoSeriePatrimonioAtivos()
     {
         $equipamentos = Equipamento::find("excluido=0 AND ativo=1");

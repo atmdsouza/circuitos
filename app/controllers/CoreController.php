@@ -527,6 +527,10 @@ class CoreController extends ControllerBase
                 $objeto = new CoreOP();
                 return $objeto->contasAgrupadorasAtivas();
                 break;
+            case 'unidadeConsumidorasAtivas':
+                $objeto = new CoreOP();
+                return $objeto->unidadeConsumidorasAtivas();
+                break;
         }
     }
 

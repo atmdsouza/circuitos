@@ -14,6 +14,8 @@ var listSetEquipamentos = [];
 var e = 0;
 var listSetSegurancas = [];
 var s = 0;
+var listUnidadeConsumidora = [];
+var u = 0;
 
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos)
 function inicializar()
@@ -91,7 +93,7 @@ function editar(id)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarConectividade', id: id},
+        data: {metodo: 'visualizarEstacaoTelecon', id: id},
         complete: function () {
             $("#formCadastro input").removeAttr('readonly', 'readonly');
             $("#formCadastro select").removeAttr('readonly', 'readonly');
@@ -111,12 +113,21 @@ function editar(id)
         },
         success: function (data) {
             $('#id').val(data.dados.id);
+            $('#descricao').val(data.dados.descricao);
             $('#lid_cidade_digital').val(data.dados.desc_cidade_digital);
             $('#id_cidade_digital').val(data.dados.id_cidade_digital);
-            $('#lid_tipo').val(data.dados.desc_tipo);
-            $('#id_tipo').val(data.dados.id_tipo);
-            $('#descricao').val(data.dados.descricao);
-            $('#endereco').val(data.dados.endereco);
+            $('#lid_contrato').val(data.dados.desc_contrato);
+            $('#id_contrato').val(data.dados.id_contrato);
+            $('#lid_torre').val(data.dados.desc_torre);
+            $('#id_torre').val(data.dados.id_torre);
+            $('#lid_terreno').val(data.dados.desc_terreno);
+            $('#id_terreno').val(data.dados.id_terreno);
+            $('#lid_set_equipamento').val(data.dados.desc_set_equipamento);
+            $('#id_set_equipamento').val(data.dados.id_set_equipamento);
+            $('#lid_set_seguranca').val(data.dados.desc_set_seguranca);
+            $('#id_set_seguranca').val(data.dados.id_set_seguranca);
+            $('#lid_unidade_consumidora').val(data.dados.desc_unidade_consumidora);
+            $('#id_unidade_consumidora').val(data.dados.id_unidade_consumidora);
         }
     });
 }
@@ -363,7 +374,7 @@ function visualizar(id)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarConectividade', id: id},
+        data: {metodo: 'visualizarEstacaoTelecon', id: id},
         complete: function () {
             $("#formCadastro input").attr('readonly', 'readonly');
             $("#formCadastro select").attr('readonly', 'readonly');
@@ -382,11 +393,21 @@ function visualizar(id)
         },
         success: function (data) {
             $('#id').val(data.dados.id);
+            $('#descricao').val(data.dados.descricao);
             $('#lid_cidade_digital').val(data.dados.desc_cidade_digital);
             $('#id_cidade_digital').val(data.dados.id_cidade_digital);
-            $('#id_tipo').val(data.dados.id_tipo).selected = "true";
-            $('#descricao').val(data.dados.descricao);
-            $('#endereco').val(data.dados.endereco);
+            $('#lid_contrato').val(data.dados.desc_contrato);
+            $('#id_contrato').val(data.dados.id_contrato);
+            $('#lid_torre').val(data.dados.desc_torre);
+            $('#id_torre').val(data.dados.id_torre);
+            $('#lid_terreno').val(data.dados.desc_terreno);
+            $('#id_terreno').val(data.dados.id_terreno);
+            $('#lid_set_equipamento').val(data.dados.desc_set_equipamento);
+            $('#id_set_equipamento').val(data.dados.id_set_equipamento);
+            $('#lid_set_seguranca').val(data.dados.desc_set_seguranca);
+            $('#id_set_seguranca').val(data.dados.id_set_seguranca);
+            $('#lid_unidade_consumidora').val(data.dados.desc_unidade_consumidora);
+            $('#id_unidade_consumidora').val(data.dados.id_unidade_consumidora);
         }
     });
 }
@@ -609,5 +630,41 @@ function autocompletarSetSeguranca()
 
 function autocompletarUnidadeConsumidora()
 {
-
+    "use strict";
+    var input_autocomplete = $("#lid_unidade_consumidora");
+    var input_valor = $("#id_unidade_consumidora");
+    var string = input_autocomplete.val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'unidadeConsumidorasAtivas', string: string},
+        success: function (data) {
+            if (data.operacao) {
+                listUnidadeConsumidora = [];
+                $.each(data.dados, function (key, value) {
+                    listUnidadeConsumidora.push({value: value.codigo_conta_contrato, data: value.id});
+                });
+                if(u === 0) {
+                    //Autocomplete
+                    input_autocomplete.autocomplete({
+                        lookup: listUnidadeConsumidora,
+                        onSelect: function (suggestion) {
+                            input_valor.val(suggestion.data);
+                        }
+                    });
+                    u++;
+                } else {
+                    //Autocomplete
+                    input_autocomplete.autocomplete().setOptions( {
+                        lookup: listUnidadeConsumidora
+                    });
+                }
+            } else {
+                input_valor.val("");
+                input_autocomplete.val("");
+            }
+        }
+    });
 }

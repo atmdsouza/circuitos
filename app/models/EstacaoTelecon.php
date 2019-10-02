@@ -497,6 +497,26 @@ class EstacaoTelecon extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field sigla_estado
+     *
+     * @return string
+     */
+    public function getUnidadeConsumidora()
+    {
+        return $this->UnidadeConsumidora->codigo_conta_contrato;
+    }
+
+    /**
+     * Returns the value of tipo de conectividade
+     *
+     * @return string
+     */
+    public function getNomeCidadeDigital()
+    {
+        return $this->CidadeDigital->descricao;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
