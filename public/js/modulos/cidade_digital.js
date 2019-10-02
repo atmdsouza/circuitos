@@ -14,6 +14,9 @@ var listSetEquipamentos = [];
 var e = 0;
 var listSetSegurancas = [];
 var s = 0;
+var listUnidadeConsumidora = [];
+var u = 0;
+
 
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos)
 function inicializar()
@@ -86,7 +89,7 @@ function criar()
 function editar(id)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -364,7 +367,7 @@ function excluir(id, descr)
 function visualizar(id)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -562,7 +565,7 @@ function autocompletarCidade()
     var ac_cidade = $("#lid_cidade");
     var vl_cidade = $("#id_cidade");
     var id_estado = $("#uf_estado").val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -618,7 +621,7 @@ function autocompletarTerreno()
     var input_autocomplete = $("#lid_terreno");
     var input_valor = $("#i_id_terreno");
     var string = input_autocomplete.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -659,7 +662,7 @@ function autocompletarTorre()
     var input_autocomplete = $("#lid_torre");
     var input_valor = $("#i_id_torre");
     var string = input_autocomplete.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -700,7 +703,7 @@ function autocompletarSetEquipamento()
     var input_autocomplete = $("#lid_set_equipamento");
     var input_valor = $("#i_id_set_equipamento");
     var string = input_autocomplete.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -741,7 +744,7 @@ function autocompletarSetSeguranca()
     var input_autocomplete = $("#lid_set_seguranca");
     var input_valor = $("#i_id_set_seguranca");
     var string = input_autocomplete.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({
         type: "GET",
         dataType: "JSON",
@@ -778,5 +781,41 @@ function autocompletarSetSeguranca()
 
 function autocompletarUnidadeConsumidora()
 {
-
+    "use strict";
+    var input_autocomplete = $("#lid_unidade_consumidora");
+    var input_valor = $("#id_unidade_consumidora");
+    var string = input_autocomplete.val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'unidadeConsumidorasAtivas', string: string},
+        success: function (data) {
+            if (data.operacao) {
+                listUnidadeConsumidora = [];
+                $.each(data.dados, function (key, value) {
+                    listUnidadeConsumidora.push({value: value.codigo_conta_contrato, data: value.id});
+                });
+                if(u === 0) {
+                    //Autocomplete
+                    input_autocomplete.autocomplete({
+                        lookup: listUnidadeConsumidora,
+                        onSelect: function (suggestion) {
+                            input_valor.val(suggestion.data);
+                        }
+                    });
+                    u++;
+                } else {
+                    //Autocomplete
+                    input_autocomplete.autocomplete().setOptions( {
+                        lookup: listUnidadeConsumidora
+                    });
+                }
+            } else {
+                input_valor.val("");
+                input_autocomplete.val("");
+            }
+        }
+    });
 }
