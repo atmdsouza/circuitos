@@ -339,6 +339,7 @@ function visualizar(id, ocultar)
                 $("#formCadastro textarea").removeAttr('readonly', 'readonly');
                 $("#salvarCadastro").val('editar');
                 $("#salvarCadastro").show();
+                $('.hide_buttons').show();
             }
             $("#modalCadastro").modal();
         },
