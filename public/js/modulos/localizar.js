@@ -20,7 +20,7 @@ function init()
 {
     "use strict";
     //Carga incial do Mapa - Todos Marcadores
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjax");
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
     $.ajax({
         type: 'GET',
         dataType: 'JSON',

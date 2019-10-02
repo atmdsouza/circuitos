@@ -475,10 +475,6 @@ class CoreController extends ControllerBase
                 $objeto = new CoreOP();
                 return $objeto->cidadesDigitaisAtivas();
                 break;
-            case 'estacoesTeleconAtivas':
-                $objeto = new CoreOP();
-                return $objeto->estacoesTeleconAtivas();
-                break;
             case 'tiposCidadesDigitaisAtivas':
                 $objeto = new CoreOP();
                 return $objeto->tiposCidadesDigitaisAtivas();
@@ -591,9 +587,9 @@ class CoreController extends ControllerBase
         $dados = filter_input_array(INPUT_GET);
         switch ($dados['metodo'])
         {
-            case 'visualizarConectividade':
-                $objeto = new ConectividadeOP();
-                return $objeto->visualizarConectividade($dados['id']);
+            case 'estacoesTeleconAtivas':
+                $objeto = new CoreOP();
+                return $objeto->estacoesTeleconAtivas();
                 break;
         }
     }
