@@ -2,6 +2,7 @@
 
 namespace Circuitos\Controllers;
 
+use Circuitos\Models\SetEquipamentoComponentes;
 use Phalcon\Logger;
 use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Http\Response as Response;
@@ -579,6 +580,14 @@ class CoreController extends ControllerBase
                 $objeto = new SetEquipamentoOP();
                 return $objeto->visualizarSetEquipamento($dados['id']);
                 break;
+            case 'visualizarComponentesSetEquipamento':
+                $objeto = new SetEquipamentoOP();
+                return $objeto->visualizarComponentesSetEquipamento($dados['id']);
+                break;
+            case 'visualizarComponenteSetEquipamento':
+                $objeto = new SetEquipamentoOP();
+                return $objeto->visualizarComponenteSetEquipamento($dados['id']);
+                break;
             case 'visualizarTerreno':
                 $objeto = new TerrenoOP();
                 return $objeto->visualizarTerreno($dados['id']);
@@ -627,6 +636,22 @@ class CoreController extends ControllerBase
                 $objComponente = new SetSegurancaComponentes();
                 $objComponente->setId($dados['id']);
                 return $objeto->deletarComponenteSeguranca($objComponente);
+                break;
+            case 'alterarComponenteEquipamento':
+                $dados_form = $dados['array_dados'];
+                $objeto = new SetEquipamentoOP();
+                $objComponente = new SetEquipamentoComponentes();
+                $objComponente->setId($dados_form['id']);
+                $objComponente->setIdContrato(($dados_form['id_contrato']) ? $dados_form['id_contrato'] : null);
+                $objComponente->setIdEquipamento($dados_form['id_equipamento']);
+                $objComponente->setIdFornecedor($dados_form['id_fornecedor']);
+                return $objeto->alterarComponenteEquipamento($objComponente);
+                break;
+            case 'deletarComponenteEquipamento':
+                $objeto = new SetEquipamentoOP();
+                $objComponente = new SetEquipamentoComponentes();
+                $objComponente->setId($dados['id']);
+                return $objeto->deletarComponenteEquipamento($objComponente);
                 break;
         }
     }

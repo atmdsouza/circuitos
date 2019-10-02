@@ -96,8 +96,21 @@ class SetEquipamentoController extends ControllerBase
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             $setequipamentoOP = new SetEquipamentoOP();
-            $setequipamento = new SetEquipamento($params);
-            if($setequipamentoOP->alterar($setequipamento)){//Altera com sucesso
+            $setequipamento = new SetEquipamento();
+            $setequipamento->setId($params['id']);
+            $setequipamento->setDescricao($params['descricao']);
+            $arrayComponente = array();
+            foreach ($params['id_contrato'] as $key => $id_contrato){
+                $contrato = ($id_contrato) ? $id_contrato : null;
+                $equipamento = ($params['id_equipamento'][$key]) ? $params['id_equipamento'][$key] : null;
+                $fornecedor = ($params['id_fornecedor'][$key]) ? $params['id_fornecedor'][$key] : null;
+                $componente = new SetEquipamentoComponentes();
+                $componente->setIdContrato($contrato);
+                $componente->setIdFornecedor($fornecedor);
+                $componente->setIdEquipamento($equipamento);
+                array_push($arrayComponente, $componente);
+            }
+            if($setequipamentoOP->alterar($setequipamento, $arrayComponente)){//Altera com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));

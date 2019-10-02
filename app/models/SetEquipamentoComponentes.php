@@ -234,6 +234,96 @@ class SetEquipamentoComponentes extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field Fabricante do Equipamento
+     *
+     * @return string
+     */
+    public function getIdFabricante()
+    {
+        return $this->Equipamento->id_fabricante;
+    }
+
+    /**
+     * Returns the value of field Fabricante do Equipamento
+     *
+     * @return string
+     */
+    public function getFabricante()
+    {
+        return $this->Equipamento->Fabricante->Pessoa->nome;
+    }
+
+    /**
+     * Returns the value of field Modelo do Equipamento
+     *
+     * @return string
+     */
+    public function getIdModelo()
+    {
+        return $this->Equipamento->id_modelo;
+    }
+
+    /**
+     * Returns the value of field Modelo do Equipamento
+     *
+     * @return string
+     */
+    public function getModelo()
+    {
+        return $this->Equipamento->Modelo->modelo;
+    }
+
+    /**
+     * Returns the value of field Equipamento
+     *
+     * @return string
+     */
+    public function getEquipamento()
+    {
+        return $this->Equipamento->nome;
+    }
+
+    /**
+     * Returns the value of field Numero Serie
+     *
+     * @return string
+     */
+    public function getNumSerie()
+    {
+        return $this->Equipamento->numserie;
+    }
+
+    /**
+     * Returns the value of field Numero Patrimonio
+     *
+     * @return string
+     */
+    public function getNumPatrimonio()
+    {
+        return $this->Equipamento->numpatrimonio;
+    }
+
+    /**
+     * Returns the value of field Nome do Fornecedor
+     *
+     * @return string
+     */
+    public function getFornecedor()
+    {
+        return $this->Fornecedor->Pessoa->nome;
+    }
+
+    /**
+     * Returns the value of field Contrato
+     *
+     * @return string
+     */
+    public function getContrato()
+    {
+        return $this->Contrato->numero;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
