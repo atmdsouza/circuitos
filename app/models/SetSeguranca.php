@@ -16,12 +16,6 @@ class SetSeguranca extends \Phalcon\Mvc\Model
 
     /**
      *
-     * @var integer
-     */
-    protected $id_contrato;
-
-    /**
-     *
      * @var string
      */
     protected $descricao;
@@ -53,19 +47,6 @@ class SetSeguranca extends \Phalcon\Mvc\Model
     public function setId($id)
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field id_contrato
-     *
-     * @param integer $id_contrato
-     * @return $this
-     */
-    public function setIdContrato($id_contrato)
-    {
-        $this->id_contrato = $id_contrato;
 
         return $this;
     }
@@ -130,16 +111,6 @@ class SetSeguranca extends \Phalcon\Mvc\Model
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Returns the value of field id_contrato
-     *
-     * @return integer
-     */
-    public function getIdContrato()
-    {
-        return $this->id_contrato;
     }
 
     /**

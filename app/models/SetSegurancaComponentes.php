@@ -354,26 +354,87 @@ class SetSegurancaComponentes extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field Nome do Fornecedor
+     *
+     * @return string
+     */
+    public function getFornecedor()
+    {
+        return $this->Fornecedor->Pessoa->nome;
+    }
+
+    /**
+     * Returns the value of field Contrato
+     *
+     * @return string
+     */
+    public function getContrato()
+    {
+        return $this->Contrato->numero;
+    }
+
+    /**
+     * Returns the value of field descrição tipo
+     *
+     * @return string
+     */
+    public function getTipo()
+    {
+        return $this->Lov->descricao;
+    }
+
+    /**
+     * Returns the value of field descrição contato
+     *
+     * @return string
+     */
+    public function getContatoNome()
+    {
+        return (isset($this->SetSegurancaContato[0])) ? $this->SetSegurancaContato[0]->nome : null;
+    }
+
+    /**
+     * Returns the value of field email contato
+     *
+     * @return string
+     */
+    public function getContatoEmail()
+    {
+        return (isset($this->SetSegurancaContato[0])) ? $this->SetSegurancaContato[0]->email : null;
+    }
+
+    /**
+     * Returns the value of field email contato
+     *
+     * @return string
+     */
+    public function getContatoTelefone()
+    {
+        return (isset($this->SetSegurancaContato[0])) ? $this->SetSegurancaContato[0]->telefone : null;
+    }
+
+    /**
+     * Returns the value of field id contato
+     *
+     * @return int
+     */
+    public function getIdContato()
+    {
+        return (isset($this->SetSegurancaContato[0])) ? $this->SetSegurancaContato[0]->id : null;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("set_seguranca_componentes");
+        $this->hasMany('id', 'Circuitos\Models\SetSegurancaContato', 'id_set_seguranca_componente', ['alias' => 'SetSegurancaContato']);
         $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
         $this->belongsTo('id_fornecedor', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Fornecedor']);
         $this->belongsTo('id_tipo', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
         $this->belongsTo('id_set_seguranca', 'Circuitos\Models\SetSeguranca', 'id', ['alias' => 'SetSeguranca']);
-    }
-
-    /**
-     * Returns table name mapped in the model.
-     *
-     * @return string
-     */
-    public function getSource()
-    {
-        return 'set_seguranca_componentes';
     }
 
     /**
@@ -396,6 +457,16 @@ class SetSegurancaComponentes extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Returns table name mapped in the model.
+     *
+     * @return string
+     */
+    public function getSource()
+    {
+        return 'set_seguranca_componentes';
     }
 
 }

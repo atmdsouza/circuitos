@@ -77,7 +77,7 @@ function editar(id)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarConectividade', id: id},
+        data: {metodo: 'visualizarSetSeguranca', id: id},
         complete: function () {
             $("#formCadastro input").removeAttr('readonly', 'readonly');
             $("#formCadastro select").removeAttr('readonly', 'readonly');
@@ -349,7 +349,7 @@ function visualizar(id)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarConectividade', id: id},
+        data: {metodo: 'visualizarSetSeguranca', id: id},
         complete: function () {
             $("#formCadastro input").attr('readonly', 'readonly');
             $("#formCadastro select").attr('readonly', 'readonly');
@@ -367,6 +367,7 @@ function visualizar(id)
             }
         },
         success: function (data) {
+            console.log(data.dados);
             $('#id').val(data.dados.id);
             $('#lid_cidade_digital').val(data.dados.desc_cidade_digital);
             $('#id_cidade_digital').val(data.dados.id_cidade_digital);

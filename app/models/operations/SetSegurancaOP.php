@@ -61,8 +61,6 @@ class SetSegurancaOP extends SetSeguranca
                             for ($i = 0; $i < count($messages); $i++) {
                                 $errors .= "[".$messages[$i]."] ";
                             }
-                            var_dump($messages);
-                            exit;
                             $transaction->rollback("Não foi possível salvar o SetSegurancaContato!");
                         }
                     }
@@ -77,7 +75,7 @@ class SetSegurancaOP extends SetSeguranca
         }
     }
 
-    public function alterar(SetSeguranca $objArray)
+    public function alterar(SetSeguranca $objArray, $arrayObjComponente, $arrayObjContato)
     {
         $manager = new TxManager();
         $transaction = $manager->get();
@@ -164,16 +162,31 @@ class SetSegurancaOP extends SetSeguranca
     {
         try {
             $objeto = SetSeguranca::findFirst("id={$id}");
-            $objetoArray = array(
-                'id' => $objeto->getId(),
-                'id_cidade_digital' => $objeto->getIdCidadeDigital(),
-                'desc_cidade_digital' => $objeto->getNomeCidadeDigital(),
-                'id_tipo' => $objeto->getIdTipo(),
-                'descricao' => $objeto->getDescricao(),
-                'endereco' => $objeto->getEndereco()
+            $objetosComponente = SetSegurancaComponentes::find('id_set_seguranca = ' . $objeto->getId());
+            foreach ($objetosComponente as $key => $objetoComponente){
+                $objTransporte = new \stdClass();
+                $objTransporte->cont_id = $objetoComponente->getIdContato();
+                $objTransporte->cont_nome = $objetoComponente->getContatoNome();
+                $objTransporte->cont_email = $objetoComponente->getContatoEmail();
+                $objTransporte->cont_telefone = $objetoComponente->getContatoTelefone();
+                $objTransporte->desc_contrato = $objetoComponente->getContrato();
+                $objTransporte->desc_fornecedor = $objetoComponente->getFornecedor();
+                $objTransporte->desc_tipo = $objetoComponente->getTipo();
+                $objTransporte->id_contrato = $objetoComponente->getIdContrato();
+                $objTransporte->id_fornecedor = $objetoComponente->getIdFornecedor();
+                $objTransporte->id_tipo = $objetoComponente->getIdTipo();
+                $objTransporte->propriedade_prodepa = $objetoComponente->getPropriedadeProdepa();
+                $objTransporte->senha = $objetoComponente->getSenha();
+                $objTransporte->validade = $objetoComponente->getValidade();
+                $objTransporte->endereco = $objetoComponente->getEnderecoChave();
+                $objTransporte->id_componente = $objetoComponente->getId();
+            }
+            $arrayObjetos = array(
+                'objPrincipal' => $objeto,
+                'objComponente' => $objTransporte
             );
             $response = new Response();
-            $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoArray)));
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $arrayObjetos)));
             return $response;
         } catch (TxFailed $e) {
             var_dump($e->getMessage());
