@@ -8,6 +8,12 @@ use Phalcon\Http\Response as Response;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 
+use Circuitos\Models\SetSegurancaComponentes;
+use Circuitos\Models\SetSegurancaContato;
+use Circuitos\Models\Empresa;
+use Circuitos\Models\EndEndereco;
+use Circuitos\Models\EndEstado;
+use Circuitos\Models\EndCidade;
 use Circuitos\Models\Pessoa;
 use Circuitos\Models\PessoaJuridica;
 use Circuitos\Models\PessoaFisica;
@@ -15,10 +21,6 @@ use Circuitos\Models\PessoaEndereco;
 use Circuitos\Models\PessoaEmail;
 use Circuitos\Models\PessoaTelefone;
 use Circuitos\Models\PessoaContato;
-use Circuitos\Models\Empresa;
-use Circuitos\Models\EndEndereco;
-use Circuitos\Models\EndEstado;
-use Circuitos\Models\EndCidade;
 
 use Circuitos\Models\Operations\CoreOP;
 use Circuitos\Models\Operations\ConectividadeOP;
@@ -475,6 +477,10 @@ class CoreController extends ControllerBase
                 $objeto = new CoreOP();
                 return $objeto->cidadesDigitaisAtivas();
                 break;
+            case 'estacoesTeleconAtivas':
+                $objeto = new CoreOP();
+                return $objeto->estacoesTeleconAtivas();
+                break;
             case 'tiposCidadesDigitaisAtivas':
                 $objeto = new CoreOP();
                 return $objeto->tiposCidadesDigitaisAtivas();
@@ -561,6 +567,14 @@ class CoreController extends ControllerBase
                 $objeto = new SetSegurancaOP();
                 return $objeto->visualizarSetSeguranca($dados['id']);
                 break;
+            case 'visualizarComponentesSetSeguranca':
+                $objeto = new SetSegurancaOP();
+                return $objeto->visualizarComponentesSetSeguranca($dados['id']);
+                break;
+            case 'visualizarComponenteSetSeguranca':
+                $objeto = new SetSegurancaOP();
+                return $objeto->visualizarComponenteSetSeguranca($dados['id']);
+                break;
             case 'visualizarSetEquipamento':
                 $objeto = new SetEquipamentoOP();
                 return $objeto->visualizarSetEquipamento($dados['id']);
@@ -584,12 +598,29 @@ class CoreController extends ControllerBase
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
-        $dados = filter_input_array(INPUT_GET);
+        $dados = filter_input_array(INPUT_POST);
         switch ($dados['metodo'])
         {
-            case 'estacoesTeleconAtivas':
-                $objeto = new CoreOP();
-                return $objeto->estacoesTeleconAtivas();
+            case 'alterarComponenteSeguranca':
+                $dados_form = $dados['array_dados'];
+                $objeto = new SetSegurancaOP();
+                $objComponente = new SetSegurancaComponentes();
+                $objComponente->setId($dados_form['id']);
+                $objComponente->setIdTipo($dados_form['id_tipo']);
+                $objComponente->setIdContrato($dados_form['id_contrato']);
+                $objComponente->setIdFornecedor($dados_form['id_fornecedor']);
+                $objComponente->setPropriedadeProdepa($dados_form['propriedade_prodepa']);
+                $objComponente->setSenha($dados_form['senha']);
+                $objComponente->setValidade($dados_form['validade']);
+                $objComponente->setEnderecoChave($dados_form['endereco_chave']);
+                $objComponenteContato = new SetSegurancaContato();
+                if (!empty($dados_form['cont_id'])){
+                    $objComponenteContato->setId($dados_form['cont_id']);
+                    $objComponenteContato->setNome($dados_form['nome']);
+                    $objComponenteContato->setTelefone($dados_form['telefone']);
+                    $objComponenteContato->setEmail($dados_form['email']);
+                }
+                return $objeto->alterarComponenteSeguranca($objComponente, $objComponenteContato);
                 break;
         }
     }

@@ -104,6 +104,7 @@ class SetSegurancaController extends ControllerBase
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
+        $util = new Util();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
         $params = array();
@@ -115,8 +116,34 @@ class SetSegurancaController extends ControllerBase
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             $setsegurancaOP = new SetSegurancaOP();
-            $setseguranca = new SetSeguranca($params);
-            if($setsegurancaOP->alterar($setseguranca)){//Altera com sucesso
+            $setseguranca = new SetSeguranca();
+            $setseguranca->setId($params['id']);
+            $setseguranca->setDescricao($params['descricao']);
+            $arrayComponente = array();
+            $arrayComponenteContato = array();
+            foreach ($params['id_contrato'] as $key => $id_contrato){
+                $validade = ($params['validade'][$key]) ? $util->converterDataUSA($params['validade'][$key]) : null;
+                $contrato = ($id_contrato) ? $id_contrato : null;
+                $tipo = ($params['id_tipo'][$key]) ? $params['id_tipo'][$key] : null;
+                $fornecedor = ($params['id_fornecedor'][$key]) ? $params['id_fornecedor'][$key] : null;
+                $componente = new SetSegurancaComponentes();
+                $componente->setIdContrato($contrato);
+                $componente->setEnderecoChave($params['endereco_chave'][$key]);
+                $componente->setSenha($params['senha'][$key]);
+                $componente->setValidade($validade);
+                $componente->setIdFornecedor($fornecedor);
+                $componente->setIdTipo($tipo);
+                $componente->setPropriedadeProdepa($params['propriedade_prodepa'][$key]);
+                array_push($arrayComponente, $componente);
+                $componenteContato = new SetSegurancaContato();
+                $tel1 = ($params["telefone"][$key]) ? $util->formataFone($params["telefone"][$key]) : null;
+                $tel = ($tel1) ? $tel1["ddd"] . $tel1["fone"] : null;
+                $componenteContato->setNome($params['nome'][$key]);
+                $componenteContato->setTelefone($tel);
+                $componenteContato->setEmail($params['email'][$key]);
+                array_push($arrayComponenteContato, $componenteContato);
+            }
+            if($setsegurancaOP->alterar($setseguranca, $arrayComponente, $arrayComponenteContato)){//Altera com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
