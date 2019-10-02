@@ -163,28 +163,30 @@ class SetSegurancaOP extends SetSeguranca
         try {
             $objeto = SetSeguranca::findFirst("id={$id}");
             $objetosComponente = SetSegurancaComponentes::find('id_set_seguranca = ' . $objeto->getId());
+            $arrTransporte = [];
             foreach ($objetosComponente as $key => $objetoComponente){
                 $objTransporte = new \stdClass();
                 $objTransporte->cont_id = $objetoComponente->getIdContato();
                 $objTransporte->cont_nome = $objetoComponente->getContatoNome();
                 $objTransporte->cont_email = $objetoComponente->getContatoEmail();
                 $objTransporte->cont_telefone = $objetoComponente->getContatoTelefone();
-                $objTransporte->desc_contrato = $objetoComponente->getContrato();
-                $objTransporte->desc_fornecedor = $objetoComponente->getFornecedor();
-                $objTransporte->desc_tipo = $objetoComponente->getTipo();
+                $objTransporte->id_componente = $objetoComponente->getId();
                 $objTransporte->id_contrato = $objetoComponente->getIdContrato();
-                $objTransporte->id_fornecedor = $objetoComponente->getIdFornecedor();
+                $objTransporte->desc_contrato = $objetoComponente->getContrato();
                 $objTransporte->id_tipo = $objetoComponente->getIdTipo();
+                $objTransporte->desc_tipo = $objetoComponente->getTipo();
+                $objTransporte->id_fornecedor = $objetoComponente->getIdFornecedor();
+                $objTransporte->desc_fornecedor = $objetoComponente->getFornecedor();
                 $objTransporte->propriedade_prodepa = $objetoComponente->getPropriedadeProdepa();
                 $objTransporte->senha = $objetoComponente->getSenha();
                 $objTransporte->validade = $objetoComponente->getValidade();
                 $objTransporte->endereco = $objetoComponente->getEnderecoChave();
-                $objTransporte->id_componente = $objetoComponente->getId();
+                array_push($arrTransporte, $objTransporte);
             }
-            $arrayObjetos = array(
+            $arrayObjetos = [
                 'objPrincipal' => $objeto,
-                'objComponente' => $objTransporte
-            );
+                'objComponente' => $arrTransporte
+            ];
             $response = new Response();
             $response->setContent(json_encode(array("operacao" => True,"dados" => $arrayObjetos)));
             return $response;

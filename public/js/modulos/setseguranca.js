@@ -66,6 +66,7 @@ function criar()
     $("#formCadastro textarea").removeAttr('readonly', 'readonly');
     $("#salvarCadastro").val('criar');
     $("#salvarCadastro").show();
+    $('.hide_buttons').show();
     $("#modalCadastro").modal();
 }
 
@@ -96,13 +97,32 @@ function editar(id)
             }
         },
         success: function (data) {
-            $('#id').val(data.dados.id);
-            $('#lid_cidade_digital').val(data.dados.desc_cidade_digital);
-            $('#id_cidade_digital').val(data.dados.id_cidade_digital);
-            $('#lid_tipo').val(data.dados.desc_tipo);
-            $('#id_tipo').val(data.dados.id_tipo);
-            $('#descricao').val(data.dados.descricao);
-            $('#endereco').val(data.dados.endereco);
+            $('#id').val(data.dados.objPrincipal.id);
+            $('#descricao').val(data.dados.objPrincipal.descricao);
+            //Tabela de componentes
+            $('.tr_res_remove').remove();
+            var linhas = null;
+            $.each(data.dados.objComponente, function (key, value) {
+                var desc_propriedade_prodepa = (value.propriedade_prodepa == '1') ? 'Sim' : 'Não';
+                linhas += '<tr class="tr_res_remove">';
+                linhas += '<td style="display: none;">' + value.desc_contrato + '<input name="res_id_contrato[]" type="hidden" value="' + value.id_contrato + '" /></td>';
+                linhas += '<td style="display: none;">'+ value.endereco +'<input name="res_endereco_chave[]" type="hidden" value="'+ value.endereco +'" /></td>';
+                linhas += '<td style="display: none;">'+ value.senha +'<input name="res_senha[]" type="hidden" value="'+ value.senha +'" /></td>';
+                linhas += '<td style="display: none;">'+ value.validade +'<input name="res_validade[]" type="hidden" value="'+ value.validade +'" /></td>';
+                linhas += '<td style="display: none;">'+ value.cont_email +'<input name="res_email[]" type="hidden" value="'+ value.cont_email +'" /></td>';
+                linhas += '<td>'+ value.desc_fornecedor +'<input name="res_id_fornecedor[]" type="hidden" value="'+ value.id_fornecedor +'" /></td>';
+                linhas += '<td>'+ value.desc_tipo +'<input name="res_id_tipo[]" type="hidden" value="'+ value.id_tipo +'" /></td>';
+                linhas += '<td>'+ desc_propriedade_prodepa +'<input name="res_propriedade_prodepa[]" type="hidden" value="'+ value.propriedade_prodepa +'" /></td>';
+                linhas += '<td>'+ value.cont_nome +'<input name="res_nome[]" type="hidden" value="'+ value.cont_nome +'" /></td>';
+                linhas += '<td>'+ value.cont_telefone +'<input name="res_telefone[]" type="hidden" value="'+ value.cont_telefone +'" /></td>';
+                linhas += '<td><a href="javascript:void(0)" class="botoes_acao"><img src="public/images/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>' +
+                    '<a href="javascript:void(0)" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+                linhas += '</tr>';
+            });
+            $("#tabela_componentes").append(linhas);
+            $('#tabela_componentes').removeAttr('style','display: none;');
+            $('#tabela_componentes').attr('style', 'display: table;');
+            $('.hide_buttons').show();
         }
     });
 }
@@ -367,15 +387,43 @@ function visualizar(id)
             }
         },
         success: function (data) {
-            console.log(data.dados);
-            $('#id').val(data.dados.id);
-            $('#lid_cidade_digital').val(data.dados.desc_cidade_digital);
-            $('#id_cidade_digital').val(data.dados.id_cidade_digital);
-            $('#id_tipo').val(data.dados.id_tipo).selected = "true";
-            $('#descricao').val(data.dados.descricao);
-            $('#endereco').val(data.dados.endereco);
+            $('#id').val(data.dados.objPrincipal.id);
+            $('#descricao').val(data.dados.objPrincipal.descricao);
+            //Tabela de componentes
+            $('.tr_res_remove').remove();
+            var linhas = null;
+            $.each(data.dados.objComponente, function (key, value) {
+                var desc_propriedade_prodepa = (value.propriedade_prodepa == '1') ? 'Sim' : 'Não';
+                linhas += '<tr class="tr_res_remove">';
+                linhas += '<td style="display: none;">' + value.desc_contrato + '<input name="res_id_contrato[]" type="hidden" value="' + value.id_contrato + '" /></td>';
+                linhas += '<td style="display: none;">'+ value.endereco +'<input name="res_endereco_chave[]" type="hidden" value="'+ value.endereco +'" /></td>';
+                linhas += '<td style="display: none;">'+ value.senha +'<input name="res_senha[]" type="hidden" value="'+ value.senha +'" /></td>';
+                linhas += '<td style="display: none;">'+ value.validade +'<input name="res_validade[]" type="hidden" value="'+ value.validade +'" /></td>';
+                linhas += '<td style="display: none;">'+ value.cont_email +'<input name="res_email[]" type="hidden" value="'+ value.cont_email +'" /></td>';
+                linhas += '<td>'+ value.desc_fornecedor +'<input name="res_id_fornecedor[]" type="hidden" value="'+ value.id_fornecedor +'" /></td>';
+                linhas += '<td>'+ value.desc_tipo +'<input name="res_id_tipo[]" type="hidden" value="'+ value.id_tipo +'" /></td>';
+                linhas += '<td>'+ desc_propriedade_prodepa +'<input name="res_propriedade_prodepa[]" type="hidden" value="'+ value.propriedade_prodepa +'" /></td>';
+                linhas += '<td>'+ value.cont_nome +'<input name="res_nome[]" type="hidden" value="'+ value.cont_nome +'" /></td>';
+                linhas += '<td>'+ value.cont_telefone +'<input name="res_telefone[]" type="hidden" value="'+ value.cont_telefone +'" /></td>';
+                linhas += '<td><a href="javascript:void(0)" class="botoes_acao"><img src="public/images/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a></td>';
+                linhas += '</tr>';
+            });
+            $("#tabela_componentes").append(linhas);
+            $('#tabela_componentes').removeAttr('style','display: none;');
+            $('#tabela_componentes').attr('style', 'display: table;');
+            $('.hide_buttons').hide();
         }
     });
+}
+
+function exibirDetalhesComponente()
+{
+
+}
+
+function editarComponente()
+{
+
 }
 
 function limpar()
