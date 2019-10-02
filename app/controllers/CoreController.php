@@ -616,10 +616,10 @@ class CoreController extends ControllerBase
                 $objComponenteContato = new SetSegurancaContato();
                 if (!empty($dados_form['cont_id'])){
                     $objComponenteContato->setId($dados_form['cont_id']);
-                    $objComponenteContato->setNome($dados_form['nome']);
-                    $objComponenteContato->setTelefone($dados_form['telefone']);
-                    $objComponenteContato->setEmail($dados_form['email']);
                 }
+                $objComponenteContato->setNome($dados_form['nome']);
+                $objComponenteContato->setTelefone($dados_form['telefone']);
+                $objComponenteContato->setEmail($dados_form['email']);
                 return $objeto->alterarComponenteSeguranca($objComponente, $objComponenteContato);
                 break;
         }

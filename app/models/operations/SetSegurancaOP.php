@@ -64,7 +64,7 @@ class SetSegurancaOP extends SetSeguranca
                             for ($i = 0; $i < count($messages); $i++) {
                                 $errors .= "[".$messages[$i]."] ";
                             }
-                            $transaction->rollback("Não foi possível salvar o SetSegurancaContato!");
+                            $transaction->rollback("Não foi possível salvar o SetSegurancaContato: " . $errors);
                         }
                     }
                 }
@@ -287,21 +287,26 @@ class SetSegurancaOP extends SetSeguranca
         if ($objetoComponente->save() == false) {
             $transaction->rollback("Não foi possível salvar o SetSegurancaComponente!");
         }
+        $objetoContato = null;
         if ($objContato->getId()) {
             $objetoContato = SetSegurancaContato::findFirst('id='.$objContato->getId());
             $objetoContato->setTransaction($transaction);
-            $objetoContato->setNome(mb_strtoupper($objContato->getNome(), $this->encode));
-            $objetoContato->setTelefone(mb_strtoupper($objContato->getTelefone(), $this->encode));
-            $objetoContato->setEmail($objContato->getEmail());
-            $objetoContato->setDataUpdate(date('Y-m-d H:i:s'));
-            if ($objetoContato->save() == false) {
-                $messages = $objetoContato->getMessages();
-                $errors = "";
-                for ($i = 0; $i < count($messages); $i++) {
-                    $errors .= "[".$messages[$i]."] ";
-                }
-                $transaction->rollback("Não foi possível salvar o SetSegurancaContato!");
+        } else {
+            $objetoContato = new SetSegurancaContato();
+            $objetoContato->setTransaction($transaction);
+            $objetoContato->setIdSetSegurancaComponente($objComponente->getId());
+        }
+        $objetoContato->setNome(mb_strtoupper($objContato->getNome(), $this->encode));
+        $objetoContato->setTelefone(mb_strtoupper($objContato->getTelefone(), $this->encode));
+        $objetoContato->setEmail($objContato->getEmail());
+        $objetoContato->setDataUpdate(date('Y-m-d H:i:s'));
+        if ($objetoContato->save() == false) {
+            $messages = $objetoContato->getMessages();
+            $errors = "";
+            for ($i = 0; $i < count($messages); $i++) {
+                $errors .= "[".$messages[$i]."] ";
             }
+            $transaction->rollback("Não foi possível salvar o SetSegurancaContato: " . $errors);
         }
         $transaction->commit();
         $response = new Response();
