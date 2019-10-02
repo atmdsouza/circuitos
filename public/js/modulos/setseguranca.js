@@ -369,6 +369,7 @@ function exibirDetalhesComponente(id, ocultar)
                 $('#bt_inserir_componente').text("Alterar");
                 $('#bt_inserir_componente').removeAttr('onclick');
                 $('#bt_inserir_componente').attr('onclick','editarComponente(' + id + ');');
+                $('.hide_buttons').show();
             }
         },
         error: function (data) {
@@ -453,7 +454,45 @@ function editarComponente(id)
 
 function excluirComponente(id)
 {
-
+    'use strict';
+    swal({
+        title: "Tem certeza que deseja excluir o registro?",
+        text: "O sistema irá excluir o registro selecionado com essa ação.",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, excluir!"
+    }).then((result) => {
+        var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: action,
+            data: {metodo: 'deletarComponenteSeguranca', id: id},
+            complete: function () {
+            },
+            error: function (data) {
+                if (data.status && data.status === 401) {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            },
+            success: function (data) {
+                $('.tr_res_remove').remove();
+                limparDadosFormComponente();
+                montarTabelaComponente(data.dados, false);
+                swal({
+                    title: "Exclusão de Componente",
+                    text: 'Componente excluído com sucesso!',
+                    type: "success"
+                });
+            }
+        });
+    });
 }
 
 function montarTabelaComponente(id_set_seguranca, visualizar)

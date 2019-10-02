@@ -622,6 +622,12 @@ class CoreController extends ControllerBase
                 $objComponenteContato->setEmail($dados_form['email']);
                 return $objeto->alterarComponenteSeguranca($objComponente, $objComponenteContato);
                 break;
+            case 'deletarComponenteSeguranca':
+                $objeto = new SetSegurancaOP();
+                $objComponente = new SetSegurancaComponentes();
+                $objComponente->setId($dados['id']);
+                return $objeto->deletarComponenteSeguranca($objComponente);
+                break;
         }
     }
 

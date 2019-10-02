@@ -44,7 +44,7 @@ class SetSegurancaOP extends SetSeguranca
                     $objetoComponente->setIdFornecedor($objComponente->getIdFornecedor());
                     $objetoComponente->setPropriedadeProdepa($objComponente->getPropriedadeProdepa());
                     $objetoComponente->setSenha($objComponente->getSenha());
-                    $objetoComponente->setValidade($util->converterDataUSA($objComponente->getValidade()));
+                    $objetoComponente->setValidade(($objComponente->getValidade()) ? $util->converterDataUSA($objComponente->getValidade()) : null);
                     $objetoComponente->setEnderecoChave(mb_strtoupper($objComponente->getEnderecoChave(), $this->encode));
                     $objetoComponente->setDataUpdate(date('Y-m-d H:i:s'));
                     if ($objetoComponente->save() == false) {
@@ -55,7 +55,7 @@ class SetSegurancaOP extends SetSeguranca
                         $objetoContato->setTransaction($transaction);
                         $objetoContato->setIdSetSegurancaComponente($objetoComponente->getId());
                         $objetoContato->setNome(mb_strtoupper($arrayObjContato[$key]->getNome(), $this->encode));
-                        $objetoContato->setTelefone(mb_strtoupper($arrayObjContato[$key]->getTelefone(), $this->encode));
+                        $objetoContato->setTelefone($util->formataNumeroTelefone($arrayObjContato[$key]->getTelefone()));
                         $objetoContato->setEmail($arrayObjContato[$key]->getEmail());
                         $objetoContato->setDataUpdate(date('Y-m-d H:i:s'));
                         if ($objetoContato->save() == false) {
@@ -101,7 +101,7 @@ class SetSegurancaOP extends SetSeguranca
                     $objetoComponente->setIdFornecedor($objComponente->getIdFornecedor());
                     $objetoComponente->setPropriedadeProdepa($objComponente->getPropriedadeProdepa());
                     $objetoComponente->setSenha($objComponente->getSenha());
-                    $objetoComponente->setValidade($util->converterDataUSA($objComponente->getValidade()));
+                    $objetoComponente->setValidade(($objComponente->getValidade()) ? $util->converterDataUSA($objComponente->getValidade()) : null);
                     $objetoComponente->setEnderecoChave(mb_strtoupper($objComponente->getEnderecoChave(), $this->encode));
                     $objetoComponente->setDataUpdate(date('Y-m-d H:i:s'));
                     if ($objetoComponente->save() == false) {
@@ -112,7 +112,7 @@ class SetSegurancaOP extends SetSeguranca
                         $objetoContato->setTransaction($transaction);
                         $objetoContato->setIdSetSegurancaComponente($objetoComponente->getId());
                         $objetoContato->setNome(mb_strtoupper($arrayObjContato[$key]->getNome(), $this->encode));
-                        $objetoContato->setTelefone(mb_strtoupper($arrayObjContato[$key]->getTelefone(), $this->encode));
+                        $objetoContato->setTelefone($util->formataNumeroTelefone($arrayObjContato[$key]->getTelefone()));
                         $objetoContato->setEmail($arrayObjContato[$key]->getEmail());
                         $objetoContato->setDataUpdate(date('Y-m-d H:i:s'));
                         if ($objetoContato->save() == false) {
@@ -209,6 +209,7 @@ class SetSegurancaOP extends SetSeguranca
 
     public function visualizarComponentesSetSeguranca($id_set_seguranca)
     {
+        $util = new Util();
         try {
             $objetosComponente = SetSegurancaComponentes::find('id_set_seguranca = ' . $id_set_seguranca);
             $arrTransporte = [];
@@ -217,7 +218,7 @@ class SetSegurancaOP extends SetSeguranca
                 $objTransporte->cont_id = $objetoComponente->getIdContato();
                 $objTransporte->cont_nome = $objetoComponente->getContatoNome();
                 $objTransporte->cont_email = $objetoComponente->getContatoEmail();
-                $objTransporte->cont_telefone = $objetoComponente->getContatoTelefone();
+                $objTransporte->cont_telefone = $util->mask($objetoComponente->getContatoTelefone(), '(##) ####-#####');
                 $objTransporte->id_componente = $objetoComponente->getId();
                 $objTransporte->id_contrato = $objetoComponente->getIdContrato();
                 $objTransporte->desc_contrato = $objetoComponente->getContrato();
@@ -227,7 +228,7 @@ class SetSegurancaOP extends SetSeguranca
                 $objTransporte->desc_fornecedor = $objetoComponente->getFornecedor();
                 $objTransporte->propriedade_prodepa = $objetoComponente->getPropriedadeProdepa();
                 $objTransporte->senha = $objetoComponente->getSenha();
-                $objTransporte->validade = $objetoComponente->getValidade();
+                $objTransporte->validade = $util->converterDataParaBr($objetoComponente->getValidade());
                 $objTransporte->endereco = $objetoComponente->getEnderecoChave();
                 array_push($arrTransporte, $objTransporte);
             }
@@ -242,13 +243,14 @@ class SetSegurancaOP extends SetSeguranca
 
     public function visualizarComponenteSetSeguranca($id)
     {
+        $util = new Util();
         try {
             $objetoComponente = SetSegurancaComponentes::findFirst('id= ' . $id);
             $objTransporte = new \stdClass();
             $objTransporte->cont_id = $objetoComponente->getIdContato();
             $objTransporte->cont_nome = $objetoComponente->getContatoNome();
             $objTransporte->cont_email = $objetoComponente->getContatoEmail();
-            $objTransporte->cont_telefone = $objetoComponente->getContatoTelefone();
+            $objTransporte->cont_telefone = $util->mask($objetoComponente->getContatoTelefone(), '(##) ####-#####');
             $objTransporte->id_componente = $objetoComponente->getId();
             $objTransporte->id_contrato = $objetoComponente->getIdContrato();
             $objTransporte->desc_contrato = $objetoComponente->getContrato();
@@ -258,7 +260,7 @@ class SetSegurancaOP extends SetSeguranca
             $objTransporte->desc_fornecedor = $objetoComponente->getFornecedor();
             $objTransporte->propriedade_prodepa = $objetoComponente->getPropriedadeProdepa();
             $objTransporte->senha = $objetoComponente->getSenha();
-            $objTransporte->validade = $objetoComponente->getValidade();
+            $objTransporte->validade = $util->converterDataParaBr($objetoComponente->getValidade());
             $objTransporte->endereco = $objetoComponente->getEnderecoChave();
             $response = new Response();
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objTransporte)));
@@ -271,46 +273,71 @@ class SetSegurancaOP extends SetSeguranca
 
     public function alterarComponenteSeguranca(SetSegurancaComponentes $objComponente, SetSegurancaContato $objContato)
     {
-        $util = new Util();
-        $manager = new TxManager();
-        $transaction = $manager->get();
-        $objetoComponente = SetSegurancaComponentes::findFirst('id='.$objComponente->getId());
-        $objetoComponente->setTransaction($transaction);
-        $objetoComponente->setIdTipo($objComponente->getIdTipo());
-        $objetoComponente->setIdContrato(($objComponente->getIdContrato()) ? $objComponente->getIdContrato() : null);
-        $objetoComponente->setIdFornecedor($objComponente->getIdFornecedor());
-        $objetoComponente->setPropriedadeProdepa($objComponente->getPropriedadeProdepa());
-        $objetoComponente->setSenha($objComponente->getSenha());
-        $objetoComponente->setValidade(($objComponente->getValidade()) ? $util->converterDataUSA($objComponente->getValidade()) : null);
-        $objetoComponente->setEnderecoChave(mb_strtoupper($objComponente->getEnderecoChave(), $this->encode));
-        $objetoComponente->setDataUpdate(date('Y-m-d H:i:s'));
-        if ($objetoComponente->save() == false) {
-            $transaction->rollback("Não foi possível salvar o SetSegurancaComponente!");
-        }
-        $objetoContato = null;
-        if ($objContato->getId()) {
-            $objetoContato = SetSegurancaContato::findFirst('id='.$objContato->getId());
-            $objetoContato->setTransaction($transaction);
-        } else {
-            $objetoContato = new SetSegurancaContato();
-            $objetoContato->setTransaction($transaction);
-            $objetoContato->setIdSetSegurancaComponente($objComponente->getId());
-        }
-        $objetoContato->setNome(mb_strtoupper($objContato->getNome(), $this->encode));
-        $objetoContato->setTelefone(mb_strtoupper($objContato->getTelefone(), $this->encode));
-        $objetoContato->setEmail($objContato->getEmail());
-        $objetoContato->setDataUpdate(date('Y-m-d H:i:s'));
-        if ($objetoContato->save() == false) {
-            $messages = $objetoContato->getMessages();
-            $errors = "";
-            for ($i = 0; $i < count($messages); $i++) {
-                $errors .= "[".$messages[$i]."] ";
+        try {
+            $util = new Util();
+            $manager = new TxManager();
+            $transaction = $manager->get();
+            $objetoComponente = SetSegurancaComponentes::findFirst('id='.$objComponente->getId());
+            $objetoComponente->setTransaction($transaction);
+            $objetoComponente->setIdTipo($objComponente->getIdTipo());
+            $objetoComponente->setIdContrato(($objComponente->getIdContrato()) ? $objComponente->getIdContrato() : null);
+            $objetoComponente->setIdFornecedor($objComponente->getIdFornecedor());
+            $objetoComponente->setPropriedadeProdepa($objComponente->getPropriedadeProdepa());
+            $objetoComponente->setSenha($objComponente->getSenha());
+            $objetoComponente->setValidade(($objComponente->getValidade()) ? $util->converterDataUSA($objComponente->getValidade()) : null);
+            $objetoComponente->setEnderecoChave(mb_strtoupper($objComponente->getEnderecoChave(), $this->encode));
+            $objetoComponente->setDataUpdate(date('Y-m-d H:i:s'));
+            if ($objetoComponente->save() == false) {
+                $transaction->rollback("Não foi possível salvar o SetSegurancaComponente!");
             }
-            $transaction->rollback("Não foi possível salvar o SetSegurancaContato: " . $errors);
+            if ($objContato->getId()) {
+                $objetoContato = SetSegurancaContato::findFirst('id='.$objContato->getId());
+                $objetoContato->setTransaction($transaction);
+            } else {
+                $objetoContato = new SetSegurancaContato();
+                $objetoContato->setTransaction($transaction);
+                $objetoContato->setIdSetSegurancaComponente($objComponente->getId());
+            }
+            $objetoContato->setNome(mb_strtoupper($objContato->getNome(), $this->encode));
+            $objetoContato->setTelefone($util->formataNumeroTelefone($objContato->getTelefone()));
+            $objetoContato->setEmail($objContato->getEmail());
+            $objetoContato->setDataUpdate(date('Y-m-d H:i:s'));
+            if ($objetoContato->save() == false) {
+                $messages = $objetoContato->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Não foi possível salvar o SetSegurancaContato: " . $errors);
+            }
+            $transaction->commit();
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoComponente)));
+            return $response;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
         }
-        $transaction->commit();
-        $response = new Response();
-        $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoComponente)));
-        return $response;
+    }
+
+    public function deletarComponenteSeguranca(SetSegurancaComponentes $objComponente)
+    {
+        try {
+            $manager = new TxManager();
+            $transaction = $manager->get();
+            $objetoComponente = SetSegurancaComponentes::findFirst('id='.$objComponente->getId());
+            $id_set_seguranca = $objetoComponente->getIdSetSeguranca();
+            $objetoComponente->setTransaction($transaction);
+            if ($objetoComponente->delete() == false) {
+                $transaction->rollback("Não foi possível deletar o SetSegurancaComponente!");
+            }
+            $transaction->commit();
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $id_set_seguranca)));
+            return $response;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
     }
 }
