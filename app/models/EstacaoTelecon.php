@@ -517,6 +517,16 @@ class EstacaoTelecon extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field Contrato
+     *
+     * @return string
+     */
+    public function getContrato()
+    {
+        return $this->Contrato->numero;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()

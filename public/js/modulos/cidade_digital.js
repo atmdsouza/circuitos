@@ -78,50 +78,20 @@ function confirmaCancelar(modal)
 function criar()
 {
     'use strict';
+    $('.tr_res_remove_et').remove();
+    $('.tr_res_remove_co').remove();
+    $('.tr_remove').remove();
+    $('#tabela_conectividade').removeAttr('style', 'display: table;');
+    $('#tabela_conectividade').attr('style', 'display: none;');
+    $('#tabela_estacaotelecon').removeAttr('style', 'display: table;');
+    $('#tabela_estacaotelecon').attr('style', 'display: none;');
     $("#formCadastro input").removeAttr('readonly', 'readonly');
     $("#formCadastro select").removeAttr('readonly', 'readonly');
     $("#formCadastro textarea").removeAttr('readonly', 'readonly');
     $("#salvarCadastro").val('criar');
     $("#salvarCadastro").show();
+    $('.hide_buttons').show();
     $("#modalCadastro").modal();
-}
-
-function editar(id)
-{
-    'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: {metodo: 'visualizarCidadeDigital', id: id},
-        complete: function () {
-            $("#formCadastro input").removeAttr('readonly', 'readonly');
-            $("#formCadastro select").removeAttr('readonly', 'readonly');
-            $("#formCadastro textarea").removeAttr('readonly', 'readonly');
-            $("#salvarCadastro").val('editar');
-            $("#salvarCadastro").show();
-            $("#modalCadastro").modal();
-        },
-        error: function (data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function (data) {
-            $('#id').val(data.dados.id);
-            $('#lid_cidade_digital').val(data.dados.desc_cidade_digital);
-            $('#id_cidade_digital').val(data.dados.id_cidade_digital);
-            $('#lid_tipo').val(data.dados.desc_tipo);
-            $('#id_tipo').val(data.dados.id_tipo);
-            $('#descricao').val(data.dados.descricao);
-            $('#endereco').val(data.dados.endereco);
-        }
-    });
 }
 
 function salvar()
@@ -364,7 +334,7 @@ function excluir(id, descr)
     });
 }
 
-function visualizar(id)
+function visualizar(id, ocultar)
 {
     'use strict';
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
@@ -372,15 +342,24 @@ function visualizar(id)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarCidadeDigital', id: id},
-        complete: function () {
-            $("#formCadastro input").attr('readonly', 'readonly');
-            $("#formCadastro select").attr('readonly', 'readonly');
-            $("#formCadastro textarea").attr('readonly', 'readonly');
-            $("#salvarCadastro").hide();
+        data: { metodo: 'visualizarCidadeDigital', id: id },
+        complete: function() {
+            if (ocultar) {
+                $("#formCadastro input").attr('readonly', 'readonly');
+                $("#formCadastro select").attr('readonly', 'readonly');
+                $("#formCadastro textarea").attr('readonly', 'readonly');
+                $("#salvarCadastro").hide();
+            } else {
+                $("#formCadastro input").removeAttr('readonly', 'readonly');
+                $("#formCadastro select").removeAttr('readonly', 'readonly');
+                $("#formCadastro textarea").removeAttr('readonly', 'readonly');
+                $("#salvarCadastro").val('editar');
+                $("#salvarCadastro").show();
+                $('.hide_buttons').show();
+            }
             $("#modalCadastro").modal();
         },
-        error: function (data) {
+        error: function(data) {
             if (data.status && data.status === 401) {
                 swal({
                     title: "Erro de Permissão",
@@ -389,13 +368,13 @@ function visualizar(id)
                 });
             }
         },
-        success: function (data) {
+        success: function(data) {
             $('#id').val(data.dados.id);
-            $('#lid_cidade_digital').val(data.dados.desc_cidade_digital);
-            $('#id_cidade_digital').val(data.dados.id_cidade_digital);
-            $('#id_tipo').val(data.dados.id_tipo).selected = "true";
             $('#descricao').val(data.dados.descricao);
-            $('#endereco').val(data.dados.endereco);
+            $('#lid_cidade').val(data.dados.ds_cidade);
+            $('#id_cidade').val(data.dados.id_cidade);
+            montarTabelaComponenteConectividade(data.dados.id, ocultar);
+            montarTabelaComponenteETelecon(data.dados.id, ocultar);
         }
     });
 }
@@ -415,7 +394,9 @@ function criarComponenteConectividade()
 {
     'use strict';
     limparDadosFormConectividade();
-    $('#bt_inserir_conectividade').val('Inserir');
+    $('#bt_inserir_conectividade').text("Inserir");
+    $('#bt_inserir_conectividade').removeAttr('onclick');
+    $('#bt_inserir_conectividade').attr('onclick', 'inserirComponenteConectividade();');
     $('.hidden_conectividade').removeAttr('style','display: none;');
     $('.hidden_conectividade').attr('style', 'display: block;');
     $('#i_id_tipo').focus();
@@ -436,7 +417,7 @@ function inserirComponenteConectividade()
         linhas += "<td>"+ id_tipo_desc +"<input name='tipo_conectividade[]' type='hidden' value='"+ id_tipo +"' /></td>";
         linhas += "<td>"+ conectividade +"<input name='conectividade[]' type='hidden' value='"+ conectividade +"' /></td>";
         linhas += "<td>"+ endereco +"<input name='endereco[]' type='hidden' value='"+ endereco +"' /></td>";
-        linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
+        linhas += '<td><a href="javascript:void(0)" onclick="RemoveTableRow(this)" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
         linhas += "</tr>";
         $("#tabela_conectividade").append(linhas);
         $('#tabela_conectividade').removeAttr('style','display: none;');
@@ -466,7 +447,177 @@ function limparDadosFormConectividade()
     $('#i_endereco').val('');
     $('#i_descricao').val('');
     $('#i_id_tipo').val(null).selected = 'true';
+    $('.hidden_conectividade').removeAttr('style','display: block;');
+    $('.hidden_conectividade').attr('style', 'display: none;');
     $('#i_id_tipo').focus();
+}
+
+function exibirDetalhesComponenteConectividade(id, ocultar)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'visualizarCdConectividade', id: id },
+        complete: function() {
+            if (ocultar) {
+                $("#formCadastro input").attr('readonly', 'readonly');
+                $("#formCadastro select").attr('readonly', 'readonly');
+                $("#formCadastro textarea").attr('readonly', 'readonly');
+                $('.hide_buttons').hide();
+                $("#salvarCadastro").hide();
+            } else {
+                $('#bt_inserir_conectividade').text("Alterar");
+                $('#bt_inserir_conectividade').removeAttr('onclick');
+                $('#bt_inserir_conectividade').attr('onclick', 'editarComponenteConectividade(' + id + ');');
+                $('.hide_buttons').show();
+            }
+        },
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('#i_id_tipo').val(data.dados.id_tipo).selected = 'true';
+            $('#i_descricao').val(data.dados.descricao);
+            $('#i_endereco').val(data.dados.endereco);
+            $('.hidden_conectividade').removeAttr('style', 'display: none;');
+            $('.hidden_conectividade').attr('style', 'display: block;');
+        }
+    });
+}
+
+function editarComponenteConectividade(id)
+{
+    'use strict';
+    var array_dados = {
+        id: id,
+        id_tipo: $('#i_id_tipo').val(),
+        descricao: $('#i_descricao').val(),
+        endereco: $('#i_endereco').val()
+    };
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
+    $.ajax({
+        type: "POST",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'alterarCdConectividade', array_dados: array_dados },
+        complete: function() {},
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('.tr_res_remove_co').remove();
+            limparDadosFormConectividade();
+            montarTabelaComponenteConectividade(data.dados.id_cidade_digital, false);
+            swal({
+                title: "Alteração de Conectividade",
+                text: 'Conectividade alterada com sucesso!',
+                type: "success"
+            });
+        }
+    });
+}
+
+function excluirComponenteConectividade(id)
+{
+    'use strict';
+    swal({
+        title: "Tem certeza que deseja excluir o registro?",
+        text: "O sistema irá excluir o registro selecionado com essa ação.",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, excluir!"
+    }).then((result) => {
+        var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: action,
+            data: { metodo: 'deletarCdConectividade', id: id },
+            complete: function() {},
+            error: function(data) {
+                if (data.status && data.status === 401) {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            },
+            success: function(data) {
+                $('.tr_res_remove_co').remove();
+                limparDadosFormConectividade();
+                montarTabelaComponenteConectividade(data.dados, false);
+                swal({
+                    title: "Exclusão de Conectividade",
+                    text: 'Conectividade excluída com sucesso!',
+                    type: "success"
+                });
+            }
+        });
+    });
+}
+
+function montarTabelaComponenteConectividade(id_cidade_digital, visualizar)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'visualizarCdConectividades', id: id_cidade_digital },
+        complete: function() {
+            $('#tabela_conectividade').removeAttr('style', 'display: none;');
+            $('#tabela_conectividade').attr('style', 'display: table;');
+            if (visualizar) {
+                $('.hide_buttons').hide();
+            }
+        },
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('.tr_res_remove_co').remove();
+            var linhas = null;
+            $.each(data.dados, function(key, value) {
+                linhas += '<tr class="tr_res_remove_co">';
+                linhas += "<td>"+ value.ds_tipo +"<input name='res_tipo_conectividade[]' type='hidden' value='"+ value.id_tipo +"' /></td>";
+                linhas += "<td>"+ value.descricao +"<input name='res_conectividade[]' type='hidden' value='"+ value.descricao +"' /></td>";
+                linhas += "<td>"+ value.endereco +"<input name='res_endereco[]' type='hidden' value='"+ value.endereco +"' /></td>";
+                if (visualizar) {
+                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesComponenteConectividade(' + value.id_conectividade + ', ' + true + ');" class="botoes_acao"><img src="public/images/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a></td>';
+                } else {
+                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesComponenteConectividade(' + value.id_conectividade + ', ' + false + ');" class="botoes_acao"><img src="public/images/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>' +
+                        '<a href="javascript:void(0)" onclick="excluirComponenteConectividade(' + value.id_conectividade + ');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+                }
+                linhas += '</tr>';
+            });
+            $("#tabela_conectividade").append(linhas);
+        }
+    });
 }
 
 /*
@@ -477,7 +628,9 @@ function criarComponenteETelecon()
 {
     'use strict';
     limparDadosFormETelecon();
-    $('#bt_inserir_estacaotelecon').val('Inserir');
+    $('#bt_inserir_estacaotelecon').text("Inserir");
+    $('#bt_inserir_estacaotelecon').removeAttr('onclick');
+    $('#bt_inserir_estacaotelecon').attr('onclick', 'inserirComponenteETelecon();');
     $('.hidden_estacaotelecon').removeAttr('style', 'display: none;');
     $('.hidden_estacaotelecon').attr('style','display: block;');
     $('#i_descricao').focus();
@@ -511,7 +664,7 @@ function inserirComponenteETelecon()
         linhas += "<td>"+ set_equipamento +"<input name='id_set_equipamento[]' type='hidden' value='"+ id_set_equipamento +"' /></td>";
         linhas += "<td style='display: none;'>"+ set_seguranca +"<input name='id_set_seguranca[]' type='hidden' value='"+ id_set_seguranca +"' /></td>";
         linhas += "<td style='display: none;'>"+ unidade_consumidora +"<input name='id_unidade_consumidora[]' type='hidden' value='"+ id_unidade_consumidora +"' /></td>";
-        linhas += "<td><a href='#' onclick='RemoveTableRow(this)'><i class='fi-circle-cross'></i></a></td>";
+        linhas += '<td><a href="javascript:void(0)" onclick="RemoveTableRow(this)" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
         linhas += "</tr>";
         $("#tabela_estacaotelecon").append(linhas);
         $('#tabela_estacaotelecon').removeAttr('style','display: none;');
@@ -551,7 +704,195 @@ function limparDadosFormETelecon()
     $('#lid_set_seguranca').val('');
     $('#i_id_unidade_consumidora').val('');
     $('#lid_unidade_consumidora').val('');
+    $('.hidden_estacaotelecon').removeAttr('style','display: block;');
+    $('.hidden_estacaotelecon').attr('style', 'display: none;');
     $('#i_descricao_et').focus();
+}
+
+function exibirDetalhesComponenteETelecon(id, ocultar)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'visualizarCdETelecon', id: id },
+        complete: function() {
+            if (ocultar) {
+                $("#formCadastro input").attr('readonly', 'readonly');
+                $("#formCadastro select").attr('readonly', 'readonly');
+                $("#formCadastro textarea").attr('readonly', 'readonly');
+                $('.hide_buttons').hide();
+                $("#salvarCadastro").hide();
+            } else {
+                $('#bt_inserir_estacaotelecon').text("Alterar");
+                $('#bt_inserir_estacaotelecon').removeAttr('onclick');
+                $('#bt_inserir_estacaotelecon').attr('onclick', 'editarComponenteETelecon(' + id + ');');
+                $('.hide_buttons').show();
+            }
+        },
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('#i_descricao_et').val(data.dados.descricao);
+            $('#lid_contrato').val(data.dados.ds_contrato);
+            $('#i_id_contrato').val(data.dados.id_contrato);
+            $('#lid_terreno').val(data.dados.ds_terreno);
+            $('#i_id_terreno').val(data.dados.id_terreno);
+            $('#lid_torre').val(data.dados.ds_torre);
+            $('#i_id_torre').val(data.dados.id_torre);
+            $('#lid_set_equipamento').val(data.dados.ds_set_equipamento);
+            $('#i_id_set_equipamento').val(data.dados.id_set_equipamento);
+            $('#lid_set_seguranca').val(data.dados.ds_set_seguranca);
+            $('#i_id_set_seguranca').val(data.dados.id_set_seguranca);
+            $('#lid_unidade_consumidora').val(data.dados.ds_unidade_consumidora);
+            $('#i_id_unidade_consumidora').val(data.dados.id_unidade_consumidora);
+            $('.hidden_estacaotelecon').removeAttr('style', 'display: none;');
+            $('.hidden_estacaotelecon').attr('style', 'display: block;');
+        }
+    });
+}
+
+function editarComponenteETelecon(id)
+{
+    'use strict';
+    var array_dados = {
+        id: id,
+        descricao: $('#i_descricao_et').val(),
+        id_contrato: $('#i_id_contrato').val(),
+        id_terreno: $('#i_id_terreno').val(),
+        id_torre: $('#i_id_torre').val(),
+        id_set_equipamento: $('#i_id_set_equipamento').val(),
+        id_set_seguranca: $('#i_id_set_seguranca').val(),
+        id_unidade_consumidora: $('#i_id_unidade_consumidora').val()
+    };
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
+    $.ajax({
+        type: "POST",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'alterarCdETelecon', array_dados: array_dados },
+        complete: function() {},
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('.tr_res_remove').remove();
+            limparDadosFormETelecon();
+            montarTabelaComponenteETelecon(data.dados.id_cidade_digital, false);
+            swal({
+                title: "Alteração de Componente",
+                text: 'Componente alterado com sucesso!',
+                type: "success"
+            });
+        }
+    });
+}
+
+function excluirComponenteETelecon(id)
+{
+    'use strict';
+    swal({
+        title: "Tem certeza que deseja excluir o registro?",
+        text: "O sistema irá excluir o registro selecionado com essa ação.",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, excluir!"
+    }).then((result) => {
+        var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: action,
+            data: { metodo: 'deletarCdETelecon', id: id },
+            complete: function() {},
+            error: function(data) {
+                if (data.status && data.status === 401) {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            },
+            success: function(data) {
+                $('.tr_res_remove').remove();
+                limparDadosFormETelecon();
+                montarTabelaComponenteETelecon(data.dados, false);
+                swal({
+                    title: "Exclusão de Componente",
+                    text: 'Componente excluído com sucesso!',
+                    type: "success"
+                });
+            }
+        });
+    });
+}
+
+function montarTabelaComponenteETelecon(id_cidade_digital, visualizar)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'visualizarCdETelecons', id: id_cidade_digital },
+        complete: function() {
+            $('#tabela_estacaotelecon').removeAttr('style', 'display: none;');
+            $('#tabela_estacaotelecon').attr('style', 'display: table;');
+            if (visualizar) {
+                $('.hide_buttons').hide();
+            }
+        },
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('.tr_res_remove_et').remove();
+            var linhas = null;
+            $.each(data.dados, function(key, value) {
+                linhas += '<tr class="tr_res_remove_et">';
+                linhas += "<td>"+ value.descricao +"<input name='res_estelecon[]' type='hidden' value='"+ value.descricao +"' /></td>";
+                linhas += "<td style='display: none;'>"+ value.ds_contrato +"<input name='res_id_contrato[]' type='hidden' value='"+ value.id_contrato +"' /></td>";
+                linhas += "<td>"+ value.ds_terreno +"<input name='res_id_terreno[]' type='hidden' value='"+ value.id_terreno +"' /></td>";
+                linhas += "<td>"+ value.ds_torre +"<input name='res_id_torre[]' type='hidden' value='"+ value.id_torre +"' /></td>";
+                linhas += "<td>"+ value.ds_set_equipamento +"<input name='res_id_set_equipamento[]' type='hidden' value='"+ value.id_set_equipamento +"' /></td>";
+                linhas += "<td style='display: none;'>"+ value.ds_set_seguranca +"<input name='res_id_set_seguranca[]' type='hidden' value='"+ value.id_set_seguranca +"' /></td>";
+                linhas += "<td style='display: none;'>"+ value.ds_unidade_consumidora +"<input name='res_id_unidade_consumidora[]' type='hidden' value='"+ value.id_unidade_consumidora +"' /></td>";
+                if (visualizar) {
+                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesComponenteETelecon(' + value.id_etelecon + ', ' + true + ');" class="botoes_acao"><img src="public/images/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a></td>';
+                } else {
+                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesComponenteETelecon(' + value.id_etelecon + ', ' + false + ');" class="botoes_acao"><img src="public/images/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>' +
+                        '<a href="javascript:void(0)" onclick="excluirComponenteETelecon(' + value.id_etelecon + ');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+                }
+                linhas += '</tr>';
+            });
+            $("#tabela_estacaotelecon").append(linhas);
+        }
+    });
 }
 
 /*
@@ -783,7 +1124,7 @@ function autocompletarUnidadeConsumidora()
 {
     "use strict";
     var input_autocomplete = $("#lid_unidade_consumidora");
-    var input_valor = $("#id_unidade_consumidora");
+    var input_valor = $("#i_id_unidade_consumidora");
     var string = input_autocomplete.val();
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({

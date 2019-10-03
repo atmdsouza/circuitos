@@ -8,7 +8,8 @@ var listFornecedor = [];
 var f = 0;
 
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos)
-function inicializar() {
+function inicializar()
+{
     'use strict';
     //Configuração Específica do Datatable
     $("#datatable_listar").DataTable({
@@ -24,14 +25,16 @@ function inicializar() {
     autocompletarFornecedor();
 }
 
-function verificarAlteracao() {
+function verificarAlteracao()
+{
     'use strict';
     $('form').on('change paste', 'input, select, textarea', function() {
         mudou = true;
     });
 }
 
-function confirmaCancelar(modal) {
+function confirmaCancelar(modal)
+{
     'use strict';
     verificarAlteracao();
     if (mudou) {
@@ -55,7 +58,8 @@ function confirmaCancelar(modal) {
     }
 }
 
-function criar() {
+function criar()
+{
     'use strict';
     $('.tr_res_remove').remove();
     $('.tr_remove').remove();
@@ -70,7 +74,8 @@ function criar() {
     $("#modalCadastro").modal();
 }
 
-function salvar() {
+function salvar()
+{
     'use strict';
     var acao = $('#salvarCadastro').val();
     $("#formCadastro").validate({
@@ -131,7 +136,8 @@ function salvar() {
     });
 }
 
-function ativar(id, descr) {
+function ativar(id, descr)
+{
     'use strict';
     swal({
         title: "Tem certeza que deseja ativar o registro \"" + descr + "\"?",
@@ -186,7 +192,8 @@ function ativar(id, descr) {
     });
 }
 
-function inativar(id, descr) {
+function inativar(id, descr)
+{
     'use strict';
     swal({
         title: "Tem certeza que deseja inativar o registro \"" + descr + "\"?",
@@ -241,7 +248,8 @@ function inativar(id, descr) {
     });
 }
 
-function excluir(id, descr) {
+function excluir(id, descr)
+{
     'use strict';
     swal({
         title: "Tem certeza que deseja excluir o registro \"" + descr + "\"?",
@@ -296,7 +304,8 @@ function excluir(id, descr) {
     });
 }
 
-function visualizar(id, ocultar) {
+function visualizar(id, ocultar)
+{
     'use strict';
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
     $.ajax({
@@ -337,7 +346,8 @@ function visualizar(id, ocultar) {
     });
 }
 
-function exibirDetalhesComponente(id, ocultar) {
+function exibirDetalhesComponente(id, ocultar)
+{
     'use strict';
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
     $.ajax({
@@ -392,7 +402,8 @@ function exibirDetalhesComponente(id, ocultar) {
     });
 }
 
-function editarComponente(id) {
+function editarComponente(id)
+{
     'use strict';
     var array_dados = {
         id: id,
@@ -437,7 +448,8 @@ function editarComponente(id) {
     });
 }
 
-function excluirComponente(id) {
+function excluirComponente(id)
+{
     'use strict';
     swal({
         title: "Tem certeza que deseja excluir o registro?",
@@ -478,7 +490,8 @@ function excluirComponente(id) {
     });
 }
 
-function montarTabelaComponente(id_set_seguranca, visualizar) {
+function montarTabelaComponente(id_set_seguranca, visualizar)
+{
     'use strict';
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
     $.ajax({
@@ -531,13 +544,15 @@ function montarTabelaComponente(id_set_seguranca, visualizar) {
     });
 }
 
-function limpar() {
+function limpar()
+{
     'use strict';
     $('#fieldPesquisa').val('');
     $('#formPesquisa').submit();
 }
 
-function criarComponente() {
+function criarComponente()
+{
     'use strict';
     limparDadosFormComponente();
     $('#bt_inserir_componente').text("Inserir");
@@ -552,7 +567,8 @@ function criarComponente() {
     $('#i_lid_fornecedor').focus();
 }
 
-function habilitarFornecedor() {
+function habilitarFornecedor()
+{
     'use strict';
     var propriedade_prodepa = $('#i_propriedade_prodepa').val();
     if (propriedade_prodepa !== '-1') {
@@ -566,7 +582,8 @@ function habilitarFornecedor() {
     }
 }
 
-function inserirComponente() {
+function inserirComponente()
+{
     'use strict';
     //Dados
     var lid_fornecedor = $('#i_lid_fornecedor').val();
@@ -611,13 +628,15 @@ function inserirComponente() {
     }
 }
 
-function cancelarComponente() {
+function cancelarComponente()
+{
     'use strict';
     verificarAlteracao();
     limparDadosFormComponente();
 }
 
-function limparDadosFormComponente() {
+function limparDadosFormComponente()
+{
     'use strict';
     $('#i_id_contrato').val('');
     $('#i_lid_contrato').val('');
@@ -636,11 +655,13 @@ function limparDadosFormComponente() {
 }
 
 //Sessão de autocompletes
-function autocompletarContrato() {
+function autocompletarContrato()
+{
 
 }
 
-function autocompletarFornecedor() {
+function autocompletarFornecedor()
+{
     "use strict";
     //Autocomplete de Fabricante
     var ac_fornecedor = $("#i_lid_fornecedor");

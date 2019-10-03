@@ -2,6 +2,9 @@
 
 namespace Circuitos\Controllers;
 
+use Circuitos\Models\Conectividade;
+use Circuitos\Models\EstacaoTelecon;
+use Circuitos\Models\Operations\CidadeDigitalOP;
 use Circuitos\Models\SetEquipamentoComponentes;
 use Phalcon\Logger;
 use Phalcon\Logger\Adapter\File as FileAdapter;
@@ -544,6 +547,26 @@ class CoreController extends ControllerBase
         $dados = filter_input_array(INPUT_GET);
         switch ($dados['metodo'])
         {
+            case 'visualizarCidadeDigital':
+                $objeto = new CidadeDigitalOP();
+                return $objeto->visualizarCidadeDigital($dados['id']);
+                break;
+            case 'visualizarCdConectividades':
+                $objeto = new CidadeDigitalOP();
+                return $objeto->visualizarCdConectividades($dados['id']);
+                break;
+            case 'visualizarCdConectividade':
+                $objeto = new CidadeDigitalOP();
+                return $objeto->visualizarCdConectividade($dados['id']);
+                break;
+            case 'visualizarCdETelecons':
+                $objeto = new CidadeDigitalOP();
+                return $objeto->visualizarCdETelecons($dados['id']);
+                break;
+            case 'visualizarCdETelecon':
+                $objeto = new CidadeDigitalOP();
+                return $objeto->visualizarCdETelecon($dados['id']);
+                break;
             case 'visualizarContrato':
                 $objeto = new ContratoOP();
                 return $objeto->visualizarContrato($dados['id']);
@@ -652,6 +675,42 @@ class CoreController extends ControllerBase
                 $objComponente = new SetEquipamentoComponentes();
                 $objComponente->setId($dados['id']);
                 return $objeto->deletarComponenteEquipamento($objComponente);
+                break;
+            case 'alterarCdConectividade':
+                $dados_form = $dados['array_dados'];
+                $objeto = new CidadeDigitalOP();
+                $objComponente = new Conectividade();
+                $objComponente->setId($dados_form['id']);
+                $objComponente->setIdTipo($dados_form['id_tipo']);
+                $objComponente->setDescricao($dados_form['descricao']);
+                $objComponente->setEndereco($dados_form['endereco']);
+                return $objeto->alterarCdConectividade($objComponente);
+                break;
+            case 'deletarCdConectividade':
+                $objeto = new CidadeDigitalOP();
+                $objComponente = new Conectividade();
+                $objComponente->setId($dados['id']);
+                return $objeto->deletarCdConectividade($objComponente);
+                break;
+            case 'alterarCdETelecon':
+                $dados_form = $dados['array_dados'];
+                $objeto = new CidadeDigitalOP();
+                $objComponente = new EstacaoTelecon();
+                $objComponente->setId($dados_form['id']);
+                $objComponente->setDescricao($dados_form['descricao']);
+                $objComponente->setIdContrato($dados_form['id_contrato']);
+                $objComponente->setIdTerreno($dados_form['id_terreno']);
+                $objComponente->setIdTorre($dados_form['id_torre']);
+                $objComponente->setIdSetEquipamento($dados_form['id_set_equipamento']);
+                $objComponente->setIdSetSeguranca($dados_form['id_set_seguranca']);
+                $objComponente->setIdUnidadeConsumidora($dados_form['id_unidade_consumidora']);
+                return $objeto->alterarCdETelecon($objComponente);
+                break;
+            case 'deletarCdETelecon':
+                $objeto = new CidadeDigitalOP();
+                $objComponente = new EstacaoTelecon();
+                $objComponente->setId($dados['id']);
+                return $objeto->deletarCdETelecon($objComponente);
                 break;
         }
     }

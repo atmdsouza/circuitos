@@ -142,8 +142,31 @@ class CidadeDigitalController extends ControllerBase
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             $cidadedigitalOP = new CidadeDigitalOP();
-            $cidadedigital = new CidadeDigital($params);
-            if($cidadedigitalOP->alterar($cidadedigital)){//Altera com sucesso
+            $cidadedigital = new CidadeDigital();
+            $cidadedigital->setId($params['id']);
+            $cidadedigital->setDescricao($params['descricao']);
+            $cidadedigital->setIdCidade($params['id_cidade']);
+            $arrayConectividade = array();
+            $arrayETelecon = array();
+            foreach ($params['conectividade'] as $key => $conect){
+                $conectividade = new Conectividade();
+                $conectividade->setIdTipo($params['tipo_conectividade'][$key]);
+                $conectividade->setDescricao($conect);
+                $conectividade->setEndereco($params['endereco'][$key]);
+                array_push($arrayConectividade, $conectividade);
+            }
+            foreach ($params['estelecon'] as $key => $etelecon){
+                $estacaotelecon = new EstacaoTelecon();
+                $estacaotelecon->setDescricao($etelecon);
+                $estacaotelecon->setIdContrato($params['id_contrato'][$key]);
+                $estacaotelecon->setIdTerreno($params['id_terreno'][$key]);
+                $estacaotelecon->setIdTorre($params['id_torre'][$key]);
+                $estacaotelecon->setIdSetEquipamento($params['id_set_equipamento'][$key]);
+                $estacaotelecon->setIdSetSeguranca($params['id_set_seguranca'][$key]);
+                $estacaotelecon->setIdUnidadeConsumidora($params['id_unidade_consumidora'][$key]);
+                array_push($arrayETelecon, $estacaotelecon);
+            }
+            if($cidadedigitalOP->alterar($cidadedigital, $arrayConectividade, $arrayETelecon)){//Altera com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));

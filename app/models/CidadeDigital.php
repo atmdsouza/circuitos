@@ -194,6 +194,7 @@ class CidadeDigital extends \Phalcon\Mvc\Model
         $this->setSource("cidade_digital");
         $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_cidadedigital', ['alias' => 'Circuitos']);
         $this->hasMany('id', 'Circuitos\Models\Conectividade', 'id_cidade_digital', ['alias' => 'Conectividade']);
+        $this->hasMany('id', 'Circuitos\Models\EstacaoTelecon', 'id_estacao_telecon', ['alias' => 'EstacaoTelecon']);
         $this->belongsTo('id_cidade', 'Circuitos\Models\EndCidade', 'id', ['alias' => 'EndCidade']);
     }
 
