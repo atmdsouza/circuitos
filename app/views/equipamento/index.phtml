@@ -130,6 +130,20 @@ use Phalcon\Tag;
                                 </div>
                             </div>
                             <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="propriedade_prodepa">Propriedade PRODEPA? <span class="required">*</span></label>
+                                    <select id="propriedade_prodepa" name="propriedade_prodepa" class="form-control" onchange="habilitarFornecedor();">
+                                        <option value="-1" selected>Sim</option>
+                                        <option value="0">Não</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="lid_fornecedor">Fornecedor </label>
+                                    <?php echo $this->tag->textField(["lid_fornecedor", "size" => 120, "class" => "form-control", "disabled" => "true", "id" => "lid_fornecedor", "placeholder" => "Fornecedor", "onkeyup" => "autocompletarFornecedor();"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_fornecedor", "size" => 120, "class" => "form-control", "id" => "id_fornecedor"]) ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <label for="descricao">Descrição do Equipamento</label>
                                     <?php echo $this->tag->textArea(["descricao", "size" => 200, "class" => "form-control", "id" => "descricao", "placeholder" => "Descricao"]) ?>

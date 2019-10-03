@@ -2,22 +2,18 @@
 
 namespace Circuitos\Controllers;
 
-use Circuitos\Models\Conectividade;
-use Circuitos\Models\EstacaoTelecon;
-use Circuitos\Models\Operations\CidadeDigitalOP;
-use Circuitos\Models\SetEquipamentoComponentes;
 use Phalcon\Logger;
 use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Http\Response as Response;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 
-use Circuitos\Models\SetSegurancaComponentes;
-use Circuitos\Models\SetSegurancaContato;
+use Circuitos\Models\Conectividade;
 use Circuitos\Models\Empresa;
 use Circuitos\Models\EndEndereco;
 use Circuitos\Models\EndEstado;
 use Circuitos\Models\EndCidade;
+use Circuitos\Models\EstacaoTelecon;
 use Circuitos\Models\Pessoa;
 use Circuitos\Models\PessoaJuridica;
 use Circuitos\Models\PessoaFisica;
@@ -25,7 +21,11 @@ use Circuitos\Models\PessoaEndereco;
 use Circuitos\Models\PessoaEmail;
 use Circuitos\Models\PessoaTelefone;
 use Circuitos\Models\PessoaContato;
+use Circuitos\Models\SetEquipamentoComponentes;
+use Circuitos\Models\SetSegurancaComponentes;
+use Circuitos\Models\SetSegurancaContato;
 
+use Circuitos\Models\Operations\CidadeDigitalOP;
 use Circuitos\Models\Operations\CoreOP;
 use Circuitos\Models\Operations\ConectividadeOP;
 use Circuitos\Models\Operations\ContratoOP;

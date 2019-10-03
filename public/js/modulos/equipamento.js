@@ -1,7 +1,14 @@
+var listFornecedor = [];
+var f = 0;
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos
 function inicializar()
 {
-
+    'use strict';
+    if ($('#propriedade_prodepa').val() === '-1'){
+        $('#lid_fornecedor').val('PRODEPA');
+        $('#id_fornecedor').val(-1);
+    }
+    autocompletarFornecedor();
 }
 
 var table = $("#tb_equipamento").DataTable({
@@ -329,7 +336,10 @@ $(".bt_edit").on("click", function(){
                 }
             });
             $("#id").val(data.dados.id);
+            $("#lid_fornecedor").val(data.dados.ds_fornecedor);
+            $("#id_fornecedor").val(data.dados.id_fornecedor);
             $("#id_fabricante").val(data.dados.id_fabricante).selected = "true";
+            $("#propriedade_prodepa").val(data.dados.propriedade_prodepa).selected = "true";
             $("#id_tipoequipamento").val(data.dados.id_tipoequipamento).selected = "true";
             $("#nome").val(data.dados.nome);
             $("#numserie").val(data.dados.numserie);
@@ -409,7 +419,10 @@ $(".bt_visual").on("click", function(){
                 }
             });
             $("#id").val(data.dados.id);
+            $("#lid_fornecedor").val(data.dados.ds_fornecedor);
+            $("#id_fornecedor").val(data.dados.id_fornecedor);
             $("#id_fabricante").val(data.dados.id_fabricante).selected = "true";
+            $("#propriedade_prodepa").val(data.dados.propriedade_prodepa).selected = "true";
             $("#id_tipoequipamento").val(data.dados.id_tipoequipamento).selected = "true";
             $("#nome").val(data.dados.nome);
             $("#numserie").val(data.dados.numserie);
@@ -929,3 +942,70 @@ $("#numpatrimonio").on("change", function(){
         }
     });
 });
+
+function autocompletarFornecedor()
+{
+    "use strict";
+    //Autocomplete de Fabricante
+    var ac_fornecedor = $("#lid_fornecedor");
+    var vl_fornecedor = $("#id_fornecedor");
+    var string = ac_fornecedor.val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'fornecedoresAtivos', string: string},
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao) {
+                listFornecedor = [];
+                $.each(data.dados, function (key, value) {
+                    listFornecedor.push({value: value.nome, data: value.id});
+                });
+                if(f === 0) {
+                    //Autocomplete
+                    ac_fornecedor.autocomplete({
+                        lookup: listFornecedor,
+                        onSelect: function (suggestion) {
+                            vl_fornecedor.val(suggestion.data);
+                        }
+                    });
+                    f++;
+                } else {
+                    //Autocomplete
+                    ac_fornecedor.autocomplete().setOptions( {
+                        lookup: listFornecedor
+                    });
+                }
+            } else {
+                vl_fornecedor.val("");
+                ac_fornecedor.val("");
+            }
+        }
+    });
+}
+
+function habilitarFornecedor()
+{
+    'use strict';
+    var propriedade_prodepa = $('#propriedade_prodepa').val();
+    if (propriedade_prodepa !== '-1'){
+        $('#lid_fornecedor').removeAttr('disabled');
+        $('#lid_fornecedor').val('');
+        $('#id_fornecedor').val('');
+    } else {
+        $('#lid_fornecedor').attr('disabled', 'true');
+        $('#lid_fornecedor').val('PRODEPA');
+        $('#id_fornecedor').val(-1);
+    }
+}

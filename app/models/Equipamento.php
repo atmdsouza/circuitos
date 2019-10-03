@@ -30,6 +30,12 @@ class Equipamento extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
+    protected $id_fornecedor;
+
+    /**
+     *
+     * @var integer
+     */
     protected $id_tipoequipamento;
 
     /**
@@ -350,12 +356,36 @@ class Equipamento extends \Phalcon\Mvc\Model
     /**
      * @param int $propriedade_prodepa
      */
-    public function setPropriedadeProdepa(int $propriedade_prodepa)
+    public function setPropriedadeProdepa($propriedade_prodepa)
     {
         $this->propriedade_prodepa = $propriedade_prodepa;
     }
 
+    /**
+     * @return int
+     */
+    public function getIdFornecedor()
+    {
+        return $this->id_fornecedor;
+    }
 
+    /**
+     * Returns the value of field nome do Fornecedor
+     *
+     * @return string
+     */
+    public function getFornecedor()
+    {
+        return $this->Fornecedor->Pessoa->nome;
+    }
+
+    /**
+     * @param int $id_fornecedor
+     */
+    public function setIdFornecedor($id_fornecedor)
+    {
+        $this->id_fornecedor = $id_fornecedor;
+    }
 
     /**
      * Initialize method for model.
@@ -368,6 +398,7 @@ class Equipamento extends \Phalcon\Mvc\Model
         $this->belongsTo('id_fabricante', 'Circuitos\Models\Fabricante', 'id', ['alias' => 'Fabricante']);
         $this->belongsTo('id_tipoequipamento', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
         $this->belongsTo('id_modelo', 'Circuitos\Models\Modelo', 'id', ['alias' => 'Modelo']);
+        $this->belongsTo('id_fornecedor', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Fornecedor']);
     }
 
     /**
