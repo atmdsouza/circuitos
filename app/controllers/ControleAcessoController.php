@@ -224,7 +224,7 @@ class ControleAcessoController extends ControllerBase
         $permissoes = array(
             "session"                                       => ["login", "logout", "sair", "recuperar", "inativo"],
             "usuario"                                       => ["gerarSenha", "resetarSenha", "alterarSenha", "primeiro", "redirecionaUsuario", "recuperarSenha", "trocar", "validarLogin", "formUsuario"],
-            "core"                                          => ["ativarPessoa", "inativarPessoa", "deletarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail", "upload"],
+            "core"                                          => ["ativarPessoa", "inativarPessoa", "deletarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail", "upload", "processarAjaxAcao", "processarAjaxVisualizar", "processarAjaxAutocomplete"],
             "error"                                         => ["show401", "show404"],
             "index"                                         => ["index"],
             "cidade_digital"                                => ["formCidadeDigital"],

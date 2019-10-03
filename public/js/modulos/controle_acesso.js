@@ -27,34 +27,14 @@ var table = $("#tb_controleacesso").DataTable({
             enabled: false
 
         },
-        {//Botão Visualizar Registro
-            className: "bt_visual",
-            text: "Visualizar",
-            name: "visualizar", // do not change name
-            titleAttr: "Visualizar Circuito",
-            action: function (e, dt, node, config) {
-            },
-            enabled: false
-        },
-        // {//Botão Editar Registro
-        //     className: "bt_edit",
-        //     text: "Editar",
-        //     name: "edit", // do not change name
-        //     titleAttr: "Editar registro",
+        // {//Botão Visualizar Registro
+        //     className: "bt_visual",
+        //     text: "Visualizar",
+        //     name: "visualizar", // do not change name
+        //     titleAttr: "Visualizar Perfil",
         //     action: function (e, dt, node, config) {
         //     },
         //     enabled: false
-        //
-        // },
-        // {//Botão Inativar Registro
-        //     className: "bt_inativo",
-        //     text: "Inativar",
-        //     name: "inativo", // do not change name
-        //     titleAttr: "Inativar registro",
-        //     action: function (e, dt, node, config) {
-        //     },
-        //     enabled: false
-        //
         // },
         {//Botão Deletar Registro
             className: "bt_del",
@@ -65,32 +45,7 @@ var table = $("#tb_controleacesso").DataTable({
             },
             enabled: false
 
-        },
-        // {//Botão Selecionar
-        //     extend: "selectAll",
-        //     text: "Selecionar",
-        //     titleAttr: "Selecionar Todos os Registros"
-        // },
-        // {//Botão Limpar Seleção
-        //     extend: "selectNone",
-        //     text: "Limpar",
-        //     titleAttr: "Limpar Seleção dos Registros"
-        // },
-        // {//Botão imprimir
-        //     extend: "print",
-        //     text: "Imprimir",
-        //     titleAttr: "Imprimir"
-        // },
-        // {//Botão exportar excel
-        //     extend: "excelHtml5",
-        //     text: "XLSX",
-        //     titleAttr: "Exportar para Excel"
-        // },
-        // {//Botão exportar pdf
-        //     extend: "pdfHtml5",
-        //     text: "PDF",
-        //     titleAttr: "Exportar para PDF"
-        // }
+        }
     ]
 });
 
@@ -588,6 +543,54 @@ function checkAcessoUnitario(resources)
             seletor_unitario = ".permissao_unitaria_usuario";
             seletor_total = ".check_total_usuario";
             break;
+        case "conectividade":
+            seletor_unitario = ".permissao_unitaria_conectividade";
+            seletor_total = ".check_total_conectividade";
+            break;
+        case "contrato":
+            seletor_unitario = ".permissao_unitaria_contrato";
+            seletor_total = ".check_total_contrato";
+            break;
+        case "estacao_telecon":
+            seletor_unitario = ".permissao_unitaria_estacao_telecon";
+            seletor_total = ".check_total_estacao_telecon";
+            break;
+        case "proposta_comercial":
+            seletor_unitario = ".permissao_unitaria_proposta_comercial";
+            seletor_total = ".check_total_proposta_comercial";
+            break;
+        case "proposta_comercial_servico":
+            seletor_unitario = ".permissao_unitaria_proposta_comercial_servico";
+            seletor_total = ".check_total_proposta_comercial_servico";
+            break;
+        case "proposta_comercial_servico_grupo":
+            seletor_unitario = ".permissao_unitaria_proposta_comercial_servico_grupo";
+            seletor_total = ".check_total_proposta_comercial_servico_grupo";
+            break;
+        case "proposta_comercial_servico_unidade":
+            seletor_unitario = ".permissao_unitaria_proposta_comercial_servico_unidade";
+            seletor_total = ".check_total_proposta_comercial_servico_unidade";
+            break;
+        case "set_seguranca":
+            seletor_unitario = ".permissao_unitaria_set_seguranca";
+            seletor_total = ".check_total_set_seguranca";
+            break;
+        case "set_equipamento":
+            seletor_unitario = ".permissao_unitaria_set_equipamento";
+            seletor_total = ".check_total_set_equipamento";
+            break;
+        case "terreno":
+            seletor_unitario = ".permissao_unitaria_terreno";
+            seletor_total = ".check_total_terreno";
+            break;
+        case "torre":
+            seletor_unitario = ".permissao_unitaria_torre";
+            seletor_total = ".check_total_torre";
+            break;
+        case "unidade_consumidora":
+            seletor_unitario = ".permissao_unitaria_unidade_consumidora";
+            seletor_total = ".check_total_unidade_consumidora";
+            break;
     }
     //verifica o check total
     $(seletor_unitario).each(function () {
@@ -825,6 +828,42 @@ $(".permissao_total_modulo").on("change", function(){
         case "usuario":
             seletor = ".permissao_unitaria_usuario";
             break;
+        case "conectividade":
+            seletor = ".permissao_unitaria_conectividade";
+            break;
+        case "contrato":
+            seletor = ".permissao_unitaria_contrato";
+            break;
+        case "estacao_telecon":
+            seletor = ".permissao_unitaria_estacao_telecon";
+            break;
+        case "proposta_comercial":
+            seletor = ".permissao_unitaria_proposta_comercial";
+            break;
+        case "proposta_comercial_servico":
+            seletor = ".permissao_unitaria_proposta_comercial_servico";
+            break;
+        case "proposta_comercial_servico_grupo":
+            seletor = ".permissao_unitaria_proposta_comercial_servico_grupo";
+            break;
+        case "proposta_comercial_servico_unidade":
+            seletor = ".permissao_unitaria_proposta_comercial_servico_unidade";
+            break;
+        case "set_seguranca":
+            seletor = ".permissao_unitaria_set_seguranca";
+            break;
+        case "set_esquipamento":
+            seletor = ".permissao_unitaria_set_equipamento";
+            break;
+        case "terreno":
+            seletor = ".permissao_unitaria_terreno";
+            break;
+        case "torre":
+            seletor = ".permissao_unitaria_torre";
+            break;
+        case "unidade_consumidora":
+            seletor = ".permissao_unitaria_unidade_consumidora";
+            break;
     }
     $.blockUI({
         message: "<img src='" + URLImagensSistema + "/loader_gears.gif' width='50' height='50'/>      Aguarde um momento, estamos processando suas permissões...",
@@ -1000,3 +1039,7 @@ $(".permissao_unitaria").on("change", function(){
     checkAcessoUnitario(resource);
     checkAcessoTotal();
 });
+
+function reload() {
+    window.location.reload(true);
+}
