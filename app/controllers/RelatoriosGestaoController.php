@@ -4,8 +4,6 @@ namespace Circuitos\Controllers;
 
 use Phalcon\Http\Response as Response;
 
-//use Circuitos\Controllers\ControllerBase;
-
 use Circuitos\Models\Circuitos;
 use Circuitos\Models\CidadeDigital;
 use Circuitos\Models\Cliente;

@@ -1,3 +1,9 @@
+//Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos
+function inicializar()
+{
+
+}
+
 var table = $("#tb_lov").DataTable({
     buttons: [
         {//Botão Novo Registro

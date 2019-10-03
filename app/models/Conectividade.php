@@ -51,6 +51,12 @@ class Conectividade extends \Phalcon\Mvc\Model
     protected $excluido;
 
     /**
+     *
+     * @var string
+     */
+    protected $data_update;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -222,6 +228,32 @@ class Conectividade extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of tipo de conectividade
+     *
+     * @return string
+     */
+    public function getNomeCidadeDigital()
+    {
+        return $this->CidadeDigital->descricao;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataUpdate()
+    {
+        return $this->data_update;
+    }
+
+    /**
+     * @param string $data_update
+     */
+    public function setDataUpdate($data_update)
+    {
+        $this->data_update = $data_update;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -279,6 +311,29 @@ class Conectividade extends \Phalcon\Mvc\Model
         $query->join("Circuitos\Models\Lov", "Lov.id = Conectividade.id_tipo", "Lov");
         $query->where("Conectividade.id_cidade_digital = :id: AND Conectividade.excluido = :excluido:", array("id" => $id_cidadedigital, "excluido" => 0));
         $resultado = $query->getQuery()->execute()->setHydrateMode(Resultset::HYDRATE_ARRAYS);
+        return $resultado;
+    }
+
+    /**
+     * Consulta completa de Conectividades, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return Conectividades|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarConectividade($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("Conectividade" => "Circuitos\Models\Conectividade"));
+        $query->columns("Conectividade.*");
+        $query->leftJoin("Circuitos\Models\Lov", "Lov.id = Conectividade.id_tipo", "Lov");
+        $query->leftJoin("Circuitos\Models\CidadeDigital", "CidadeDigital.id = Conectividade.id_cidade_digital", "CidadeDigital");
+        $query->where("Conectividade.excluido = 0 AND (CONVERT(Conectividade.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Conectividade.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(CidadeDigital.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Lov.descricao USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("Conectividade.id");
+        $query->orderBy("Conectividade.id DESC");
+        $resultado = $query->getQuery()->execute();
         return $resultado;
     }
 

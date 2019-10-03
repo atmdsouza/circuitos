@@ -114,6 +114,12 @@ class Util {
 
         return $arr; //retorna o valor formatado para gravar no banco
     }
+    function formataNumeroTelefone($phone) {
+        $phones = filter_var($phone, FILTER_SANITIZE_NUMBER_INT);
+        $source = array('(', ')', '-', ' ');
+        $tel = str_replace($source, '', $phones);
+        return $tel;
+    }
 
     function formataNumeroMoeda($valor_americano) {
         $valor = number_format($valor_americano, 2, '.', ''); //remove os pontos e substitui a virgula pelo ponto

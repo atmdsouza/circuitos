@@ -94,6 +94,7 @@ class ClienteController extends ControllerBase
                 $datafund = (!empty($pessoajuridica->getDatafund())) ? $util->converterDataParaBr($pessoajuridica->getDatafund()) : null;
                 $dados = array(
                     "id" => $cliente->getId(),
+                    "classificacao" => $cliente->getClassificacao(),
                     "tipo" => $cliente->getIdTipocliente(),
                     "nome" => $pessoa->getNome(),
                     "id_tipoesfera" => $pessoajuridica->getIdTipoesfera(),
@@ -118,6 +119,7 @@ class ClienteController extends ControllerBase
                 $datanasc = (!empty($pessoafisica->getDatanasc())) ? $util->converterDataParaBr($pessoafisica->getDatanasc()) : null;
                 $dados = array(
                     "id" => $cliente->getId(),
+                    "classificacao" => $cliente->getClassificacao(),
                     "tipo" => $cliente->getIdTipocliente(),
                     "nome" => $pessoa->getNome(),
                     "id_sexo" => $pessoafisica->getIdSexo(),
@@ -178,6 +180,7 @@ class ClienteController extends ControllerBase
                     $cliente->setTransaction($transaction);
                     $cliente->setIdPessoa($pessoa->getId());
                     $cliente->setIdTipocliente($params["tipocliente"]);
+                    $cliente->setClassificacao($params["classificacao"]);
                     if ($cliente->save() == false) {
                         $transaction->rollback("Não foi possível salvar o cliente!");
                     }
@@ -275,6 +278,7 @@ class ClienteController extends ControllerBase
                     $cliente->setTransaction($transaction);
                     $cliente->setIdPessoa($pessoa->getId());
                     $cliente->setIdTipocliente($params["tipocliente"]);
+                    $cliente->setClassificacao($params["classificacao"]);
                     if ($cliente->save() == false) {
                         $transaction->rollback("Não foi possível salvar o cliente!");
                     }
@@ -340,6 +344,11 @@ class ClienteController extends ControllerBase
                     $pessoajuridica->setSigla($params["sigla"]);
                     if ($pessoajuridica->save() == false) {
                         $transaction->rollback("Não foi possível salvar a pessoa juridica!");
+                    }
+                    $cliente->setTransaction($transaction);
+                    $cliente->setClassificacao($params["classificacao"]);
+                    if ($cliente->save() == false) {
+                        $transaction->rollback("Não foi possível salvar o cliente!");
                     }
                     //Commita a transação
                     $transaction->commit();
@@ -429,6 +438,11 @@ class ClienteController extends ControllerBase
                                 $transaction->rollback("Não foi possível salvar o pessoaendereco!");
                             }
                         }
+                    }
+                    $cliente->setTransaction($transaction);
+                    $cliente->setClassificacao($params["classificacao"]);
+                    if ($cliente->save() == false) {
+                        $transaction->rollback("Não foi possível salvar o cliente!");
                     }
                     //Commita a transação
                     $transaction->commit();

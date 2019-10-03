@@ -45,6 +45,24 @@ class Lov extends \Phalcon\Mvc\Model
     protected $duracao;
 
     /**
+     *
+     * @var integer
+     */
+    protected $ativo;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $excluido;
+
+    /**
+     *
+     * @var string
+     */
+    protected $data_update;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -180,6 +198,60 @@ class Lov extends \Phalcon\Mvc\Model
     public function getDuracao()
     {
         return $this->duracao;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAtivo()
+    {
+        return $this->ativo;
+    }
+
+    /**
+     * @param int $ativo
+     * @return Lov
+     */
+    public function setAtivo($ativo)
+    {
+        $this->ativo = $ativo;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExcluido()
+    {
+        return $this->excluido;
+    }
+
+    /**
+     * @param int $excluido
+     * @return Lov
+     */
+    public function setExcluido($excluido)
+    {
+        $this->excluido = $excluido;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataUpdate()
+    {
+        return $this->data_update;
+    }
+
+    /**
+     * @param string $data_update
+     * @return Lov
+     */
+    public function setDataUpdate($data_update)
+    {
+        $this->data_update = $data_update;
+        return $this;
     }
 
     /**

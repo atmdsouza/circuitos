@@ -3,3 +3,7 @@
 /public/relatorios/*
 /.idea/*
 /data/*
+/logs/*
+/logs/
+.phalcon/
+cache/

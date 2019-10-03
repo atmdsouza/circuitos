@@ -36,7 +36,7 @@ use Phalcon\Tag;
 
 <div class="col-12">
     <div class="card-box">
-        <table id="tb_equipamento" class="table table-striped table-bordered" cellspacing="0" width="100%">
+        <table id="tb_equipamento" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th>Código</th>
@@ -127,6 +127,20 @@ use Phalcon\Tag;
                                 <div class="form-group col-md-4">
                                     <label for="numpatrimonio">Número de Patrimônio <span class="required">*</span></label>
                                     <?php echo $this->tag->textField(["numpatrimonio", "size" => 60, "class" => "form-control", "id" => "numpatrimonio", "placeholder" => "Número de Patrimônio"]) ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="propriedade_prodepa">Propriedade PRODEPA? <span class="required">*</span></label>
+                                    <select id="propriedade_prodepa" name="propriedade_prodepa" class="form-control" onchange="habilitarFornecedor();">
+                                        <option value="-1" selected>Sim</option>
+                                        <option value="0">Não</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="lid_fornecedor">Fornecedor </label>
+                                    <?php echo $this->tag->textField(["lid_fornecedor", "size" => 120, "class" => "form-control", "disabled" => "true", "id" => "lid_fornecedor", "placeholder" => "Fornecedor", "onkeyup" => "autocompletarFornecedor();"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_fornecedor", "size" => 120, "class" => "form-control", "id" => "id_fornecedor"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">

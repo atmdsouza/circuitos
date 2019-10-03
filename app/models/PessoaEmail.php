@@ -48,6 +48,18 @@ class PessoaEmail extends \Phalcon\Mvc\Model
     protected $ativo;
 
     /**
+     *
+     * @var integer
+     */
+    protected $excluido;
+
+    /**
+     *
+     * @var string
+     */
+    protected $data_update;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -205,6 +217,38 @@ class PessoaEmail extends \Phalcon\Mvc\Model
         );
 
         return $this->validate($validator);
+    }
+
+    /**
+     * @return int
+     */
+    public function getExcluido()
+    {
+        return $this->excluido;
+    }
+
+    /**
+     * @param int $excluido
+     */
+    public function setExcluido($excluido)
+    {
+        $this->excluido = $excluido;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataUpdate()
+    {
+        return $this->data_update;
+    }
+
+    /**
+     * @param string $data_update
+     */
+    public function setDataUpdate($data_update)
+    {
+        $this->data_update = $data_update;
     }
 
     /**

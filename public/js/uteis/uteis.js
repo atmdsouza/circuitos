@@ -4,39 +4,66 @@
  * @action string Action que será usada na chamada, semrpe deve estar formatada como 'controller/action'
  * */
 function actionCorreta(url, action) {
+    'use strict';
     var novaAction;
     var urls = url.split("/");
     //Pasta raiz sendo "/circuitos"
-    // novaAction = urls[0] + "//" + urls[2] + "/" + urls[3] + "/" + action;
+    novaAction = urls[0] + "//" + urls[2] + "/" + urls[3] + "/" + action;
     //Pasta raiz sendo "/"
-    novaAction = urls[0] + "//" + urls[2] + "/" + action;
+    // novaAction = urls[0] + "//" + urls[2] + "/" + action;
     return novaAction;
 }
 
 //Processo para fazer funcionar o CSRF_Token
 function getCookie(c_name) {
+    'use strict';
+    var c_start;
+    var c_end;
     if (document.cookie.length > 0) {
         c_start = document.cookie.indexOf(c_name + "=");
-        if (c_start != -1) {
+        if (c_start !== -1) {
             c_start = c_start + c_name.length + 1;
             c_end = document.cookie.indexOf(";", c_start);
-            if (c_end == -1) c_end = document.cookie.length;
+            if (c_end === -1){
+                c_end = document.cookie.length;
+            }
             return unescape(document.cookie.substring(c_start, c_end));
         }
     }
     return "";
 }
 $(function () {
+    'use strict';
     $.ajaxSetup({
         headers: { "X-CSRFToken": getCookie("csrftoken") }
     });
 });
 //Fim
 
+var RemoveTableRow;
+
+//Limpar Linhas da Tabela
+(function ($) {
+    'use strict';
+    RemoveTableRow = function (handler) {
+        var tr = $(handler).closest("tr");
+        tr.fadeOut(400, function () {
+            var el = tr.closest('table');
+            tr.remove();
+            if($('.tr_remove').length === 0) {
+                el.attr('style','display: none;');
+            }
+        });
+
+        return false;
+    };
+})(jQuery);
+
 // Select2
 $(".select2").select2({
     language: "pt-BR"
 });
+
 //Date range picker
 $(".input-daterange-datepicker").daterangepicker({
     autoApply: true,
@@ -85,8 +112,20 @@ $(".input-daterange-datepicker").on('cancel.daterangepicker', function(ev, picke
     $(this).val('');
 });
 
+//Configuração padrão do autocomplete
+$.extend($.Autocomplete.defaults, {
+    autoSelectFirst: true,
+    deferRequestBy: 500,
+    noCache: true,
+    minChars: 1,
+    triggerSelectOnValidInput: false,
+    showNoSuggestionNotice: true,
+    noSuggestionNotice: "Não existem resultados para essa consulta!"
+});
+
 //Configuração padrão de datatables
-$.extend( $.fn.dataTable.defaults, {
+$.extend($.fn.dataTable.defaults, {
+    fixedHeader: true,
     language: {
         sEmptyTable: "Nenhum registro encontrado",
         sInfo: "Mostrando de _START_ até _END_ de _TOTAL_ registros",
@@ -122,7 +161,7 @@ $.extend( $.fn.dataTable.defaults, {
     select: {
         style: 'multi'
     },
-    responsive: false,
+    responsive: true,
     search: {
         caseInsensitive: true
     },
@@ -130,10 +169,57 @@ $.extend( $.fn.dataTable.defaults, {
     orderMulti: true,
     order: [[ 0, "desc" ]]
 });
-//Limpar modal bootstrap
-$('.modal').on('hidden.bs.modal', function(){
-    $(this).find('form')[0].reset();
+//Header do datatable
+function floatHeader()
+{
+    $(window).scroll(function() {
+        var floatingHeader = $('table.table.table-striped.table-bordered.table-hover.dataTable.no-footer.dtr-inline.fixedHeader-floating');
+
+        if(floatingHeader[0] != null) {
+            floatingHeader.css('top', '65px');
+            floatingHeader.css('left', ($('.left.side-menu').width() + 60 )+ 'px');
+            floatingHeader.css('width', ($('.container-fluid').width() - 120)+ 'px');
+        }
+    });
+}
+//Opções Globais Highcharts
+Highcharts.setOptions({
+    global: {
+        Date: undefined,
+        VMLRadialGradientURL: "http://code.highcharts.com/{version}/gfx/vml-radial-gradient.png",
+        canvasToolsURL: "http://code.highcharts.com/{version}/modules/canvas-tools.js",
+        getTimezoneOffset: null,
+        timezoneOffset: 0,
+        useUTC: true
+    },
+    lang: {
+        contextButtonTitle: "Opções",
+        decimalPoint: ",",
+        downloadJPEG: "Download Imagem JPEG",
+        downloadPDF: "Download Imagem PDF",
+        downloadPNG: "Download Imagem PNG",
+        downloadSVG: "Download Imagem Vetor SVG",
+        drillUpText: "Voltar para {series.name}",
+        invalidDate: null,
+        loading: "Carregando...",
+        months: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+        noData: "Sem dados para visualizar",
+        numericSymbols: ["k", "M", "G", "T", "P", "E"],
+        printChart: "Imprimir Gráfico",
+        resetZoom: "Resetar Zoom",
+        resetZoomTitle: "Resetar Zoom para Nível 1:1",
+        shortMonths: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+        shortWeekdays: undefined,
+        thousandsSep: ".",
+        weekdays: ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"]
+    }
 });
+//Limpar modal bootstrap
+function limparModalBootstrap(modal)
+{
+    'use strict';
+    $('#'+modal).find('form')[0].reset();
+}
 
 /**
  * Trabalhando com Datas e Horas
@@ -557,16 +643,16 @@ $(document).ready(function () {
     $(".valor_percentual").maskMoney({ allowNegative: true, thousands: '', decimal: ',', affixesStay: false }); //Valor Decimal
     $('.ip').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
         translation: {
-          'Z': {
-            pattern: /[0-9]/, optional: true
-          }
+            'Z': {
+                pattern: /[0-9]/, optional: true
+            }
         }
     });
     $('.ip2').mask('0ZZ.0ZZ.0ZZ.0ZZ/00', {
         translation: {
-          'Z': {
-            pattern: /[0-9]/, optional: true
-          }
+            'Z': {
+                pattern: /[0-9]/, optional: true
+            }
         }
     });
 });

@@ -238,6 +238,66 @@ class EndEndereco extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field Nome Bairro
+     *
+     * @return string
+     */
+    public function getNomeBairro()
+    {
+        return $this->EndBairro->bairro;
+    }
+
+    /**
+     * Returns the value of field Nome Cidade
+     *
+     * @return string
+     */
+    public function getNomeCidade()
+    {
+        return $this->EndCidade->cidade;
+    }
+
+    /**
+     * Returns the value of field Nome Estado
+     *
+     * @return string
+     */
+    public function getNomeEstado()
+    {
+        return $this->EndCidade->EndEstado->estado;
+    }
+
+    /**
+     * Returns the value of field Sigla Estado
+     *
+     * @return string
+     */
+    public function getSiglaEstado()
+    {
+        return $this->EndCidade->uf;
+    }
+
+    /**
+     * Returns the value of field Latitude
+     *
+     * @return string
+     */
+    public function getLatitude()
+    {
+        return $this->EndGeo->latitude;
+    }
+
+    /**
+     * Returns the value of field Longitude
+     *
+     * @return string
+     */
+    public function getLongitude()
+    {
+        return $this->EndGeo->longitude;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -246,6 +306,7 @@ class EndEndereco extends \Phalcon\Mvc\Model
         $this->setSource("end_endereco");
         $this->belongsTo("id_cidade", "Circuitos\Models\EndCidade", "id_cidade", ["alias" => "EndCidade"]);
         $this->belongsTo("id_bairro", "Circuitos\Models\EndBairro", "id_bairro", ["alias" => "EndBairro"]);
+        $this->belongsTo("cep", "Circuitos\Models\EndGeo", "cep", ["alias" => "EndGeo"]);
     }
 
     /**

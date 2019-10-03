@@ -1,4 +1,4 @@
-<?php require APP_PATH . '/config/constantes.php'; ?>
+<?php use Util\Infra; $infra = new Infra(); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,8 +22,6 @@
     <link href="<?= DIR_STATICS ?>public/css/style.css" rel="stylesheet" type="text/css" />
     <link href="<?= DIR_STATICS ?>public/css/custom.css" rel="stylesheet" type="text/css" />
 
-    <script src="<?= DIR_STATICS ?>public/js/modernizr.min.js"></script>
-
     <link href="<?= DIR_STATICS ?>public/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css" />
 
     <!-- Select2 -->
@@ -33,6 +31,8 @@
     <link href="<?= DIR_STATICS ?>public/plugins/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= DIR_STATICS ?>public/plugins/datatables/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= DIR_STATICS ?>public/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <!-- FixedHeader-->
+    <link href="<?= DIR_STATICS ?>public/plugins/datatables/fixedHeader.css" rel="stylesheet" type="text/css" />
 
     <!-- Select -->
     <link href="<?= DIR_STATICS ?>public/plugins/datatables/select/css/select.bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -40,7 +40,7 @@
 
     <!-- jQuery File Upload css -->
     <!-- blueimp Gallery styles -->
-    <link rel="stylesheet" href="https://blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
+    <link href="https://blueimp.github.io/Gallery/css/blueimp-gallery.min.css" rel="stylesheet" type="text/css">
     <!-- Arquivos jQuery File Upload-->
     <link href="<?= DIR_STATICS ?>public/plugins/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet" type="text/css" />
     <link href="<?= DIR_STATICS ?>public/plugins/jquery-file-upload/css/jquery.fileupload-ui.css" rel="stylesheet" type="text/css" />
@@ -53,15 +53,14 @@
     <link href="<?= DIR_STATICS ?>public/plugins/sweet-alert/sweetalert2.min.css" rel="stylesheet" type="text/css" />
 
     <!-- Pickers -->
-    <link href="<?= DIR_STATICS ?>public/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="<?= DIR_STATICS ?>public/plugins/switchery/switchery.min.css" />
+    <link href="<?= DIR_STATICS ?>public/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" type="text/css">
+    <link href="<?= DIR_STATICS ?>public/plugins/switchery/switchery.min.css" rel="stylesheet" type="text/css"/>
 
 
 
 </head>
 
-<body>
+<body onload="inicializar();floatHeader();">
 
 <!-- Begin page -->
 <div id="wrapper">
@@ -141,23 +140,17 @@
                     <li><?php echo $this->tag->linkTo(["index", "<i class='fi-air-play'></i> <span> Dashboard </span>"]) ?></li>
 
                     <?php
-                    if ($acl->isAllowed($role, 'cidade_digital', 'index') || $acl->isAllowed($role, 'cliente', 'index') || $acl->isAllowed($role, 'cliente_unidade', 'index') || $acl->isAllowed($role, 'fabricante', 'index') || $acl->isAllowed($role, 'modelo', 'index') || $acl->isAllowed($role, 'equipamento', 'index'))
+                    if ($acl->isAllowed($role, 'unidade_consumidora', 'index') || $acl->isAllowed($role, 'cliente', 'index') || $acl->isAllowed($role, 'cliente_unidade', 'index') || $acl->isAllowed($role, 'fabricante', 'index') || $acl->isAllowed($role, 'modelo', 'index') || $acl->isAllowed($role, 'equipamento', 'index'))
                     {
                         ?>
                         <li>
                             <a href="javascript: void(0);"><i class="fi-layers"></i> <span> Cadastros </span> <span class="menu-arrow"></span></a>
                             <ul class="nav-second-level" aria-expanded="false">
                                 <?php
-                                if ($acl->isAllowed($role, 'cidade_digital', 'index'))
-                                {
-                                    ?>
-                                    <li><?php echo $this->tag->linkTo(["cidade_digital", "Cidade Digital"]) ?></li>
-                                    <?php
-                                }
                                 if ($acl->isAllowed($role, 'cliente', 'index'))
                                 {
                                     ?>
-                                    <li><?php echo $this->tag->linkTo(["cliente", "Clientes"]) ?></li>
+                                    <li><?php echo $this->tag->linkTo(["cliente", "Clientes / Fornecedores"]) ?></li>
                                     <?php
                                 }
                                 if ($acl->isAllowed($role, 'cliente_unidade', 'index'))
@@ -184,9 +177,126 @@
                                     <li><?php echo $this->tag->linkTo(["equipamento", "Equipamentos"]) ?></li>
                                     <?php
                                 }
+                                if ($acl->isAllowed($role, 'unidade_consumidora', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["unidade_consumidora", "Unidades Consumidoras"]) ?></li>
+                                    <?php
+                                }
                                 ?>
                             </ul>
                         </li>
+                        <?php
+                    }
+                    ?>
+
+                    <?php
+                    if ($acl->isAllowed($role, 'cidade_digital', 'index') || $acl->isAllowed($role, 'conectividade', 'index') || $acl->isAllowed($role, 'torre', 'index') || $acl->isAllowed($role, 'terreno', 'index') || $acl->isAllowed($role, 'set_seguranca', 'index') || $acl->isAllowed($role, 'set_equipamento', 'index'))
+                    {
+                        ?>
+                        <li>
+                            <a href="javascript: void(0);"><i class="mdi mdi-city"></i> <span> Cidade Digital </span> <span class="menu-arrow"></span></a>
+                            <ul class="nav-second-level" aria-expanded="false">
+                                <?php
+                                if ($acl->isAllowed($role, 'cidade_digital', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["cidade_digital", "Cidade Digital"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'cidade_digital', 'localizar'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["cidade_digital/localizar", "Localização Geo"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'conectividade', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["conectividade/index", "Conectividade"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'estacao_telecon', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["estacao_telecon", "Estação Telecon"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'torre', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["torre", "Torres"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'terreno', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["terreno", "Terrenos"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'set_equipamento', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["set_equipamento", "Set de Equipamentos"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'set_seguranca', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["set_seguranca", "Set de Segurança"]) ?></li>
+                                    <?php
+                                }
+                                ?>
+                            </ul>
+                        </li>
+                        <?php
+                    }
+                    ?>
+
+                    <?php
+                    if ($acl->isAllowed($role, 'proposta_comercial', 'index') || $acl->isAllowed($role, 'proposta_comercial_servico', 'index') || $acl->isAllowed($role, 'proposta_comercial_servico_grupo', 'index') || $acl->isAllowed($role, 'proposta_comercial_servico_unidade', 'index'))
+                    {
+                        ?>
+                        <li>
+                            <a href="javascript: void(0);"><i class="mdi mdi-sale"></i> <span> Gestão Comercial </span> <span class="menu-arrow"></span></a>
+                            <ul class="nav-second-level" aria-expanded="false">
+                                <?php
+                                if ($acl->isAllowed($role, 'proposta_comercial', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["proposta_comercial", "Propostas Comerciais"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'proposta_comercial_servico', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["proposta_comercial_servico", "Serviços"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'proposta_comercial_servico_grupo', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["proposta_comercial_servico_grupo", "Grupo de Serviços"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'proposta_comercial_servico_unidade', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["proposta_comercial_servico_unidade", "Unidades de Serviços"]) ?></li>
+                                    <?php
+                                }
+                                ?>
+                            </ul>
+                        </li>
+                        <?php
+                    }
+                    ?>
+
+                    <?php
+                    if ($acl->isAllowed($role, 'contrato', 'index'))
+                    {
+                        ?>
+                        <li><?php echo $this->tag->linkTo(["contrato", "<i class='mdi mdi-book-plus'></i> <span> Gestão de Contratos </span>"]) ?></li>
                         <?php
                     }
                     ?>
@@ -196,12 +306,20 @@
                     {
                         ?>
                         <li><?php echo $this->tag->linkTo(["circuitos", "<i class='fi-link'></i> <span> Circuitos Navega Pará </span>"]) ?></li>
-                    <?php }
+                        <?php
+                    }
+                    ?>
+
+                    <?php
                     if ($acl->isAllowed($role, 'relatorios_gestao', 'index'))
                     {
                         ?>
                         <li><?php echo $this->tag->linkTo(["relatorios_gestao", "<i class='fi-printer'></i> <span> Relatórios </span>"]) ?></li>
-                    <?php }
+                        <?php
+                    }
+                    ?>
+
+                    <?php
                     if ($acl->isAllowed($role, 'usuario', 'index'))
                     {
                         ?>
@@ -226,7 +344,11 @@
                                 <?php } ?>
                             </ul>
                         </li>
-                    <?php }
+                        <?php
+                    }
+                    ?>
+
+                    <?php
                     if ($acl->isAllowed($role, 'empresa', 'index') || $acl->isAllowed($role, 'lov', 'index'))
                     {
                         ?>
@@ -251,7 +373,9 @@
                                 <?php } ?>
                             </ul>
                         </li>
-                    <?php } ?>
+                        <?php
+                    }
+                    ?>
                 </ul>
 
             </div>
@@ -278,7 +402,7 @@
             <!-- container -->
         </div> <!-- content -->
         <footer class="footer text-right">
-            2018 - 2019 © Empresa de Tecnologia da Informação e Comunicação do Estado do Pará - PRODEPA - Versão <?= VERSAO ?>
+            2018 - 2019 © Empresa de Tecnologia da Informação e Comunicação do Estado do Pará - PRODEPA - Versão <?= $infra->getVersao(); ?>
         </footer>
     </div>
     <!-- ============================================================== -->
@@ -297,6 +421,7 @@
 <script src="<?= DIR_STATICS ?>public/js/jquery.slimscroll.js" type="text/javascript"></script>
 <script src="<?= DIR_STATICS ?>public/plugins/waypoints/lib/jquery.waypoints.min.js" type="text/javascript"></script>
 <script src="<?= DIR_STATICS ?>public/plugins/counterup/jquery.counterup.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/modernizr.min.js" type="text/javascript"></script>
 
 <!-- Moment -->
 <script src="<?= DIR_STATICS ?>public/plugins/moment/moment.js" type="text/javascript"></script>
@@ -313,6 +438,8 @@
 <script src="<?= DIR_STATICS ?>public/plugins/datatables/buttons.html5.min.js" type="text/javascript"></script>
 <script src="<?= DIR_STATICS ?>public/plugins/datatables/buttons.print.min.js" type="text/javascript"></script>
 <script src="<?= DIR_STATICS ?>public/plugins/datatables/select/js/dataTables.select.min.js" type="text/javascript"></script>
+<!--FixedHeader-->
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/fixedHeader.js" type="text/javascript"></script>
 <!-- Responsive examples -->
 <script src="<?= DIR_STATICS ?>public/plugins/datatables/dataTables.responsive.min.js" type="text/javascript"></script>
 <script src="<?= DIR_STATICS ?>public/plugins/datatables/responsive.bootstrap4.min.js" type="text/javascript"></script>
@@ -323,6 +450,12 @@
 
 <!-- Autocomplete -->
 <script src="<?= DIR_STATICS ?>public/plugins/autocomplete/jquery.autocomplete.js" type="text/javascript"></script>
+
+<!-- Google Maps API -->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcu0hXW_sdQWq-6QsGYJKW2qhTSmFLMMI"></script>
+<!-- Arquivos MarkerCluster -->
+<script type="text/javascript" src="<?= DIR_STATICS ?>public/plugins/markercluster/markerclusterer.js"></script>
+<script type="text/javascript" src="<?= DIR_STATICS ?>public/plugins/markercluster/oms.min.js"></script>
 
 <!-- jQuery UI -->
 <!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>-->
@@ -360,8 +493,10 @@
 <!-- DateRangePicker -->
 <script src="<?= DIR_STATICS ?>public/plugins/bootstrap-daterangepicker/daterangepicker.js" type="text/javascript"></script>
 
-<!-- Charts.js -->
-<script src="<?= DIR_STATICS ?>public/plugins/chart.js/chart.min.js" type="text/javascript"></script>
+<!-- Higthcharts -->
+<script src="<?= DIR_STATICS ?>public/plugins/higthcharts/highcharts.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/higthcharts/modules/exporting.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/higthcharts/modules/export-data.js" type="text/javascript"></script>
 
 <!-- Plugins -->
 <script src="<?= DIR_STATICS ?>public/js/uteis/accounting.js" type="text/javascript"></script>
@@ -373,6 +508,7 @@
 
 <!-- Módulos -->
 <?php $module = $this->router->getControllerName(); ?>
+<?php $action = $this->router->getActionName(); ?>
 <?php switch($module){
 case "index":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/index.js" type="text/javascript"></script>
@@ -381,7 +517,41 @@ case "cliente":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/cliente.js" type="text/javascript"></script>
 <?php break;
 case "cidade_digital":?>
+    <?php if($action == 'index'){ ?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/cidade_digital.js" type="text/javascript"></script>
+    <?php } else if($action == 'localizar'){ ?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/localizar.js" type="text/javascript"></script>
+    <?php } ?>
+<?php break;
+case "conectividade":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/conectividade.js" type="text/javascript"></script>
+<?php break;
+case "set_seguranca":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/setseguranca.js" type="text/javascript"></script>
+<?php break;
+case "set_equipamento":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/setequipamento.js" type="text/javascript"></script>
+<?php break;
+case "terreno":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/terreno.js" type="text/javascript"></script>
+<?php break;
+case "torre":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/torre.js" type="text/javascript"></script>
+<?php break;
+case "contrato":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/contrato.js" type="text/javascript"></script>
+<?php break;
+case "estacao_telecon":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/estacaotelecon.js" type="text/javascript"></script>
+<?php break;
+case "proposta_comercial":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/propostacomercial.js" type="text/javascript"></script>
+<?php break;
+case "proposta_comercial_servico":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/propostacomercialservico.js" type="text/javascript"></script>
+<?php break;
+case "fornecedor":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/fornecedor.js" type="text/javascript"></script>
 <?php break;
 case "cliente_unidade":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/cliente_unidade.js" type="text/javascript"></script>
@@ -415,6 +585,9 @@ case "controle_acesso":?>
 <?php break;
 case "central_mensagens":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/central_mensagens.js" type="text/javascript"></script>
+<?php break;
+case "unidade_consumidora":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/unidade_consumidora.js" type="text/javascript"></script>
 <?php break;
 case "circuitos":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/circuitos.js" type="text/javascript"></script>

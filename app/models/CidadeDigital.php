@@ -30,13 +30,19 @@ class CidadeDigital extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $excluido;
+    protected $ativo;
 
     /**
      *
      * @var integer
      */
-    protected $ativo;
+    protected $excluido;
+
+    /**
+     *
+     * @var string
+     */
+    protected $data_update;
 
     /**
      * Method to set the value of field id
@@ -154,6 +160,32 @@ class CidadeDigital extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return string
+     */
+    public function getDataUpdate()
+    {
+        return $this->data_update;
+    }
+
+    /**
+     * @param string $data_update
+     * @return CidadeDigital
+     */
+    public function setDataUpdate($data_update)
+    {
+        $this->data_update = $data_update;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCidade()
+    {
+        return $this->EndCidade->cidade;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -162,6 +194,7 @@ class CidadeDigital extends \Phalcon\Mvc\Model
         $this->setSource("cidade_digital");
         $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_cidadedigital', ['alias' => 'Circuitos']);
         $this->hasMany('id', 'Circuitos\Models\Conectividade', 'id_cidade_digital', ['alias' => 'Conectividade']);
+        $this->hasMany('id', 'Circuitos\Models\EstacaoTelecon', 'id_estacao_telecon', ['alias' => 'EstacaoTelecon']);
         $this->belongsTo('id_cidade', 'Circuitos\Models\EndCidade', 'id', ['alias' => 'EndCidade']);
     }
 
@@ -201,26 +234,21 @@ class CidadeDigital extends \Phalcon\Mvc\Model
      * Consulta completa de Cidades Digitais, incluíndo os joins de tabelas
      *
      * @param string $parameters
-     * @return Cliente|\Phalcon\Mvc\Model\Resultset
+     * @return CidadeDigital|\Phalcon\Mvc\Model\Resultset
      */
     public static function pesquisarCidadeDigital($parameters = null)
     {
         $query = new Builder();
         $query->from(array("CidadeDigital" => "Circuitos\Models\CidadeDigital"));
         $query->columns("CidadeDigital.*");
-
         $query->leftJoin("Circuitos\Models\EndCidade", "CidadeDigital.id_cidade = EndCidade.id", "EndCidade");
         $query->leftJoin("Circuitos\Models\Conectividade", "CidadeDigital.id = Conectividade.id_cidade_digital", "Conectividade");
-
         $query->where("CidadeDigital.excluido = 0 AND (CONVERT(CidadeDigital.id USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(CidadeDigital.descricao USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(EndCidade.cidade USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Conectividade.descricao USING utf8) LIKE '%{$parameters}%')");
-
         $query->groupBy("CidadeDigital.id");
-
         $query->orderBy("CidadeDigital.id DESC");
-
         $resultado = $query->getQuery()->execute();
         return $resultado;
     }

@@ -54,6 +54,24 @@ class EmpresaParametros extends \Phalcon\Mvc\Model
     protected $mail_smtpssl;
 
     /**
+     *
+     * @var integer
+     */
+    protected $ativo;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $excluido;
+
+    /**
+     *
+     * @var string
+     */
+    protected $data_update;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -235,6 +253,54 @@ class EmpresaParametros extends \Phalcon\Mvc\Model
     public function getMailSmtpssl()
     {
         return $this->mail_smtpssl;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAtivo()
+    {
+        return $this->ativo;
+    }
+
+    /**
+     * @param int $ativo
+     */
+    public function setAtivo($ativo)
+    {
+        $this->ativo = $ativo;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExcluido()
+    {
+        return $this->excluido;
+    }
+
+    /**
+     * @param int $excluido
+     */
+    public function setExcluido($excluido)
+    {
+        $this->excluido = $excluido;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataUpdate()
+    {
+        return $this->data_update;
+    }
+
+    /**
+     * @param string $data_update
+     */
+    public function setDataUpdate($data_update)
+    {
+        $this->data_update = $data_update;
     }
 
     /**

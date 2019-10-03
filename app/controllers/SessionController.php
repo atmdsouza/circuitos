@@ -91,12 +91,12 @@ class SessionController extends ControllerBase {
      */
     public function logoutAction()
     {
-        $this->session->destroy();
         $logger = new FileAdapter(BASE_PATH . "/logs/systemlog.log");
         $auth = new Autentica();
         $identity = $auth->getIdentity();
-        $logger->info("Saída do usuário {$identity["login"]} do sistema.");
         $auth->remove();
+        $this->session->destroy();
+        $logger->info("Saída do usuário {$identity["login"]} do sistema.");
         return $this->response->redirect('session/sair');
     }
 

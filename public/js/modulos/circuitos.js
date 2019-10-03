@@ -2,6 +2,12 @@
 $(document).ajaxStop($.unblockUI);
 var URLImagensSistema = "public/images";
 
+//Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos
+function inicializar()
+{
+
+}
+
 //Datatable
 var table = $("#tb_circuitos").DataTable({
     buttons: [
@@ -236,11 +242,6 @@ $(".auto_cliente").on("click", function(){
             //Autocomplete de Equipamento
             ac_cliente.autocomplete({
                 lookup: listCliente,
-                noCache: true,
-                minChars: 1,
-                triggerSelectOnValidInput: false,
-                showNoSuggestionNotice: true,
-                noSuggestionNotice: "Não existem resultados para essa consulta!",
                 onSelect: function (suggestion) {
                     $("#id_cliente").val(suggestion.data);
                     var vl_cliente = suggestion.data;
@@ -285,11 +286,6 @@ $(".auto_cliente").on("click", function(){
                                 //Autocomplete de Cliente Unidade
                                 ac_cliente_unidade.autocomplete({
                                     lookup: listUnidadeCliente,
-                                    noCache: true,
-                                    minChars: 1,
-                                    triggerSelectOnValidInput: false,
-                                    showNoSuggestionNotice: true,
-                                    noSuggestionNotice: "Não existem resultados para essa consulta!",
                                     onSelect: function (suggestion) {
                                         $("#id_cliente_unidade").val(suggestion.data);
                                     }
@@ -348,11 +344,6 @@ $(".auto_cidadedigital").on("click", function(){
             //Autocomplete de Equipamento
             ac_cidadedigital.autocomplete({
                 lookup: listCidadeDigital,
-                noCache: true,
-                minChars: 1,
-                triggerSelectOnValidInput: false,
-                showNoSuggestionNotice: true,
-                noSuggestionNotice: "Não existem resultados para essa consulta!",
                 onSelect: function (suggestion) {
                     $("#id_cidadedigital").val(suggestion.data);
                     var vl_cidadedigital = $("#lid_cidadedigital").val();
@@ -397,11 +388,6 @@ $(".auto_cidadedigital").on("click", function(){
                                 //Autocomplete de Equipamento
                                 ac_conectividade.autocomplete({
                                     lookup: listConectividade,
-                                    noCache: true,
-                                    minChars: 1,
-                                    triggerSelectOnValidInput: false,
-                                    showNoSuggestionNotice: true,
-                                    noSuggestionNotice: "Não existem resultados para essa consulta!",
                                     onSelect: function (suggestion) {
                                         $("#id_conectividade").val(suggestion.data);
                                     }
@@ -470,11 +456,6 @@ $(".auto_fabricante").on("click", function(){
             //Autocomplete de Equipamento
             ac_fabricante.autocomplete({
                 lookup: listFabricante,
-                noCache: true,
-                minChars: 1,
-                triggerSelectOnValidInput: false,
-                showNoSuggestionNotice: true,
-                noSuggestionNotice: "Não existem resultados para essa consulta!",
                 onSelect: function (suggestion) {
                     $("#id_fabricante").val(suggestion.data);
                     var vl_fabricante = $("#lid_fabricante").val();
@@ -529,11 +510,6 @@ $(".auto_fabricante").on("click", function(){
                                 //Autocomplete de Modelo
                                 ac_model.autocomplete({
                                     lookup: listModel,
-                                    noCache: true,
-                                    minChars: 1,
-                                    triggerSelectOnValidInput: false,
-                                    showNoSuggestionNotice: true,
-                                    noSuggestionNotice: "Não existem resultados para essa consulta!",
                                     onSelect: function (suggestion) {
                                         $("#id_modelo").val(suggestion.data);
                                         var action = actionCorreta(window.location.href.toString(), "circuitos/equipamentoModelo");
@@ -580,11 +556,6 @@ $(".auto_fabricante").on("click", function(){
                                                 //Autocomplete de Equipamento
                                                 ac_equip.autocomplete({
                                                     lookup: listEquip,
-                                                    noCache: true,
-                                                    minChars: 1,
-                                                    triggerSelectOnValidInput: false,
-                                                    showNoSuggestionNotice: true,
-                                                    noSuggestionNotice: "Não existem resultados para essa consulta!",
                                                     onSelect: function (suggestion) {
                                                         $("#id_equipamento").val(suggestion.data);
                                                     }

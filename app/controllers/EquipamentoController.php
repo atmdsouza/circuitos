@@ -73,6 +73,9 @@ class EquipamentoController extends ControllerBase
         $equipamento = Equipamento::findFirst("id={$dados["id_equipamento"]}");
         $dados = array(
             "id" => $equipamento->getId(),
+            "ds_fornecedor" => $equipamento->getFornecedor(),
+            "id_fornecedor" => $equipamento->getIdFornecedor(),
+            "propriedade_prodepa" => $equipamento->getPropriedadeProdepa(),
             "id_fabricante" => $equipamento->getIdFabricante(),
             "id_modelo" => $equipamento->getIdModelo(),
             "nome" => $equipamento->getNome(),
@@ -103,6 +106,8 @@ class EquipamentoController extends ControllerBase
             try {
                 $equipamento = new Equipamento();
                 $equipamento->setTransaction($transaction);
+                $equipamento->setIdFornecedor($params["id_fornecedor"]);
+                $equipamento->setPropriedadeProdepa($params["propriedade_prodepa"]);
                 $equipamento->setIdFabricante($params["id_fabricante"]);
                 $equipamento->setIdModelo($params["id_modelo"]);
                 $equipamento->setNome(mb_strtoupper($params["nome"], $this->encode));
@@ -151,6 +156,8 @@ class EquipamentoController extends ControllerBase
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             try {
                 $equipamento->setTransaction($transaction);
+                $equipamento->setIdFornecedor($params["id_fornecedor"]);
+                $equipamento->setPropriedadeProdepa($params["propriedade_prodepa"]);
                 $equipamento->setIdFabricante($params["id_fabricante"]);
                 $equipamento->setIdModelo($params["id_modelo"]);
                 $equipamento->setNome(mb_strtoupper($params["nome"], $this->encode));
