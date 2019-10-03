@@ -1,4 +1,5 @@
 -- Ajuste dos campos em UPPERCASE nas tabelas
+START TRANSACTION;
 update cidade_digital set descricao = upper(descricao);
 update circuitos set observacao = upper(observacao), chamado = upper(chamado), tag = upper(tag), cidade = upper(cidade), uf = upper(uf), designacao_anterior = upper(designacao_anterior);
 update equipamento set descricao = upper(descricao), numpatrimonio = upper(numpatrimonio), numserie = upper(numserie), nome = upper(nome);
@@ -15,3 +16,4 @@ update end_bairro set bairro = upper(bairro);
 update end_endereco set logradouro = upper(logradouro),local = upper(local),complemento = upper(complemento),tipo_logradouro = upper(tipo_logradouro);
 update end_estado set estado = upper(estado);
 update conectividade set endereco = upper(endereco),descricao = upper(descricao);
+COMMIT;
