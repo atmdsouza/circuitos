@@ -15,7 +15,7 @@ function inicializar()
         language: {
             select: false
         },
-        order: [[4, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
+        order: [[3, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
     });
 }
 
