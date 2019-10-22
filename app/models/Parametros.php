@@ -2,9 +2,7 @@
 
 namespace Circuitos\Models;
 
-use Phalcon\Mvc\Model\Query\Builder;
-
-class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
+class Parametros extends \Phalcon\Mvc\Model
 {
 
     /**
@@ -17,19 +15,31 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
      *
      * @var string
      */
-    protected $codigo_legado;
+    protected $codigo;
 
     /**
      *
      * @var string
      */
-    protected $codigo_contabil;
+    protected $valor;
 
     /**
      *
      * @var string
      */
-    protected $descritivo;
+    protected $descricao;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $visivel;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $senha;
 
     /**
      *
@@ -50,6 +60,12 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
     protected $data_update;
 
     /**
+     *
+     * @var integer
+     */
+    protected $id_empresa;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -63,40 +79,66 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field codigo_legado
+     * Method to set the value of field codigo
      *
-     * @param string $codigo_legado
+     * @param string $codigo
      * @return $this
      */
-    public function setCodigoLegado($codigo_legado)
+    public function setCodigo($codigo)
     {
-        $this->codigo_legado = $codigo_legado;
+        $this->codigo = $codigo;
 
         return $this;
     }
 
     /**
-     * Method to set the value of field codigo_contabil
+     * Method to set the value of field valor
      *
-     * @param string $codigo_contabil
+     * @param string $valor
      * @return $this
      */
-    public function setCodigoContabil($codigo_contabil)
+    public function setValor($valor)
     {
-        $this->codigo_contabil = $codigo_contabil;
+        $this->valor = $valor;
 
         return $this;
     }
 
     /**
-     * Method to set the value of field descritivo
+     * Method to set the value of field descricao
      *
-     * @param string $descritivo
+     * @param string $descricao
      * @return $this
      */
-    public function setDescritivo($descritivo)
+    public function setDescricao($descricao)
     {
-        $this->descritivo = $descritivo;
+        $this->descricao = $descricao;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field visivel
+     *
+     * @param integer $visivel
+     * @return $this
+     */
+    public function setVisivel($visivel)
+    {
+        $this->visivel = $visivel;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field senha
+     *
+     * @param integer $senha
+     * @return $this
+     */
+    public function setSenha($senha)
+    {
+        $this->senha = $senha;
 
         return $this;
     }
@@ -141,6 +183,19 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field id_empresa
+     *
+     * @param integer $id_empresa
+     * @return $this
+     */
+    public function setIdEmpresa($id_empresa)
+    {
+        $this->id_empresa = $id_empresa;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field id
      *
      * @return integer
@@ -151,33 +206,53 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field codigo_legado
+     * Returns the value of field codigo
      *
      * @return string
      */
-    public function getCodigoLegado()
+    public function getCodigo()
     {
-        return $this->codigo_legado;
+        return $this->codigo;
     }
 
     /**
-     * Returns the value of field codigo_contabil
+     * Returns the value of field valor
      *
      * @return string
      */
-    public function getCodigoContabil()
+    public function getValor()
     {
-        return $this->codigo_contabil;
+        return $this->valor;
     }
 
     /**
-     * Returns the value of field descritivo
+     * Returns the value of field descricao
      *
      * @return string
      */
-    public function getDescritivo()
+    public function getDescricao()
     {
-        return $this->descritivo;
+        return $this->descricao;
+    }
+
+    /**
+     * Returns the value of field visivel
+     *
+     * @return integer
+     */
+    public function getVisivel()
+    {
+        return $this->visivel;
+    }
+
+    /**
+     * Returns the value of field senha
+     *
+     * @return integer
+     */
+    public function getSenha()
+    {
+        return $this->senha;
     }
 
     /**
@@ -211,13 +286,23 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field id_empresa
+     *
+     * @return integer
+     */
+    public function getIdEmpresa()
+    {
+        return $this->id_empresa;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
     {
         $this->setSchema("bd_circuitosnavega");
-        $this->setSource("proposta_comercial_servico_grupo");
-        $this->hasMany('id', 'Circuitos\Models\PropostaComercialServico', 'id_proposta_comercial_servico_grupo', ['alias' => 'PropostaComercialServico']);
+        $this->setSource("parametros");
+        $this->belongsTo('id_empresa', 'Circuitos\Models\Empresa', 'id', ['alias' => 'Empresa']);
     }
 
     /**
@@ -227,14 +312,14 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'proposta_comercial_servico_grupo';
+        return 'parametros';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return PropostaComercialServicoGrupo[]|PropostaComercialServicoGrupo|\Phalcon\Mvc\Model\ResultSetInterface
+     * @return Parametros[]|Parametros|\Phalcon\Mvc\Model\ResultSetInterface
      */
     public static function find($parameters = null)
     {
@@ -245,31 +330,11 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return PropostaComercialServicoGrupo|\Phalcon\Mvc\Model\ResultInterface
+     * @return Parametros|\Phalcon\Mvc\Model\ResultInterface
      */
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
-    }
-
-    /**
-     * Consulta completa de PropostaComercialServicoGrupo, incluíndo os joins de tabelas
-     *
-     * @param string $parameters
-     * @return PropostaComercialServicoGrupo|\Phalcon\Mvc\Model\Resultset
-     */
-    public static function pesquisarPropostaComercialServicoGrupo($parameters = null)
-    {
-        $query = new Builder();
-        $query->from(array("UnidadeConsumidora" => "Circuitos\Models\UnidadeConsumidora"));
-        $query->columns("UnidadeConsumidora.*");
-        $query->where("UnidadeConsumidora.excluido = 0 AND (CONVERT(UnidadeConsumidora.id USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(UnidadeConsumidora.codigo_conta_contrato USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(UnidadeConsumidora.id_conta_agrupadora USING utf8) LIKE '%{$parameters}%')");
-        $query->groupBy("UnidadeConsumidora.id");
-        $query->orderBy("UnidadeConsumidora.id DESC");
-        $resultado = $query->getQuery()->execute();
-        return $resultado;
     }
 
 }

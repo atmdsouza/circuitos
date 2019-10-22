@@ -2,6 +2,8 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+
 class PropostaComercialServico extends \Phalcon\Mvc\Model
 {
 
@@ -308,6 +310,26 @@ class PropostaComercialServico extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de PropostaComercialServico, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return PropostaComercialServico|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarPropostaComercialServico($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("PropostaComercialServico" => "Circuitos\Models\PropostaComercialServico"));
+        $query->columns("PropostaComercialServico.*");
+        $query->where("PropostaComercialServico.excluido = 0 AND (CONVERT(PropostaComercialServico.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServico.codigo_conta_contrato USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServico.id_conta_agrupadora USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("PropostaComercialServico.id");
+        $query->orderBy("PropostaComercialServico.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
 }
