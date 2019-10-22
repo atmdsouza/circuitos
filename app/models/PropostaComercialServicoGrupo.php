@@ -261,13 +261,14 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
     public static function pesquisarPropostaComercialServicoGrupo($parameters = null)
     {
         $query = new Builder();
-        $query->from(array("UnidadeConsumidora" => "Circuitos\Models\UnidadeConsumidora"));
-        $query->columns("UnidadeConsumidora.*");
-        $query->where("UnidadeConsumidora.excluido = 0 AND (CONVERT(UnidadeConsumidora.id USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(UnidadeConsumidora.codigo_conta_contrato USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(UnidadeConsumidora.id_conta_agrupadora USING utf8) LIKE '%{$parameters}%')");
-        $query->groupBy("UnidadeConsumidora.id");
-        $query->orderBy("UnidadeConsumidora.id DESC");
+        $query->from(array("PropostaComercialServicoGrupo" => "Circuitos\Models\PropostaComercialServicoGrupo"));
+        $query->columns("PropostaComercialServicoGrupo.*");
+        $query->where("PropostaComercialServicoGrupo.excluido = 0 AND (CONVERT(PropostaComercialServicoGrupo.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoGrupo.codigo_legado USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoGrupo.codigo_contabil USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoGrupo.descritivo USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("PropostaComercialServicoGrupo.id");
+        $query->orderBy("PropostaComercialServicoGrupo.id DESC");
         $resultado = $query->getQuery()->execute();
         return $resultado;
     }

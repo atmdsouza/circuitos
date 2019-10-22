@@ -235,8 +235,8 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
         $query->from(array("PropostaComercialServicoUnidade" => "Circuitos\Models\PropostaComercialServicoUnidade"));
         $query->columns("PropostaComercialServicoUnidade.*");
         $query->where("PropostaComercialServicoUnidade.excluido = 0 AND (CONVERT(PropostaComercialServicoUnidade.id USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(PropostaComercialServicoUnidade.codigo_conta_contrato USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(PropostaComercialServicoUnidade.id_conta_agrupadora USING utf8) LIKE '%{$parameters}%')");
+                        OR CONVERT(PropostaComercialServicoUnidade.sigla USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoUnidade.descricao USING utf8) LIKE '%{$parameters}%')");
         $query->groupBy("PropostaComercialServicoUnidade.id");
         $query->orderBy("PropostaComercialServicoUnidade.id DESC");
         $resultado = $query->getQuery()->execute();

@@ -323,9 +323,17 @@ class PropostaComercialServico extends \Phalcon\Mvc\Model
         $query = new Builder();
         $query->from(array("PropostaComercialServico" => "Circuitos\Models\PropostaComercialServico"));
         $query->columns("PropostaComercialServico.*");
+        $query->leftJoin("Circuitos\Models\PropostaComercialServicoGrupo", "PropostaComercialServicoGrupo.id = PropostaComercialServico.id_proposta_comercial_servico_grupo", "PropostaComercialServicoGrupo");
+        $query->leftJoin("Circuitos\Models\PropostaComercialServicoUnidade", "PropostaComercialServicoUnidade.id = PropostaComercialServico.id_proposta_comercial_servico_unidade", "PropostaComercialServicoUnidade");
         $query->where("PropostaComercialServico.excluido = 0 AND (CONVERT(PropostaComercialServico.id USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(PropostaComercialServico.codigo_conta_contrato USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(PropostaComercialServico.id_conta_agrupadora USING utf8) LIKE '%{$parameters}%')");
+                        OR CONVERT(PropostaComercialServico.codigo_contabil USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServico.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoGrupo.codigo_legado USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoGrupo.codigo_contabil USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoGrupo.descritivo USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoUnidade.sigla USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoUnidade.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServico.codigo_legado USING utf8) LIKE '%{$parameters}%')");
         $query->groupBy("PropostaComercialServico.id");
         $query->orderBy("PropostaComercialServico.id DESC");
         $resultado = $query->getQuery()->execute();

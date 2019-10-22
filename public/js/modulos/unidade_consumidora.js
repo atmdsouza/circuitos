@@ -413,7 +413,6 @@ function autocompletarAgrupadora()
             }
         },
         success: function (data) {
-            console.log(data.dados);
             if (data.operacao) {
                 listAgrupadora = [];
                 $.each(data.dados, function (key, value) {
