@@ -121,6 +121,9 @@
 			<index name="fk_vlan_lov6_idx" unique="NORMAL" >
 				<column name="id_tipoacesso" />
 			</index>
+			<index name="fk_circuitos_departamento" unique="NORMAL" >
+				<column name="id_empresa_departamento" />
+			</index>
 			<fk name="fk_circuitos_cidadedigital1" to_schema="bd_circuitosnavega" to_table="cidade_digital" >
 				<fk_column name="id_cidadedigital" pk="id" />
 			</fk>
@@ -816,8 +819,18 @@ Externo]]></comment>
 			<column name="id" type="int" jt="4" mandatory="y" autoincrement="y" />
 			<column name="id_departamento_pai" type="int" jt="4" />
 			<column name="descricao" type="varchar" length="80" jt="12" mandatory="y" />
+			<column name="ativo" type="boolean" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>1</defo>
+			</column>
+			<column name="excluido" type="boolean" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="data_update" type="datetime" length="26" decimal="0" jt="93" />
 			<index name="pk_empresa_departamento_id" unique="PRIMARY_KEY" >
 				<column name="id" />
+			</index>
+			<index name="idx_empresa_departamento" unique="NORMAL" >
+				<column name="id_departamento_pai" />
 			</index>
 			<fk name="fk_empresa_departamento" to_schema="bd_circuitosnavega" to_table="empresa_departamento" >
 				<fk_column name="id_departamento_pai" pk="id" />
@@ -1191,6 +1204,49 @@ Externo]]></comment>
 			</fk>
 			<fk name="fk_movimento_usuario1" to_schema="bd_circuitosnavega" to_table="usuario" >
 				<fk_column name="id_usuario" pk="id" />
+			</fk>
+		</table>
+		<table name="parametros" >
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="id_empresa" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<comment><![CDATA[Identificador da empresa]]></comment>
+			</column>
+			<column name="codigo" type="varchar" length="120" decimal="0" jt="12" mandatory="y" >
+				<comment><![CDATA[Codigo do parâmetro separados por underline em em uppercase.]]></comment>
+			</column>
+			<column name="valor" type="varchar" length="255" decimal="0" jt="12" mandatory="y" >
+				<comment><![CDATA[Valor do parâmetro, podendo ser um ID, um e-mail, uma URL, um cmainho de arquivo. Algo que possa ser tratado depois.]]></comment>
+			</column>
+			<column name="descricao" type="varchar" length="120" decimal="0" jt="12" >
+				<comment><![CDATA[Descrição do parâmetro.]]></comment>
+			</column>
+			<column name="visivel" type="boolean" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>1</defo>
+			</column>
+			<column name="senha" type="boolean" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="ativo" type="boolean" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>1</defo>
+			</column>
+			<column name="excluido" type="boolean" length="1" decimal="0" jt="-7" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<column name="data_update" type="datetime" length="26" decimal="0" jt="93" >
+				<comment><![CDATA[Data e hora da ultima atualização]]></comment>
+			</column>
+			<index name="pk_parametros" unique="PRIMARY_KEY" >
+				<column name="id" />
+				<column name="id_empresa" />
+			</index>
+			<index name="fk_empresa" unique="NORMAL" >
+				<column name="id_empresa" />
+			</index>
+			<index name="idx_codigo" unique="NORMAL" >
+				<column name="codigo" />
+			</index>
+			<fk name="fk_empresa" to_schema="bd_circuitosnavega" to_table="empresa" >
+				<fk_column name="id_empresa" pk="id" />
 			</fk>
 		</table>
 		<table name="pessoa" >
@@ -1994,8 +2050,12 @@ Externo]]></comment>
 				<defo>0</defo>
 			</column>
 			<column name="data_update" type="timestamp" length="26" decimal="0" jt="93" />
+			<column name="descricao" type="varchar" length="80" decimal="0" jt="12" mandatory="y" />
 			<index name="pk_unidade_consumidora" unique="PRIMARY_KEY" >
 				<column name="id" />
+			</index>
+			<index name="fk_unidade_consumidora" unique="NORMAL" >
+				<column name="id_conta_agrupadora" />
 			</index>
 			<fk name="fk_unidade_consumidora" to_schema="bd_circuitosnavega" to_table="unidade_consumidora" >
 				<fk_column name="id_conta_agrupadora" pk="id" />
@@ -2031,8 +2091,8 @@ Externo]]></comment>
 			</fk>
 		</table>
 	</schema>
-	<connector name="Local" database="MySql" driver_class="com.mysql.jdbc.Driver" driver_jar="mysql-connector-java-8.0.17.jar" driver_desc="Standard" host="localhost" port="3306" instance="bd_circuitosnavega" user="root" passwd="I2RAdGFiYXNlJA==" />
-	<connector name="PRODEPA" database="MySql" driver_class="com.mysql.jdbc.Driver" driver_jar="mysql-connector-java-8.0.17.jar" driver_desc="Standard" host="10.1.13.48" port="3306" instance="bd_circuitosnavega" user="circuitosnavega_apl" passwd="QzFSY3VJdDAk" />
+	<connector name="Local" database="MySql" driver_class="com.mysql.jdbc.Driver" driver_jar="mysql-connector-java-8.0.14.jar" driver_desc="Standard" host="localhost" port="3306" instance="bd_circuitosnavega" user="root" passwd="I2RAdGFiYXNlJA==" />
+	<connector name="PRODEPA" database="MySql" driver_class="com.mysql.jdbc.Driver" driver_jar="mysql-connector-java-8.0.14.jar" driver_desc="Standard" host="10.1.13.48" port="3306" instance="bd_circuitosnavega" user="circuitosnavega_apl" passwd="QzFSY3VJdDAk" />
 	<layout name="Layout Geral" id="Layout_2abb989" show_relation="columns" >
 		<comment><![CDATA[MySql]]></comment>
 		<entity schema="bd_circuitosnavega" name="cidade_digital" color="BED3F4" x="3344" y="384" />
@@ -2105,6 +2165,7 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="empresa_parametros" color="F4DDBE" x="4096" y="2336" />
 		<entity schema="bd_circuitosnavega" name="empresa_departamento" color="F4DDBE" x="3872" y="2480" />
 		<entity schema="bd_circuitosnavega" name="circuitos" color="F4DDBE" x="2640" y="1664" />
+		<entity schema="bd_circuitosnavega" name="parametros" color="3986C1" x="2464" y="1296" />
 		<group name="Empresa" color="C4E0F9" >
 			<entity schema="bd_circuitosnavega" name="empresa" />
 			<entity schema="bd_circuitosnavega" name="empresa_parametros" />
@@ -2163,6 +2224,7 @@ Externo]]></comment>
 			<entity schema="bd_circuitosnavega" name="email_destinatarios" />
 			<entity schema="bd_circuitosnavega" name="lov" />
 			<entity schema="bd_circuitosnavega" name="anexos" />
+			<entity schema="bd_circuitosnavega" name="parametros" />
 		</group>
 		<group name="Cidade Digital" color="C4E0F9" >
 			<entity schema="bd_circuitosnavega" name="cidade_digital" />

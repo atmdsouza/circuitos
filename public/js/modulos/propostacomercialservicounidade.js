@@ -74,7 +74,7 @@ function editar(id)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarUnidadeConsumidora', id: id},
+        data: {metodo: 'visualizarPropostaComercialServicoUnidade', id: id},
         complete: function () {
             $("#formCadastro input").removeAttr('readonly', 'readonly');
             $("#formCadastro select").removeAttr('readonly', 'readonly');
@@ -94,11 +94,8 @@ function editar(id)
         },
         success: function (data) {
             $('#id').val(data.dados.id);
-            $('#lid_conta_agrupadora').val(data.dados.desc_conta_agrupadora);
-            $('#id_conta_agrupadora').val(data.dados.id_conta_agrupadora);
-            $('#codigo_conta_contrato').val(data.dados.codigo_conta_contrato);
             $('#descricao').val(data.dados.descricao);
-            $('#observacao').val(data.dados.observacao);
+            $('#sigla').val(data.dados.sigla);
         }
     });
 }
@@ -112,21 +109,21 @@ function salvar()
             descricao:{
                 required: true
             },
-            codigo_conta_contrato:{
+            sigla:{
                 required: true
             }
         },
         messages:{
             descricao:{
-                required:"É necessário informar uma Descrição"
+                required:"É necessário informar uma Descrição para a unidade"
             },
-            codigo_conta_contrato:{
-                required:"É necessário informar um Código de Conta Contrato"
+            sigla:{
+                required:"É necessário informar uma Sigla para a unidade"
             }
         },
         submitHandler: function(form) {
             var dados = $("#formCadastro").serialize();
-            var action = actionCorreta(window.location.href.toString(), "unidade_consumidora/" + acao);
+            var action = actionCorreta(window.location.href.toString(), "proposta_comercial_servico_unidade/" + acao);
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
@@ -184,7 +181,7 @@ function ativar(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, ativar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "unidade_consumidora/ativar");
+        var action = actionCorreta(window.location.href.toString(), "proposta_comercial_servico_unidade/ativar");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -241,7 +238,7 @@ function inativar(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, inativar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "unidade_consumidora/inativar");
+        var action = actionCorreta(window.location.href.toString(), "proposta_comercial_servico_unidade/inativar");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -298,7 +295,7 @@ function excluir(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, excluir!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "unidade_consumidora/excluir");
+        var action = actionCorreta(window.location.href.toString(), "proposta_comercial_servico_unidade/excluir");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -351,7 +348,7 @@ function visualizar(id)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarUnidadeConsumidora', id: id},
+        data: {metodo: 'visualizarPropostaComercialServicoUnidade', id: id},
         complete: function () {
             $("#formCadastro input").attr('readonly', 'readonly');
             $("#formCadastro select").attr('readonly', 'readonly');
@@ -370,11 +367,8 @@ function visualizar(id)
         },
         success: function (data) {
             $('#id').val(data.dados.id);
-            $('#lid_conta_agrupadora').val(data.dados.desc_conta_agrupadora);
-            $('#id_conta_agrupadora').val(data.dados.id_conta_agrupadora);
-            $('#codigo_conta_contrato').val(data.dados.codigo_conta_contrato);
             $('#descricao').val(data.dados.descricao);
-            $('#observacao').val(data.dados.observacao);
+            $('#sigla').val(data.dados.sigla);
         }
     });
 }

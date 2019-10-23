@@ -2,6 +2,8 @@
 
 namespace Circuitos\Controllers;
 
+use Phalcon\Http\Response as Response;
+
 use Circuitos\Models\PropostaComercialServicoGrupo;
 use Circuitos\Models\Operations\PropostaComercialServicoGrupoOP;
 

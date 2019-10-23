@@ -32,6 +32,8 @@ use Circuitos\Models\Operations\ContratoOP;
 use Circuitos\Models\Operations\EstacaoTeleconOP;
 use Circuitos\Models\Operations\PropostaComercialOP;
 use Circuitos\Models\Operations\PropostaComercialServicoOP;
+use Circuitos\Models\Operations\PropostaComercialServicoGrupoOP;
+use Circuitos\Models\Operations\PropostaComercialServicoUnidadeOP;
 use Circuitos\Models\Operations\SetSegurancaOP;
 use Circuitos\Models\Operations\SetEquipamentoOP;
 use Circuitos\Models\Operations\TerrenoOP;
@@ -610,6 +612,10 @@ class CoreController extends ControllerBase
             case 'visualizarComponenteSetEquipamento':
                 $objeto = new SetEquipamentoOP();
                 return $objeto->visualizarComponenteSetEquipamento($dados['id']);
+                break;
+            case 'visualizarPropostaComercialServicoUnidade':
+                $objeto = new PropostaComercialServicoUnidadeOP();
+                return $objeto->visualizarPropostaComercialServicoUnidade($dados['id']);
                 break;
             case 'visualizarTerreno':
                 $objeto = new TerrenoOP();

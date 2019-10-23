@@ -23,12 +23,9 @@ class PropostaComercialServicoUnidadeOP extends PropostaComercialServicoUnidade
         $transaction = $manager->get();
         try {
             $objeto = new PropostaComercialServicoUnidade();
-            $id_conta_agrupadora = ($objArray->getIdContaAgrupadora()) ? $objArray->getIdContaAgrupadora() : null;
             $objeto->setTransaction($transaction);
-            $objeto->setIdContaAgrupadora($id_conta_agrupadora);
-            $objeto->setCodigoContaContrato($objArray->getCodigoContaContrato());
+            $objeto->setSigla(mb_strtoupper($objArray->getSigla(), $this->encode));
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
-            $objeto->setObservacao(mb_strtoupper($objArray->getObservacao(), $this->encode));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
                 $messages = $objeto->getMessages();
@@ -36,7 +33,7 @@ class PropostaComercialServicoUnidadeOP extends PropostaComercialServicoUnidade
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
-                $transaction->rollback("Erro ao criar a Unidade Consumidora: " . $errors);
+                $transaction->rollback("Erro ao criar a Unidade de serviço: " . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -52,15 +49,12 @@ class PropostaComercialServicoUnidadeOP extends PropostaComercialServicoUnidade
         $transaction = $manager->get();
         try {
             $objeto = PropostaComercialServicoUnidade::findFirst($objArray->getId());
-            $id_conta_agrupadora = ($objArray->getIdContaAgrupadora()) ? $objArray->getIdContaAgrupadora() : null;
             $objeto->setTransaction($transaction);
-            $objeto->setIdContaAgrupadora($id_conta_agrupadora);
-            $objeto->setCodigoContaContrato($objArray->getCodigoContaContrato());
+            $objeto->setSigla(mb_strtoupper($objArray->getSigla(), $this->encode));
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
-            $objeto->setObservacao(mb_strtoupper($objArray->getObservacao(), $this->encode));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a unidade consumidora!");
+                $transaction->rollback("Não foi possível alterar a unidade de serviço!");
             }
             $transaction->commit();
             return $objeto;
@@ -80,7 +74,7 @@ class PropostaComercialServicoUnidadeOP extends PropostaComercialServicoUnidade
             $objeto->setAtivo(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a unidade consumidora!");
+                $transaction->rollback("Não foi possível alterar a unidade de serviço!");
             }
             $transaction->commit();
             return $objeto;
@@ -100,7 +94,7 @@ class PropostaComercialServicoUnidadeOP extends PropostaComercialServicoUnidade
             $objeto->setAtivo(0);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a unidade consumidora!");
+                $transaction->rollback("Não foi possível alterar a unidade de serviço!");
             }
             $transaction->commit();
             return $objeto;
@@ -120,7 +114,7 @@ class PropostaComercialServicoUnidadeOP extends PropostaComercialServicoUnidade
             $objeto->setExcluido(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível excluir a unidade consumidora!");
+                $transaction->rollback("Não foi possível excluir a unidade de serviço!");
             }
             $transaction->commit();
             return $objeto;
@@ -136,11 +130,8 @@ class PropostaComercialServicoUnidadeOP extends PropostaComercialServicoUnidade
             $objeto = PropostaComercialServicoUnidade::findFirst("id={$id}");
             $objetoArray = array(
                 'id' => $objeto->getId(),
-                'id_conta_agrupadora' => $objeto->getIdContaAgrupadora(),
-                'desc_conta_agrupadora' => $objeto->getContaAgrupadoraPai(),
-                'codigo_conta_contrato' => $objeto->getCodigoContaContrato(),
                 'descricao' => $objeto->getDescricao(),
-                'observacao' => $objeto->getObservacao()
+                'sigla' => $objeto->getSigla()
             );
             $response = new Response();
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoArray)));

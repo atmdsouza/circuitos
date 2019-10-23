@@ -15,6 +15,12 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
 
     /**
      *
+     * @var integer
+     */
+    protected $id_grupo_pai;
+
+    /**
+     *
      * @var string
      */
     protected $codigo_legado;
@@ -29,7 +35,7 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
      *
      * @var string
      */
-    protected $descritivo;
+    protected $descricao;
 
     /**
      *
@@ -89,14 +95,14 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field descritivo
+     * Method to set the value of field descricao
      *
-     * @param string $descritivo
+     * @param string $descricao
      * @return $this
      */
-    public function setDescritivo($descritivo)
+    public function setdescricao($descricao)
     {
-        $this->descritivo = $descritivo;
+        $this->descricao = $descricao;
 
         return $this;
     }
@@ -171,13 +177,13 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field descritivo
+     * Returns the value of field descricao
      *
      * @return string
      */
-    public function getDescritivo()
+    public function getdescricao()
     {
-        return $this->descritivo;
+        return $this->descricao;
     }
 
     /**
@@ -211,6 +217,22 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return int
+     */
+    public function getIdGrupoPai()
+    {
+        return $this->id_grupo_pai;
+    }
+
+    /**
+     * @param int $id_grupo_pai
+     */
+    public function setIdGrupoPai($id_grupo_pai)
+    {
+        $this->id_grupo_pai = $id_grupo_pai;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -218,6 +240,8 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("proposta_comercial_servico_grupo");
         $this->hasMany('id', 'Circuitos\Models\PropostaComercialServico', 'id_proposta_comercial_servico_grupo', ['alias' => 'PropostaComercialServico']);
+        $this->hasMany('id', 'Circuitos\Models\PropostaComercialServico', 'id_grupo_pai', ['alias' => 'PropostaComercialServico']);
+        $this->belongsTo('id_grupo_pai', 'Circuitos\Models\PropostaComercialServico', 'id', ['alias' => 'PropostaComercialServico']);
     }
 
     /**
@@ -266,7 +290,7 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
         $query->where("PropostaComercialServicoGrupo.excluido = 0 AND (CONVERT(PropostaComercialServicoGrupo.id USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(PropostaComercialServicoGrupo.codigo_legado USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(PropostaComercialServicoGrupo.codigo_contabil USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(PropostaComercialServicoGrupo.descritivo USING utf8) LIKE '%{$parameters}%')");
+                        OR CONVERT(PropostaComercialServicoGrupo.descricao USING utf8) LIKE '%{$parameters}%')");
         $query->groupBy("PropostaComercialServicoGrupo.id");
         $query->orderBy("PropostaComercialServicoGrupo.id DESC");
         $resultado = $query->getQuery()->execute();

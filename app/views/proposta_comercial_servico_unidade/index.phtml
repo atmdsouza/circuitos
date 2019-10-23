@@ -119,24 +119,13 @@ $module = $this->router->getControllerName();
                     <div class="form-row">
                         <div class="col-12">
                             <div class="form-row">
-                                <div class="form-group col-md-4">
-                                    <label for="lid_contrato">Conta Agrupadora </label>
-                                    <?php echo $this->tag->textField(["lid_conta_agrupadora", "size" => 120, "class" => "form-control", "id" => "lid_conta_agrupadora", "placeholder" => "Conta Agrupadora", "onkeyup" => "autocompletarAgrupadora();"]) ?>
-                                    <?php echo $this->tag->hiddenField(["id_conta_agrupadora", "size" => 120, "class" => "form-control", "id" => "id_conta_agrupadora"]) ?>
+                                <div class="form-group col-md-6">
+                                    <label for="sigla">Sigla da Unidade <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["sigla", "size" => 120, "class" => "form-control", "id" => "sigla", "placeholder" => "Sigla da Unidade"]) ?>
                                 </div>
-                                <div class="form-group col-md-4">
-                                    <label for="descricao">Conta Contrato <span class="required">*</span></label>
-                                    <?= $this->tag->textField(["codigo_conta_contrato", "size" => 200, "class" => "form-control", "id" => "codigo_conta_contrato", "placeholder" => "Conta Contrato"]) ?>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="descricao">Descrição <span class="required">*</span></label>
-                                    <?= $this->tag->textField(["descricao", "size" => 200, "class" => "form-control", "id" => "descricao", "placeholder" => "Descrição da Conta Contrato"]) ?>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-12">
-                                    <label for="observacao">Observação</label>
-                                    <?php echo $this->tag->textArea(["observacao", "size" => 400, "class" => "form-control", "id" => "observacao", "placeholder" => "Observação"]) ?>
+                                <div class="form-group col-md-6">
+                                    <label for="descricao">Descrição da Unidade <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["descricao", "size" => 200, "class" => "form-control", "id" => "descricao", "placeholder" => "Descrição da Unidade"]) ?>
                                 </div>
                             </div>
                         </div>
