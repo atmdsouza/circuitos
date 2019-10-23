@@ -13,6 +13,7 @@ use Circuitos\Models\EstacaoTelecon;
 use Circuitos\Models\Fabricante;
 use Circuitos\Models\Lov;
 use Circuitos\Models\Modelo;
+use Circuitos\Models\PropostaComercialServicoGrupo;
 use Circuitos\Models\Terreno;
 use Circuitos\Models\Torre;
 use Circuitos\Models\SetEquipamento;
@@ -167,6 +168,15 @@ class CoreOP
     {
         $dados = filter_input_array(INPUT_GET);
         $torre = UnidadeConsumidora::find("excluido=0 AND ativo=1 AND codigo_conta_contrato LIKE '%{$dados['string']}%'");
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $torre)));
+        return $response;
+    }
+
+    public function gruposServicoAtivos()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $torre = PropostaComercialServicoGrupo::find("excluido=0 AND ativo=1 AND descricao LIKE '%{$dados['string']}%'");
         $response = new Response();
         $response->setContent(json_encode(array("operacao" => True, "dados" => $torre)));
         return $response;

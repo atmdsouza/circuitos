@@ -16,4 +16,7 @@ update end_bairro set bairro = upper(bairro);
 update end_endereco set logradouro = upper(logradouro),local = upper(local),complemento = upper(complemento),tipo_logradouro = upper(tipo_logradouro);
 update end_estado set estado = upper(estado);
 update conectividade set endereco = upper(endereco),descricao = upper(descricao);
+update proposta_comercial_servico_unidade set sigla = upper(sigla),descricao = upper(descricao);
+update proposta_comercial_servico_grupo set descricao = upper(descricao);
+update proposta_comercial_servico set descricao = upper(descricao);
 COMMIT;

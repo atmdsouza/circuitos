@@ -655,4 +655,11 @@ $(document).ready(function () {
             }
         }
     });
+    $(".codigo_contabil").mask('0.ZZ.ZZ.ZZ.ZZ.ZZ.ZZ.ZZ.ZZ', {
+        translation: {
+            'Z': {
+                pattern: /[0-9]/, optional: true
+            }
+        }
+    });
 });

@@ -4,6 +4,8 @@ var URLImagensSistema = "public/images";
 
 //Variáveis Globais
 var mudou = false;
+var listGrupo = [];
+var g = 0;
 
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos)
 function inicializar()
@@ -15,8 +17,9 @@ function inicializar()
         language: {
             select: false
         },
-        order: [[4, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
+        order: [[5, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
     });
+    autocompletarGrupo();
 }
 
 function verificarAlteracao()
@@ -74,7 +77,7 @@ function editar(id)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarUnidadeConsumidora', id: id},
+        data: {metodo: 'visualizarPropostaComercialServicoGrupo', id: id},
         complete: function () {
             $("#formCadastro input").removeAttr('readonly', 'readonly');
             $("#formCadastro select").removeAttr('readonly', 'readonly');
@@ -94,11 +97,11 @@ function editar(id)
         },
         success: function (data) {
             $('#id').val(data.dados.id);
-            $('#lid_conta_agrupadora').val(data.dados.desc_conta_agrupadora);
-            $('#id_conta_agrupadora').val(data.dados.id_conta_agrupadora);
-            $('#codigo_conta_contrato').val(data.dados.codigo_conta_contrato);
+            $('#lid_grupo_pai').val(data.dados.desc_grupo_pai);
+            $('#id_grupo_pai').val(data.dados.id_grupo_pai);
+            $('#codigo_contabil').val(data.dados.codigo_contabil);
             $('#descricao').val(data.dados.descricao);
-            $('#observacao').val(data.dados.observacao);
+            $('#codigo_legado').val(data.dados.codigo_legado);
         }
     });
 }
@@ -112,7 +115,7 @@ function salvar()
             descricao:{
                 required: true
             },
-            codigo_conta_contrato:{
+            codigo_contabil:{
                 required: true
             }
         },
@@ -120,13 +123,13 @@ function salvar()
             descricao:{
                 required:"É necessário informar uma Descrição"
             },
-            codigo_conta_contrato:{
-                required:"É necessário informar um Código de Conta Contrato"
+            codigo_contabil:{
+                required:"É necessário informar um Código Contábil"
             }
         },
         submitHandler: function(form) {
             var dados = $("#formCadastro").serialize();
-            var action = actionCorreta(window.location.href.toString(), "unidade_consumidora/" + acao);
+            var action = actionCorreta(window.location.href.toString(), "proposta_comercial_servico_grupo/" + acao);
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
@@ -184,7 +187,7 @@ function ativar(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, ativar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "unidade_consumidora/ativar");
+        var action = actionCorreta(window.location.href.toString(), "proposta_comercial_servico_grupo/ativar");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -241,7 +244,7 @@ function inativar(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, inativar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "unidade_consumidora/inativar");
+        var action = actionCorreta(window.location.href.toString(), "proposta_comercial_servico_grupo/inativar");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -298,7 +301,7 @@ function excluir(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, excluir!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "unidade_consumidora/excluir");
+        var action = actionCorreta(window.location.href.toString(), "proposta_comercial_servico_grupo/excluir");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -351,7 +354,7 @@ function visualizar(id)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarUnidadeConsumidora', id: id},
+        data: {metodo: 'visualizarPropostaComercialServicoGrupo', id: id},
         complete: function () {
             $("#formCadastro input").attr('readonly', 'readonly');
             $("#formCadastro select").attr('readonly', 'readonly');
@@ -370,11 +373,11 @@ function visualizar(id)
         },
         success: function (data) {
             $('#id').val(data.dados.id);
-            $('#lid_conta_agrupadora').val(data.dados.desc_conta_agrupadora);
-            $('#id_conta_agrupadora').val(data.dados.id_conta_agrupadora);
-            $('#codigo_conta_contrato').val(data.dados.codigo_conta_contrato);
+            $('#lid_grupo_pai').val(data.dados.desc_grupo_pai);
+            $('#id_grupo_pai').val(data.dados.id_grupo_pai);
+            $('#codigo_contabil').val(data.dados.codigo_contabil);
             $('#descricao').val(data.dados.descricao);
-            $('#observacao').val(data.dados.observacao);
+            $('#codigo_legado').val(data.dados.codigo_legado);
         }
     });
 }
@@ -384,4 +387,56 @@ function limpar()
     'use strict';
     $('#fieldPesquisa').val('');
     $('#formPesquisa').submit();
+}
+
+function autocompletarGrupo()
+{
+    "use strict";
+    //Autocomplete
+    var ac_grupo_pai = $("#lid_grupo_pai");
+    var vl_grupo_pai = $("#id_grupo_pai");
+    var string = ac_grupo_pai.val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'gruposServicoAtivos', string: string},
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao) {
+                listGrupo = [];
+                $.each(data.dados, function (key, value) {
+                    listGrupo.push({value: value.descricao, data: value.id});
+                });
+                if(g === 0) {
+                    //Autocomplete
+                    ac_grupo_pai.autocomplete({
+                        lookup: listGrupo,
+                        onSelect: function (suggestion) {
+                            vl_grupo_pai.val(suggestion.data);
+                        }
+                    });
+                    g++;
+                } else {
+                    //Autocomplete
+                    ac_grupo_pai.autocomplete().setOptions( {
+                        lookup: listGrupo
+                    });
+                }
+            } else {
+                vl_grupo_pai.val("");
+                ac_grupo_pai.val("");
+            }
+        }
+    });
 }

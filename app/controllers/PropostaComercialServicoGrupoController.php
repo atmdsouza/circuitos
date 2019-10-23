@@ -49,9 +49,9 @@ class PropostaComercialServicoGrupoController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-        $titulo = 'Cadastro de Unidade Consumidora';
-        $msg = 'Unidade Consumidora cadastrada com sucesso!';
-        $error_msg = 'Erro ao cadastrar uma Unidade Consumidora!';
+        $titulo = 'Cadastro de Grupo de Serviço';
+        $msg = 'Grupo de Serviço cadastrada com sucesso!';
+        $error_msg = 'Erro ao cadastrar um Grupo de Serviço!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -76,9 +76,9 @@ class PropostaComercialServicoGrupoController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-        $titulo = 'Alteração de Unidade Consumidora';
-        $msg = 'Unidade Consumidora alterada com sucesso!';
-        $error_msg = 'Erro ao alterar uma Unidade Consumidora!';
+        $titulo = 'Alteração de Grupo de Serviço';
+        $msg = 'Grupo de Serviço alterada com sucesso!';
+        $error_msg = 'Erro ao alterar um Grupo de Serviço!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -101,9 +101,9 @@ class PropostaComercialServicoGrupoController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Reativação de Unidade Consumidora';
-        $msg = 'Unidade Consumidora reativada com sucesso!';
-        $error_msg = 'Erro ao reativar uma Unidade Consumidora!';
+        $titulo = 'Reativação de Grupo de Serviço';
+        $msg = 'Grupo de Serviço reativada com sucesso!';
+        $error_msg = 'Erro ao reativar um Grupo de Serviço!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -126,9 +126,9 @@ class PropostaComercialServicoGrupoController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Desativação de Unidade Consumidora';
-        $msg = 'Unidade Consumidora desativada com sucesso!';
-        $error_msg = 'Erro ao desativar uma Unidade Consumidora!';
+        $titulo = 'Desativação de Grupo de Serviço';
+        $msg = 'Grupo de Serviço desativada com sucesso!';
+        $error_msg = 'Erro ao desativar um Grupo de Serviço!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -151,9 +151,9 @@ class PropostaComercialServicoGrupoController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Exclusão de Unidade Consumidora';
-        $msg = 'Unidade Consumidora excluída com sucesso!';
-        $error_msg = 'Erro ao excluir a Unidade Consumidora!';
+        $titulo = 'Exclusão de Grupo de Serviço';
+        $msg = 'Grupo de Serviço excluída com sucesso!';
+        $error_msg = 'Erro ao excluir a Grupo de Serviço!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido

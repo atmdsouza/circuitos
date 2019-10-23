@@ -23,12 +23,12 @@ class PropostaComercialServicoGrupoOP extends PropostaComercialServicoGrupo
         $transaction = $manager->get();
         try {
             $objeto = new PropostaComercialServicoGrupo();
-            $id_conta_agrupadora = ($objArray->getIdContaAgrupadora()) ? $objArray->getIdContaAgrupadora() : null;
+            $id_grupo_pai = ($objArray->getIdGrupoPai()) ? $objArray->getIdGrupoPai() : null;
             $objeto->setTransaction($transaction);
-            $objeto->setIdContaAgrupadora($id_conta_agrupadora);
-            $objeto->setCodigoContaContrato($objArray->getCodigoContaContrato());
+            $objeto->setIdGrupoPai($id_grupo_pai);
+            $objeto->setCodigoLegado($objArray->getCodigoLegado());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
-            $objeto->setObservacao(mb_strtoupper($objArray->getObservacao(), $this->encode));
+            $objeto->setCodigoContabil($objArray->getCodigoContabil());
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
                 $messages = $objeto->getMessages();
@@ -36,7 +36,7 @@ class PropostaComercialServicoGrupoOP extends PropostaComercialServicoGrupo
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
-                $transaction->rollback("Erro ao criar a Unidade Consumidora: " . $errors);
+                $transaction->rollback("Erro ao criar o grupo de serviço: " . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -52,15 +52,15 @@ class PropostaComercialServicoGrupoOP extends PropostaComercialServicoGrupo
         $transaction = $manager->get();
         try {
             $objeto = PropostaComercialServicoGrupo::findFirst($objArray->getId());
-            $id_conta_agrupadora = ($objArray->getIdContaAgrupadora()) ? $objArray->getIdContaAgrupadora() : null;
+            $id_grupo_pai = ($objArray->getIdGrupoPai()) ? $objArray->getIdGrupoPai() : null;
             $objeto->setTransaction($transaction);
-            $objeto->setIdContaAgrupadora($id_conta_agrupadora);
-            $objeto->setCodigoContaContrato($objArray->getCodigoContaContrato());
+            $objeto->setIdGrupoPai($id_grupo_pai);
+            $objeto->setCodigoLegado($objArray->getCodigoLegado());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
-            $objeto->setObservacao(mb_strtoupper($objArray->getObservacao(), $this->encode));
+            $objeto->setCodigoContabil($objArray->getCodigoContabil());
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a unidade consumidora!");
+                $transaction->rollback("Não foi possível alterar o grupo de serviço!");
             }
             $transaction->commit();
             return $objeto;
@@ -80,7 +80,7 @@ class PropostaComercialServicoGrupoOP extends PropostaComercialServicoGrupo
             $objeto->setAtivo(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a unidade consumidora!");
+                $transaction->rollback("Não foi possível alterar o grupo de serviço!");
             }
             $transaction->commit();
             return $objeto;
@@ -100,7 +100,7 @@ class PropostaComercialServicoGrupoOP extends PropostaComercialServicoGrupo
             $objeto->setAtivo(0);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a unidade consumidora!");
+                $transaction->rollback("Não foi possível alterar o grupo de serviço!");
             }
             $transaction->commit();
             return $objeto;
@@ -120,7 +120,7 @@ class PropostaComercialServicoGrupoOP extends PropostaComercialServicoGrupo
             $objeto->setExcluido(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível excluir a unidade consumidora!");
+                $transaction->rollback("Não foi possível excluir o grupo de serviço!");
             }
             $transaction->commit();
             return $objeto;
@@ -136,11 +136,11 @@ class PropostaComercialServicoGrupoOP extends PropostaComercialServicoGrupo
             $objeto = PropostaComercialServicoGrupo::findFirst("id={$id}");
             $objetoArray = array(
                 'id' => $objeto->getId(),
-                'id_conta_agrupadora' => $objeto->getIdContaAgrupadora(),
-                'desc_conta_agrupadora' => $objeto->getContaAgrupadoraPai(),
-                'codigo_conta_contrato' => $objeto->getCodigoContaContrato(),
-                'descricao' => $objeto->getDescricao(),
-                'observacao' => $objeto->getObservacao()
+                'desc_grupo_pai' => $objeto->getGrupoPai(),
+                'id_grupo_pai' => $objeto->getIdGrupoPai(),
+                'codigo_contabil' => $objeto->getCodigoContabil(),
+                'codigo_legado' => $objeto->getCodigoLegado(),
+                'descricao' => $objeto->getDescricao()
             );
             $response = new Response();
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoArray)));
