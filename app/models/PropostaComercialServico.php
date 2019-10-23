@@ -269,6 +269,26 @@ class PropostaComercialServico extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field data_update
+     *
+     * @return string
+     */
+    public function getGrupo()
+    {
+        return $this->PropostaComercialServicoGrupo->descricao;
+    }
+
+    /**
+     * Returns the value of field data_update
+     *
+     * @return string
+     */
+    public function getUnidade()
+    {
+        return $this->PropostaComercialServicoUnidade->descricao;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -330,7 +350,7 @@ class PropostaComercialServico extends \Phalcon\Mvc\Model
                         OR CONVERT(PropostaComercialServico.descricao USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(PropostaComercialServicoGrupo.codigo_legado USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(PropostaComercialServicoGrupo.codigo_contabil USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(PropostaComercialServicoGrupo.descritivo USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoGrupo.descricao USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(PropostaComercialServicoUnidade.sigla USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(PropostaComercialServicoUnidade.descricao USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(PropostaComercialServico.codigo_legado USING utf8) LIKE '%{$parameters}%')");

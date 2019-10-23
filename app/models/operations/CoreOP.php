@@ -2,6 +2,7 @@
 
 namespace Circuitos\Models\Operations;
 
+use Circuitos\Models\PropostaComercialServicoUnidade;
 use Phalcon\Http\Response as Response;
 
 use Circuitos\Models\CidadeDigital;
@@ -177,6 +178,24 @@ class CoreOP
     {
         $dados = filter_input_array(INPUT_GET);
         $torre = PropostaComercialServicoGrupo::find("excluido=0 AND ativo=1 AND descricao LIKE '%{$dados['string']}%'");
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $torre)));
+        return $response;
+    }
+
+    public function servicoGruposAtivos()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $torre = PropostaComercialServicoGrupo::find("excluido=0 AND ativo=1 AND descricao LIKE '%{$dados['string']}%'");
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $torre)));
+        return $response;
+    }
+
+    public function servicoUnidadesAtivos()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $torre = PropostaComercialServicoUnidade::find("excluido=0 AND ativo=1 AND descricao LIKE '%{$dados['string']}%'");
         $response = new Response();
         $response->setContent(json_encode(array("operacao" => True, "dados" => $torre)));
         return $response;

@@ -543,6 +543,14 @@ class CoreController extends ControllerBase
                 $objeto = new CoreOP();
                 return $objeto->gruposServicoAtivos();
                 break;
+            case 'servicoGruposAtivos':
+                $objeto = new CoreOP();
+                return $objeto->servicoGruposAtivos();
+                break;
+            case 'servicoUnidadesAtivos':
+                $objeto = new CoreOP();
+                return $objeto->servicoUnidadesAtivos();
+                break;
         }
     }
 
@@ -589,10 +597,6 @@ class CoreController extends ControllerBase
                 $objeto = new PropostaComercialOP();
                 return $objeto->visualizarPropostaComercial($dados['id']);
                 break;
-            case 'visualizarPropostaComercialServico':
-                $objeto = new PropostaComercialServicoOP();
-                return $objeto->visualizarPropostaComercialServico($dados['id']);
-                break;
             case 'visualizarSetSeguranca':
                 $objeto = new SetSegurancaOP();
                 return $objeto->visualizarSetSeguranca($dados['id']);
@@ -616,6 +620,10 @@ class CoreController extends ControllerBase
             case 'visualizarComponenteSetEquipamento':
                 $objeto = new SetEquipamentoOP();
                 return $objeto->visualizarComponenteSetEquipamento($dados['id']);
+                break;
+            case 'visualizarPropostaComercialServico':
+                $objeto = new PropostaComercialServicoOP();
+                return $objeto->visualizarPropostaComercialServico($dados['id']);
                 break;
             case 'visualizarPropostaComercialServicoGrupo':
                 $objeto = new PropostaComercialServicoGrupoOP();

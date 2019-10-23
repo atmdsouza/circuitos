@@ -24,10 +24,11 @@ class PropostaComercialServicoOP extends PropostaComercialServico
         try {
             $objeto = new PropostaComercialServico();
             $objeto->setTransaction($transaction);
-            $objeto->setIdCidadeDigital($objArray->getIdCidadeDigital());
-            $objeto->setIdTipo($objArray->getIdTipo());
+            $objeto->setIdPropostaComercialServicoGrupo($objArray->getIdPropostaComercialServicoGrupo());
+            $objeto->setIdPropostaComercialServicoUnidade($objArray->getIdPropostaComercialServicoUnidade());
+            $objeto->setCodigoLegado($objArray->getCodigoLegado());
+            $objeto->setCodigoContabil($objArray->getCodigoContabil());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
-            $objeto->setEndereco(mb_strtoupper($objArray->getEndereco(), $this->encode));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
                 $transaction->rollback("Não foi possível salvar a conectividade!");
@@ -47,10 +48,11 @@ class PropostaComercialServicoOP extends PropostaComercialServico
         try {
             $objeto = PropostaComercialServico::findFirst($objArray->getId());
             $objeto->setTransaction($transaction);
-            $objeto->setIdCidadeDigital($objArray->getIdCidadeDigital());
-            $objeto->setIdTipo($objArray->getIdTipo());
+            $objeto->setIdPropostaComercialServicoGrupo($objArray->getIdPropostaComercialServicoGrupo());
+            $objeto->setIdPropostaComercialServicoUnidade($objArray->getIdPropostaComercialServicoUnidade());
+            $objeto->setCodigoLegado($objArray->getCodigoLegado());
+            $objeto->setCodigoContabil($objArray->getCodigoContabil());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
-            $objeto->setEndereco(mb_strtoupper($objArray->getEndereco(), $this->encode));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
                 $transaction->rollback("Não foi possível alterar a conectividade!");
@@ -129,11 +131,13 @@ class PropostaComercialServicoOP extends PropostaComercialServico
             $objeto = PropostaComercialServico::findFirst("id={$id}");
             $objetoArray = array(
                 'id' => $objeto->getId(),
-                'id_cidade_digital' => $objeto->getIdCidadeDigital(),
-                'desc_cidade_digital' => $objeto->getNomeCidadeDigital(),
-                'id_tipo' => $objeto->getIdTipo(),
-                'descricao' => $objeto->getDescricao(),
-                'endereco' => $objeto->getEndereco()
+                'id_proposta_comercial_servico_grupo' => $objeto->getIdPropostaComercialServicoGrupo(),
+                'id_proposta_comercial_servico_unidade' => $objeto->getIdPropostaComercialServicoUnidade(),
+                'desc_proposta_comercial_servico_grupo' => $objeto->getGrupo(),
+                'desc_proposta_comercial_servico_unidade' => $objeto->getUnidade(),
+                'codigo_legado' => $objeto->getCodigoLegado(),
+                'codigo_contabil' => $objeto->getCodigoContabil(),
+                'descricao' => $objeto->getDescricao()
             );
             $response = new Response();
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoArray)));

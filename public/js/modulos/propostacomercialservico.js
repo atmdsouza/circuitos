@@ -19,7 +19,7 @@ function inicializar()
         language: {
             select: false
         },
-        order: [[4, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
+        order: [[6, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
     });
     autocompletarGrupo();
     autocompletarUnidade();
@@ -80,7 +80,7 @@ function editar(id)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarUnidadeConsumidora', id: id},
+        data: {metodo: 'visualizarPropostaComercialServico', id: id},
         complete: function () {
             $("#formCadastro input").removeAttr('readonly', 'readonly');
             $("#formCadastro select").removeAttr('readonly', 'readonly');
@@ -100,11 +100,13 @@ function editar(id)
         },
         success: function (data) {
             $('#id').val(data.dados.id);
-            $('#lid_conta_agrupadora').val(data.dados.desc_conta_agrupadora);
-            $('#id_conta_agrupadora').val(data.dados.id_conta_agrupadora);
-            $('#codigo_conta_contrato').val(data.dados.codigo_conta_contrato);
+            $('#lid_proposta_comercial_servico_grupo').val(data.dados.desc_proposta_comercial_servico_grupo);
+            $('#id_proposta_comercial_servico_grupo').val(data.dados.id_proposta_comercial_servico_grupo);
+            $('#lid_proposta_comercial_servico_unidade').val(data.dados.desc_proposta_comercial_servico_unidade);
+            $('#id_proposta_comercial_servico_unidade').val(data.dados.id_proposta_comercial_servico_unidade);
+            $('#codigo_legado').val(data.dados.codigo_legado);
+            $('#codigo_contabil').val(data.dados.codigo_contabil);
             $('#descricao').val(data.dados.descricao);
-            $('#observacao').val(data.dados.observacao);
         }
     });
 }
@@ -132,7 +134,7 @@ function salvar()
         },
         submitHandler: function(form) {
             var dados = $("#formCadastro").serialize();
-            var action = actionCorreta(window.location.href.toString(), "unidade_consumidora/" + acao);
+            var action = actionCorreta(window.location.href.toString(), "proposta_comercial_servico/" + acao);
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
@@ -190,7 +192,7 @@ function ativar(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, ativar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "unidade_consumidora/ativar");
+        var action = actionCorreta(window.location.href.toString(), "proposta_comercial_servico/ativar");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -247,7 +249,7 @@ function inativar(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, inativar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "unidade_consumidora/inativar");
+        var action = actionCorreta(window.location.href.toString(), "proposta_comercial_servico/inativar");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -304,7 +306,7 @@ function excluir(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, excluir!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "unidade_consumidora/excluir");
+        var action = actionCorreta(window.location.href.toString(), "proposta_comercial_servico/excluir");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -357,7 +359,7 @@ function visualizar(id)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarUnidadeConsumidora', id: id},
+        data: {metodo: 'visualizarPropostaComercialServico', id: id},
         complete: function () {
             $("#formCadastro input").attr('readonly', 'readonly');
             $("#formCadastro select").attr('readonly', 'readonly');
@@ -376,11 +378,13 @@ function visualizar(id)
         },
         success: function (data) {
             $('#id').val(data.dados.id);
-            $('#lid_conta_agrupadora').val(data.dados.desc_conta_agrupadora);
-            $('#id_conta_agrupadora').val(data.dados.id_conta_agrupadora);
-            $('#codigo_conta_contrato').val(data.dados.codigo_conta_contrato);
+            $('#lid_proposta_comercial_servico_grupo').val(data.dados.desc_proposta_comercial_servico_grupo);
+            $('#id_proposta_comercial_servico_grupo').val(data.dados.id_proposta_comercial_servico_grupo);
+            $('#lid_proposta_comercial_servico_unidade').val(data.dados.desc_proposta_comercial_servico_unidade);
+            $('#id_proposta_comercial_servico_unidade').val(data.dados.id_proposta_comercial_servico_unidade);
+            $('#codigo_legado').val(data.dados.codigo_legado);
+            $('#codigo_contabil').val(data.dados.codigo_contabil);
             $('#descricao').val(data.dados.descricao);
-            $('#observacao').val(data.dados.observacao);
         }
     });
 }
@@ -396,15 +400,15 @@ function autocompletarGrupo()
 {
     "use strict";
     //Autocomplete
-    var ac_agrupadora = $("#lid_conta_agrupadora");
-    var vl_agrupadora = $("#id_conta_agrupadora");
-    var string = ac_agrupadora.val();
+    var ac_servico_grupo = $("#lid_proposta_comercial_servico_grupo");
+    var vl_servico_grupo = $("#id_proposta_comercial_servico_grupo");
+    var string = ac_servico_grupo.val();
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'contasAgrupadorasAtivas', string: string},
+        data: {metodo: 'servicoGruposAtivos', string: string},
         error: function (data) {
             if (data.status && data.status === 401)
             {
@@ -419,26 +423,26 @@ function autocompletarGrupo()
             if (data.operacao) {
                 listGrupo = [];
                 $.each(data.dados, function (key, value) {
-                    listGrupo.push({value: value.codigo_conta_contrato, data: value.id});
+                    listGrupo.push({value: value.descricao, data: value.id});
                 });
                 if(g === 0) {
                     //Autocomplete
-                    ac_agrupadora.autocomplete({
+                    ac_servico_grupo.autocomplete({
                         lookup: listGrupo,
                         onSelect: function (suggestion) {
-                            vl_agrupadora.val(suggestion.data);
+                            vl_servico_grupo.val(suggestion.data);
                         }
                     });
                     g++;
                 } else {
                     //Autocomplete
-                    ac_agrupadora.autocomplete().setOptions( {
+                    ac_servico_grupo.autocomplete().setOptions( {
                         lookup: listGrupo
                     });
                 }
             } else {
-                vl_agrupadora.val("");
-                ac_agrupadora.val("");
+                vl_servico_grupo.val("");
+                ac_servico_grupo.val("");
             }
         }
     });
@@ -448,15 +452,15 @@ function autocompletarUnidade()
 {
     "use strict";
     //Autocomplete
-    var ac_agrupadora = $("#lid_conta_agrupadora");
-    var vl_agrupadora = $("#id_conta_agrupadora");
-    var string = ac_agrupadora.val();
+    var ac_servico_unidade = $("#lid_proposta_comercial_servico_unidade");
+    var vl_servico_unidade = $("#id_proposta_comercial_servico_unidade");
+    var string = ac_servico_unidade.val();
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
     $.ajax({
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'contasAgrupadorasAtivas', string: string},
+        data: {metodo: 'servicoUnidadesAtivos', string: string},
         error: function (data) {
             if (data.status && data.status === 401)
             {
@@ -471,26 +475,26 @@ function autocompletarUnidade()
             if (data.operacao) {
                 listUnidade = [];
                 $.each(data.dados, function (key, value) {
-                    listUnidade.push({value: value.codigo_conta_contrato, data: value.id});
+                    listUnidade.push({value: value.descricao, data: value.id});
                 });
                 if(u === 0) {
                     //Autocomplete
-                    ac_agrupadora.autocomplete({
+                    ac_servico_unidade.autocomplete({
                         lookup: listUnidade,
                         onSelect: function (suggestion) {
-                            vl_agrupadora.val(suggestion.data);
+                            vl_servico_unidade.val(suggestion.data);
                         }
                     });
                     u++;
                 } else {
                     //Autocomplete
-                    ac_agrupadora.autocomplete().setOptions( {
+                    ac_servico_unidade.autocomplete().setOptions( {
                         lookup: listUnidade
                     });
                 }
             } else {
-                vl_agrupadora.val("");
-                ac_agrupadora.val("");
+                vl_servico_unidade.val("");
+                ac_servico_unidade.val("");
             }
         }
     });
