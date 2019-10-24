@@ -17,6 +17,7 @@ function inicializar()
         },
         order: [[7, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
     });
+    autocompletarCliente();
 }
 
 function verificarAlteracao()
@@ -381,11 +382,6 @@ function limpar()
     $('#formPesquisa').submit();
 }
 
-function autocompletarContrato()
-{
-
-}
-
 function criarComponente()
 {
     'use strict';
@@ -466,9 +462,4 @@ function limparDadosFormComponente()
     $('#i_propriedade_prodepa').val('1').selected = 'true';
     $('#dados_componente').removeAttr('style', 'display: block;');
     $('#dados_componente').attr('style','display: none;');
-}
-
-function autocompletarCliente()
-{
-
 }

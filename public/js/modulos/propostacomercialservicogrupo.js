@@ -4,8 +4,6 @@ var URLImagensSistema = "public/images";
 
 //Variáveis Globais
 var mudou = false;
-var listGrupo = [];
-var g = 0;
 
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos)
 function inicializar()
@@ -19,7 +17,7 @@ function inicializar()
         },
         order: [[5, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
     });
-    autocompletarGrupo();
+    autocompletarGrupo('lid_grupo_pai','id_grupo_pai');
 }
 
 function verificarAlteracao()
@@ -387,56 +385,4 @@ function limpar()
     'use strict';
     $('#fieldPesquisa').val('');
     $('#formPesquisa').submit();
-}
-
-function autocompletarGrupo()
-{
-    "use strict";
-    //Autocomplete
-    var ac_grupo_pai = $("#lid_grupo_pai");
-    var vl_grupo_pai = $("#id_grupo_pai");
-    var string = ac_grupo_pai.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: {metodo: 'gruposServicoAtivos', string: string},
-        error: function (data) {
-            if (data.status && data.status === 401)
-            {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function (data) {
-            if (data.operacao) {
-                listGrupo = [];
-                $.each(data.dados, function (key, value) {
-                    listGrupo.push({value: value.descricao, data: value.id});
-                });
-                if(g === 0) {
-                    //Autocomplete
-                    ac_grupo_pai.autocomplete({
-                        lookup: listGrupo,
-                        onSelect: function (suggestion) {
-                            vl_grupo_pai.val(suggestion.data);
-                        }
-                    });
-                    g++;
-                } else {
-                    //Autocomplete
-                    ac_grupo_pai.autocomplete().setOptions( {
-                        lookup: listGrupo
-                    });
-                }
-            } else {
-                vl_grupo_pai.val("");
-                ac_grupo_pai.val("");
-            }
-        }
-    });
 }

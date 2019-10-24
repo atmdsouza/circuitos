@@ -125,7 +125,7 @@ $module = $this->router->getControllerName();
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label for="lid_contrato">Grupo Principal </label>
-                                    <?php echo $this->tag->textField(["lid_grupo_pai", "size" => 120, "class" => "form-control", "id" => "lid_grupo_pai", "placeholder" => "Grupo Principal", "onkeyup" => "autocompletarGrupo();"]) ?>
+                                    <?php echo $this->tag->textField(["lid_grupo_pai", "size" => 120, "class" => "form-control", "id" => "lid_grupo_pai", "placeholder" => "Grupo Principal", "onkeyup" => "autocompletarGrupo('lid_grupo_pai','id_grupo_pai');"]) ?>
                                     <?php echo $this->tag->hiddenField(["id_grupo_pai", "size" => 120, "class" => "form-control", "id" => "id_grupo_pai"]) ?>
                                 </div>
                                 <div class="form-group col-md-6">

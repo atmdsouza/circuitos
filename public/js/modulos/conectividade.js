@@ -4,8 +4,6 @@ var URLImagensSistema = "public/images";
 
 //Variáveis Globais
 var mudou = false;
-var listCidadeDigital = [];
-var i = 0;
 
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos)
 function inicializar()
@@ -20,7 +18,7 @@ function inicializar()
         },
         order: [[5, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
     });
-    autocompletarCidadeDigital();
+    autocompletarCidadeDigital('lid_cidade_digital','id_cidade_digital');
 }
 
 function verificarAlteracao()
@@ -395,46 +393,6 @@ function limpar()
     'use strict';
     $('#fieldPesquisa').val('');
     $('#formPesquisa').submit();
-}
-
-function autocompletarCidadeDigital()
-{
-    "use strict";
-    var ac_cidadedigital = $("#lid_cidade_digital");
-    var string = ac_cidadedigital.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: {metodo: 'cidadesDigitaisAtivas', string: string},
-        success: function (data) {
-            if (data.operacao) {
-                listCidadeDigital = [];
-                $.each(data.dados, function (key, value) {
-                    listCidadeDigital.push({value: value.descricao, data: value.id});
-                });
-                if(i === 0) {
-                    //Autocomplete
-                    ac_cidadedigital.autocomplete({
-                        lookup: listCidadeDigital,
-                        onSelect: function (suggestion) {
-                            $("#id_cidade_digital").val(suggestion.data);
-                        }
-                    });
-                    i++;
-                } else {
-                    //Autocomplete
-                    ac_cidadedigital.autocomplete().setOptions( {
-                        lookup: listCidadeDigital
-                    });
-                }
-            } else {
-                $("#id_cidade_digital").val("");
-                $("#lid_cidade_digital").val("");
-            }
-        }
-    });
 }
 
 /**

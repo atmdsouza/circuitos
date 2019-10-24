@@ -136,7 +136,7 @@ $module = $this->router->getControllerName();
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="lid_contrato">Contrato </label>
-                                    <?php echo $this->tag->textField(["lid_contrato", "size" => 120, "class" => "form-control", "id" => "lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato();"]) ?>
+                                    <?php echo $this->tag->textField(["lid_contrato", "size" => 120, "class" => "form-control", "id" => "lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato('lid_contrato','id_contrato');"]) ?>
                                     <?php echo $this->tag->hiddenField(["id_contrato", "size" => 120, "class" => "form-control", "id" => "id_contrato"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
@@ -154,7 +154,7 @@ $module = $this->router->getControllerName();
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="lid_fornecedor">Fornecedor </label>
-                                    <?php echo $this->tag->textField(["lid_fornecedor", "size" => 120, "class" => "form-control", "disabled" => "true", "id" => "lid_fornecedor", "placeholder" => "Fornecedor", "onkeyup" => "autocompletarFornecedor();"]) ?>
+                                    <?php echo $this->tag->textField(["lid_fornecedor", "size" => 120, "class" => "form-control", "disabled" => "true", "id" => "lid_fornecedor", "placeholder" => "Fornecedor", "onkeyup" => "autocompletarFornecedor('lid_fornecedor','id_fornecedor');"]) ?>
                                     <?php echo $this->tag->hiddenField(["id_fornecedor", "size" => 120, "class" => "form-control", "id" => "id_fornecedor"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">

@@ -4,10 +4,6 @@ var URLImagensSistema = "public/images";
 
 //Variáveis Globais
 var mudou = false;
-var listGrupo = [];
-var g = 0;
-var listUnidade = [];
-var u = 0;
 
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos)
 function inicializar()
@@ -21,8 +17,8 @@ function inicializar()
         },
         order: [[6, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
     });
-    autocompletarGrupo();
-    autocompletarUnidade();
+    autocompletarGrupo('lid_proposta_comercial_servico_grupo','id_proposta_comercial_servico_grupo');
+    autocompletarUnidade('lid_proposta_comercial_servico_unidade','id_proposta_comercial_servico_unidade');
 }
 
 function verificarAlteracao()
@@ -394,108 +390,4 @@ function limpar()
     'use strict';
     $('#fieldPesquisa').val('');
     $('#formPesquisa').submit();
-}
-
-function autocompletarGrupo()
-{
-    "use strict";
-    //Autocomplete
-    var ac_servico_grupo = $("#lid_proposta_comercial_servico_grupo");
-    var vl_servico_grupo = $("#id_proposta_comercial_servico_grupo");
-    var string = ac_servico_grupo.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: {metodo: 'servicoGruposAtivos', string: string},
-        error: function (data) {
-            if (data.status && data.status === 401)
-            {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function (data) {
-            if (data.operacao) {
-                listGrupo = [];
-                $.each(data.dados, function (key, value) {
-                    listGrupo.push({value: value.descricao, data: value.id});
-                });
-                if(g === 0) {
-                    //Autocomplete
-                    ac_servico_grupo.autocomplete({
-                        lookup: listGrupo,
-                        onSelect: function (suggestion) {
-                            vl_servico_grupo.val(suggestion.data);
-                        }
-                    });
-                    g++;
-                } else {
-                    //Autocomplete
-                    ac_servico_grupo.autocomplete().setOptions( {
-                        lookup: listGrupo
-                    });
-                }
-            } else {
-                vl_servico_grupo.val("");
-                ac_servico_grupo.val("");
-            }
-        }
-    });
-}
-
-function autocompletarUnidade()
-{
-    "use strict";
-    //Autocomplete
-    var ac_servico_unidade = $("#lid_proposta_comercial_servico_unidade");
-    var vl_servico_unidade = $("#id_proposta_comercial_servico_unidade");
-    var string = ac_servico_unidade.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: {metodo: 'servicoUnidadesAtivos', string: string},
-        error: function (data) {
-            if (data.status && data.status === 401)
-            {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function (data) {
-            if (data.operacao) {
-                listUnidade = [];
-                $.each(data.dados, function (key, value) {
-                    listUnidade.push({value: value.descricao, data: value.id});
-                });
-                if(u === 0) {
-                    //Autocomplete
-                    ac_servico_unidade.autocomplete({
-                        lookup: listUnidade,
-                        onSelect: function (suggestion) {
-                            vl_servico_unidade.val(suggestion.data);
-                        }
-                    });
-                    u++;
-                } else {
-                    //Autocomplete
-                    ac_servico_unidade.autocomplete().setOptions( {
-                        lookup: listUnidade
-                    });
-                }
-            } else {
-                vl_servico_unidade.val("");
-                ac_servico_unidade.val("");
-            }
-        }
-    });
 }

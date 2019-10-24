@@ -52,9 +52,9 @@ class PropostaComercialController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-        $titulo = 'Cadastro de PropostaComercial';
-        $msg = 'PropostaComercial cadastrada com sucesso!';
-        $error_msg = 'Erro ao cadastrar uma PropostaComercial!';
+        $titulo = 'Cadastro de Proposta Comercial';
+        $msg = 'Proposta Comercial cadastrada com sucesso!';
+        $error_msg = 'Erro ao cadastrar uma Proposta Comercial!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -79,9 +79,9 @@ class PropostaComercialController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-        $titulo = 'Alteração de PropostaComercial';
-        $msg = 'PropostaComercial alterada com sucesso!';
-        $error_msg = 'Erro ao alterar uma PropostaComercial!';
+        $titulo = 'Alteração de Proposta Comercial';
+        $msg = 'Proposta Comercial alterada com sucesso!';
+        $error_msg = 'Erro ao alterar uma Proposta Comercial!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -104,9 +104,9 @@ class PropostaComercialController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Reativação de PropostaComercial';
-        $msg = 'PropostaComercial reativada com sucesso!';
-        $error_msg = 'Erro ao reativar uma PropostaComercial!';
+        $titulo = 'Reativação de Proposta Comercial';
+        $msg = 'Proposta Comercial reativada com sucesso!';
+        $error_msg = 'Erro ao reativar uma Proposta Comercial!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -129,9 +129,9 @@ class PropostaComercialController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Desativação de PropostaComercial';
-        $msg = 'PropostaComercial desativada com sucesso!';
-        $error_msg = 'Erro ao desativar uma PropostaComercial!';
+        $titulo = 'Desativação de Proposta Comercial';
+        $msg = 'Proposta Comercial desativada com sucesso!';
+        $error_msg = 'Erro ao desativar uma Proposta Comercial!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -154,9 +154,9 @@ class PropostaComercialController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Exclusão de PropostaComercial';
-        $msg = 'PropostaComercial excluída com sucesso!';
-        $error_msg = 'Erro ao excluir a PropostaComercial!';
+        $titulo = 'Exclusão de Proposta Comercial';
+        $msg = 'Proposta Comercial excluída com sucesso!';
+        $error_msg = 'Erro ao excluir a Proposta Comercial!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido

@@ -185,17 +185,17 @@ $module = $this->router->getControllerName();
                                         <?php echo $this->tag->hiddenField(["i_id_equipamento", "size" => 60, "class" => "form-control", "id" => "i_id_equipamento"]) ?>
                                     </div>
                                 </div>
-                                    <div class="form-row">
+                                <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="i_lid_fornecedor">Fornecedor <span class="required">*</span></label>
-                                        <?php echo $this->tag->textField(["i_lid_fornecedor", "size" => 120, "class" => "form-control", "id" => "i_lid_fornecedor", "placeholder" => "Fornecedor", "onkeyup" => "autocompletarFornecedor();"]) ?>
+                                        <?php echo $this->tag->textField(["i_lid_fornecedor", "size" => 120, "class" => "form-control", "id" => "i_lid_fornecedor", "placeholder" => "Fornecedor", "onkeyup" => "autocompletarFornecedor('i_lid_fornecedor','i_id_fornecedor');"]) ?>
                                         <?php echo $this->tag->hiddenField(["i_id_fornecedor", "size" => 120, "class" => "form-control", "id" => "i_id_fornecedor"]) ?>
                                     </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="i_lid_contrato">Contrato </label>
-                                            <?php echo $this->tag->textField(["i_lid_contrato", "size" => 120, "class" => "form-control", "id" => "i_lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato();"]) ?>
-                                            <?php echo $this->tag->hiddenField(["i_id_contrato", "size" => 120, "class" => "form-control", "id" => "i_id_contrato"]) ?>
-                                        </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="i_lid_contrato">Contrato </label>
+                                        <?php echo $this->tag->textField(["i_lid_contrato", "size" => 120, "class" => "form-control", "id" => "i_lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato('i_lid_contrato','i_id_contrato');"]) ?>
+                                        <?php echo $this->tag->hiddenField(["i_id_contrato", "size" => 120, "class" => "form-control", "id" => "i_id_contrato"]) ?>
+                                    </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
