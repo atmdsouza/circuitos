@@ -507,6 +507,10 @@ class CoreController extends ControllerBase
                 $objeto = new CoreOP();
                 return $objeto->fornecedoresAtivos();
                 break;
+            case 'clientesAtivos':
+                $objeto = new CoreOP();
+                return $objeto->clientesAtivos();
+                break;
             case 'modelosAtivos':
                 $objeto = new CoreOP();
                 return $objeto->modelosAtivos();
@@ -550,6 +554,14 @@ class CoreController extends ControllerBase
             case 'servicoUnidadesAtivos':
                 $objeto = new CoreOP();
                 return $objeto->servicoUnidadesAtivos();
+                break;
+            case 'servicosAtivos':
+                $objeto = new CoreOP();
+                return $objeto->servicosAtivos();
+                break;
+            case 'codigoServicosAtivos':
+                $objeto = new CoreOP();
+                return $objeto->codigoServicosAtivos();
                 break;
         }
     }
@@ -735,6 +747,29 @@ class CoreController extends ControllerBase
                 return $objeto->deletarCdETelecon($objComponente);
                 break;
         }
+    }
+
+    public function processarAjaxSelectAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $dados = filter_input_array(INPUT_GET);
+        switch ($dados['metodo']) {
+            case 'selectSubGrupo':
+                $objeto = new PropostaComercialServicoGrupoOP();
+                return $objeto->selectSubGrupo($dados['id']);
+                break;
+        }
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $dados = filter_input_array(INPUT_GET);
+        switch ($dados['metodo']) {
+            case 'selectIdServico':
+                $objeto = new PropostaComercialServicoOP();
+                return $objeto->selectIdServico($dados['id']);
+                break;
+        }
+
     }
 
 }

@@ -178,7 +178,7 @@ $module = $this->router->getControllerName();
                                     </div>
                                 </div>
                                 <div class="form-row">
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 botoes_forms_alinhamento">
                                         <label for="i_lid_contrato">Contrato </label>
                                         <?php echo $this->tag->textField(["i_lid_contrato", "size" => 120, "class" => "form-control", "id" => "i_lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato('i_lid_contrato','i_id_contrato');"]) ?>
                                         <?php echo $this->tag->hiddenField(["i_id_contrato", "size" => 120, "class" => "form-control", "id" => "i_id_contrato"]) ?>
@@ -194,32 +194,32 @@ $module = $this->router->getControllerName();
                                     </div>
                                 </div>
                                 <div class="form-row">
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-12 botoes_forms_alinhamento">
                                         <label for="i_endereco_chave">Endereço da Chave </label>
                                         <?= $this->tag->textField(["i_endereco_chave", "size" => 200, "class" => "form-control", "id" => "i_endereco_chave", "placeholder" => "Endereço da Chave"]) ?>
                                     </div>
                                 </div>
                                 <div class="form-row">
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 botoes_forms_alinhamento">
                                         <label for="i_senha">Senha </label>
                                         <?= $this->tag->textField(["i_senha", "size" => 200, "class" => "form-control", "id" => "i_senha", "placeholder" => "Senha"]) ?>
                                     </div>
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 botoes_forms_alinhamento">
                                         <label for="i_validade">Validade </label>
                                         <?= $this->tag->textField(["i_validade", "size" => 200, "class" => "form-control data", "id" => "i_validade", "placeholder" => "Validade"]) ?>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <input type="hidden" id="cont_id" name="cont_id" value=""><!-- Manter como hidden -->
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 botoes_forms_alinhamento">
                                         <label for="i_nome">Nome Contato </label>
                                         <?= $this->tag->textField(["i_nome", "size" => 200, "class" => "form-control", "id" => "i_nome", "placeholder" => "Nome do Contato"]) ?>
                                     </div>
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 botoes_forms_alinhamento">
                                         <label for="i_email">E-mail </label>
                                         <?= $this->tag->emailField(["i_email", "size" => 200, "class" => "form-control", "id" => "i_email", "placeholder" => "E-mail do Contato"]) ?>
                                     </div>
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 botoes_forms_alinhamento">
                                         <label for="i_telefone">Telefone </label>
                                         <?= $this->tag->textField(["i_telefone", "size" => 200, "class" => "form-control celular", "id" => "i_telefone", "placeholder" => "Telefone do Contato"]) ?>
                                     </div>

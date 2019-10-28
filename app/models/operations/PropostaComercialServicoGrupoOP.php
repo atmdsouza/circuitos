@@ -150,4 +150,17 @@ class PropostaComercialServicoGrupoOP extends PropostaComercialServicoGrupo
             return false;
         }
     }
+
+    public function selectSubGrupo($id)
+    {
+        try {
+            $objeto = PropostaComercialServicoGrupo::find("id_grupo_pai={$id} AND excluido=0 AND ativo=1");
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $objeto)));
+            return $response;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
+    }
 }

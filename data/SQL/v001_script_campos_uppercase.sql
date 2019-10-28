@@ -19,4 +19,5 @@ update conectividade set endereco = upper(endereco),descricao = upper(descricao)
 update proposta_comercial_servico_unidade set sigla = upper(sigla),descricao = upper(descricao);
 update proposta_comercial_servico_grupo set descricao = upper(descricao);
 update proposta_comercial_servico set descricao = upper(descricao);
+update empresa_departamento set descricao = upper(descricao);
 COMMIT;

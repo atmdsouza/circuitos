@@ -2,7 +2,6 @@
 
 namespace Circuitos\Models\Operations;
 
-use Circuitos\Models\PropostaComercialServicoUnidade;
 use Phalcon\Http\Response as Response;
 
 use Circuitos\Models\CidadeDigital;
@@ -14,7 +13,9 @@ use Circuitos\Models\EstacaoTelecon;
 use Circuitos\Models\Fabricante;
 use Circuitos\Models\Lov;
 use Circuitos\Models\Modelo;
+use Circuitos\Models\PropostaComercialServico;
 use Circuitos\Models\PropostaComercialServicoGrupo;
+use Circuitos\Models\PropostaComercialServicoUnidade;
 use Circuitos\Models\Terreno;
 use Circuitos\Models\Torre;
 use Circuitos\Models\SetEquipamento;
@@ -80,6 +81,19 @@ class CoreOP
         $array_dados = array();
         foreach ($fornecedores as $fornecedor){
             array_push($array_dados, ['id' => $fornecedor->getId(), 'nome' => $fornecedor->getClienteNome()]);
+        }
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $array_dados)));
+        return $response;
+    }
+
+    public function clientesAtivos()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $clientes = Cliente::pesquisarClientesAtivos($dados['string']);
+        $array_dados = array();
+        foreach ($clientes as $cliente){
+            array_push($array_dados, ['id' => $cliente->getId(), 'nome' => $cliente->getClienteNome()]);
         }
         $response = new Response();
         $response->setContent(json_encode(array("operacao" => True, "dados" => $array_dados)));
@@ -171,6 +185,50 @@ class CoreOP
         $torre = UnidadeConsumidora::find("excluido=0 AND ativo=1 AND codigo_conta_contrato LIKE '%{$dados['string']}%'");
         $response = new Response();
         $response->setContent(json_encode(array("operacao" => True, "dados" => $torre)));
+        return $response;
+    }
+
+    public function servicosAtivos()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        if (!empty($dados['id_subgrupo'])){
+            $servicos = PropostaComercialServico::find("excluido=0 AND ativo=1 AND id_proposta_comercial_servico_grupo IN ({$dados['id_subgrupo']}) AND descricao LIKE '%{$dados['string']}%'");
+        } else if (!empty($dados['id_grupo'])) {
+            $objSubgrupos = PropostaComercialServicoGrupo::find('excluido=0 AND ativo=1 AND id_grupo_pai = '. $dados['id_grupo']);
+            $prefix = $subGrupoList = '';
+            foreach ($objSubgrupos as $objSubgrupo)
+            {
+                $subGrupoList .= $prefix . $objSubgrupo->getId() . ' ';
+                $prefix = ', ';
+            }
+            $servicos = PropostaComercialServico::find("excluido=0 AND ativo=1 AND id_proposta_comercial_servico_grupo IN ({$subGrupoList}) AND descricao LIKE '%{$dados['string']}%'");
+        } else {
+            $servicos = PropostaComercialServico::find("excluido=0 AND ativo=1 AND descricao LIKE '%{$dados['string']}%'");
+        }
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $servicos)));
+        return $response;
+    }
+
+    public function codigoServicosAtivos()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        if (!empty($dados['id_subgrupo'])){
+            $servicos = PropostaComercialServico::find("excluido=0 AND ativo=1 AND id_proposta_comercial_servico_grupo IN ({$dados['vl_id_subgrupo']}) AND codigo_legado LIKE '%{$dados['string']}%'");
+        } else if (!empty($dados['id_grupo'])) {
+            $objSubgrupos = PropostaComercialServicoGrupo::find('excluido=0 AND ativo=1 AND id_grupo_pai = '. $dados['vl_id_grupo']);
+            $prefix = $subGrupoList = '';
+            foreach ($objSubgrupos as $objSubgrupo)
+            {
+                $subGrupoList .= $prefix . $objSubgrupo->getId() . ' ';
+                $prefix = ', ';
+            }
+            $servicos = PropostaComercialServico::find("excluido=0 AND ativo=1 AND id_proposta_comercial_servico_grupo IN ({$subGrupoList}) AND codigo_legado LIKE '%{$dados['string']}%'");
+        } else {
+            $servicos = PropostaComercialServico::find("excluido=0 AND ativo=1 AND codigo_legado LIKE '%{$dados['string']}%'");
+        }
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $servicos)));
         return $response;
     }
 

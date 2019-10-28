@@ -211,6 +211,29 @@ class Cliente extends \Phalcon\Mvc\Model
      * @param string $parameters
      * @return Cliente|\Phalcon\Mvc\Model\Resultset
      */
+    public static function pesquisarClientesAtivos($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("Cliente" => "Circuitos\Models\Cliente"));
+        $query->columns("Cliente.*");
+
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa2.id = Cliente.id_pessoa", "Pessoa2");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "Pessoa2.id = PessoaJuridica2.id", "PessoaJuridica2");
+        $query->leftJoin("Circuitos\Models\PessoaFisica", "Pessoa2.id = PessoaFisica2.id", "PessoaFisica2");
+        $query->where("Pessoa2.excluido=0 AND Pessoa2.ativo=1 AND Cliente.classificacao = 0 AND (CONVERT(Pessoa2.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica2.razaosocial USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("Cliente.id");
+        $query->orderBy("Cliente.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta completa de fornecedores, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return Cliente|\Phalcon\Mvc\Model\Resultset
+     */
     public static function pesquisarFornecedoresAtivos($parameters = null)
     {
         $query = new Builder();

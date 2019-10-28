@@ -4,9 +4,14 @@ namespace Circuitos\Controllers;
 
 use Phalcon\Http\Response as Response;
 
+use Circuitos\Models\EmpresaDepartamento;
 use Circuitos\Models\Lov;
-use Circuitos\Models\Operations\PropostaComercialOP;
 use Circuitos\Models\PropostaComercial;
+use Circuitos\Models\PropostaComercialItem;
+use Circuitos\Models\PropostaComercialValorMensal;
+use Circuitos\Models\PropostaComercialServicoGrupo;
+
+use Circuitos\Models\Operations\PropostaComercialOP;
 
 use Auth\Autentica;
 use Util\TokenManager;
@@ -40,7 +45,11 @@ class PropostaComercialController extends ControllerBase
         $propostacomercialOP = new PropostaComercialOP();
         $propostacomercial = $propostacomercialOP->listar($dados['pesquisa']);
         $tipos = Lov::find("tipo=23 AND excluido=0 AND ativo=1");
+        $grupos = PropostaComercialServicoGrupo::find("id_grupo_pai IS NULL AND excluido=0 AND ativo=1");
+        $departamentos = EmpresaDepartamento::find('excluido=0 AND ativo=1');
         $this->view->tipos = $tipos;
+        $this->view->grupos = $grupos;
+        $this->view->departamentos = $departamentos;
         $this->view->page = $propostacomercial;
     }
 
@@ -56,11 +65,15 @@ class PropostaComercialController extends ControllerBase
         $msg = 'Proposta Comercial cadastrada com sucesso!';
         $error_msg = 'Erro ao cadastrar uma Proposta Comercial!';
         $error_chk = 'Check de token de formulário inválido!';
+        var_dump($params);die();
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             $propostacomercialOP = new PropostaComercialOP();
             $propostacomercial = new PropostaComercial($params);
-            if($propostacomercialOP->cadastrar($propostacomercial)){//Cadastrou com sucesso
+            $propostacomercialvalormensal = new PropostaComercialValorMensal();
+            $arrPropostacomercialitens = [];
+            $propostacomercialitens = new PropostaComercialItem();
+            if($propostacomercialOP->cadastrar($propostacomercial, $propostacomercialvalormensal, $arrPropostacomercialitens)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));

@@ -7,6 +7,8 @@ use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Phalcon\Http\Response as Response;
 
 use Circuitos\Models\PropostaComercial;
+use Circuitos\Models\PropostaComercialValorMensal;
+use Circuitos\Models\PropostaComercialItem;
 
 class PropostaComercialOP extends PropostaComercial
 {
@@ -17,7 +19,7 @@ class PropostaComercialOP extends PropostaComercial
         return PropostaComercial::pesquisarPropostaComercial($dados);
     }
 
-    public function cadastrar(PropostaComercial $objArray)
+    public function cadastrar(PropostaComercial $objArray, PropostaComercialValorMensal $objArrayValorMensal, $arrObjItensProposta)
     {
         $manager = new TxManager();
         $transaction = $manager->get();

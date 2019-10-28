@@ -27,10 +27,125 @@ var listFornecedor = [];
 var o = 0;
 var listAgrupadora = [];
 var f = 0;
+var listCliente = [];
+var c = 0;
+var listCodigoServico = [];
+var cs = 0;
+var listServico = [];
+var z = 0;
 
 /*
 * Sessão de Campos Autocomplete
 * */
+function autocompletarCodigoServico(id_label, id_valor, id_grupo, id_subgrupo)
+{
+    "use strict";
+    //Autocomplete de Fabricante
+    var ac_codigo_servico = $("#"+id_label);
+    var vl_codigo_servico = $("#"+id_valor);
+    var vl_grupo = $("#"+id_grupo).val();
+    var vl_subgrupo = $("#"+id_subgrupo).val();
+    var string = ac_codigo_servico.val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'codigoServicosAtivos', string: string, id_grupo: vl_grupo, id_subgrupo: vl_subgrupo},
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao) {
+                listCodigoServico = [];
+                $.each(data.dados, function (key, value) {
+                    listCodigoServico.push({value: value.codigo_legado, data: value.id});
+                });
+                if(cs === 0) {
+                    //Autocomplete
+                    ac_codigo_servico.autocomplete({
+                        lookup: listCodigoServico,
+                        onSelect: function (suggestion) {
+                            vl_codigo_servico.val(suggestion.data);
+                        }
+                    });
+                    cs++;
+                } else {
+                    //Autocomplete
+                    ac_codigo_servico.autocomplete().setOptions( {
+                        lookup: listCodigoServico
+                    });
+                }
+            } else {
+                vl_codigo_servico.val("");
+                ac_codigo_servico.val("");
+            }
+        }
+    });
+
+}
+
+function autocompletarServico(id_label, id_valor, id_grupo, id_subgrupo)
+{
+    "use strict";
+    //Autocomplete de Fabricante
+    var ac_servico = $("#"+id_label);
+    var vl_servico = $("#"+id_valor);
+    var vl_grupo = $("#"+id_grupo).val();
+    var vl_subgrupo = $("#"+id_subgrupo).val();
+    var string = ac_servico.val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'servicosAtivos', string: string, id_grupo: vl_grupo, id_subgrupo: vl_subgrupo},
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao) {
+                listServico = [];
+                $.each(data.dados, function (key, value) {
+                    listServico.push({value: value.descricao, data: value.id});
+                });
+                if(z === 0) {
+                    //Autocomplete
+                    ac_servico.autocomplete({
+                        lookup: listServico,
+                        onSelect: function (suggestion) {
+                            vl_servico.val(suggestion.data);
+                        }
+                    });
+                    z++;
+                } else {
+                    //Autocomplete
+                    ac_servico.autocomplete().setOptions( {
+                        lookup: listServico
+                    });
+                }
+            } else {
+                vl_servico.val("");
+                ac_servico.val("");
+            }
+        }
+    });
+}
+
 function autocompletarContratoVinculado(id_label, id_valor)
 {
 
@@ -38,7 +153,54 @@ function autocompletarContratoVinculado(id_label, id_valor)
 
 function autocompletarCliente(id_label, id_valor)
 {
-
+    "use strict";
+    //Autocomplete de Fabricante
+    var ac_cliente = $("#"+id_label);
+    var vl_cliente = $("#"+id_valor);
+    var string = ac_cliente.val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'clientesAtivos', string: string},
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao) {
+                listCliente = [];
+                $.each(data.dados, function (key, value) {
+                    listCliente.push({value: value.nome, data: value.id});
+                });
+                if(c === 0) {
+                    //Autocomplete
+                    ac_cliente.autocomplete({
+                        lookup: listCliente,
+                        onSelect: function (suggestion) {
+                            vl_cliente.val(suggestion.data);
+                        }
+                    });
+                    c++;
+                } else {
+                    //Autocomplete
+                    ac_cliente.autocomplete().setOptions( {
+                        lookup: listCliente
+                    });
+                }
+            } else {
+                vl_cliente.val("");
+                ac_cliente.val("");
+            }
+        }
+    });
 }
 
 function autocompletarContrato(id_label, id_valor)

@@ -121,7 +121,7 @@ $module = $this->router->getControllerName();
                     <div class="form-row">
                         <div class="col-12">
                             <div class="form-row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-4 botoes_forms_alinhamento">
                                     <label for="lid_contrato">Conta Agrupadora </label>
                                     <?php echo $this->tag->textField(["lid_conta_agrupadora", "size" => 120, "class" => "form-control", "id" => "lid_conta_agrupadora", "placeholder" => "Conta Agrupadora", "onkeyup" => "autocompletarAgrupadora('lid_conta_agrupadora','id_conta_agrupadora');"]) ?>
                                     <?php echo $this->tag->hiddenField(["id_conta_agrupadora", "size" => 120, "class" => "form-control", "id" => "id_conta_agrupadora"]) ?>

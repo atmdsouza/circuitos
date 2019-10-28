@@ -817,6 +817,9 @@ Externo]]></comment>
 		<table name="empresa_departamento" >
 			<comment><![CDATA[Setorização da empresa]]></comment>
 			<column name="id" type="int" jt="4" mandatory="y" autoincrement="y" />
+			<column name="id_empresa" type="int" jt="4" mandatory="y" >
+				<comment><![CDATA[Identificador da empresa]]></comment>
+			</column>
 			<column name="id_departamento_pai" type="int" jt="4" />
 			<column name="descricao" type="varchar" length="80" jt="12" mandatory="y" />
 			<column name="ativo" type="boolean" length="1" decimal="0" jt="-7" mandatory="y" >
@@ -832,8 +835,14 @@ Externo]]></comment>
 			<index name="idx_empresa_departamento" unique="NORMAL" >
 				<column name="id_departamento_pai" />
 			</index>
+			<index name="idx_empresa_departamento_empresa" unique="NORMAL" >
+				<column name="id_empresa" />
+			</index>
 			<fk name="fk_empresa_departamento" to_schema="bd_circuitosnavega" to_table="empresa_departamento" >
 				<fk_column name="id_departamento_pai" pk="id" />
+			</fk>
+			<fk name="fk_empresa_departamento_empresa" to_schema="bd_circuitosnavega" to_table="empresa" >
+				<fk_column name="id_empresa" pk="id" />
 			</fk>
 		</table>
 		<table name="empresa_parametros" >
@@ -1551,8 +1560,12 @@ Externo]]></comment>
 			<column name="id_tipo_proposta" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="id_localizacao" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="id_status" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="data_proposta" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
+			<column name="data_criacao" type="timestamp" jt="93" mandatory="y" >
 				<defo>CURRENT_TIMESTAMP</defo>
+				<comment><![CDATA[Data de criação da proposta no sistema circuitos]]></comment>
+			</column>
+			<column name="data_proposta" type="date" jt="91" >
+				<comment><![CDATA[Data de criação original da proposta]]></comment>
 			</column>
 			<column name="numero" type="varchar" length="60" decimal="0" jt="12" mandatory="y" />
 			<column name="vencimento" type="date" length="10" decimal="0" jt="91" mandatory="y" />
@@ -1611,11 +1624,11 @@ Externo]]></comment>
 			<fk name="fk_proposta_comercial_lov1" to_schema="bd_circuitosnavega" to_table="lov" >
 				<fk_column name="id_tipo_proposta" pk="id" />
 			</fk>
-			<fk name="fk_proposta_comercial_lov2" to_schema="bd_circuitosnavega" to_table="lov" >
-				<fk_column name="id_localizacao" pk="id" />
-			</fk>
 			<fk name="fk_proposta_comercial_lov3" to_schema="bd_circuitosnavega" to_table="lov" >
 				<fk_column name="id_status" pk="id" />
+			</fk>
+			<fk name="fk_proposta_comercial_departamento" to_schema="bd_circuitosnavega" to_table="empresa_departamento" >
+				<fk_column name="id_localizacao" pk="id" />
 			</fk>
 		</table>
 		<table name="proposta_comercial_anexo" >
@@ -1727,9 +1740,12 @@ Externo]]></comment>
 		</table>
 		<table name="proposta_comercial_servico_grupo" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="id_grupo_pai" type="int" jt="4" >
+				<comment><![CDATA[Identificador de grupo concentrador para subgrupos]]></comment>
+			</column>
 			<column name="codigo_legado" type="varchar" length="20" decimal="0" jt="12" />
 			<column name="codigo_contabil" type="varchar" length="40" decimal="0" jt="12" mandatory="y" />
-			<column name="descritivo" type="varchar" length="60" decimal="0" jt="12" mandatory="y" />
+			<column name="descricao" type="varchar" length="60" decimal="0" jt="12" mandatory="y" />
 			<column name="ativo" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" >
 				<defo>1</defo>
 			</column>
@@ -1740,6 +1756,9 @@ Externo]]></comment>
 			<index name="pk_proposta_comercial_servico_grupo" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
+			<fk name="fk_proposta_comercial_servico_grupo" to_schema="bd_circuitosnavega" to_table="proposta_comercial_servico_grupo" >
+				<fk_column name="id_grupo_pai" pk="id" />
+			</fk>
 		</table>
 		<table name="proposta_comercial_servico_unidade" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
@@ -2126,10 +2145,6 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="phalcon_resources_accesses" color="BED3F4" x="2032" y="1312" />
 		<entity schema="bd_circuitosnavega" name="phalcon_roles" color="BED3F4" x="1360" y="1312" />
 		<entity schema="bd_circuitosnavega" name="phalcon_roles_inherits" color="BED3F4" x="1568" y="1536" />
-		<entity schema="bd_circuitosnavega" name="proposta_comercial" color="D1BEF4" x="112" y="1312" />
-		<entity schema="bd_circuitosnavega" name="proposta_comercial_item" color="D1BEF4" x="368" y="1840" />
-		<entity schema="bd_circuitosnavega" name="proposta_comercial_servico" color="D1BEF4" x="368" y="1312" />
-		<entity schema="bd_circuitosnavega" name="proposta_comercial_servico_grupo" color="D1BEF4" x="752" y="1312" />
 		<entity schema="bd_circuitosnavega" name="proposta_comercial_valor_mensal" color="D1BEF4" x="48" y="1840" />
 		<entity schema="bd_circuitosnavega" name="terreno" color="C7F4BE" x="2720" y="240" />
 		<entity schema="bd_circuitosnavega" name="usuario" color="F4DDBE" x="1104" y="1312" />
@@ -2163,9 +2178,13 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="set_seguranca_componentes" color="C7F4BE" x="3584" y="752" />
 		<entity schema="bd_circuitosnavega" name="movimentos" color="F4DDBE" x="2944" y="1664" />
 		<entity schema="bd_circuitosnavega" name="empresa_parametros" color="F4DDBE" x="4096" y="2336" />
-		<entity schema="bd_circuitosnavega" name="empresa_departamento" color="F4DDBE" x="3872" y="2480" />
 		<entity schema="bd_circuitosnavega" name="circuitos" color="F4DDBE" x="2640" y="1664" />
+		<entity schema="bd_circuitosnavega" name="empresa_departamento" color="F4DDBE" x="3872" y="2480" />
 		<entity schema="bd_circuitosnavega" name="parametros" color="3986C1" x="2464" y="1296" />
+		<entity schema="bd_circuitosnavega" name="proposta_comercial_item" color="D1BEF4" x="368" y="1840" />
+		<entity schema="bd_circuitosnavega" name="proposta_comercial_servico" color="D1BEF4" x="368" y="1312" />
+		<entity schema="bd_circuitosnavega" name="proposta_comercial_servico_grupo" color="D1BEF4" x="752" y="1312" />
+		<entity schema="bd_circuitosnavega" name="proposta_comercial" color="D1BEF4" x="112" y="1312" />
 		<group name="Empresa" color="C4E0F9" >
 			<entity schema="bd_circuitosnavega" name="empresa" />
 			<entity schema="bd_circuitosnavega" name="empresa_parametros" />

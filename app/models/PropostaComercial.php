@@ -731,7 +731,7 @@ class PropostaComercial extends \Phalcon\Mvc\Model
      */
     public function getLocalizacao()
     {
-        return $this->Lov2->descricao;
+        return $this->EmpresaDepartamento->descricao;
     }
 
     /**
@@ -756,7 +756,7 @@ class PropostaComercial extends \Phalcon\Mvc\Model
         $this->hasMany('id', 'Circuitos\Models\PropostaComercialValorMensal', 'id_proposta_comercial', ['alias' => 'PropostaComercialValorMensal']);
         $this->belongsTo('id_cliente', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Cliente']);
         $this->belongsTo('id_tipo_proposta', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov1']);
-        $this->belongsTo('id_localizacao', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov2']);
+        $this->belongsTo('id_localizacao', 'Circuitos\Models\EmpresaDepartamento', 'id', ['alias' => 'EmpresaDepartamento']);
         $this->belongsTo('id_status', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov3']);
     }
 

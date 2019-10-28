@@ -123,7 +123,7 @@ $module = $this->router->getControllerName();
                     <div class="form-row">
                         <div class="col-12">
                             <div class="form-row">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-6 botoes_forms_alinhamento">
                                     <label for="lid_contrato">Grupo Principal </label>
                                     <?php echo $this->tag->textField(["lid_grupo_pai", "size" => 120, "class" => "form-control", "id" => "lid_grupo_pai", "placeholder" => "Grupo Principal", "onkeyup" => "autocompletarGrupo('lid_grupo_pai','id_grupo_pai');"]) ?>
                                     <?php echo $this->tag->hiddenField(["id_grupo_pai", "size" => 120, "class" => "form-control", "id" => "id_grupo_pai"]) ?>
@@ -132,7 +132,7 @@ $module = $this->router->getControllerName();
                                     <label for="descricao">Descrição <span class="required">*</span></label>
                                     <?= $this->tag->textField(["descricao", "size" => 200, "class" => "form-control", "id" => "descricao", "placeholder" => "Descrição do Grupo"]) ?>
                                 </div>
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-6 botoes_forms_alinhamento">
                                     <label for="codigo_legado">Código Legado </label>
                                     <?= $this->tag->textField(["codigo_legado", "size" => 200, "class" => "form-control", "id" => "codigo_legado", "placeholder" => "Código Legado"]) ?>
                                 </div>

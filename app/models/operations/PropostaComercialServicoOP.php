@@ -147,4 +147,23 @@ class PropostaComercialServicoOP extends PropostaComercialServico
             return false;
         }
     }
+
+    public function selectIdServico($id)
+    {
+        try {
+            $objeto = PropostaComercialServico::findFirst("id={$id}");
+            $objetoArray = array(
+                'id' => $objeto->getId(),
+                'codigo_legado' => $objeto->getCodigoLegado(),
+                'descricao' => $objeto->getDescricao(),
+                'grandeza' => $objeto->getUnidade()
+            );
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoArray)));
+            return $response;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
+    }
 }
