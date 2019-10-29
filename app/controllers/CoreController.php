@@ -2,45 +2,43 @@
 
 namespace Circuitos\Controllers;
 
-use Phalcon\Logger;
-use Phalcon\Logger\Adapter\File as FileAdapter;
-use Phalcon\Http\Response as Response;
-use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
-use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-
 use Circuitos\Models\Conectividade;
 use Circuitos\Models\Empresa;
+use Circuitos\Models\EndCidade;
 use Circuitos\Models\EndEndereco;
 use Circuitos\Models\EndEstado;
-use Circuitos\Models\EndCidade;
 use Circuitos\Models\EstacaoTelecon;
-use Circuitos\Models\Pessoa;
-use Circuitos\Models\PessoaJuridica;
-use Circuitos\Models\PessoaFisica;
-use Circuitos\Models\PessoaEndereco;
-use Circuitos\Models\PessoaEmail;
-use Circuitos\Models\PessoaTelefone;
-use Circuitos\Models\PessoaContato;
-use Circuitos\Models\SetEquipamentoComponentes;
-use Circuitos\Models\SetSegurancaComponentes;
-use Circuitos\Models\SetSegurancaContato;
-
 use Circuitos\Models\Operations\CidadeDigitalOP;
-use Circuitos\Models\Operations\CoreOP;
 use Circuitos\Models\Operations\ConectividadeOP;
 use Circuitos\Models\Operations\ContratoOP;
+use Circuitos\Models\Operations\CoreOP;
 use Circuitos\Models\Operations\EstacaoTeleconOP;
 use Circuitos\Models\Operations\PropostaComercialOP;
+use Circuitos\Models\Operations\PropostaComercialServicoGrupoOP;
 use Circuitos\Models\Operations\PropostaComercialServicoOP;
-use Circuitos\Models\Operations\SetSegurancaOP;
+use Circuitos\Models\Operations\PropostaComercialServicoUnidadeOP;
 use Circuitos\Models\Operations\SetEquipamentoOP;
+use Circuitos\Models\Operations\SetSegurancaOP;
 use Circuitos\Models\Operations\TerrenoOP;
 use Circuitos\Models\Operations\TorreOP;
 use Circuitos\Models\Operations\UnidadeConsumidoraOP;
-
-use PHPMailer\PHPMailer\PHPMailer;
+use Circuitos\Models\Pessoa;
+use Circuitos\Models\PessoaContato;
+use Circuitos\Models\PessoaEmail;
+use Circuitos\Models\PessoaEndereco;
+use Circuitos\Models\PessoaFisica;
+use Circuitos\Models\PessoaJuridica;
+use Circuitos\Models\PessoaTelefone;
+use Circuitos\Models\PropostaComercialItem;
+use Circuitos\Models\SetEquipamentoComponentes;
+use Circuitos\Models\SetSegurancaComponentes;
+use Circuitos\Models\SetSegurancaContato;
+use Phalcon\Http\Response as Response;
+use Phalcon\Logger\Adapter\File as FileAdapter;
+use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
+use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use PHPMailer\PHPMailer\Exception;
-
+use PHPMailer\PHPMailer\PHPMailer;
 use Util\Util;
 
 require APP_PATH . "/library/PHPMailer/src/Exception.php";
@@ -505,6 +503,10 @@ class CoreController extends ControllerBase
                 $objeto = new CoreOP();
                 return $objeto->fornecedoresAtivos();
                 break;
+            case 'clientesAtivos':
+                $objeto = new CoreOP();
+                return $objeto->clientesAtivos();
+                break;
             case 'modelosAtivos':
                 $objeto = new CoreOP();
                 return $objeto->modelosAtivos();
@@ -536,6 +538,26 @@ class CoreController extends ControllerBase
             case 'unidadeConsumidorasAtivas':
                 $objeto = new CoreOP();
                 return $objeto->unidadeConsumidorasAtivas();
+                break;
+            case 'gruposServicoAtivos':
+                $objeto = new CoreOP();
+                return $objeto->gruposServicoAtivos();
+                break;
+            case 'servicoGruposAtivos':
+                $objeto = new CoreOP();
+                return $objeto->servicoGruposAtivos();
+                break;
+            case 'servicoUnidadesAtivos':
+                $objeto = new CoreOP();
+                return $objeto->servicoUnidadesAtivos();
+                break;
+            case 'servicosAtivos':
+                $objeto = new CoreOP();
+                return $objeto->servicosAtivos();
+                break;
+            case 'codigoServicosAtivos':
+                $objeto = new CoreOP();
+                return $objeto->codigoServicosAtivos();
                 break;
         }
     }
@@ -583,10 +605,6 @@ class CoreController extends ControllerBase
                 $objeto = new PropostaComercialOP();
                 return $objeto->visualizarPropostaComercial($dados['id']);
                 break;
-            case 'visualizarPropostaComercialServico':
-                $objeto = new PropostaComercialServicoOP();
-                return $objeto->visualizarPropostaComercialServico($dados['id']);
-                break;
             case 'visualizarSetSeguranca':
                 $objeto = new SetSegurancaOP();
                 return $objeto->visualizarSetSeguranca($dados['id']);
@@ -611,6 +629,18 @@ class CoreController extends ControllerBase
                 $objeto = new SetEquipamentoOP();
                 return $objeto->visualizarComponenteSetEquipamento($dados['id']);
                 break;
+            case 'visualizarPropostaComercialServico':
+                $objeto = new PropostaComercialServicoOP();
+                return $objeto->visualizarPropostaComercialServico($dados['id']);
+                break;
+            case 'visualizarPropostaComercialServicoGrupo':
+                $objeto = new PropostaComercialServicoGrupoOP();
+                return $objeto->visualizarPropostaComercialServicoGrupo($dados['id']);
+                break;
+            case 'visualizarPropostaComercialServicoUnidade':
+                $objeto = new PropostaComercialServicoUnidadeOP();
+                return $objeto->visualizarPropostaComercialServicoUnidade($dados['id']);
+                break;
             case 'visualizarTerreno':
                 $objeto = new TerrenoOP();
                 return $objeto->visualizarTerreno($dados['id']);
@@ -622,6 +652,14 @@ class CoreController extends ControllerBase
             case 'visualizarUnidadeConsumidora':
                 $objeto = new UnidadeConsumidoraOP();
                 return $objeto->visualizarUnidadeConsumidora($dados['id']);
+                break;
+            case 'visualizarPropostaItens':
+                $objeto = new PropostaComercialOP();
+                return $objeto->visualizarPropostaItens($dados['id']);
+                break;
+            case 'visualizarPropostaItem':
+                $objeto = new PropostaComercialOP();
+                return $objeto->visualizarPropostaItem($dados['id']);
                 break;
         }
     }
@@ -712,7 +750,54 @@ class CoreController extends ControllerBase
                 $objComponente->setId($dados['id']);
                 return $objeto->deletarCdETelecon($objComponente);
                 break;
+            case 'alterarPropostaItem':
+                $dados_form = $dados['array_dados'];
+                $objeto = new PropostaComercialOP();
+                $objComponente = new PropostaComercialItem();
+                $objComponente->setId($dados_form['id']);
+                $objComponente->setIdPropostaComercialServicos($dados_form['id_servico']);
+                $objComponente->setImposto($dados_form['imposto']);
+                $objComponente->setReajuste($dados_form['reajuste']);
+                $objComponente->setQuantidade($dados_form['quantidade']);
+                $objComponente->setMesInicial($dados_form['mes_inicial']);
+                $objComponente->setVigencia($dados_form['vigencia']);
+                $objComponente->setValorUnitario($dados_form['valor_unitario']);
+                $objComponente->setValorTotal($dados_form['valor_total']);
+                $objComponente->setValorTotalReajuste($dados_form['valor_total_reajuste']);
+                $objComponente->setValorImpostos($dados_form['valor_impostos']);
+                $objComponente->setValorTotalImpostos($dados_form['valor_total_impostos']);
+                return $objeto->alterarPropostaItem($objComponente);
+                break;
+            case 'deletarPropostaItem':
+                $objeto = new PropostaComercialOP();
+                $objComponente = new PropostaComercialItem();
+                $objComponente->setId($dados['id']);
+                return $objeto->deletarPropostaItem($objComponente);
+                break;
         }
+    }
+
+    public function processarAjaxSelectAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $dados = filter_input_array(INPUT_GET);
+        switch ($dados['metodo']) {
+            case 'selectSubGrupo':
+                $objeto = new PropostaComercialServicoGrupoOP();
+                return $objeto->selectSubGrupo($dados['id']);
+                break;
+        }
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $dados = filter_input_array(INPUT_GET);
+        switch ($dados['metodo']) {
+            case 'selectIdServico':
+                $objeto = new PropostaComercialServicoOP();
+                return $objeto->selectIdServico($dados['id']);
+                break;
+        }
+
     }
 
 }

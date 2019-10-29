@@ -640,7 +640,8 @@ $(document).ready(function () {
     $(".celular").mask("(00) 0000-00009"); //Celular com até 9 digitos
     $(".valor_monetario").maskMoney({ symbol: 'R$ ', symbolStay: false, allowNegative: true, thousands: '.', decimal: ',', affixesStay: false }); //Valor Monetário R$
     $(".valor_monetario_limpo").maskMoney({ allowNegative: true, thousands: '.', decimal: ',', affixesStay: false }); //Valor Monetário sem R$
-    $(".valor_percentual").maskMoney({ allowNegative: true, thousands: '', decimal: ',', affixesStay: false }); //Valor Decimal
+    $(".valor_percentual").maskMoney({ allowNegative: true, thousands: '.', decimal: ',', affixesStay: false }); //Valor Decimal
+    $(".valor_inteiro").maskMoney({ allowNegative: true, thousands: '.', decimal: '', affixesStay: false, precision: 0 }); //Valor Decimal
     $('.ip').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
         translation: {
             'Z': {
@@ -655,4 +656,15 @@ $(document).ready(function () {
             }
         }
     });
+    $(".codigo_contabil").mask('0.ZZ.ZZ.ZZ.ZZ.ZZ.ZZ.ZZ.ZZ', {
+        translation: {
+            'Z': {
+                pattern: /[0-9]/, optional: true
+            }
+        }
+    });
 });
+
+jQuery.validator.addMethod("maiorQueZero", function(value, element) {
+    return this.optional(element) || (parseFloat(value) > 0);
+}, "* O valor precisa ser maior que 0!");

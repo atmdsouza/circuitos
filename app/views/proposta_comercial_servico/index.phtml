@@ -53,18 +53,19 @@ $module = $this->router->getControllerName();
             <thead>
             <tr>
                 <th>Código</th>
-                <th>Cidade Digital</th>
-                <th>Tipo</th>
-                <th>Terreno</th>
-                <th>Endereço</th>
+                <th>Código Legado</th>
+                <th>Código Contábil</th>
+                <th>Descrição</th>
+                <th>Grupo</th>
+                <th>Unidade</th>
                 <th>Ativo</th>
                 <th>Ações</th>
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($page as $proposta_comercial_servico): ?>
+            <?php foreach ($page as $servico): ?>
                 <?php
-                switch($proposta_comercial_servico->getAtivo())
+                switch($servico->getAtivo())
                 {
                     case '0'://Inativo (False)
                         $ativo = "Inativo";
@@ -77,30 +78,31 @@ $module = $this->router->getControllerName();
                 }
                 ?>
                 <tr <?= $class_tr; ?>>
-                    <td><?= $proposta_comercial_servico->getId() ?></td>
-                    <td><?= $proposta_comercial_servico->getNomeCidadeDigital() ?></td>
-                    <td><?= $proposta_comercial_servico->getTipoTerreno() ?></td>
-                    <td><?= $proposta_comercial_servico->getDescricao() ?></td>
-                    <td><?= $proposta_comercial_servico->getEndereco() ?></td>
+                    <td><?= $servico->getId() ?></td>
+                    <td><?= $servico->getCodigoLegado() ?></td>
+                    <td><?= $servico->getCodigoContabil() ?></td>
+                    <td><?= $servico->getDescricao() ?></td>
+                    <td><?= $servico->getGrupo() ?></td>
+                    <td><?= $servico->getUnidade() ?></td>
                     <td><?= $ativo ?></td>
                     <td class="td_acoes">
                         <?php if($acl->isAllowed($role,$module, 'visualizar')): ?>
-                            <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $proposta_comercial_servico->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a>
+                            <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $servico->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a>
                         <?php endif; ?>
-                        <?php if($proposta_comercial_servico->getAtivo() == '0'): ?>
+                        <?php if($servico->getAtivo() == '0'): ?>
                             <?php if($acl->isAllowed($role, $module, 'ativar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="ativar(<?= $proposta_comercial_servico->getId() ?>, '<?= $proposta_comercial_servico->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/reativar.png" title="Ativar" alt="Ativar" height="25" width="25"></a>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="ativar(<?= $servico->getId() ?>, '<?= $servico->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/reativar.png" title="Ativar" alt="Ativar" height="25" width="25"></a>
                             <?php endif; ?>
                         <?php else: ?>
                             <?php if($acl->isAllowed($role, $module, 'editar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="editar(<?= $proposta_comercial_servico->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="editar(<?= $servico->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
                             <?php endif; ?>
                             <?php if($acl->isAllowed($role, $module, 'inativar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="inativar(<?= $proposta_comercial_servico->getId() ?>, '<?= $proposta_comercial_servico->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/desativar.png" title="Desativar" alt="Desativar" height="25" width="25"></a>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="inativar(<?= $servico->getId() ?>, '<?= $servico->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/desativar.png" title="Desativar" alt="Desativar" height="25" width="25"></a>
                             <?php endif; ?>
                         <?php endif; ?>
                         <?php if($acl->isAllowed($role, $module, 'excluir')): ?>
-                            <a href="javascript:void(0)" class="botoes_acao" onclick="excluir(<?= $proposta_comercial_servico->getId() ?>, '<?= $proposta_comercial_servico->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a>
+                            <a href="javascript:void(0)" class="botoes_acao" onclick="excluir(<?= $servico->getId() ?>, '<?= $servico->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -111,11 +113,11 @@ $module = $this->router->getControllerName();
 </div>
 <!--  Modal Cadastro -->
 <div id="modalCadastro" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalCadastro" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-sg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" aria-hidden="true" onclick="confirmaCancelar('modalCadastro');">×</button>
-                <h5 class="modal-title" id="modalCadastro">Dados da Terreno</h5>
+                <h5 class="modal-title" id="modalCadastro">Dados da Unidade Consumidora</h5>
             </div>
             <form id="formCadastro">
                 <input type="hidden" id="token" name="<?= $token['tokenKey'] ?>" value="<?= $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
@@ -124,26 +126,26 @@ $module = $this->router->getControllerName();
                         <div class="col-12">
                             <div class="form-row">
                                 <div class="form-group col-md-4">
-                                    <label for="lid_cidade_digital">Cidade Digital <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["lid_cidade_digital", "size" => 120, "class" => "form-control", "id" => "lid_cidade_digital", "placeholder" => "Cidade Digital", "onkeyup" => "autocompletarCidadeDigital();"]) ?>
-                                    <?php echo $this->tag->hiddenField(["id_cidade_digital", "size" => 120, "class" => "form-control", "id" => "id_cidade_digital"]) ?>
+                                    <label for="lid_proposta_comercial_servico_grupo">Grupo de Serviço <span class="required">*</span></label>
+                                    <?php echo $this->tag->textField(["lid_proposta_comercial_servico_grupo", "size" => 120, "class" => "form-control", "id" => "lid_proposta_comercial_servico_grupo", "placeholder" => "Grupo de Serviço", "onkeyup" => "autocompletarGrupo('lid_proposta_comercial_servico_grupo','id_proposta_comercial_servico_grupo');"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_proposta_comercial_servico_grupo", "size" => 120, "class" => "form-control", "id" => "id_proposta_comercial_servico_grupo"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="id_tipo">Tipo Terreno <span class="required">*</span></label>
-                                    <?php echo $this->tag->select(["id_tipo", $tipos, "class" => "form-control", "id" => "id_tipo",
-                                        "using" => ["id", "descricao",],
-                                        "useEmpty" => true,
-                                        "emptyText" => "Selecione o tipo de Terreno",
-                                        "emptyValue" => ""])
-                                    ?>
+                                    <label for="lid_proposta_comercial_servico_unidade">Unidade de Serviço <span class="required">*</span></label>
+                                    <?php echo $this->tag->textField(["lid_proposta_comercial_servico_unidade", "size" => 120, "class" => "form-control", "id" => "lid_proposta_comercial_servico_unidade", "placeholder" => "Unidade de Serviço", "onkeyup" => "autocompletarUnidade('lid_proposta_comercial_servico_unidade','id_proposta_comercial_servico_unidade');"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_proposta_comercial_servico_unidade", "size" => 120, "class" => "form-control", "id" => "id_proposta_comercial_servico_unidade"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="descricao">Terreno <span class="required">*</span></label>
-                                    <?= $this->tag->textField(["descricao", "size" => 200, "class" => "form-control result", "id" => "descricao", "placeholder" => "Descrição da Terreno"]) ?>
+                                    <label for="codigo_legado">Código Legado </label>
+                                    <?= $this->tag->textField(["codigo_legado", "size" => 200, "class" => "form-control", "id" => "codigo_legado", "placeholder" => "Código Legado"]) ?>
                                 </div>
-                                <div class="form-group col-md-12">
-                                    <label for="endereco">Endereço da Terreno</label>
-                                    <?= $this->tag->textField(["endereco", "size" => 200, "class" => "form-control", "id" => "endereco", "placeholder" => "Endereço da Terreno"]) ?>
+                                <div class="form-group col-md-4">
+                                    <label for="codigo_contabil">Código Contábil <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["codigo_contabil", "size" => 200, "class" => "form-control codigo_contabil", "id" => "codigo_contabil", "placeholder" => "Código Contábil"]) ?>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="descricao">Descrição <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["descricao", "size" => 200, "class" => "form-control", "id" => "descricao", "placeholder" => "Descrição do Serviço"]) ?>
                                 </div>
                             </div>
                         </div>

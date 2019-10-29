@@ -241,7 +241,7 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field codigo_conta_contrato
+     * Returns the value of field conta_agrupadora
      *
      * @return string
      */

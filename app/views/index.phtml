@@ -20,7 +20,7 @@
     <link href="<?= DIR_STATICS ?>public/css/icons.css" rel="stylesheet" type="text/css" />
     <link href="<?= DIR_STATICS ?>public/css/metismenu.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= DIR_STATICS ?>public/css/style.css" rel="stylesheet" type="text/css" />
-    <link href="<?= DIR_STATICS ?>public/css/custom.css" rel="stylesheet" type="text/css" />
+    <link href="<?= DIR_STATICS ?>public/css/custom.css?<?= filemtime(BASE_PATH.'/public/css/custom.css'); ?>"" rel="stylesheet" type="text/css" />
 
     <link href="<?= DIR_STATICS ?>public/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css" />
 
@@ -54,9 +54,10 @@
 
     <!-- Pickers -->
     <link href="<?= DIR_STATICS ?>public/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" type="text/css">
-    <link href="<?= DIR_STATICS ?>public/plugins/switchery/switchery.min.css" rel="stylesheet" type="text/css"/>
+    <link href="<?= DIR_STATICS ?>public/plugins/switchery/switchery.min.css" rel="stylesheet" rel="stylesheet" type="text/css"/>
 
-
+    <!-- Bootstrap fileupload css -->
+    <link href="<?= DIR_STATICS ?>public/plugins/bootstrap-fileupload/bootstrap-fileupload.css" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -412,191 +413,201 @@
 <!-- END wrapper -->
 
 <!-- jQuery  -->
-<script src="<?= DIR_STATICS ?>public/js/jquery.min.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/jquery-validate/jquery.validate.min.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/js/popper.min.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/js/metisMenu.min.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/js/waves.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/js/jquery.slimscroll.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/waypoints/lib/jquery.waypoints.min.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/counterup/jquery.counterup.min.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/js/modernizr.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/jquery.min.js?<?= filemtime(BASE_PATH.'/public/js/jquery.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/jquery-validate/jquery.validate.min.js?<?= filemtime(BASE_PATH.'/public/plugins/jquery-validate/jquery.validate.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/popper.min.js?<?= filemtime(BASE_PATH.'/public/js/popper.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/bootstrap.min.js?<?= filemtime(BASE_PATH.'/public/js/bootstrap.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/metisMenu.min.js?<?= filemtime(BASE_PATH.'/public/js/metisMenu.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/waves.js?<?= filemtime(BASE_PATH.'/public/js/waves.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/jquery.slimscroll.js?<?= filemtime(BASE_PATH.'/public/js/jquery.slimscroll.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/waypoints/lib/jquery.waypoints.min.js?<?= filemtime(BASE_PATH.'/public/plugins/waypoints/lib/jquery.waypoints.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/counterup/jquery.counterup.min.js?<?= filemtime(BASE_PATH.'/public/plugins/counterup/jquery.counterup.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/modernizr.min.js?<?= filemtime(BASE_PATH.'/public/js/modernizr.min.js'); ?>" type="text/javascript"></script>
 
 <!-- Moment -->
-<script src="<?= DIR_STATICS ?>public/plugins/moment/moment.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/moment/moment.js?<?= filemtime(BASE_PATH.'/public/plugins/moment/moment.js'); ?>" type="text/javascript"></script>
 
 <!-- Required datatable js -->
-<script src="<?= DIR_STATICS ?>public/plugins/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/datatables/dataTables.bootstrap4.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/jquery.dataTables.min.js?<?= filemtime(BASE_PATH.'/public/plugins/datatables/jquery.dataTables.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/dataTables.bootstrap4.min.js?<?= filemtime(BASE_PATH.'/public/plugins/datatables/dataTables.bootstrap4.min.js'); ?>" type="text/javascript"></script>
 <!-- Buttons examples -->
-<script src="<?= DIR_STATICS ?>public/plugins/datatables/dataTables.buttons.min.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/datatables/buttons.bootstrap4.min.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/datatables/jszip.min.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/datatables/pdfmake.min.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/datatables/vfs_fonts.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/datatables/buttons.html5.min.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/datatables/buttons.print.min.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/datatables/select/js/dataTables.select.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/dataTables.buttons.min.js?<?= filemtime(BASE_PATH.'/public/plugins/datatables/dataTables.buttons.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/buttons.bootstrap4.min.js?<?= filemtime(BASE_PATH.'/public/plugins/datatables/buttons.bootstrap4.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/jszip.min.js?<?= filemtime(BASE_PATH.'/public/plugins/datatables/jszip.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/pdfmake.min.js?<?= filemtime(BASE_PATH.'/public/plugins/datatables/pdfmake.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/vfs_fonts.js?<?= filemtime(BASE_PATH.'/public/plugins/datatables/vfs_fonts.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/buttons.html5.min.js?<?= filemtime(BASE_PATH.'/public/plugins/datatables/buttons.html5.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/buttons.print.min.js?<?= filemtime(BASE_PATH.'/public/plugins/datatables/buttons.print.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/select/js/dataTables.select.min.js?<?= filemtime(BASE_PATH.'/public/plugins/datatables/select/js/dataTables.select.min.js'); ?>" type="text/javascript"></script>
 <!--FixedHeader-->
-<script src="<?= DIR_STATICS ?>public/plugins/datatables/fixedHeader.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/fixedHeader.js?<?= filemtime(BASE_PATH.'/public/plugins/datatables/fixedHeader.js'); ?>" type="text/javascript"></script>
 <!-- Responsive examples -->
-<script src="<?= DIR_STATICS ?>public/plugins/datatables/dataTables.responsive.min.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/datatables/responsive.bootstrap4.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/dataTables.responsive.min.js?<?= filemtime(BASE_PATH.'/public/plugins/datatables/dataTables.responsive.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/datatables/responsive.bootstrap4.min.js?<?= filemtime(BASE_PATH.'/public/plugins/datatables/responsive.bootstrap4.min.js'); ?>" type="text/javascript"></script>
 
 <!-- Modal-Effect -->
-<script src="<?= DIR_STATICS ?>public/plugins/custombox/js/custombox.min.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/custombox/js/legacy.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/custombox/js/custombox.min.js?<?= filemtime(BASE_PATH.'/public/plugins/custombox/js/custombox.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/custombox/js/legacy.min.js?<?= filemtime(BASE_PATH.'/public/plugins/custombox/js/legacy.min.js'); ?>" type="text/javascript"></script>
 
 <!-- Autocomplete -->
-<script src="<?= DIR_STATICS ?>public/plugins/autocomplete/jquery.autocomplete.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/autocomplete/jquery.autocomplete.js?<?= filemtime(BASE_PATH.'/public/plugins/autocomplete/jquery.autocomplete.js'); ?>" type="text/javascript"></script>
 
 <!-- Google Maps API -->
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcu0hXW_sdQWq-6QsGYJKW2qhTSmFLMMI"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcu0hXW_sdQWq-6QsGYJKW2qhTSmFLMMI" type="text/javascript"></script>
 <!-- Arquivos MarkerCluster -->
-<script type="text/javascript" src="<?= DIR_STATICS ?>public/plugins/markercluster/markerclusterer.js"></script>
-<script type="text/javascript" src="<?= DIR_STATICS ?>public/plugins/markercluster/oms.min.js"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/markercluster/markerclusterer.js?<?= filemtime(BASE_PATH.'/public/plugins/markercluster/markerclusterer.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/markercluster/oms.min.js?<?= filemtime(BASE_PATH.'/public/plugins/markercluster/oms.min.js'); ?>" type="text/javascript"></script>
 
 <!-- jQuery UI -->
-<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>-->
+<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-ui/jquery-ui.min.js?<?= filemtime(BASE_PATH.'/public/js/modulos/propostacomercial.js'); ?>" type="text/javascript"></script>-->
 
 <!-- jQuery File Upload -->
 <!-- jQuery UI Width -->
-<script src="<?= DIR_STATICS ?>public/plugins/jquery-file-upload/js/jqeury-ui-width.js"></script>
+<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jqeury-ui-width.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jqeury-ui-width.js'); ?><!--" type="text/javascript"></script>-->
 <!-- The Templates plugin is included to render the upload/download listings -->
-<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/tmpl.min.js"></script>-->
+<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/tmpl.min.js" type="text/javascript"></script>-->
 <!-- The Load Image plugin is included for the preview images and image resizing functionality-->
-<script src="<?= DIR_STATICS ?>public/plugins/jquery-file-upload/js/load-image.all.min.js"></script>
+<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/load-image.all.min.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/load-image.all.min.js'); ?><!--" type="text/javascript"></script>-->
 <!-- The Canvas to Blob plugin is included for image resizing functionality -->
-<script src="<?= DIR_STATICS ?>public/plugins/jquery-file-upload/js/canvas-to-blob.min.js"></script>
+<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/canvas-to-blob.min.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/canvas-to-blob.min.js'); ?><!--" type="text/javascript"></script>-->
 <!--Arquivos do File Upload-->
-<script src="<?= DIR_STATICS ?>public/plugins/jquery-file-upload/js/jquery.iframe-transport.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/jquery-file-upload/js/jquery.fileupload.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/jquery-file-upload/js/jquery.fileupload-process.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/jquery-file-upload/js/jquery.fileupload-image.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/jquery-file-upload/js/jquery.fileupload-audio.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/jquery-file-upload/js/jquery.fileupload-video.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/jquery-file-upload/js/jquery.fileupload-validate.js" type="text/javascript"></script>
-<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.fileupload-jquery-ui.js" type="text/javascript"></script>-->
-<script src="<?= DIR_STATICS ?>public/plugins/jquery-file-upload/js/jquery.fileupload-ui.js" type="text/javascript"></script>
+<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.iframe-transport.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jquery.iframe-transport.js'); ?><!--" type="text/javascript"></script>-->
+<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.fileupload.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jqueryfileupload.js'); ?><!--" type="text/javascript"></script>-->
+<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.fileupload-process.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jquery.iframe-transport.js'); ?><!--" type="text/javascript"></script>-->
+<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.fileupload-image.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jquery.fileupload-process.js'); ?><!--" type="text/javascript"></script>-->
+<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.fileupload-audio.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jquery.fileupload-audio.js'); ?><!--" type="text/javascript"></script>-->
+<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.fileupload-video.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jquery.fileupload-video.js'); ?><!--" type="text/javascript"></script>-->
+<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.fileupload-validate.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jquery.fileupload-validate.js'); ?><!--" type="text/javascript"></script>-->
+<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.fileupload-jquery-ui.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jquery.fileupload-jquery-ui.js'); ?><!--" type="text/javascript"></script>-->
+<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.fileupload-ui.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jquery.fileupload-ui.js'); ?><!--" type="text/javascript"></script>-->
 
 <!--Custom File Input-->
-<script src="<?= DIR_STATICS ?>public/plugins/customfileinputs/js/custom-file-input.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/customfileinputs/js/custom-file-input.js?<?= filemtime(BASE_PATH.'/public/plugins/customfileinputs/js/custom-file-input.js'); ?>" type="text/javascript"></script>
+
+<!--Bootstrap File Upload-->
+<script src="<?= DIR_STATICS ?>public/plugins/bootstrap-fileupload/bootstrap-fileupload.js" type="text/javascript"></script>
 
 <!-- Sweet Alert Js  -->
-<script src="<?= DIR_STATICS ?>public/plugins/sweet-alert/sweetalert2.min.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/switchery/switchery.min.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/sweet-alert/sweetalert2.min.js?<?= filemtime(BASE_PATH.'/public/plugins/sweet-alert/sweetalert2.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/switchery/switchery.min.js?<?= filemtime(BASE_PATH.'/public/plugins/switchery/switchery.min.js'); ?>" type="text/javascript"></script>
 
 <!-- Select2 -->
-<script src="<?= DIR_STATICS ?>public/plugins/select2/js/select2.full.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/select2/js/select2.full.js?<?= filemtime(BASE_PATH.'/public/plugins/select2/js/select2.full.js'); ?>" type="text/javascript"></script>
 
 <!-- DateRangePicker -->
-<script src="<?= DIR_STATICS ?>public/plugins/bootstrap-daterangepicker/daterangepicker.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/bootstrap-daterangepicker/daterangepicker.js?<?= filemtime(BASE_PATH.'/public/plugins/bootstrap-daterangepicker/daterangepicker.js'); ?>" type="text/javascript"></script>
 
 <!-- Higthcharts -->
-<script src="<?= DIR_STATICS ?>public/plugins/higthcharts/highcharts.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/higthcharts/modules/exporting.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/plugins/higthcharts/modules/export-data.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/higthcharts/highcharts.js?<?= filemtime(BASE_PATH.'/public/plugins/higthcharts/highcharts.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/higthcharts/modules/exporting.js?<?= filemtime(BASE_PATH.'/public/plugins/higthcharts/modules/exporting.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/higthcharts/modules/export-data.js?<?= filemtime(BASE_PATH.'/public/plugins/higthcharts/modules/export-data.js'); ?>" type="text/javascript"></script>
 
 <!-- Plugins -->
-<script src="<?= DIR_STATICS ?>public/js/uteis/accounting.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/js/uteis/jquery.mask.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/js/uteis/maskMoney.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/js/uteis/multiselect.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/js/uteis/uteis.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/js/uteis/jquery-blockui.js" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/uteis/accounting.js?<?= filemtime(BASE_PATH.'/public/js/uteis/accounting.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/uteis/jquery.mask.js?<?= filemtime(BASE_PATH.'/public/js/uteis/jquery.mask.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/uteis/maskMoney.js?<?= filemtime(BASE_PATH.'/public/js/uteis/maskMoney.js'); ?>" type="text/javascript"></script>
+<!--<script src="--><?//= DIR_STATICS ?><!--public/js/uteis/multiselect.js?--><?//= filemtime(BASE_PATH.'/public/js/uteis/multiselect.js'); ?><!--" type="text/javascript"></script>-->
+<script src="<?= DIR_STATICS ?>public/js/uteis/uteis.js?<?= filemtime(BASE_PATH.'/public/js/uteis/uteis.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/uteis/autocompletes.js?<?= filemtime(BASE_PATH.'/public/js/uteis/autocompletes.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/uteis/jquery-blockui.js?<?= filemtime(BASE_PATH.'/public/js/uteis/jquery-blockui.js'); ?>" type="text/javascript"></script>
+
+<!-- App js -->
+<script src="<?= DIR_STATICS ?>public/js/jquery.core.js?<?= filemtime(BASE_PATH.'/public/js/jquery.core.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/js/jquery.app.js?<?= filemtime(BASE_PATH.'/public/js/jquery.app.js'); ?>" type="text/javascript"></script>
 
 <!-- Módulos -->
 <?php $module = $this->router->getControllerName(); ?>
 <?php $action = $this->router->getActionName(); ?>
 <?php switch($module){
 case "index":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/index.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/index.js?<?= filemtime(BASE_PATH.'/public/js/modulos/index.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "cliente":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/cliente.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/cliente.js?<?= filemtime(BASE_PATH.'/public/js/modulos/cliente.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "cidade_digital":?>
     <?php if($action == 'index'){ ?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/cidade_digital.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/cidade_digital.js?<?= filemtime(BASE_PATH.'/public/js/modulos/cidade_digital.js'); ?>" type="text/javascript"></script>
     <?php } else if($action == 'localizar'){ ?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/localizar.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/localizar.js?<?= filemtime(BASE_PATH.'/public/js/modulos/localizar.js'); ?>" type="text/javascript"></script>
     <?php } ?>
 <?php break;
 case "conectividade":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/conectividade.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/conectividade.js?<?= filemtime(BASE_PATH.'/public/js/modulos/conectividade.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "set_seguranca":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/setseguranca.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/setseguranca.js?<?= filemtime(BASE_PATH.'/public/js/modulos/setseguranca.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "set_equipamento":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/setequipamento.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/setequipamento.js?<?= filemtime(BASE_PATH.'/public/js/modulos/setequipamento.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "terreno":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/terreno.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/terreno.js?<?= filemtime(BASE_PATH.'/public/js/modulos/terreno.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "torre":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/torre.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/torre.js?<?= filemtime(BASE_PATH.'/public/js/modulos/torre.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "contrato":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/contrato.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/contrato.js?<?= filemtime(BASE_PATH.'/public/js/modulos/contrato.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "estacao_telecon":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/estacaotelecon.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/estacaotelecon.js?<?= filemtime(BASE_PATH.'/public/js/modulos/estacaotelecon.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "proposta_comercial":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/propostacomercial.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/propostacomercial.js?<?= filemtime(BASE_PATH.'/public/js/modulos/propostacomercial.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "proposta_comercial_servico":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/propostacomercialservico.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/propostacomercialservico.js?<?= filemtime(BASE_PATH.'/public/js/modulos/propostacomercialservico.js'); ?>" type="text/javascript"></script>
+<?php break;
+case "proposta_comercial_servico_unidade":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/propostacomercialservicounidade.js?<?= filemtime(BASE_PATH.'/public/js/modulos/propostacomercialservicounidade.js'); ?>" type="text/javascript"></script>
+<?php break;
+case "proposta_comercial_servico_grupo":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/propostacomercialservicogrupo.js?<?= filemtime(BASE_PATH.'/public/js/modulos/propostacomercialservicogrupo.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "fornecedor":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/fornecedor.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/fornecedor.js?<?= filemtime(BASE_PATH.'/public/js/modulos/fornecedor.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "cliente_unidade":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/cliente_unidade.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/cliente_unidade.js?<?= filemtime(BASE_PATH.'/public/js/modulos/cliente_unidade.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "usuario":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/usuario.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/usuario.js?<?= filemtime(BASE_PATH.'/public/js/modulos/usuario.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "logs_sistema":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/logs.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/logs.js?<?= filemtime(BASE_PATH.'/public/js/modulos/logs.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "lov":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/lov.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/lov.js?<?= filemtime(BASE_PATH.'/public/js/modulos/lov.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "empresa":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/empresa.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/empresa.js?<?= filemtime(BASE_PATH.'/public/js/modulos/empresa.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "fabricante":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/fabricante.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/fabricante.js?<?= filemtime(BASE_PATH.'/public/js/modulos/fabricante.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "equipamento":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/equipamento.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/equipamento.js?<?= filemtime(BASE_PATH.'/public/js/modulos/equipamento.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "modelo":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/modelo.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/modelo.js?<?= filemtime(BASE_PATH.'/public/js/modulos/modelo.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "relatorios_gestao":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/relatorios_gestao.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/relatorios_gestao.js?<?= filemtime(BASE_PATH.'/public/js/modulos/relatorios_gestao.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "controle_acesso":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/controle_acesso.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/controle_acesso.js?<?= filemtime(BASE_PATH.'/public/js/modulos/controle_acesso.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "central_mensagens":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/central_mensagens.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/central_mensagens.js?<?= filemtime(BASE_PATH.'/public/js/modulos/central_mensagens.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "unidade_consumidora":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/unidade_consumidora.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/unidade_consumidora.js?<?= filemtime(BASE_PATH.'/public/js/modulos/unidade_consumidora.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "circuitos":?>
-    <script src="<?= DIR_STATICS ?>public/js/modulos/circuitos.js" type="text/javascript"></script>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/circuitos.js?<?= filemtime(BASE_PATH.'/public/js/modulos/circuitos.js'); ?>" type="text/javascript"></script>
     <?php break;
 } ?>
-
-<!-- App js -->
-<script src="<?= DIR_STATICS ?>public/js/jquery.core.js" type="text/javascript"></script>
-<script src="<?= DIR_STATICS ?>public/js/jquery.app.js" type="text/javascript"></script>
 
 </body>
 </html>

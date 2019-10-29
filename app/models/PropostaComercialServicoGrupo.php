@@ -2,6 +2,8 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+
 class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
 {
 
@@ -10,6 +12,12 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $id;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $id_grupo_pai;
 
     /**
      *
@@ -27,7 +35,7 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
      *
      * @var string
      */
-    protected $descritivo;
+    protected $descricao;
 
     /**
      *
@@ -87,14 +95,14 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field descritivo
+     * Method to set the value of field descricao
      *
-     * @param string $descritivo
+     * @param string $descricao
      * @return $this
      */
-    public function setDescritivo($descritivo)
+    public function setdescricao($descricao)
     {
-        $this->descritivo = $descritivo;
+        $this->descricao = $descricao;
 
         return $this;
     }
@@ -169,13 +177,13 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field descritivo
+     * Returns the value of field descricao
      *
      * @return string
      */
-    public function getDescritivo()
+    public function getDescricao()
     {
-        return $this->descritivo;
+        return $this->descricao;
     }
 
     /**
@@ -209,6 +217,32 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return int
+     */
+    public function getIdGrupoPai()
+    {
+        return $this->id_grupo_pai;
+    }
+
+    /**
+     * @param int $id_grupo_pai
+     */
+    public function setIdGrupoPai($id_grupo_pai)
+    {
+        $this->id_grupo_pai = $id_grupo_pai;
+    }
+
+    /**
+     * Returns the value of field grupo_pai
+     *
+     * @return string
+     */
+    public function getGrupoPai()
+    {
+        return $this->PropostaComercialServicoGrupo->descricao;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -216,6 +250,8 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("proposta_comercial_servico_grupo");
         $this->hasMany('id', 'Circuitos\Models\PropostaComercialServico', 'id_proposta_comercial_servico_grupo', ['alias' => 'PropostaComercialServico']);
+        $this->hasMany('id', 'Circuitos\Models\PropostaComercialServicoGrupo', 'id_grupo_pai', ['alias' => 'PropostaComercialServicoGrupo']);
+        $this->belongsTo('id_grupo_pai', 'Circuitos\Models\PropostaComercialServicoGrupo', 'id', ['alias' => 'PropostaComercialServicoGrupo']);
     }
 
     /**
@@ -248,6 +284,29 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de PropostaComercialServicoGrupo, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return PropostaComercialServicoGrupo|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarPropostaComercialServicoGrupo($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("PropostaComercialServicoGrupo" => "Circuitos\Models\PropostaComercialServicoGrupo"));
+        $query->columns("PropostaComercialServicoGrupo.*");
+        $query->leftJoin("Circuitos\Models\PropostaComercialServicoGrupo", "PropostaComercialServicoGrupo.id = PropostaComercialServicoGrupo.id_grupo_pai", "PropostaComercialServicoGrupoPai");
+        $query->where("PropostaComercialServicoGrupo.excluido = 0 AND (CONVERT(PropostaComercialServicoGrupo.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoGrupo.codigo_legado USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoGrupo.codigo_contabil USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoGrupo.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoGrupoPai.descricao USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("PropostaComercialServicoGrupo.id");
+        $query->orderBy("PropostaComercialServicoGrupo.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
 }

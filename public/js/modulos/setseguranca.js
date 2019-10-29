@@ -4,8 +4,6 @@ var URLImagensSistema = "public/images";
 
 //Variáveis Globais
 var mudou = false;
-var listFornecedor = [];
-var f = 0;
 
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos)
 function inicializar()
@@ -22,7 +20,8 @@ function inicializar()
                 [0, "desc"]
             ] //Ordenação passando a lista de ativos primeiro
     });
-    autocompletarFornecedor();
+    autocompletarFornecedor('i_lid_fornecedor','i_id_fornecedor');
+    autocompletarContrato('i_lid_contrato','i_id_contrato');
 }
 
 function verificarAlteracao()
@@ -652,61 +651,4 @@ function limparDadosFormComponente()
     $('#i_propriedade_prodepa').val('-1').selected = 'true';
     $('#dados_componente').removeAttr('style', 'display: block;');
     $('#dados_componente').attr('style', 'display: none;');
-}
-
-//Sessão de autocompletes
-function autocompletarContrato()
-{
-
-}
-
-function autocompletarFornecedor()
-{
-    "use strict";
-    //Autocomplete de Fabricante
-    var ac_fornecedor = $("#i_lid_fornecedor");
-    var vl_fornecedor = $("#i_id_fornecedor");
-    var string = ac_fornecedor.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: { metodo: 'fornecedoresAtivos', string: string },
-        error: function(data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function(data) {
-            if (data.operacao) {
-                listFornecedor = [];
-                $.each(data.dados, function(key, value) {
-                    listFornecedor.push({ value: value.nome, data: value.id });
-                });
-                if (f === 0) {
-                    //Autocomplete
-                    ac_fornecedor.autocomplete({
-                        lookup: listFornecedor,
-                        onSelect: function(suggestion) {
-                            vl_fornecedor.val(suggestion.data);
-                        }
-                    });
-                    f++;
-                } else {
-                    //Autocomplete
-                    ac_fornecedor.autocomplete().setOptions({
-                        lookup: listFornecedor
-                    });
-                }
-            } else {
-                vl_fornecedor.val("");
-                ac_fornecedor.val("");
-            }
-        }
-    });
 }

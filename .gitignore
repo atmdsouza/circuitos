@@ -1,9 +1,6 @@
-/nbproject/*
-/.phalcon/*
-/public/relatorios/*
-/.idea/*
-/data/*
-/logs/*
+/nbproject/
+/.phalcon/
+/public/relatorios/
+/.idea/
 /logs/
-.phalcon/
 cache/

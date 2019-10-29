@@ -2,7 +2,7 @@
 
 namespace Circuitos\Models;
 
-class CircuitosAnexo extends \Phalcon\Mvc\Model
+class EmpresaDepartamento extends \Phalcon\Mvc\Model
 {
 
     /**
@@ -15,31 +15,13 @@ class CircuitosAnexo extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $id_circuitos;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $id_tipo_anexo;
-
-    /**
-     *
-     * @var string
-     */
-    protected $data_criacao;
+    protected $id_departamento_pai;
 
     /**
      *
      * @var string
      */
     protected $descricao;
-
-    /**
-     *
-     * @var string
-     */
-    protected $url;
 
     /**
      *
@@ -60,6 +42,12 @@ class CircuitosAnexo extends \Phalcon\Mvc\Model
     protected $data_update;
 
     /**
+     *
+     * @var integer
+     */
+    protected $id_empresa;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -73,40 +61,14 @@ class CircuitosAnexo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field id_circuitos
+     * Method to set the value of field id_departamento_pai
      *
-     * @param integer $id_circuitos
+     * @param integer $id_departamento_pai
      * @return $this
      */
-    public function setIdCircuitos($id_circuitos)
+    public function setIdDepartamentoPai($id_departamento_pai)
     {
-        $this->id_circuitos = $id_circuitos;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field id_tipo_anexo
-     *
-     * @param integer $id_tipo_anexo
-     * @return $this
-     */
-    public function setIdTipoAnexo($id_tipo_anexo)
-    {
-        $this->id_tipo_anexo = $id_tipo_anexo;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field data_criacao
-     *
-     * @param string $data_criacao
-     * @return $this
-     */
-    public function setDataCriacao($data_criacao)
-    {
-        $this->data_criacao = $data_criacao;
+        $this->id_departamento_pai = $id_departamento_pai;
 
         return $this;
     }
@@ -120,19 +82,6 @@ class CircuitosAnexo extends \Phalcon\Mvc\Model
     public function setDescricao($descricao)
     {
         $this->descricao = $descricao;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field url
-     *
-     * @param string $url
-     * @return $this
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
 
         return $this;
     }
@@ -177,6 +126,19 @@ class CircuitosAnexo extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field id_empresa
+     *
+     * @param integer $id_empresa
+     * @return $this
+     */
+    public function setIdEmpresa($id_empresa)
+    {
+        $this->id_empresa = $id_empresa;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field id
      *
      * @return integer
@@ -187,33 +149,13 @@ class CircuitosAnexo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id_circuitos
+     * Returns the value of field id_departamento_pai
      *
      * @return integer
      */
-    public function getIdCircuitos()
+    public function getIdDepartamentoPai()
     {
-        return $this->id_circuitos;
-    }
-
-    /**
-     * Returns the value of field id_tipo_anexo
-     *
-     * @return integer
-     */
-    public function getIdTipoAnexo()
-    {
-        return $this->id_tipo_anexo;
-    }
-
-    /**
-     * Returns the value of field data_criacao
-     *
-     * @return string
-     */
-    public function getDataCriacao()
-    {
-        return $this->data_criacao;
+        return $this->id_departamento_pai;
     }
 
     /**
@@ -224,16 +166,6 @@ class CircuitosAnexo extends \Phalcon\Mvc\Model
     public function getDescricao()
     {
         return $this->descricao;
-    }
-
-    /**
-     * Returns the value of field url
-     *
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->url;
     }
 
     /**
@@ -267,14 +199,27 @@ class CircuitosAnexo extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field id_empresa
+     *
+     * @return integer
+     */
+    public function getIdEmpresa()
+    {
+        return $this->id_empresa;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
     {
         $this->setSchema("bd_circuitosnavega");
-        $this->setSource("circuitos_anexo");
-        $this->belongsTo('id_circuitos', 'CircuitosModels\Circuitos', 'id', ['alias' => 'Circuitos']);
-        $this->belongsTo('id_tipo_anexo', 'CircuitosModels\Lov', 'id', ['alias' => 'Lov']);
+        $this->setSource("empresa_departamento");
+        $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_empresa_departamento', ['alias' => 'Circuitos']);
+        $this->hasMany('id', 'Circuitos\Models\EmpresaDepartamento', 'id_departamento_pai', ['alias' => 'EmpresaDepartamento']);
+        $this->hasMany('id', 'Circuitos\Models\PropostaComercial', 'id_localizacao', ['alias' => 'PropostaComercial']);
+        $this->belongsTo('id_departamento_pai', 'Circuitos\Models\EmpresaDepartamento', 'id', ['alias' => 'EmpresaDepartamento']);
+        $this->belongsTo('id_empresa', 'Circuitos\Models\Empresa', 'id', ['alias' => 'Empresa']);
     }
 
     /**
@@ -284,14 +229,14 @@ class CircuitosAnexo extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'circuitos_anexo';
+        return 'empresa_departamento';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return CircuitosAnexo[]|CircuitosAnexo|\Phalcon\Mvc\Model\ResultSetInterface
+     * @return EmpresaDepartamento[]|EmpresaDepartamento|\Phalcon\Mvc\Model\ResultSetInterface
      */
     public static function find($parameters = null)
     {
@@ -302,7 +247,7 @@ class CircuitosAnexo extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return CircuitosAnexo|\Phalcon\Mvc\Model\ResultInterface
+     * @return EmpresaDepartamento|\Phalcon\Mvc\Model\ResultInterface
      */
     public static function findFirst($parameters = null)
     {
