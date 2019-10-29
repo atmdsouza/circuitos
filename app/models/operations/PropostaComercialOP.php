@@ -339,4 +339,58 @@ class PropostaComercialOP extends PropostaComercial
             return false;
         }
     }
+
+    public function alterarPropostaItem(PropostaComercialItem $objPropostaComercialItem)
+    {
+        try {
+            $manager = new TxManager();
+            $transaction = $manager->get();
+            $objetoComponente = PropostaComercialItem::findFirst('id='.$objPropostaComercialItem->getId());
+            $objetoComponente->setTransaction($transaction);
+            $objetoComponente->setDescricao(mb_strtoupper($objPropostaComercialItem->getDescricao(), $this->encode));
+            $objetoComponente->setIdContrato(($objPropostaComercialItem->getIdContrato()) ? $objPropostaComercialItem->getIdContrato() : null);
+            $objetoComponente->setIdTerreno(($objPropostaComercialItem->getIdTerreno()) ? $objPropostaComercialItem->getIdTerreno() : null);
+            $objetoComponente->setIdTorre(($objPropostaComercialItem->getIdTorre()) ? $objPropostaComercialItem->getIdTorre() : null);
+            $objetoComponente->setIdSetEquipamento(($objPropostaComercialItem->getIdSetEquipamento()) ? $objPropostaComercialItem->getIdSetEquipamento() : null);
+            $objetoComponente->setIdSetSeguranca(($objPropostaComercialItem->getIdSetSeguranca()) ? $objPropostaComercialItem->getIdSetSeguranca() : null);
+            $objetoComponente->setIdUnidadeConsumidora(($objPropostaComercialItem->getIdUnidadeConsumidora()) ? $objPropostaComercialItem->getIdUnidadeConsumidora() : null);
+            $objetoComponente->setDataUpdate(date('Y-m-d H:i:s'));
+            if ($objetoComponente->save() == false) {
+                $messages = $objetoComponente->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Não foi possível salvar o item da proposta: " . $errors);
+            }
+            $transaction->commit();
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoComponente)));
+            return $response;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
+    }
+
+    public function deletarPropostaItem(PropostaComercialItem $objPropostaComercialItem)
+    {
+        try {
+            $manager = new TxManager();
+            $transaction = $manager->get();
+            $objetoComponente = PropostaComercialItem::findFirst('id='.$objPropostaComercialItem->getId());
+            $id_proposta_comercial = $objetoComponente->getIdPropostaComercial();
+            $objetoComponente->setTransaction($transaction);
+            if ($objetoComponente->delete() == false) {
+                $transaction->rollback("Não foi possível deletar o item da proposta!");
+            }
+            $transaction->commit();
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $id_proposta_comercial)));
+            return $response;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
+    }
 }

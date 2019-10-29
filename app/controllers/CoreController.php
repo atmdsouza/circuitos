@@ -2,6 +2,7 @@
 
 namespace Circuitos\Controllers;
 
+use Circuitos\Models\PropostaComercialItem;
 use Phalcon\Logger;
 use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Http\Response as Response;
@@ -749,6 +750,26 @@ class CoreController extends ControllerBase
                 $objComponente = new EstacaoTelecon();
                 $objComponente->setId($dados['id']);
                 return $objeto->deletarCdETelecon($objComponente);
+                break;
+            case 'alterarPropostaItem':
+                $dados_form = $dados['array_dados'];
+                $objeto = new PropostaComercialOP();
+                $objComponente = new PropostaComercialItem();
+                $objComponente->setId($dados_form['id']);
+                $objComponente->setDescricao($dados_form['descricao']);
+                $objComponente->setIdContrato($dados_form['id_contrato']);
+                $objComponente->setIdTerreno($dados_form['id_terreno']);
+                $objComponente->setIdTorre($dados_form['id_torre']);
+                $objComponente->setIdSetEquipamento($dados_form['id_set_equipamento']);
+                $objComponente->setIdSetSeguranca($dados_form['id_set_seguranca']);
+                $objComponente->setIdUnidadeConsumidora($dados_form['id_unidade_consumidora']);
+                return $objeto->alterarPropostaItem($objComponente);
+                break;
+            case 'deletarPropostaItem':
+                $objeto = new PropostaComercialOP();
+                $objComponente = new PropostaComercialItem();
+                $objComponente->setId($dados['id']);
+                return $objeto->deletarPropostaItem($objComponente);
                 break;
         }
     }
