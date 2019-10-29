@@ -2,16 +2,14 @@
 
 namespace Circuitos\Controllers;
 
-use Phalcon\Paginator\Adapter\Model as Paginator;
+use Auth\Autentica;
+use Circuitos\Models\PhalconAccessList;
+use Circuitos\Models\PhalconResources;
+use Circuitos\Models\PhalconRoles;
+use Phalcon\Http\Response as Response;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-use Phalcon\Http\Response as Response;
-
-use Circuitos\Models\PhalconRoles;
-use Circuitos\Models\PhalconResources;
-use Circuitos\Models\PhalconAccessList;
-
-use Auth\Autentica;
+use Phalcon\Paginator\Adapter\Model as Paginator;
 use Util\TokenManager;
 
 class ControleAcessoController extends ControllerBase
@@ -224,7 +222,7 @@ class ControleAcessoController extends ControllerBase
         $permissoes = array(
             "session"                                       => ["login", "logout", "sair", "recuperar", "inativo"],
             "usuario"                                       => ["gerarSenha", "resetarSenha", "alterarSenha", "primeiro", "redirecionaUsuario", "recuperarSenha", "trocar", "validarLogin", "formUsuario"],
-            "core"                                          => ["ativarPessoa", "inativarPessoa", "deletarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail", "upload", "processarAjaxAcao", "processarAjaxVisualizar", "processarAjaxAutocomplete"],
+            "core"                                          => ["ativarPessoa", "inativarPessoa", "deletarPessoa", "deletarPessoaEndereco", "deletarPessoaEmail", "deletarPessoaContato", "deletarPessoaTelefone", "validarEmail", "validarCNPJ", "validarCPF", "completaEndereco", "enviarEmail", "upload", "processarAjaxAcao", "processarAjaxVisualizar", "processarAjaxAutocomplete", "processarAjaxSelect"],
             "error"                                         => ["show401", "show404"],
             "index"                                         => ["index"],
             "cidade_digital"                                => ["formCidadeDigital"],
