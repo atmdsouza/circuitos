@@ -2,22 +2,19 @@
 
 namespace Circuitos\Controllers;
 
-use Phalcon\Mvc\View;
-use Phalcon\Mvc\Model\Criteria;
-use Phalcon\Paginator\Adapter\Model as Paginator;
-use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
-use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-use Phalcon\Http\Response as Response;
-
+use Auth\Autentica;
 use Circuitos\Controllers\CoreController as Core;
-use Circuitos\Models\Usuario;
+use Circuitos\Models\Empresa;
 use Circuitos\Models\Operations\UsuarioOP;
-use Circuitos\Models\PhalconRoles;
 use Circuitos\Models\Pessoa;
 use Circuitos\Models\PessoaEmail;
-
-use Auth\Autentica;
-use Util\Util;
+use Circuitos\Models\PhalconRoles;
+use Circuitos\Models\Usuario;
+use Phalcon\Http\Response as Response;
+use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
+use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
+use Phalcon\Mvc\View;
+use Phalcon\Paginator\Adapter\Model as Paginator;
 use Util\TemplatesEmails;
 use Util\TokenManager;
 
@@ -551,7 +548,8 @@ class UsuarioController extends ControllerBase
             //Commita a transação
             $transaction->commit();
             $html = $template->recuperaSenha($senha);
-            $email = $core->enviarEmailAction(1,$pessoaemail->getEmail(),$pessoa->getNome(),null,"E-mail de Segurança",$html);
+            $empresa = Empresa::find();
+            $email = $core->enviarEmailAction((int)$empresa[0]->getId(),$pessoaemail->getEmail(),$pessoa->getNome(),null,"E-mail de Segurança",$html);
             if ($email) {
                 return True;
             } else {
