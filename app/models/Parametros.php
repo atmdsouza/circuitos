@@ -2,9 +2,7 @@
 
 namespace Circuitos\Models;
 
-use Phalcon\Mvc\Model\Query\Builder;
-
-class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
+class Parametros extends \Phalcon\Mvc\Model
 {
 
     /**
@@ -17,13 +15,31 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
      *
      * @var string
      */
-    protected $sigla;
+    protected $codigo;
+
+    /**
+     *
+     * @var string
+     */
+    protected $valor;
 
     /**
      *
      * @var string
      */
     protected $descricao;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $visivel;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $senha;
 
     /**
      *
@@ -44,6 +60,12 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
     protected $data_update;
 
     /**
+     *
+     * @var integer
+     */
+    protected $id_empresa;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -57,14 +79,27 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field sigla
+     * Method to set the value of field codigo
      *
-     * @param string $sigla
+     * @param string $codigo
      * @return $this
      */
-    public function setSigla($sigla)
+    public function setCodigo($codigo)
     {
-        $this->sigla = $sigla;
+        $this->codigo = $codigo;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field valor
+     *
+     * @param string $valor
+     * @return $this
+     */
+    public function setValor($valor)
+    {
+        $this->valor = $valor;
 
         return $this;
     }
@@ -78,6 +113,32 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
     public function setDescricao($descricao)
     {
         $this->descricao = $descricao;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field visivel
+     *
+     * @param integer $visivel
+     * @return $this
+     */
+    public function setVisivel($visivel)
+    {
+        $this->visivel = $visivel;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field senha
+     *
+     * @param integer $senha
+     * @return $this
+     */
+    public function setSenha($senha)
+    {
+        $this->senha = $senha;
 
         return $this;
     }
@@ -122,6 +183,19 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field id_empresa
+     *
+     * @param integer $id_empresa
+     * @return $this
+     */
+    public function setIdEmpresa($id_empresa)
+    {
+        $this->id_empresa = $id_empresa;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field id
      *
      * @return integer
@@ -132,13 +206,23 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field sigla
+     * Returns the value of field codigo
      *
      * @return string
      */
-    public function getSigla()
+    public function getCodigo()
     {
-        return $this->sigla;
+        return $this->codigo;
+    }
+
+    /**
+     * Returns the value of field valor
+     *
+     * @return string
+     */
+    public function getValor()
+    {
+        return $this->valor;
     }
 
     /**
@@ -149,6 +233,26 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
     public function getDescricao()
     {
         return $this->descricao;
+    }
+
+    /**
+     * Returns the value of field visivel
+     *
+     * @return integer
+     */
+    public function getVisivel()
+    {
+        return $this->visivel;
+    }
+
+    /**
+     * Returns the value of field senha
+     *
+     * @return integer
+     */
+    public function getSenha()
+    {
+        return $this->senha;
     }
 
     /**
@@ -182,13 +286,23 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field id_empresa
+     *
+     * @return integer
+     */
+    public function getIdEmpresa()
+    {
+        return $this->id_empresa;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
     {
         $this->setSchema("bd_circuitosnavega");
-        $this->setSource("proposta_comercial_servico_unidade");
-        $this->hasMany('id', 'Circuitos\Models\PropostaComercialServico', 'id_proposta_comercial_servico_unidade', ['alias' => 'PropostaComercialServico']);
+        $this->setSource("parametros");
+        $this->belongsTo('id_empresa', 'Circuitos\Models\Empresa', 'id', ['alias' => 'Empresa']);
     }
 
     /**
@@ -198,14 +312,14 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'proposta_comercial_servico_unidade';
+        return 'parametros';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return PropostaComercialServicoUnidade[]|PropostaComercialServicoUnidade|\Phalcon\Mvc\Model\ResultSetInterface
+     * @return Parametros[]|Parametros|\Phalcon\Mvc\Model\ResultSetInterface
      */
     public static function find($parameters = null)
     {
@@ -216,31 +330,11 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return PropostaComercialServicoUnidade|\Phalcon\Mvc\Model\ResultInterface
+     * @return Parametros|\Phalcon\Mvc\Model\ResultInterface
      */
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
-    }
-
-    /**
-     * Consulta completa de PropostaComercialServicoUnidade, incluíndo os joins de tabelas
-     *
-     * @param string $parameters
-     * @return PropostaComercialServicoUnidade|\Phalcon\Mvc\Model\Resultset
-     */
-    public static function pesquisarPropostaComercialServicoUnidade($parameters = null)
-    {
-        $query = new Builder();
-        $query->from(array("PropostaComercialServicoUnidade" => "Circuitos\Models\PropostaComercialServicoUnidade"));
-        $query->columns("PropostaComercialServicoUnidade.*");
-        $query->where("PropostaComercialServicoUnidade.excluido = 0 AND (CONVERT(PropostaComercialServicoUnidade.id USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(PropostaComercialServicoUnidade.sigla USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(PropostaComercialServicoUnidade.descricao USING utf8) LIKE '%{$parameters}%')");
-        $query->groupBy("PropostaComercialServicoUnidade.id");
-        $query->orderBy("PropostaComercialServicoUnidade.id DESC");
-        $resultado = $query->getQuery()->execute();
-        return $resultado;
     }
 
 }

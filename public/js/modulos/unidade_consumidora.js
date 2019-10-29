@@ -4,8 +4,6 @@ var URLImagensSistema = "public/images";
 
 //Variáveis Globais
 var mudou = false;
-var listAgrupadora = [];
-var f = 0;
 
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos)
 function inicializar()
@@ -19,7 +17,7 @@ function inicializar()
         },
         order: [[4, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
     });
-    autocompletarAgrupadora();
+    autocompletarAgrupadora('lid_conta_agrupadora','id_conta_agrupadora');
 }
 
 function verificarAlteracao()
@@ -387,57 +385,4 @@ function limpar()
     'use strict';
     $('#fieldPesquisa').val('');
     $('#formPesquisa').submit();
-}
-
-function autocompletarAgrupadora()
-{
-    "use strict";
-    //Autocomplete
-    var ac_agrupadora = $("#lid_conta_agrupadora");
-    var vl_agrupadora = $("#id_conta_agrupadora");
-    var string = ac_agrupadora.val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: {metodo: 'contasAgrupadorasAtivas', string: string},
-        error: function (data) {
-            if (data.status && data.status === 401)
-            {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function (data) {
-            console.log(data.dados);
-            if (data.operacao) {
-                listAgrupadora = [];
-                $.each(data.dados, function (key, value) {
-                    listAgrupadora.push({value: value.codigo_conta_contrato, data: value.id});
-                });
-                if(f === 0) {
-                    //Autocomplete
-                    ac_agrupadora.autocomplete({
-                        lookup: listAgrupadora,
-                        onSelect: function (suggestion) {
-                            vl_agrupadora.val(suggestion.data);
-                        }
-                    });
-                    f++;
-                } else {
-                    //Autocomplete
-                    ac_agrupadora.autocomplete().setOptions( {
-                        lookup: listAgrupadora
-                    });
-                }
-            } else {
-                vl_agrupadora.val("");
-                ac_agrupadora.val("");
-            }
-        }
-    });
 }

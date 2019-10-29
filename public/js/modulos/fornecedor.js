@@ -381,11 +381,6 @@ function limpar()
     $('#formPesquisa').submit();
 }
 
-function autocompletarContrato()
-{
-
-}
-
 function criarComponente()
 {
     'use strict';

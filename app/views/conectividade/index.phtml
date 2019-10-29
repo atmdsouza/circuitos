@@ -125,7 +125,7 @@ $module = $this->router->getControllerName();
                             <div class="form-row">
                                 <div class="form-group col-md-4">
                                     <label for="lid_cidade_digital">Cidade Digital <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["lid_cidade_digital", "size" => 120, "class" => "form-control", "id" => "lid_cidade_digital", "placeholder" => "Cidade Digital", "onkeyup" => "autocompletarCidadeDigital();"]) ?>
+                                    <?php echo $this->tag->textField(["lid_cidade_digital", "size" => 120, "class" => "form-control", "id" => "lid_cidade_digital", "placeholder" => "Cidade Digital", "onkeyup" => "autocompletarCidadeDigital('lid_cidade_digital','id_cidade_digital');"]) ?>
                                     <?php echo $this->tag->hiddenField(["id_cidade_digital", "size" => 120, "class" => "form-control", "id" => "id_cidade_digital"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
@@ -141,7 +141,7 @@ $module = $this->router->getControllerName();
                                     <label for="descricao">Conectividade <span class="required">*</span></label>
                                     <?= $this->tag->textField(["descricao", "size" => 200, "class" => "form-control result", "id" => "descricao", "placeholder" => "Descrição da Conectividade"]) ?>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="form-group col-md-12 botoes_forms_alinhamento">
                                     <label for="endereco">Endereço da Conectividade</label>
                                     <?= $this->tag->textField(["endereco", "size" => 200, "class" => "form-control", "id" => "endereco", "placeholder" => "Endereço da Conectividade"]) ?>
                                 </div>

@@ -4,11 +4,12 @@
  */
 
 use Auth\Autentica;
-use Phalcon\Tag;
 use Util\Infra;
+use Util\Util;
 
 $infra = new Infra();
 $auth = new Autentica();
+$util = new Util();
 $security_plugin = new SecurityPlugin();
 $acl = $security_plugin->getAcl();
 $role = $auth->getRoles();
@@ -55,10 +56,10 @@ $module = $this->router->getControllerName();
                 <th>Código</th>
                 <th>Número</th>
                 <th>Cliente</th>
+                <th>Valor Global</th>
                 <th>Localizacao</th>
                 <th>Status</th>
                 <th>Data Proposta</th>
-                <th>Data Vencimento</th>
                 <th>Ativo</th>
                 <th>Ações</th>
             </tr>
@@ -82,29 +83,29 @@ $module = $this->router->getControllerName();
                     <td><?= $proposta_comercial->getId() ?></td>
                     <td><?= $proposta_comercial->getNumero() ?></td>
                     <td><?= $proposta_comercial->getCliente() ?></td>
+                    <td><?= $util->formataMoedaReal($proposta_comercial->getValorGlobal()) ?></td>
                     <td><?= $proposta_comercial->getLocalizacao() ?></td>
                     <td><?= $proposta_comercial->getStatus() ?></td>
-                    <td><?= $proposta_comercial->getDataProposta() ?></td>
-                    <td><?= $proposta_comercial->getDataVencimento() ?></td>
+                    <td><?= $util->converterDataParaBr($proposta_comercial->getDataProposta()) ?></td>
                     <td><?= $ativo ?></td>
                     <td class="td_acoes">
                         <?php if($acl->isAllowed($role,$module, 'visualizar')): ?>
-                            <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $proposta_comercial->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a>
+                            <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $proposta_comercial->getId() ?>, true);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a>
                         <?php endif; ?>
                         <?php if($proposta_comercial->getAtivo() == '0'): ?>
                             <?php if($acl->isAllowed($role, $module, 'ativar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="ativar(<?= $proposta_comercial->getId() ?>, '<?= $proposta_comercial->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/reativar.png" title="Ativar" alt="Ativar" height="25" width="25"></a>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="ativar(<?= $proposta_comercial->getId() ?>, '<?= $proposta_comercial->getNumero() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/reativar.png" title="Ativar" alt="Ativar" height="25" width="25"></a>
                             <?php endif; ?>
                         <?php else: ?>
                             <?php if($acl->isAllowed($role, $module, 'editar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="editar(<?= $proposta_comercial->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $proposta_comercial->getId() ?>, false);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
                             <?php endif; ?>
                             <?php if($acl->isAllowed($role, $module, 'inativar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="inativar(<?= $proposta_comercial->getId() ?>, '<?= $proposta_comercial->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/desativar.png" title="Desativar" alt="Desativar" height="25" width="25"></a>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="inativar(<?= $proposta_comercial->getId() ?>, '<?= $proposta_comercial->getNumero() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/desativar.png" title="Desativar" alt="Desativar" height="25" width="25"></a>
                             <?php endif; ?>
                         <?php endif; ?>
                         <?php if($acl->isAllowed($role, $module, 'excluir')): ?>
-                            <a href="javascript:void(0)" class="botoes_acao" onclick="excluir(<?= $proposta_comercial->getId() ?>, '<?= $proposta_comercial->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a>
+                            <a href="javascript:void(0)" class="botoes_acao" onclick="excluir(<?= $proposta_comercial->getId() ?>, '<?= $proposta_comercial->getNumero() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -121,12 +122,12 @@ $module = $this->router->getControllerName();
                 <button type="button" class="close" aria-hidden="true" onclick="confirmaCancelar('modalCadastro');">×</button>
                 <h5 class="modal-title" id="modalCadastro">Dados da Proposta Comercial</h5>
             </div>
-            <form id="formCadastro">
+            <form id="formCadastro" method="POST" enctype="multipart/form-data">
                 <input type="hidden" id="token" name="<?= $token['tokenKey'] ?>" value="<?= $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
                 <div class="modal-body">
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
-                            <a href="#tab_proposta_comercial" data-toggle="tab" aria-expanded="true" class="nav-link active">
+                            <a id="primeira_aba" href="#tab_proposta_comercial" data-toggle="tab" aria-expanded="true" class="nav-link active">
                                 Proposta Comercial
                             </a>
                         </li>
@@ -142,7 +143,7 @@ $module = $this->router->getControllerName();
                         </li>
                         <li class="nav-item">
                             <a href="#tab_itens_proposta_comercial" data-toggle="tab" aria-expanded="false" class="nav-link">
-                                Itens da Proposta
+                                Serviços Previstos
                             </a>
                         </li>
                     </ul>
@@ -151,14 +152,23 @@ $module = $this->router->getControllerName();
                             <div class="form-row">
                                 <div class="col-12">
                                     <div class="form-row">
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-6">
                                             <label for="lid_cliente">Cliente <span class="required">*</span></label>
-                                            <?php echo $this->tag->textField(["lid_cliente", "size" => 120, "class" => "form-control", "id" => "lid_cliente", "placeholder" => "Cliente", "onkeyup" => "autocompletarCliente();"]) ?>
-                                            <?php echo $this->tag->hiddenField(["id_cliente", "size" => 120, "class" => "form-control", "id" => "id_cliente"]) ?>
+                                            <?= $this->tag->textField(["lid_cliente", "size" => 120, "class" => "form-control", "id" => "lid_cliente", "placeholder" => "Cliente", "onkeyup" => "autocompletarCliente('lid_cliente','id_cliente');"]) ?>
+                                            <?= $this->tag->hiddenField(["id_cliente", "size" => 120, "class" => "form-control", "id" => "id_cliente"]) ?>
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <label for="id_status">Status da Proposta <span class="required">*</span></label>
+                                            <?= $this->tag->select(["id_status", $status, "class" => "form-control", "id" => "id_status",
+                                                "using" => ["id", "descricao",],
+                                                "useEmpty" => true,
+                                                "emptyText" => "Selecione o status da Proposta",
+                                                "emptyValue" => ""])
+                                            ?>
                                         </div>
                                         <div class="form-group col-md-2">
                                             <label for="id_tipo_proposta">Tipo de Proposta <span class="required">*</span></label>
-                                            <?php echo $this->tag->select(["id_tipo_proposta", $tipos, "class" => "form-control", "id" => "id_tipo_proposta",
+                                            <?= $this->tag->select(["id_tipo_proposta", $tipos, "class" => "form-control", "id" => "id_tipo_proposta",
                                                 "using" => ["id", "descricao",],
                                                 "useEmpty" => true,
                                                 "emptyText" => "Selecione o tipo de Proposta",
@@ -167,7 +177,7 @@ $module = $this->router->getControllerName();
                                         </div>
                                         <div class="form-group col-md-2">
                                             <label for="id_localizacao">Localização <span class="required">*</span></label>
-                                            <?php echo $this->tag->select(["id_localizacao", $tipos, "class" => "form-control", "id" => "id_localizacao",
+                                            <?= $this->tag->select(["id_localizacao", $departamentos, "class" => "form-control", "id" => "id_localizacao",
                                                 "using" => ["id", "descricao",],
                                                 "useEmpty" => true,
                                                 "emptyText" => "Selecione a Localização",
@@ -182,31 +192,29 @@ $module = $this->router->getControllerName();
                                             <label for="numero">Número <span class="required">*</span></label>
                                             <?= $this->tag->textField(["numero", "size" => 200, "class" => "form-control", "id" => "numero", "placeholder" => "Número da Proposta"]) ?>
                                         </div>
-                                    </div>
-                                    <div class="form-row">
                                         <div class="form-group col-md-2">
                                             <label for="vencimento">Vencimento <span class="required">*</span></label>
                                             <?= $this->tag->textField(["vencimento", "size" => 200, "class" => "form-control data", "id" => "vencimento", "placeholder" => "Vencimento da Proposta"]) ?>
                                         </div>
-                                        <div class="form-group col-md-2">
-                                            <label for="reajuste">Reajuste <span class="required">*</span></label>
+                                        <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                            <label for="reajuste">Reajuste </label>
                                             <?= $this->tag->textField(["reajuste", "size" => 200, "class" => "form-control valor_percentual", "id" => "reajuste", "placeholder" => "Reajuste da Proposta"]) ?>
                                         </div>
-                                        <div class="form-group col-md-2">
-                                            <label for="desconto">Desconto <span class="required">*</span></label>
+                                        <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                            <label for="desconto">Desconto </label>
                                             <?= $this->tag->textField(["desconto", "size" => 200, "class" => "form-control valor_percentual", "id" => "desconto", "placeholder" => "Desconto da Proposta"]) ?>
                                         </div>
-                                        <div class="form-group col-md-2">
-                                            <label for="imposto">Imposto <span class="required">*</span></label>
+                                        <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                            <label for="imposto">Imposto </label>
                                             <?= $this->tag->textField(["imposto", "size" => 200, "class" => "form-control valor_percentual", "id" => "imposto", "placeholder" => "Imposto da Proposta"]) ?>
                                         </div>
-                                        <div class="form-group col-md-2">
-                                            <label for="encargos">Encargos <span class="required">*</span></label>
+                                        <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                            <label for="encargos">Encargos </label>
                                             <?= $this->tag->textField(["encargos", "size" => 200, "class" => "form-control valor_percentual", "id" => "encargos", "placeholder" => "Encargos da Proposta"]) ?>
                                         </div>
                                         <div class="form-group col-md-2">
                                             <label for="valor_global">Valor Global <span class="required">*</span></label>
-                                            <?= $this->tag->textField(["valor_global", "size" => 200, "class" => "form-control valor_monetario_limpo", "id" => "valor_global", "placeholder" => "Valor Global da Proposta"]) ?>
+                                            <?= $this->tag->textField(["valor_global", "readonly", "size" => 200, "class" => "form-control valor_monetario_limpo", "id" => "valor_global", "placeholder" => "Valor Global da Proposta"]) ?>
                                         </div>
                                     </div>
                                 </div>
@@ -215,51 +223,222 @@ $module = $this->router->getControllerName();
                         <div class="tab-pane fade show" id="tab_objetivos_proposta_comercial">
                             <div class="form-row">
                                 <div class="form-group col-md-12">
-                                    <label for="objetivo">Objetivo</label>
-                                    <?php echo $this->tag->textArea(["objetivo", "size" => 500, "class" => "form-control", "id" => "objetivo", "placeholder" => "Objetivo da Proposta"]) ?>
+                                    <label for="objetivo">Objetivo <span class="required">*</span></label>
+                                    <?= $this->tag->textArea(["objetivo", "style" => "resize: none", "size" => 500, "class" => "form-control", "id" => "objetivo", "placeholder" => "Objetivo da Proposta"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
-                                    <label for="objetivo_especifico">Objetivo Específico</label>
-                                    <?php echo $this->tag->textArea(["objetivo_especifico", "size" => 500, "class" => "form-control", "id" => "objetivo_especifico", "placeholder" => "Objetivo Específico da Proposta"]) ?>
+                                    <label for="objetivo_especifico">Objetivo Específico <span class="required">*</span></label>
+                                    <?= $this->tag->textArea(["objetivo_especifico", "style" => "resize: none", "size" => 500, "class" => "form-control", "id" => "objetivo_especifico", "placeholder" => "Objetivo Específico da Proposta"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
-                                    <label for="objetivo">Descritivo</label>
-                                    <?php echo $this->tag->textArea(["objetivo", "size" => 500, "class" => "form-control", "id" => "objetivo", "placeholder" => "Objetivo da Proposta"]) ?>
+                                    <label for="descritivo">Descritivo <span class="required">*</span></label>
+                                    <?= $this->tag->textArea(["descritivo", "style" => "resize: none", "size" => 500, "class" => "form-control", "id" => "descritivo", "placeholder" => "Descritivo da Proposta"]) ?>
                                 </div>
                             </div>
                         </div>
                         <div class="tab-pane fade show" id="tab_condicoes_proposta_comercial">
                             <div class="form-row">
                                 <div class="form-group col-md-12">
-                                    <label for="responsabilidade">Responsabilidade</label>
-                                    <?php echo $this->tag->textArea(["responsabilidade", "size" => 500, "class" => "form-control", "id" => "responsabilidade", "placeholder" => "Responsabilidade da Proposta"]) ?>
+                                    <label for="responsabilidade">Responsabilidade <span class="required">*</span></label>
+                                    <?= $this->tag->textArea(["responsabilidade", "style" => "resize: none", "size" => 500, "class" => "form-control", "id" => "responsabilidade", "placeholder" => "Responsabilidade da Proposta"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
-                                    <label for="condicoes_pgto">Condições de Pagamento</label>
-                                    <?php echo $this->tag->textArea(["condicoes_pgto", "size" => 500, "class" => "form-control", "id" => "condicoes_pgto", "placeholder" => "Condições de Pagamento da Proposta"]) ?>
+                                    <label for="condicoes_pgto">Condições de Pagamento <span class="required">*</span></label>
+                                    <?= $this->tag->textArea(["condicoes_pgto", "style" => "resize: none", "size" => 500, "class" => "form-control", "id" => "condicoes_pgto", "placeholder" => "Condições de Pagamento da Proposta"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
-                                    <label for="prazo_execucao">Prazo de Execução</label>
-                                    <?php echo $this->tag->textArea(["prazo_execucao", "size" => 500, "class" => "form-control", "id" => "prazo_execucao", "placeholder" => "Prazo de Execução da Proposta"]) ?>
+                                    <label for="prazo_execucao">Prazo de Execução <span class="required">*</span></label>
+                                    <?= $this->tag->textArea(["prazo_execucao", "style" => "resize: none", "size" => 500, "class" => "form-control", "id" => "prazo_execucao", "placeholder" => "Prazo de Execução da Proposta"]) ?>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
-                                    <label for="consideracoes">Considerações</label>
-                                    <?php echo $this->tag->textArea(["consideracoes", "size" => 500, "class" => "form-control", "id" => "consideracoes", "placeholder" => "Considerações da Proposta"]) ?>
+                                    <label for="consideracoes">Considerações <span class="required">*</span></label>
+                                    <?= $this->tag->textArea(["consideracoes", "style" => "resize: none", "size" => 500, "class" => "form-control", "id" => "consideracoes", "placeholder" => "Considerações da Proposta"]) ?>
                                 </div>
                             </div>
                         </div>
                         <div class="tab-pane fade show" id="tab_itens_proposta_comercial">
-
+                            <!-- Valor total de Serviços -->
+                            <div class="form-row">
+                                <table id="tabela_total_serviços" class="" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="2">Tabela de Serviços</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td style="width: 10%;">Total:</td>
+                                        <td style="width: 90%;">R$ <span id="demonstrativo_valor_total">0,00</span></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <br>
+                            <!-- Demonstrativo mensal de valores -->
+                            <div class="form-row">
+                                <table id="tabela_mensal_serviços" class="table-bordered" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="12" style="text-align: center;">Valores Mensais de Serviços</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <th>1º Mês</th>
+                                        <td>R$ <span id="mes_1">0,00</span><input name="jan" id="jan" type="hidden" value=""/></td>
+                                        <th>2º Mês</th>
+                                        <td>R$ <span id="mes_2">0,00</span><input name="fev" id="fev" type="hidden" value=""/></td>
+                                        <th>3º Mês</th>
+                                        <td>R$ <span id="mes_3">0,00</span><input name="mar" id="mar" type="hidden" value=""/></td>
+                                        <th>4º Mês</th>
+                                        <td>R$ <span id="mes_4">0,00</span><input name="abr" id="abr" type="hidden" value=""/></td>
+                                        <th>5º Mês</th>
+                                        <td>R$ <span id="mes_5">0,00</span><input name="mai" id="mai" type="hidden" value=""/></td>
+                                        <th>6º Mês</th>
+                                        <td>R$ <span id="mes_6">0,00</span><input name="jun" id="jun" type="hidden" value=""/></td>
+                                    </tr>
+                                    <tr>
+                                        <th>7º Mês</th>
+                                        <td>R$ <span id="mes_7">0,00</span><input name="jul" id="jul" type="hidden" value=""/></td>
+                                        <th>8º Mês</th>
+                                        <td>R$ <span id="mes_8">0,00</span><input name="ago" id="ago" type="hidden" value=""/></td>
+                                        <th>9º Mês</th>
+                                        <td>R$ <span id="mes_9">0,00</span><input name="set" id="set" type="hidden" value=""/></td>
+                                        <th>10º Mês</th>
+                                        <td>R$ <span id="mes_10">0,00</span><input name="out" id="out" type="hidden" value=""/></td>
+                                        <th>11º Mês</th>
+                                        <td>R$ <span id="mes_11">0,00</span><input name="nov" id="nov" type="hidden" value=""/></td>
+                                        <th>12º Mês</th>
+                                        <td>R$ <span id="mes_12">0,00</span><input name="dez" id="dez" type="hidden" value=""/></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <br>
+                            <!-- Grid de Serviços -->
+                            <div class="form-row">
+                                <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                    <label for="grupo">Grupo </label>
+                                    <?= $this->tag->select(["grupo", $grupos, "class" => "form-control", "id" => "grupo", "onchange" => "mostrarSubgrupo()",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione o grupo",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                    <label for="subgrupo">Subgrupo </label>
+                                    <select disabled name="subgrupo" id="subgrupo" class="form-control">
+                                        <option value="">Selecione um subgrupo</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                    <label for="codigo_servico">Código Serviço </label>
+                                    <?= $this->tag->textField(["codigo_servico", "size" => 200, "class" => "form-control", "id" => "codigo_servico", "placeholder" => "Código do Serviço", "onkeyup" => "autocompletarCodigoServico('codigo_servico','id_codigo_servico','grupo','subgrupo');", "onblur" => "selecaoDescricaoServico();"]) ?>
+                                    <?= $this->tag->hiddenField(["id_codigo_servico", "size" => 120, "class" => "form-control", "id" => "id_codigo_servico"]) ?>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="descricao_servico">Descrição <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["descricao_servico", "size" => 200, "class" => "form-control", "id" => "descricao_servico", "placeholder" => "Descrição do Serviço", "onkeyup" => "autocompletarServico('descricao_servico','id_servico','grupo','subgrupo');", "onblur" => "selectCodigoServico();"]) ?>
+                                    <?= $this->tag->hiddenField(["id_servico", "size" => 120, "class" => "form-control", "id" => "id_servico"]) ?>
+                                    <?= $this->tag->hiddenField(["grandeza", "size" => 120, "class" => "form-control", "id" => "grandeza"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="tem_imposto">Tem Imposto? <span class="required">*</span></label>
+                                    <select name="tem_imposto" id="tem_imposto" class="form-control">
+                                        <option value="0">Não</option>
+                                        <option value="1">Sim</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="tem_reajuste">Tem Reajuste? <span class="required">*</span></label>
+                                    <select name="tem_reajuste" id="tem_reajuste" class="form-control">
+                                        <option value="0">Não</option>
+                                        <option value="1">Sim</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="quantidade_unitaria_servico">Quantidade Unitária <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["quantidade_unitaria_servico", "size" => 200, "class" => "form-control valor_inteiro", "id" => "quantidade_unitaria_servico", "placeholder" => "Quantidade Unitária"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="valor_unitario_servico">Valor Unitário <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["valor_unitario_servico", "size" => 200, "class" => "form-control valor_monetario_limpo", "id" => "valor_unitario_servico", "placeholder" => "Valor Unitário"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="mes_inicial_servico">Mês Inicial <span class="required">*</span></label>
+                                    <select name="mes_inicial_servico" id="mes_inicial_servico" class="form-control">
+                                        <option value="1" selected>1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="vigencia_servico">Vigência <span class="required">*</span></label>
+                                    <select name="vigencia_servico" id="vigencia_servico" class="form-control">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12" selected>12</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                    <button type="button" name="bt_inserir_servico" id="bt_inserir_servico" class="btn btn-info btn-rounded waves-light w-md bt_menu_tabela hide_buttons" onclick="inserirComponente();">Inserir</button>
+                                    <button type="button" name="bt_limpar_servico" id="bt_limpar_servico" class="btn btn-danger btn-rounded waves-light w-md bt_menu_tabela hide_buttons" onclick="cancelarComponente();">Limpar</button>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12" id="div_tabela_componentes">
+                                    <table id="tabela_componentes" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%"  style="display: none;">
+                                        <thead>
+                                        <tr style="text-align: center;">
+                                            <td>Código Serviço</td>
+                                            <td>Descrição do Serviço</td>
+                                            <td>Grandeza</td>
+                                            <td>Tem Imposto?</td>
+                                            <td>Tem Reajuste?</td>
+                                            <td>Quantidade</td>
+                                            <td>Mês Inicial</td>
+                                            <td>Vigência</td>
+                                            <td>Valor Unitário</td>
+                                            <td>Total</td>
+                                            <td>Total c/ Reajuste</td>
+                                            <td>Impostos</td>
+                                            <td>Total c/ Impostos</td>
+                                            <td>Ações</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

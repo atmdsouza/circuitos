@@ -21,7 +21,7 @@ $module = $this->router->getControllerName();
 <div class="col-12">
     <?= $this->tag->form(
         [
-            "unidade_consumidora/index",
+            "proposta_comercial_servico_grupo/index",
             "autocomplete" => "off",
             "id" => "formPesquisa"
         ]
@@ -53,17 +53,18 @@ $module = $this->router->getControllerName();
             <thead>
             <tr>
                 <th>Código</th>
+                <th>Grupo Principal</th>
+                <th>Código Legado</th>
+                <th>Código Contábil</th>
                 <th>Descrição</th>
-                <th>Conta Contrato</th>
-                <th>Conta Agrupadora</th>
                 <th>Ativo</th>
                 <th>Ações</th>
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($page as $unidadeconsumidora): ?>
+            <?php foreach ($page as $gruposervico): ?>
                 <?php
-                switch($unidadeconsumidora->getAtivo())
+                switch($gruposervico->getAtivo())
                 {
                     case '0'://Inativo (False)
                         $ativo = "Inativo";
@@ -76,29 +77,30 @@ $module = $this->router->getControllerName();
                 }
                 ?>
                 <tr <?= $class_tr; ?>>
-                    <td><?= $unidadeconsumidora->getId() ?></td>
-                    <td><?= $unidadeconsumidora->getDescricao() ?></td>
-                    <td><?= $unidadeconsumidora->getCodigoContaContrato() ?></td>
-                    <td><?= $unidadeconsumidora->getContaAgrupadoraPai() ?></td>
+                    <td><?= $gruposervico->getId() ?></td>
+                    <td><?= $gruposervico->getGrupoPai() ?></td>
+                    <td><?= $gruposervico->getCodigoLegado() ?></td>
+                    <td><?= $gruposervico->getCodigoContabil() ?></td>
+                    <td><?= $gruposervico->getDescricao() ?></td>
                     <td><?= $ativo ?></td>
                     <td class="td_acoes">
                         <?php if($acl->isAllowed($role,$module, 'visualizar')): ?>
-                            <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $unidadeconsumidora->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a>
+                            <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $gruposervico->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a>
                         <?php endif; ?>
-                        <?php if($unidadeconsumidora->getAtivo() == '0'): ?>
+                        <?php if($gruposervico->getAtivo() == '0'): ?>
                             <?php if($acl->isAllowed($role, $module, 'ativar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="ativar(<?= $unidadeconsumidora->getId() ?>, '<?= $unidadeconsumidora->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/reativar.png" title="Ativar" alt="Ativar" height="25" width="25"></a>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="ativar(<?= $gruposervico->getId() ?>, '<?= $gruposervico->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/reativar.png" title="Ativar" alt="Ativar" height="25" width="25"></a>
                             <?php endif; ?>
                         <?php else: ?>
                             <?php if($acl->isAllowed($role, $module, 'editar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="editar(<?= $unidadeconsumidora->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="editar(<?= $gruposervico->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
                             <?php endif; ?>
                             <?php if($acl->isAllowed($role, $module, 'inativar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="inativar(<?= $unidadeconsumidora->getId() ?>, '<?= $unidadeconsumidora->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/desativar.png" title="Desativar" alt="Desativar" height="25" width="25"></a>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="inativar(<?= $gruposervico->getId() ?>, '<?= $gruposervico->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/desativar.png" title="Desativar" alt="Desativar" height="25" width="25"></a>
                             <?php endif; ?>
                         <?php endif; ?>
                         <?php if($acl->isAllowed($role, $module, 'excluir')): ?>
-                            <a href="javascript:void(0)" class="botoes_acao" onclick="excluir(<?= $unidadeconsumidora->getId() ?>, '<?= $unidadeconsumidora->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a>
+                            <a href="javascript:void(0)" class="botoes_acao" onclick="excluir(<?= $gruposervico->getId() ?>, '<?= $gruposervico->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -121,24 +123,22 @@ $module = $this->router->getControllerName();
                     <div class="form-row">
                         <div class="col-12">
                             <div class="form-row">
-                                <div class="form-group col-md-4 botoes_forms_alinhamento">
-                                    <label for="lid_contrato">Conta Agrupadora </label>
-                                    <?php echo $this->tag->textField(["lid_conta_agrupadora", "size" => 120, "class" => "form-control", "id" => "lid_conta_agrupadora", "placeholder" => "Conta Agrupadora", "onkeyup" => "autocompletarAgrupadora('lid_conta_agrupadora','id_conta_agrupadora');"]) ?>
-                                    <?php echo $this->tag->hiddenField(["id_conta_agrupadora", "size" => 120, "class" => "form-control", "id" => "id_conta_agrupadora"]) ?>
+                                <div class="form-group col-md-6 botoes_forms_alinhamento">
+                                    <label for="lid_contrato">Grupo Principal </label>
+                                    <?php echo $this->tag->textField(["lid_grupo_pai", "size" => 120, "class" => "form-control", "id" => "lid_grupo_pai", "placeholder" => "Grupo Principal", "onkeyup" => "autocompletarGrupo('lid_grupo_pai','id_grupo_pai');"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_grupo_pai", "size" => 120, "class" => "form-control", "id" => "id_grupo_pai"]) ?>
                                 </div>
-                                <div class="form-group col-md-4">
-                                    <label for="descricao">Conta Contrato <span class="required">*</span></label>
-                                    <?= $this->tag->textField(["codigo_conta_contrato", "size" => 200, "class" => "form-control", "id" => "codigo_conta_contrato", "placeholder" => "Conta Contrato"]) ?>
-                                </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-6">
                                     <label for="descricao">Descrição <span class="required">*</span></label>
-                                    <?= $this->tag->textField(["descricao", "size" => 200, "class" => "form-control", "id" => "descricao", "placeholder" => "Descrição da Conta Contrato"]) ?>
+                                    <?= $this->tag->textField(["descricao", "size" => 200, "class" => "form-control", "id" => "descricao", "placeholder" => "Descrição do Grupo"]) ?>
                                 </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-12">
-                                    <label for="observacao">Observação</label>
-                                    <?php echo $this->tag->textArea(["observacao", "size" => 400, "class" => "form-control", "id" => "observacao", "placeholder" => "Observação"]) ?>
+                                <div class="form-group col-md-6 botoes_forms_alinhamento">
+                                    <label for="codigo_legado">Código Legado </label>
+                                    <?= $this->tag->textField(["codigo_legado", "size" => 200, "class" => "form-control", "id" => "codigo_legado", "placeholder" => "Código Legado"]) ?>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="codigo_contabil">Código Contábil <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["codigo_contabil", "size" => 200, "class" => "form-control codigo_contabil", "id" => "codigo_contabil", "placeholder" => "Código Contábil"]) ?>
                                 </div>
                             </div>
                         </div>

@@ -147,36 +147,6 @@ class Util {
         return $diff->format('%H hora(s), %i minuto(s) e %s segundo(s)');
     }
 
-    public function beginTransaction() {
-        $model = new Cadastros_Model_Empresa();
-        $adapter = $model->getDefaultAdapter();
-        try {
-            $adapter->beginTransaction();
-        } catch (Zend_Exception $e) {
-            throw $e;
-        }
-    }
-
-    public function commit() {
-        $model = new Cadastros_Model_Empresa();
-        $adapter = $model->getDefaultAdapter();
-        try {
-            $adapter->commit();
-        } catch (Zend_Exception $e) {
-            throw $e;
-        }
-    }
-
-    public function rollback() {
-        $model = new Cadastros_Model_Empresa();
-        $adapter = $model->getDefaultAdapter();
-        try {
-            $adapter->rollBack();
-        } catch (Zend_Exception $e) {
-            throw $e;
-        }
-    }
-
     /**
      * Função para listar os aquivos dentro de um diretório expecificado
      * @author Kalil Kelvin <kalil@emagesolucoes.com.br>

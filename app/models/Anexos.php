@@ -2,9 +2,7 @@
 
 namespace Circuitos\Models;
 
-use Phalcon\Mvc\Model\Query\Builder;
-
-class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
+class Anexos extends \Phalcon\Mvc\Model
 {
 
     /**
@@ -15,15 +13,27 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
 
     /**
      *
+     * @var integer
+     */
+    protected $id_tipo_anexo;
+
+    /**
+     *
      * @var string
      */
-    protected $sigla;
+    protected $data_criacao;
 
     /**
      *
      * @var string
      */
     protected $descricao;
+
+    /**
+     *
+     * @var string
+     */
+    protected $url;
 
     /**
      *
@@ -57,14 +67,27 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field sigla
+     * Method to set the value of field id_tipo_anexo
      *
-     * @param string $sigla
+     * @param integer $id_tipo_anexo
      * @return $this
      */
-    public function setSigla($sigla)
+    public function setIdTipoAnexo($id_tipo_anexo)
     {
-        $this->sigla = $sigla;
+        $this->id_tipo_anexo = $id_tipo_anexo;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field data_criacao
+     *
+     * @param string $data_criacao
+     * @return $this
+     */
+    public function setDataCriacao($data_criacao)
+    {
+        $this->data_criacao = $data_criacao;
 
         return $this;
     }
@@ -78,6 +101,19 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
     public function setDescricao($descricao)
     {
         $this->descricao = $descricao;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field url
+     *
+     * @param string $url
+     * @return $this
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
 
         return $this;
     }
@@ -132,13 +168,23 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field sigla
+     * Returns the value of field id_tipo_anexo
+     *
+     * @return integer
+     */
+    public function getIdTipoAnexo()
+    {
+        return $this->id_tipo_anexo;
+    }
+
+    /**
+     * Returns the value of field data_criacao
      *
      * @return string
      */
-    public function getSigla()
+    public function getDataCriacao()
     {
-        return $this->sigla;
+        return $this->data_criacao;
     }
 
     /**
@@ -149,6 +195,16 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
     public function getDescricao()
     {
         return $this->descricao;
+    }
+
+    /**
+     * Returns the value of field url
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
     }
 
     /**
@@ -187,8 +243,13 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
     public function initialize()
     {
         $this->setSchema("bd_circuitosnavega");
-        $this->setSource("proposta_comercial_servico_unidade");
-        $this->hasMany('id', 'Circuitos\Models\PropostaComercialServico', 'id_proposta_comercial_servico_unidade', ['alias' => 'PropostaComercialServico']);
+        $this->setSource("anexos");
+        $this->hasMany('id', 'Circuitos\Models\CircuitosAnexo', 'id_anexo', ['alias' => 'CircuitosAnexo']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoAcompanhamentoFinanceiroNotaAnexo', 'id_anexo', ['alias' => 'ContratoAcompanhamentoFinanceiroNotaAnexo']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoAnexo', 'id_anexo', ['alias' => 'ContratoAnexo']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoNaoConformidadeAnexo', 'id_anexo', ['alias' => 'ContratoNaoConformidadeAnexo']);
+        $this->hasMany('id', 'Circuitos\Models\PropostaComercialAnexo', 'id_anexo', ['alias' => 'PropostaComercialAnexo']);
+        $this->belongsTo('id_tipo_anexo', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
     }
 
     /**
@@ -198,14 +259,14 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'proposta_comercial_servico_unidade';
+        return 'anexos';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return PropostaComercialServicoUnidade[]|PropostaComercialServicoUnidade|\Phalcon\Mvc\Model\ResultSetInterface
+     * @return Anexos[]|Anexos|\Phalcon\Mvc\Model\ResultSetInterface
      */
     public static function find($parameters = null)
     {
@@ -216,31 +277,11 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return PropostaComercialServicoUnidade|\Phalcon\Mvc\Model\ResultInterface
+     * @return Anexos|\Phalcon\Mvc\Model\ResultInterface
      */
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
-    }
-
-    /**
-     * Consulta completa de PropostaComercialServicoUnidade, incluíndo os joins de tabelas
-     *
-     * @param string $parameters
-     * @return PropostaComercialServicoUnidade|\Phalcon\Mvc\Model\Resultset
-     */
-    public static function pesquisarPropostaComercialServicoUnidade($parameters = null)
-    {
-        $query = new Builder();
-        $query->from(array("PropostaComercialServicoUnidade" => "Circuitos\Models\PropostaComercialServicoUnidade"));
-        $query->columns("PropostaComercialServicoUnidade.*");
-        $query->where("PropostaComercialServicoUnidade.excluido = 0 AND (CONVERT(PropostaComercialServicoUnidade.id USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(PropostaComercialServicoUnidade.sigla USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(PropostaComercialServicoUnidade.descricao USING utf8) LIKE '%{$parameters}%')");
-        $query->groupBy("PropostaComercialServicoUnidade.id");
-        $query->orderBy("PropostaComercialServicoUnidade.id DESC");
-        $resultado = $query->getQuery()->execute();
-        return $resultado;
     }
 
 }

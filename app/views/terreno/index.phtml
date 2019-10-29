@@ -133,14 +133,14 @@ $module = $this->router->getControllerName();
                                         <option value="0">Não</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-3 botoes_forms_alinhamento">
                                     <label for="lid_fornecedor">Fornecedor </label>
-                                    <?php echo $this->tag->textField(["lid_fornecedor", "size" => 120, "class" => "form-control", "disabled" => "true", "id" => "lid_fornecedor", "placeholder" => "Fornecedor", "onkeyup" => "autocompletarFornecedor();"]) ?>
+                                    <?php echo $this->tag->textField(["lid_fornecedor", "size" => 120, "class" => "form-control", "disabled" => "true", "id" => "lid_fornecedor", "placeholder" => "Fornecedor", "onkeyup" => "autocompletarFornecedor('lid_fornecedor','id_fornecedor');"]) ?>
                                     <?php echo $this->tag->hiddenField(["id_fornecedor", "size" => 120, "class" => "form-control", "id" => "id_fornecedor"]) ?>
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-3 botoes_forms_alinhamento">
                                     <label for="lid_contrato">Contrato </label>
-                                    <?php echo $this->tag->textField(["lid_contrato", "size" => 120, "class" => "form-control", "id" => "lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato();"]) ?>
+                                    <?php echo $this->tag->textField(["lid_contrato", "size" => 120, "class" => "form-control", "id" => "lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato('lid_contrato','id_contrato');"]) ?>
                                     <?php echo $this->tag->hiddenField(["id_contrato", "size" => 120, "class" => "form-control", "id" => "id_contrato"]) ?>
                                 </div>
                                 <div class="form-group col-md-3">
@@ -149,15 +149,15 @@ $module = $this->router->getControllerName();
                                 </div>
                             </div>
                             <div class="form-row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-4 botoes_forms_alinhamento">
                                     <label for="comprimento">Comprimento </label>
                                     <?= $this->tag->textField(["comprimento", "size" => 200, "class" => "form-control valor_percentual", "id" => "comprimento", "placeholder" => "Comprimento do Terreno"]) ?>
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-4 botoes_forms_alinhamento">
                                     <label for="largura">Largura </label>
                                     <?= $this->tag->textField(["largura", "size" => 200, "class" => "form-control valor_percentual", "id" => "largura", "placeholder" => "Largura do Terreno"]) ?>
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-4 botoes_forms_alinhamento">
                                     <label for="area">Área </label>
                                     <?= $this->tag->textField(["area", "size" => 200, "class" => "form-control valor_percentual", "id" => "area", "placeholder" => "Área do Terreno"]) ?>
                                 </div>
@@ -165,7 +165,7 @@ $module = $this->router->getControllerName();
                             <div class="form-row">
                                 <div class="form-group col-md-3">
                                     <label for="cep">CEP <span class="required">*</span></label>
-                                    <?= $this->tag->textField(["cep", "size" => 200, "class" => "form-control cep", "id" => "cep", "onchange" => "preencherEndereco();", "placeholder" => "CEP do Terreno"]) ?>
+                                    <?= $this->tag->textField(["cep", "size" => 200, "class" => "form-control cep", "id" => "cep", "onchange" => "preencherEndereco('cep', 'endereco', 'numero', 'complemento', 'bairro', 'cidade', 'estado', 'sigla_estado', 'latitude', 'longitude');", "placeholder" => "CEP do Terreno"]) ?>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="endereco">Endereço <span class="required">*</span></label>
@@ -181,7 +181,7 @@ $module = $this->router->getControllerName();
                                     <label for="bairro">Bairro <span class="required">*</span></label>
                                     <?= $this->tag->textField(["bairro", "size" => 200, "class" => "form-control", "id" => "bairro", "placeholder" => "Bairro do Terreno"]) ?>
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group col-md-4 botoes_forms_alinhamento">
                                     <label for="complemento">Complemento </label>
                                     <?= $this->tag->textField(["complemento", "size" => 200, "class" => "form-control", "id" => "complemento", "placeholder" => "Complemento do Terreno"]) ?>
                                 </div>
@@ -196,11 +196,11 @@ $module = $this->router->getControllerName();
                                 </div>
                             </div>
                             <div class="form-row">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-3 botoes_forms_alinhamento">
                                     <label for="latitude">Latitude </label>
                                     <?= $this->tag->textField(["latitude", "size" => 200, "class" => "form-control", "id" => "latitude", "placeholder" => "Latitude do Terreno"]) ?>
                                 </div>
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-3 botoes_forms_alinhamento">
                                     <label for="longitude">Longitude </label>
                                     <?= $this->tag->textField(["longitude", "size" => 200, "class" => "form-control", "id" => "longitude", "placeholder" => "Longitude do Terreno"]) ?>
                                 </div>

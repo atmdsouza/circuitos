@@ -2,6 +2,8 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
+
 class PropostaComercialServico extends \Phalcon\Mvc\Model
 {
 
@@ -267,6 +269,26 @@ class PropostaComercialServico extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field data_update
+     *
+     * @return string
+     */
+    public function getGrupo()
+    {
+        return $this->PropostaComercialServicoGrupo->descricao;
+    }
+
+    /**
+     * Returns the value of field data_update
+     *
+     * @return string
+     */
+    public function getUnidade()
+    {
+        return $this->PropostaComercialServicoUnidade->descricao;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -308,6 +330,34 @@ class PropostaComercialServico extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de PropostaComercialServico, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return PropostaComercialServico|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarPropostaComercialServico($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("PropostaComercialServico" => "Circuitos\Models\PropostaComercialServico"));
+        $query->columns("PropostaComercialServico.*");
+        $query->leftJoin("Circuitos\Models\PropostaComercialServicoGrupo", "PropostaComercialServicoGrupo.id = PropostaComercialServico.id_proposta_comercial_servico_grupo", "PropostaComercialServicoGrupo");
+        $query->leftJoin("Circuitos\Models\PropostaComercialServicoUnidade", "PropostaComercialServicoUnidade.id = PropostaComercialServico.id_proposta_comercial_servico_unidade", "PropostaComercialServicoUnidade");
+        $query->where("PropostaComercialServico.excluido = 0 AND (CONVERT(PropostaComercialServico.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServico.codigo_contabil USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServico.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoGrupo.codigo_legado USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoGrupo.codigo_contabil USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoGrupo.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoUnidade.sigla USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServicoUnidade.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PropostaComercialServico.codigo_legado USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("PropostaComercialServico.id");
+        $query->orderBy("PropostaComercialServico.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
 }
