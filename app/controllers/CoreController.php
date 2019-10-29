@@ -2,48 +2,43 @@
 
 namespace Circuitos\Controllers;
 
-use Circuitos\Models\PropostaComercialItem;
-use Phalcon\Logger;
-use Phalcon\Logger\Adapter\File as FileAdapter;
-use Phalcon\Http\Response as Response;
-use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
-use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-
 use Circuitos\Models\Conectividade;
 use Circuitos\Models\Empresa;
+use Circuitos\Models\EndCidade;
 use Circuitos\Models\EndEndereco;
 use Circuitos\Models\EndEstado;
-use Circuitos\Models\EndCidade;
 use Circuitos\Models\EstacaoTelecon;
-use Circuitos\Models\Pessoa;
-use Circuitos\Models\PessoaJuridica;
-use Circuitos\Models\PessoaFisica;
-use Circuitos\Models\PessoaEndereco;
-use Circuitos\Models\PessoaEmail;
-use Circuitos\Models\PessoaTelefone;
-use Circuitos\Models\PessoaContato;
-use Circuitos\Models\SetEquipamentoComponentes;
-use Circuitos\Models\SetSegurancaComponentes;
-use Circuitos\Models\SetSegurancaContato;
-
 use Circuitos\Models\Operations\CidadeDigitalOP;
-use Circuitos\Models\Operations\CoreOP;
 use Circuitos\Models\Operations\ConectividadeOP;
 use Circuitos\Models\Operations\ContratoOP;
+use Circuitos\Models\Operations\CoreOP;
 use Circuitos\Models\Operations\EstacaoTeleconOP;
 use Circuitos\Models\Operations\PropostaComercialOP;
-use Circuitos\Models\Operations\PropostaComercialServicoOP;
 use Circuitos\Models\Operations\PropostaComercialServicoGrupoOP;
+use Circuitos\Models\Operations\PropostaComercialServicoOP;
 use Circuitos\Models\Operations\PropostaComercialServicoUnidadeOP;
-use Circuitos\Models\Operations\SetSegurancaOP;
 use Circuitos\Models\Operations\SetEquipamentoOP;
+use Circuitos\Models\Operations\SetSegurancaOP;
 use Circuitos\Models\Operations\TerrenoOP;
 use Circuitos\Models\Operations\TorreOP;
 use Circuitos\Models\Operations\UnidadeConsumidoraOP;
-
-use PHPMailer\PHPMailer\PHPMailer;
+use Circuitos\Models\Pessoa;
+use Circuitos\Models\PessoaContato;
+use Circuitos\Models\PessoaEmail;
+use Circuitos\Models\PessoaEndereco;
+use Circuitos\Models\PessoaFisica;
+use Circuitos\Models\PessoaJuridica;
+use Circuitos\Models\PessoaTelefone;
+use Circuitos\Models\PropostaComercialItem;
+use Circuitos\Models\SetEquipamentoComponentes;
+use Circuitos\Models\SetSegurancaComponentes;
+use Circuitos\Models\SetSegurancaContato;
+use Phalcon\Http\Response as Response;
+use Phalcon\Logger\Adapter\File as FileAdapter;
+use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
+use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use PHPMailer\PHPMailer\Exception;
-
+use PHPMailer\PHPMailer\PHPMailer;
 use Util\Util;
 
 require APP_PATH . "/library/PHPMailer/src/Exception.php";
@@ -662,6 +657,10 @@ class CoreController extends ControllerBase
                 $objeto = new PropostaComercialOP();
                 return $objeto->visualizarPropostaItens($dados['id']);
                 break;
+            case 'visualizarPropostaItem':
+                $objeto = new PropostaComercialOP();
+                return $objeto->visualizarPropostaItem($dados['id']);
+                break;
         }
     }
 
@@ -756,13 +755,17 @@ class CoreController extends ControllerBase
                 $objeto = new PropostaComercialOP();
                 $objComponente = new PropostaComercialItem();
                 $objComponente->setId($dados_form['id']);
-                $objComponente->setDescricao($dados_form['descricao']);
-                $objComponente->setIdContrato($dados_form['id_contrato']);
-                $objComponente->setIdTerreno($dados_form['id_terreno']);
-                $objComponente->setIdTorre($dados_form['id_torre']);
-                $objComponente->setIdSetEquipamento($dados_form['id_set_equipamento']);
-                $objComponente->setIdSetSeguranca($dados_form['id_set_seguranca']);
-                $objComponente->setIdUnidadeConsumidora($dados_form['id_unidade_consumidora']);
+                $objComponente->setIdPropostaComercialServicos($dados_form['id_servico']);
+                $objComponente->setImposto($dados_form['imposto']);
+                $objComponente->setReajuste($dados_form['reajuste']);
+                $objComponente->setQuantidade($dados_form['quantidade']);
+                $objComponente->setMesInicial($dados_form['mes_inicial']);
+                $objComponente->setVigencia($dados_form['vigencia']);
+                $objComponente->setValorUnitario($dados_form['valor_unitario']);
+                $objComponente->setValorTotal($dados_form['valor_total']);
+                $objComponente->setValorTotalReajuste($dados_form['valor_total_reajuste']);
+                $objComponente->setValorImpostos($dados_form['valor_impostos']);
+                $objComponente->setValorTotalImpostos($dados_form['valor_total_impostos']);
                 return $objeto->alterarPropostaItem($objComponente);
                 break;
             case 'deletarPropostaItem':

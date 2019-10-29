@@ -4,7 +4,6 @@
  */
 
 use Auth\Autentica;
-use Phalcon\Tag;
 use Util\Infra;
 use Util\Util;
 
@@ -128,7 +127,7 @@ $module = $this->router->getControllerName();
                 <div class="modal-body">
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
-                            <a id="teste" href="#tab_proposta_comercial" data-toggle="tab" aria-expanded="true" class="nav-link active">
+                            <a id="primeira_aba" href="#tab_proposta_comercial" data-toggle="tab" aria-expanded="true" class="nav-link active">
                                 Proposta Comercial
                             </a>
                         </li>
@@ -412,7 +411,7 @@ $module = $this->router->getControllerName();
                                 </div>
                                 <div class="form-group col-md-2 botoes_forms_alinhamento">
                                     <button type="button" name="bt_inserir_servico" id="bt_inserir_servico" class="btn btn-info btn-rounded waves-light w-md bt_menu_tabela hide_buttons" onclick="inserirComponente();">Inserir</button>
-                                    <button type="button" name="bt_limpar_servico" id="bt_limpar_servico" class="btn btn-danger btn-rounded waves-light w-md bt_menu_tabela" onclick="cancelarComponente();">Limpar</button>
+                                    <button type="button" name="bt_limpar_servico" id="bt_limpar_servico" class="btn btn-danger btn-rounded waves-light w-md bt_menu_tabela hide_buttons" onclick="cancelarComponente();">Limpar</button>
                                 </div>
                             </div>
                             <div class="form-row">

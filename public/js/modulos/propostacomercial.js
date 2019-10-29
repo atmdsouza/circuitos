@@ -61,7 +61,11 @@ function confirmaCancelar(modal)
 function criar()
 {
     'use strict';
-    $('#teste').trigger('click');
+    $('#primeira_aba').trigger('click');
+    $('.hide_buttons').show();
+    $('#bt_inserir_servico').text("Inserir");
+    $('#bt_inserir_servico').removeAttr('onclick');
+    $('#bt_inserir_servico').attr('onclick', 'inserirComponente();');
     limparDadosFormComponente();
     atualizaValorTotalMensal(0, 0);
     $('.tr_remove').remove();
@@ -417,6 +421,7 @@ function visualizar(id, ocultar)
                 $("#salvarCadastro").show();
                 $('.hide_buttons').show();
             }
+            $('#primeira_aba').trigger('click');
             $("#modalCadastro").modal();
         },
         error: function (data) {
@@ -486,8 +491,8 @@ function montarTabelaComponente(id_proposta_comercial, visualizar)
             var linhas = null;
             $.each(data.dados, function(key, value) {
                 valor_global += accounting.unformat(value.valor_total);
-                var ds_imposto = (value.imposto) ? 'Sim' : 'Não';
-                var ds_reajuste = (value.reajuste) ? 'Sim' : 'Não';
+                var ds_imposto = (value.imposto === '1') ? 'Sim' : 'Não';
+                var ds_reajuste = (value.reajuste === '1') ? 'Sim' : 'Não';
                 linhas += '<tr class="tr_remove_vis">';
                 linhas += '<td>'+ value.ds_codigo_servico +'</td>';
                 linhas += '<td>'+ value.ds_proposta_comercial_servicos +'<input name="res_id_proposta_comercial_servicos_item[]" type="hidden" value="'+ value.id_proposta_comercial_servicos +'" /></td>';
@@ -527,10 +532,10 @@ function criarComponente()
 {
     'use strict';
     limparDadosFormComponente();
+    $('.hide_buttons').show();
     $('#bt_inserir_servico').text("Inserir");
     $('#bt_inserir_servico').removeAttr('onclick');
     $('#bt_inserir_servico').attr('onclick', 'inserirComponente();');
-    $('#bt_inserir_componente').val('Inserir');
     $('#grupo').focus();
 }
 
@@ -551,10 +556,10 @@ function inserirComponente()
     var vigencia = $('#vigencia_servico').val();
     var valor_unitario = accounting.unformat($('#valor_unitario_servico').val(), ",");
     var valor_total = valor_unitario * accounting.unformat(quantidade_unitaria, ",");
-    var valor_impostos = accounting.unformat(valor_total, ",") * (accounting.unformat($('#imposto').val(), ",") * 0.01);
-    var valor_reajuste = accounting.unformat(valor_total, ",") * (accounting.unformat($('#reajuste').val(), ",") * 0.01);
-    var valor_total_reajuste = (tem_reajuste) ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_reajuste, ",") : 0;
-    var valor_total_imposto = (tem_imposto) ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_impostos, ",") : 0;
+    var valor_impostos = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") * (accounting.unformat($('#imposto').val(), ",") * 0.01) : 0;
+    var valor_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") * (accounting.unformat($('#reajuste').val(), ",") * 0.01) : 0;
+    var valor_total_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_reajuste, ",") : 0;
+    var valor_total_imposto = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_impostos, ",") : 0;
     if(id_servico !== '' && quantidade_unitaria > 0 && tem_imposto !== '' && tem_reajuste !== '' && mes_inicial !== '' && vigencia !== ''){//Campos Obrigatórios
         var linhas = null;
         linhas += '<tr class="tr_remove">';
@@ -687,6 +692,9 @@ function removerValoresTotais(seletor)
 function cancelarComponente()
 {
     'use strict';
+    $('#bt_inserir_servico').text("Inserir");
+    $('#bt_inserir_servico').removeAttr('onclick');
+    $('#bt_inserir_servico').attr('onclick', 'inserirComponente();');
     verificarAlteracao();
     limparDadosFormComponente();
 }
@@ -839,9 +847,17 @@ function exibirDetalhesComponente(id, ocultar)
             }
         },
         success: function(data) {
-            $('#i_id_tipo').val(data.dados.id_tipo).selected = 'true';
-            $('#i_descricao').val(data.dados.descricao);
-            $('#i_endereco').val(data.dados.endereco);
+            $('#tem_imposto').val(data.dados.imposto).selected = 'true';
+            $('#tem_reajuste').val(data.dados.reajuste).selected = 'true';
+            $('#mes_inicial_servico').val(data.dados.mes_inicial).selected = 'true';
+            $('#vigencia_servico').val(data.dados.vigencia).selected = 'true';
+            $('#codigo_servico').val(data.dados.ds_codigo_servico);
+            $('#id_codigo_servico').val(data.dados.id_proposta_comercial_servicos);
+            $('#descricao_servico').val(data.dados.ds_proposta_comercial_servicos);
+            $('#id_servico').val(data.dados.id_proposta_comercial_servicos);
+            $('#grandeza').val(data.dados.ds_proposta_comercial_servicos_unidade);
+            $('#quantidade_unitaria_servico').val(data.dados.quantidade);
+            $('#valor_unitario_servico').val(accounting.formatMoney(data.dados.valor_unitario, "R$ ", 2, ".", ","));
         }
     });
 }
@@ -849,11 +865,25 @@ function exibirDetalhesComponente(id, ocultar)
 function editarComponente(id)
 {
     'use strict';
+    var valor_unitario = accounting.unformat($('#valor_unitario_servico').val(), ",");
+    var valor_total = valor_unitario * accounting.unformat($('#quantidade_unitaria_servico').val(), ",");
+    var valor_impostos = accounting.unformat(valor_total, ",") * (accounting.unformat($('#imposto').val(), ",") * 0.01);
+    var valor_reajuste = accounting.unformat(valor_total, ",") * (accounting.unformat($('#reajuste').val(), ",") * 0.01);
+    var valor_total_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_reajuste, ",") : 0;
+    var valor_total_imposto = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_impostos, ",") : 0;
     var array_dados = {
         id: id,
-        id_tipo: $('#i_id_tipo').val(),
-        descricao: $('#i_descricao').val(),
-        endereco: $('#i_endereco').val()
+        id_servico: $('#id_servico').val(),
+        imposto: $('#tem_imposto').val(),
+        reajuste: $('#tem_reajuste').val(),
+        mes_inicial: $('#mes_inicial_servico').val(),
+        vigencia: $('#vigencia_servico').val(),
+        quantidade: $('#quantidade_unitaria_servico').val(),
+        valor_unitario: valor_unitario,
+        valor_total: valor_total,
+        valor_total_reajuste: valor_total_reajuste,
+        valor_impostos: valor_impostos,
+        valor_total_impostos: valor_total_imposto
     };
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
     $.ajax({

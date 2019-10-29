@@ -2,14 +2,12 @@
 
 namespace Circuitos\Models\Operations;
 
+use Circuitos\Models\PropostaComercial;
+use Circuitos\Models\PropostaComercialItem;
+use Circuitos\Models\PropostaComercialValorMensal;
+use Phalcon\Http\Response as Response;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-use Phalcon\Http\Response as Response;
-
-use Circuitos\Models\PropostaComercial;
-use Circuitos\Models\PropostaComercialValorMensal;
-use Circuitos\Models\PropostaComercialItem;
-
 use Util\Util;
 
 class PropostaComercialOP extends PropostaComercial
@@ -340,20 +338,50 @@ class PropostaComercialOP extends PropostaComercial
         }
     }
 
+    public function visualizarPropostaItem($id_proposta_comercial_item)
+    {
+        try {
+            $objetoComponente = PropostaComercialItem::findFirst('id=' . $id_proposta_comercial_item);
+            $objTransporte = new \stdClass();
+            $objTransporte->id_proposta_comercial_item = $objetoComponente->getId();
+            $objTransporte->id_proposta_comercial_servicos = $objetoComponente->getIdPropostaComercialServicos();
+            $objTransporte->ds_codigo_servico = $objetoComponente->getCodigoServico();
+            $objTransporte->ds_proposta_comercial_servicos = $objetoComponente->getServico();
+            $objTransporte->ds_proposta_comercial_servicos_unidade = $objetoComponente->getServicoUnidade();
+            $objTransporte->imposto = $objetoComponente->getImposto();
+            $objTransporte->reajuste = $objetoComponente->getReajuste();
+            $objTransporte->quantidade = $objetoComponente->getQuantidade();
+            $objTransporte->mes_inicial = $objetoComponente->getMesInicial();
+            $objTransporte->vigencia = $objetoComponente->getVigencia();
+            $objTransporte->valor_unitario = $objetoComponente->getValorUnitario();
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $objTransporte)));
+            return $response;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
+    }
+
     public function alterarPropostaItem(PropostaComercialItem $objPropostaComercialItem)
     {
+        $util = new Util();
         try {
             $manager = new TxManager();
             $transaction = $manager->get();
             $objetoComponente = PropostaComercialItem::findFirst('id='.$objPropostaComercialItem->getId());
             $objetoComponente->setTransaction($transaction);
-            $objetoComponente->setDescricao(mb_strtoupper($objPropostaComercialItem->getDescricao(), $this->encode));
-            $objetoComponente->setIdContrato(($objPropostaComercialItem->getIdContrato()) ? $objPropostaComercialItem->getIdContrato() : null);
-            $objetoComponente->setIdTerreno(($objPropostaComercialItem->getIdTerreno()) ? $objPropostaComercialItem->getIdTerreno() : null);
-            $objetoComponente->setIdTorre(($objPropostaComercialItem->getIdTorre()) ? $objPropostaComercialItem->getIdTorre() : null);
-            $objetoComponente->setIdSetEquipamento(($objPropostaComercialItem->getIdSetEquipamento()) ? $objPropostaComercialItem->getIdSetEquipamento() : null);
-            $objetoComponente->setIdSetSeguranca(($objPropostaComercialItem->getIdSetSeguranca()) ? $objPropostaComercialItem->getIdSetSeguranca() : null);
-            $objetoComponente->setIdUnidadeConsumidora(($objPropostaComercialItem->getIdUnidadeConsumidora()) ? $objPropostaComercialItem->getIdUnidadeConsumidora() : null);
+            $objetoComponente->setIdPropostaComercialServicos($objPropostaComercialItem->getIdPropostaComercialServicos());
+            $objetoComponente->setImposto($objPropostaComercialItem->getImposto());
+            $objetoComponente->setReajuste($objPropostaComercialItem->getReajuste());
+            $objetoComponente->setQuantidade($objPropostaComercialItem->getQuantidade());
+            $objetoComponente->setMesInicial($objPropostaComercialItem->getMesInicial());
+            $objetoComponente->setVigencia($objPropostaComercialItem->getVigencia());
+            $objetoComponente->setValorUnitario((!empty($objPropostaComercialItem->getValorUnitario())) ? $util->formataNumero($objPropostaComercialItem->getValorUnitario()) : 0);
+            $objetoComponente->setValorTotal((!empty($objPropostaComercialItem->getValorTotal())) ? $util->formataNumero($objPropostaComercialItem->getValorTotal()) : 0);
+            $objetoComponente->setValorTotalReajuste((!empty($objPropostaComercialItem->getValorTotalReajuste())) ? $util->formataNumero($objPropostaComercialItem->getValorTotalReajuste()) : 0);
+            $objetoComponente->setValorImpostos((!empty($objPropostaComercialItem->getValorImpostos())) ? $util->formataNumero($objPropostaComercialItem->getValorImpostos()) : 0);
+            $objetoComponente->setValorTotalImpostos((!empty($objPropostaComercialItem->getValorTotalImpostos())) ? $util->formataNumero($objPropostaComercialItem->getValorTotalImpostos()) : 0);
             $objetoComponente->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objetoComponente->save() == false) {
                 $messages = $objetoComponente->getMessages();
