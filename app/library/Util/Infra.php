@@ -37,7 +37,7 @@ class Infra
 
     public function getVersao()
     {
-        return '2.00.00';
+        return '2.01.00';
     }
 
     public function getCaminhoRelatorios()
