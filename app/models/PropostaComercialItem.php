@@ -470,6 +470,36 @@ class PropostaComercialItem extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field serviços
+     *
+     * @return string
+     */
+    public function getServico()
+    {
+        return $this->PropostaComercialServico->descricao;
+    }
+
+    /**
+     * Returns the value of field serviços unidade
+     *
+     * @return string
+     */
+    public function getServicoUnidade()
+    {
+        return $this->PropostaComercialServico->PropostaComercialServicoUnidade->descricao;
+    }
+
+    /**
+     * Returns the value of field serviços unidade
+     *
+     * @return string
+     */
+    public function getCodigoServico()
+    {
+        return $this->PropostaComercialServico->codigo_legado;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()

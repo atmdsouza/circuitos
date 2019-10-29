@@ -657,6 +657,10 @@ class CoreController extends ControllerBase
                 $objeto = new UnidadeConsumidoraOP();
                 return $objeto->visualizarUnidadeConsumidora($dados['id']);
                 break;
+            case 'visualizarPropostaItens':
+                $objeto = new PropostaComercialOP();
+                return $objeto->visualizarPropostaItens($dados['id']);
+                break;
         }
     }
 

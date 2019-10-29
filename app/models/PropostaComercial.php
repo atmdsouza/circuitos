@@ -42,6 +42,12 @@ class PropostaComercial extends \Phalcon\Mvc\Model
      *
      * @var string
      */
+    protected $data_criacao;
+
+    /**
+     *
+     * @var string
+     */
     protected $data_proposta;
 
     /**
@@ -742,6 +748,22 @@ class PropostaComercial extends \Phalcon\Mvc\Model
     public function getStatus()
     {
         return $this->Lov3->descricao;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataCriacao()
+    {
+        return $this->data_criacao;
+    }
+
+    /**
+     * @param string $data_criacao
+     */
+    public function setDataCriacao($data_criacao)
+    {
+        $this->data_criacao = $data_criacao;
     }
 
     /**
