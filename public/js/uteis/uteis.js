@@ -668,3 +668,7 @@ $(document).ready(function () {
 jQuery.validator.addMethod("maiorQueZero", function(value, element) {
     return this.optional(element) || (parseFloat(value) > 0);
 }, "* O valor precisa ser maior que 0!");
+
+function carregar_arquivo(id_vinculado) {
+
+}

@@ -2,13 +2,11 @@
 
 namespace Circuitos\Controllers;
 
-use Phalcon\Http\Response as Response;
-
+use Auth\Autentica;
+use Circuitos\Models\Contrato;
 use Circuitos\Models\Lov;
 use Circuitos\Models\Operations\ContratoOP;
-use Circuitos\Models\Contrato;
-
-use Auth\Autentica;
+use Phalcon\Http\Response as Response;
 use Util\TokenManager;
 
 class ContratoController extends ControllerBase
@@ -40,7 +38,13 @@ class ContratoController extends ControllerBase
         $contratoOP = new ContratoOP();
         $contrato = $contratoOP->listar($dados['pesquisa']);
         $tipos = Lov::find("tipo=26 AND excluido=0 AND ativo=1");
+        $tipos_processos = Lov::find("tipo=27 AND excluido=0 AND ativo=1");
+        $tipos_movimentos = Lov::find("tipo=28 AND excluido=0 AND ativo=1");
+        $tipos_modalidades = Lov::find("tipo=29 AND excluido=0 AND ativo=1");
         $this->view->tipos = $tipos;
+        $this->view->tipos_processos = $tipos_processos;
+        $this->view->tipos_movimentos = $tipos_movimentos;
+        $this->view->tipos_modalidades = $tipos_modalidades;
         $this->view->page = $contrato;
     }
 

@@ -58,6 +58,29 @@ function confirmaCancelar(modal)
 function criar()
 {
     'use strict';
+    $('#primeira_aba').trigger('click');
+    $('.hide_buttons').show();
+    $('#bt_inserir_garantia').text("Inserir");
+    $('#bt_inserir_garantia').removeAttr('onclick');
+    $('#bt_inserir_garantia').attr('onclick', 'inserirGarantia();');
+    $('#bt_inserir_exercicio').text("Inserir");
+    $('#bt_inserir_exercicio').removeAttr('onclick');
+    $('#bt_inserir_exercicio').attr('onclick', 'inserirExercicio();');
+    $('#bt_inserir_orcamento').text("Inserir");
+    $('#bt_inserir_orcamento').removeAttr('onclick');
+    $('#bt_inserir_orcamento').attr('onclick', 'inserirOrcamento();');
+    limparDadosFormGarantia();
+    limparDadosFormExercicio();
+    limparDadosFormOrcamento();
+    $('.tr_remove_prc').remove();
+    $('.tr_remove_exe').remove();
+    $('.tr_remove_gar').remove();
+    $('#tabela_orcamentos').removeAttr('style', 'display: table;');
+    $('#tabela_orcamentos').attr('style', 'display: none;');
+    $('#tabela_exercicios').removeAttr('style', 'display: table;');
+    $('#tabela_exercicios').attr('style', 'display: none;');
+    $('#tabela_garantias').removeAttr('style', 'display: table;');
+    $('#tabela_garantias').attr('style', 'display: none;');
     $("#formCadastro input").removeAttr('readonly', 'readonly');
     $("#formCadastro select").removeAttr('readonly', 'readonly');
     $("#formCadastro textarea").removeAttr('readonly', 'readonly');
@@ -66,62 +89,109 @@ function criar()
     $("#modalCadastro").modal();
 }
 
-function editar(id)
-{
-    'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: {metodo: 'visualizarConectividade', id: id},
-        complete: function () {
-            $("#formCadastro input").removeAttr('readonly', 'readonly');
-            $("#formCadastro select").removeAttr('readonly', 'readonly');
-            $("#formCadastro textarea").removeAttr('readonly', 'readonly');
-            $("#salvarCadastro").val('editar');
-            $("#salvarCadastro").show();
-            $("#modalCadastro").modal();
-        },
-        error: function (data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function (data) {
-            $('#id').val(data.dados.id);
-            $('#lid_cidade_digital').val(data.dados.desc_cidade_digital);
-            $('#id_cidade_digital').val(data.dados.id_cidade_digital);
-            $('#lid_tipo').val(data.dados.desc_tipo);
-            $('#id_tipo').val(data.dados.id_tipo);
-            $('#descricao').val(data.dados.descricao);
-            $('#endereco').val(data.dados.endereco);
-        }
-    });
-}
-
 function salvar()
 {
     'use strict';
     var acao = $('#salvarCadastro').val();
     $("#formCadastro").validate({
         rules : {
-            descricao:{
+            id_cliente:{
+                required: true
+            },
+            id_tipo_proposta:{
+                required: true
+            },
+            id_localizacao:{
+                required: true
+            },
+            id_status:{
+                required: true
+            },
+            data_proposta:{
+                required: true
+            },
+            numero:{
+                required: true
+            },
+            vencimento:{
+                required: true
+            },
+            valor_global:{
+                required: true,
+                maiorQueZero: true
+            },
+            objetivo:{
+                required: true
+            },
+            objetivo_especifico:{
+                required: true
+            },
+            descritivo:{
+                required: true
+            },
+            responsabilidade:{
+                required: true
+            },
+            condicoes_pgto:{
+                required: true
+            },
+            prazo_execucao:{
+                required: true
+            },
+            consideracoes:{
                 required: true
             }
         },
         messages:{
-            descricao:{
-                required:"É necessário informar uma Descrição"
+            id_cliente:{
+                required:"É necessário informar um Cliente"
+            },
+            id_tipo_proposta:{
+                required: "É necessário informar um tipo de proposta"
+            },
+            id_localizacao:{
+                required: "É necessário informar um departamento"
+            },
+            id_status:{
+                required: "É necessário informar um status"
+            },
+            data_proposta:{
+                required: "É necessário informar a data da proposta"
+            },
+            numero:{
+                required: "É necessário informar o número da proposta"
+            },
+            vencimento:{
+                required: "É necessário informar a data de vencimento"
+            },
+            valor_global:{
+                required: "É necessário informar o valor global"
+            },
+            objetivo:{
+                required: "É necessário informar um objetivo"
+            },
+            objetivo_especifico:{
+                required: "É necessário informar um objetivo específico"
+            },
+            descritivo:{
+                required: "É necessário informar um descritivo"
+            },
+            responsabilidade:{
+                required: "É necessário informar a responsabilidade"
+            },
+            condicoes_pgto:{
+                required: "É necessário informar as condições de pagamento"
+            },
+            prazo_execucao:{
+                required: "É necessário informar um prazo de execução"
+            },
+            consideracoes:{
+                required: "É necessário informar as considerações"
             }
         },
         submitHandler: function(form) {
             var dados = $("#formCadastro").serialize();
-            var action = actionCorreta(window.location.href.toString(), "set_seguranca/" + acao);
+            var action = actionCorreta(window.location.href.toString(), "contrato/" + acao);
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
@@ -179,7 +249,7 @@ function ativar(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, ativar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "conectividade/ativar");
+        var action = actionCorreta(window.location.href.toString(), "contrato/ativar");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -236,7 +306,7 @@ function inativar(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, inativar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "conectividade/inativar");
+        var action = actionCorreta(window.location.href.toString(), "contrato/inativar");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -293,7 +363,7 @@ function excluir(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, excluir!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "conectividade/excluir");
+        var action = actionCorreta(window.location.href.toString(), "contrato/excluir");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -338,7 +408,7 @@ function excluir(id, descr)
     });
 }
 
-function visualizar(id)
+function visualizar(id, ocultar)
 {
     'use strict';
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
@@ -346,12 +416,22 @@ function visualizar(id)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarConectividade', id: id},
+        data: {metodo: 'visualizarContrato', id: id},
         complete: function () {
-            $("#formCadastro input").attr('readonly', 'readonly');
-            $("#formCadastro select").attr('readonly', 'readonly');
-            $("#formCadastro textarea").attr('readonly', 'readonly');
-            $("#salvarCadastro").hide();
+            if (ocultar) {
+                $("#formCadastro input").attr('readonly', 'readonly');
+                $("#formCadastro select").attr('readonly', 'readonly');
+                $("#formCadastro textarea").attr('readonly', 'readonly');
+                $("#salvarCadastro").hide();
+            } else {
+                $("#formCadastro input").removeAttr('readonly', 'readonly');
+                $("#formCadastro select").removeAttr('readonly', 'readonly');
+                $("#formCadastro textarea").removeAttr('readonly', 'readonly');
+                $("#salvarCadastro").val('editar');
+                $("#salvarCadastro").show();
+                $('.hide_buttons').show();
+            }
+            $('#primeira_aba').trigger('click');
             $("#modalCadastro").modal();
         },
         error: function (data) {
@@ -365,13 +445,49 @@ function visualizar(id)
         },
         success: function (data) {
             $('#id').val(data.dados.id);
-            $('#lid_cidade_digital').val(data.dados.desc_cidade_digital);
-            $('#id_cidade_digital').val(data.dados.id_cidade_digital);
-            $('#id_tipo').val(data.dados.id_tipo).selected = "true";
-            $('#descricao').val(data.dados.descricao);
-            $('#endereco').val(data.dados.endereco);
+            $('#lid_cliente').val(data.dados.ds_cliente);
+            $('#id_cliente').val(data.dados.id_cliente);
+            $('#id_status').val(data.dados.id_status).selected = "true";
+            $('#id_tipo_proposta').val(data.dados.id_tipo_proposta).selected = "true";
+            $('#id_localizacao').val(data.dados.id_localizacao).selected = "true";
+            $('#data_proposta').val(data.dados.data_proposta);
+            $('#numero').val(data.dados.numero);
+            $('#vencimento').val(data.dados.vencimento);
+            $('#reajuste').val(data.dados.reajuste);
+            $('#desconto').val(data.dados.desconto);
+            $('#imposto').val(data.dados.imposto);
+            $('#encargos').val(data.dados.encargos);
+            $('#valor_global').val(data.dados.valor_global);
+            $('#objetivo').val(data.dados.objetivo);
+            $('#objetivo_especifico').val(data.dados.objetivo_especifico);
+            $('#descritivo').val(data.dados.descritivo);
+            $('#responsabilidade').val(data.dados.responsabilidade);
+            $('#condicoes_pgto').val(data.dados.condicoes_pgto);
+            $('#prazo_execucao').val(data.dados.prazo_execucao);
+            $('#consideracoes').val(data.dados.consideracoes);
+            montarTabelaGarantia(data.dados.id, ocultar);
         }
     });
+}
+
+function movimentar(id)
+{
+
+}
+
+function atribuir(id)
+{
+
+}
+
+function fiscalizar(id)
+{
+
+}
+
+function acompanhar(id)
+{
+
 }
 
 function limpar()
@@ -381,53 +497,125 @@ function limpar()
     $('#formPesquisa').submit();
 }
 
-function criarComponente()
+/*
+* Orçamento
+* */
+function montarTabelaOrcamento(id_contrato, visualizar)
 {
     'use strict';
-    limparDadosFormComponente();
-    $('#bt_inserir_componente').val('Inserir');
-    $('#dados_componente').removeAttr('style','display: none;');
-    $('#dados_componente').attr('style', 'display: block;');
-    $('#i_lid_fornecedor').focus();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'visualizarContratoOrcamento', id: id_contrato },
+        complete: function() {
+            $('#tabela_orcamentos').removeAttr('style', 'display: none;');
+            $('#tabela_orcamentos').attr('style', 'display: table;');
+            if (visualizar) {
+                $('.hide_buttons').hide();
+            }
+        },
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('.tr_remove_orc_vis').remove();
+            var valor_global = 0;
+            var linhas = null;
+            $.each(data.dados, function(key, value) {
+                valor_global += accounting.unformat(value.valor_total);
+                var ds_imposto = (value.imposto === '1') ? 'Sim' : 'Não';
+                var ds_reajuste = (value.reajuste === '1') ? 'Sim' : 'Não';
+                linhas += '<tr class="tr_remove_orc_vis">';
+                linhas += '<td>'+ value.ds_codigo_servico +'</td>';
+                linhas += '<td>'+ value.ds_contrato_servicos +'<input name="res_id_contrato_servicos_item[]" type="hidden" value="'+ value.id_contrato_servicos +'" /></td>';
+                linhas += '<td>'+ value.ds_contrato_servicos_unidade +'</td>';
+                linhas += '<td>'+ ds_imposto +'<input name="res_imposto_item[]" type="hidden" value="'+ value.imposto +'" /></td>';
+                linhas += '<td>'+ ds_reajuste +'<input name="res_reajuste_item[]" type="hidden" value="'+ value.reajuste +'" /></td>';
+                linhas += '<td>'+ value.quantidade +'<input name="res_quantidade_item[]" type="hidden" value="'+ value.quantidade +'" /></td>';
+                linhas += '<td>'+ value.mes_inicial +'<input name="res_mes_inicial_item[]" type="hidden" value="'+ value.mes_inicial +'" /></td>';
+                linhas += '<td>'+ value.vigencia +'<input name="res_vigencia_item[]" type="hidden" value="'+ value.vigencia +'" /></td>';
+                linhas += '<td>'+ accounting.formatMoney(value.valor_unitario, "R$ ", 2, ".", ",") +'<input name="res_valor_unitario_item[]" type="hidden" value="'+ value.valor_unitario +'" /></td>';
+                linhas += '<td>'+ accounting.formatMoney(value.valor_total, "R$ ", 2, ".", ",") +'<input name="res_valor_total_item[]" type="hidden" value="'+ value.valor_total +'" /></td>';
+                linhas += '<td>'+ accounting.formatMoney(value.valor_total_reajuste, "R$ ", 2, ".", ",") +'<input name="res_valor_total_reajuste_item[]" type="hidden" value="'+ value.valor_total_reajuste +'" /></td>';
+                linhas += '<td>'+ accounting.formatMoney(value.valor_impostos, "R$ ", 2, ".", ",") +'<input name="res_valor_impostos_item[]" type="hidden" value="'+ value.valor_impostos +'" /></td>';
+                linhas += '<td>'+ accounting.formatMoney(value.valor_total_impostos, "R$ ", 2, ".", ",") +'<input name="res_valor_total_impostos_item[]" type="hidden" value="'+ value.valor_total_impostos +'" /></td>';
+                if (visualizar) {
+                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesOrcamento(' + value.id_contrato_item + ', ' + true + ');" class="botoes_acao"><img src="public/images/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a></td>';
+                } else {
+                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesOrcamento(' + value.id_contrato_item + ', ' + false + ');" class="botoes_acao"><img src="public/images/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>' +
+                        '<a href="javascript:void(0)" onclick="excluirOrcamento(' + value.id_contrato_item + ');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+                }
+                linhas += '</tr>';
+            });
+            $("#tabela_orcamentos").append(linhas);
+        }
+    });
 }
 
-function inserirComponente()
+function criarOrcamento()
+{
+    'use strict';
+    limparDadosFormOrcamento();
+    $('.hide_buttons').show();
+    $('#bt_inserir_orcamento').text("Inserir");
+    $('#bt_inserir_orcamento').removeAttr('onclick');
+    $('#bt_inserir_orcamento').attr('onclick', 'inserirOrcamento();');
+    $('#dados_orcamento').removeAttr('style', 'display: none;');
+    $('#dados_orcamento').attr('style', 'display: block;');
+    $('#grupo').focus();
+}
+
+function inserirOrcamento()
 {
     'use strict';
     //Dados
-    var lid_fornecedor = $('#i_lid_fornecedor').val();
-    var id_fornecedor = $('#i_id_fornecedor').val();
-    var lid_contrato = $('#i_lid_contrato').val();
-    var id_contrato = $('#i_id_contrato').val();
-    var endereco = $('#i_endereco_chave').val();
-    var desc_id_tipo = document.getElementById("i_id_tipo").options[document.getElementById("i_id_tipo").selectedIndex].text;
-    var id_tipo = $('#i_id_tipo').val();
-    var propriedade_prodepa = $('#i_propriedade_prodepa').val();
-    var desc_propriedade_prodepa = (propriedade_prodepa === '1') ? 'Sim' : 'Não';
-    var senha = $('#i_senha').val();
-    var validade = $('#i_validade').val();
-    var nome = $('#i_nome').val();
-    var email = $('#i_email').val();
-    var telefone = $('#i_telefone').val();
-    if(id_tipo !== '' && lid_fornecedor !== ''){//Campos Obrigatórios
+    var codigo_servico = $('#codigo_servico').val();
+    var descricao_servico = $('#descricao_servico').val();
+    var id_servico = $('#id_servico').val();
+    var grandeza = $('#grandeza').val();
+    var quantidade_unitaria = $('#quantidade_unitaria_servico').val();
+    var ds_tem_imposto = document.getElementById("tem_imposto").options[document.getElementById("tem_imposto").selectedIndex].text;
+    var tem_imposto = $('#tem_imposto').val();
+    var ds_tem_reajuste = document.getElementById("tem_reajuste").options[document.getElementById("tem_reajuste").selectedIndex].text;
+    var tem_reajuste = $('#tem_reajuste').val();
+    var mes_inicial = $('#mes_inicial_servico').val();
+    var vigencia = $('#vigencia_servico').val();
+    var valor_unitario = accounting.unformat($('#valor_unitario_servico').val(), ",");
+    var valor_total = valor_unitario * accounting.unformat(quantidade_unitaria, ",");
+    var valor_impostos = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") * (accounting.unformat($('#imposto').val(), ",") * 0.01) : 0;
+    var valor_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") * (accounting.unformat($('#reajuste').val(), ",") * 0.01) : 0;
+    var valor_total_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_reajuste, ",") : 0;
+    var valor_total_imposto = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_impostos, ",") : 0;
+    if(id_servico !== '' && quantidade_unitaria > 0 && tem_imposto !== '' && tem_reajuste !== '' && mes_inicial !== '' && vigencia !== ''){//Campos Obrigatórios
         var linhas = null;
-        linhas += '<tr class="tr_remove">';
-        linhas += '<td style="display: none;">' + lid_contrato + '<input name="id_contrato[]" type="hidden" value="' + id_contrato + '" /></td>';
-        linhas += '<td style="display: none;">'+ endereco +'<input name="endereco_chave[]" type="hidden" value="'+ endereco +'" /></td>';
-        linhas += '<td style="display: none;">'+ senha +'<input name="senha[]" type="hidden" value="'+ senha +'" /></td>';
-        linhas += '<td style="display: none;">'+ validade +'<input name="validade[]" type="hidden" value="'+ validade +'" /></td>';
-        linhas += '<td style="display: none;">'+ email +'<input name="email[]" type="hidden" value="'+ email +'" /></td>';
-        linhas += '<td>'+ lid_fornecedor +'<input name="id_fornecedor[]" type="hidden" value="'+ id_fornecedor +'" /></td>';
-        linhas += '<td>'+ desc_id_tipo +'<input name="id_tipo[]" type="hidden" value="'+ id_tipo +'" /></td>';
-        linhas += '<td>'+ desc_propriedade_prodepa +'<input name="propriedade_prodepa[]" type="hidden" value="'+ propriedade_prodepa +'" /></td>';
-        linhas += '<td>'+ nome +'<input name="nome[]" type="hidden" value="'+ nome +'" /></td>';
-        linhas += '<td>'+ telefone +'<input name="telefone[]" type="hidden" value="'+ telefone +'" /></td>';
-        linhas += '<td><a href="javascript:void(0)" onclick="RemoveTableRow(this)" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+        linhas += '<tr class="tr_remove_orc">';
+        linhas += '<td>'+ codigo_servico +'</td>';
+        linhas += '<td>'+ descricao_servico +'<input name="id_contrato_servicos_item[]" type="hidden" value="'+ id_servico +'" /></td>';
+        linhas += '<td>'+ grandeza +'</td>';
+        linhas += '<td>'+ ds_tem_imposto +'<input name="imposto_item[]" type="hidden" value="'+ tem_imposto +'" /></td>';
+        linhas += '<td>'+ ds_tem_reajuste +'<input name="reajuste_item[]" type="hidden" value="'+ tem_reajuste +'" /></td>';
+        linhas += '<td>'+ quantidade_unitaria +'<input name="quantidade_item[]" type="hidden" value="'+ quantidade_unitaria +'" /></td>';
+        linhas += '<td>'+ mes_inicial +'<input name="mes_inicial_item[]" type="hidden" value="'+ mes_inicial +'" /></td>';
+        linhas += '<td>'+ vigencia +'<input name="vigencia_item[]" type="hidden" value="'+ vigencia +'" /></td>';
+        linhas += '<td>'+ accounting.formatMoney(valor_unitario, "R$ ", 2, ".", ",") +'<input name="valor_unitario_item[]" type="hidden" value="'+ valor_unitario +'" /></td>';
+        linhas += '<td>'+ accounting.formatMoney(valor_total, "R$ ", 2, ".", ",") +'<input name="valor_total_item[]" type="hidden" value="'+ valor_total +'" /></td>';
+        linhas += '<td>'+ accounting.formatMoney(valor_total_reajuste, "R$ ", 2, ".", ",") +'<input name="valor_total_reajuste_item[]" type="hidden" value="'+ valor_total_reajuste +'" /></td>';
+        linhas += '<td>'+ accounting.formatMoney(valor_impostos, "R$ ", 2, ".", ",") +'<input name="valor_impostos_item[]" type="hidden" value="'+ valor_impostos +'" /></td>';
+        linhas += '<td>'+ accounting.formatMoney(valor_total_imposto, "R$ ", 2, ".", ",") +'<input name="valor_total_impostos_item[]" type="hidden" value="'+ valor_total_imposto +'" /></td>';
+        linhas += '<td><a data-valor-total="'+ valor_total +'" href="javascript:void(0)" onclick="RemoveTableRow(this);removerValoresTotais(this)" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
         linhas += '</tr>';
-        $("#tabela_componentes").append(linhas);
-        $('#tabela_componentes').removeAttr('style','display: none;');
-        $('#tabela_componentes').attr('style', 'display: table;');
-        limparDadosFormComponente();
+        $("#tabela_orcamentos").append(linhas);
+        $('#tabela_orcamentos').removeAttr('style','display: none;');
+        $('#tabela_orcamentos').attr('style', 'display: table;');
+        limparDadosFormOrcamento();
     } else {
         swal({
             title: "Campos Obrigatórios!",
@@ -437,38 +625,771 @@ function inserirComponente()
     }
 }
 
-function cancelarComponente()
+function cancelarOrcamento()
 {
     'use strict';
+    $('#bt_inserir_orcamento').text("Inserir");
+    $('#bt_inserir_orcamento').removeAttr('onclick');
+    $('#bt_inserir_orcamento').attr('onclick', 'inserirOrcamento();');
     verificarAlteracao();
-    limparDadosFormComponente();
+    limparDadosFormOrcamento();
 }
 
-function limparDadosFormComponente()
+function limparDadosFormOrcamento()
 {
     'use strict';
-    $('#i_id_contrato').val('');
-    $('#i_lid_contrato').val('');
-    $('#i_id_fornecedor').val('');
-    $('#i_lid_fornecedor').val('');
-    $('#i_senha').val('');
-    $('#i_validade').val('');
-    $('#i_endereco_chave').val('');
-    $('#i_nome').val('');
-    $('#i_telefone').val('');
-    $('#i_email').val('');
-    $('#i_id_tipo').val(null).selected = 'true';
-    $('#i_propriedade_prodepa').val('1').selected = 'true';
-    $('#dados_componente').removeAttr('style', 'display: block;');
-    $('#dados_componente').attr('style','display: none;');
+    $('#valor_unitario_servico').val('');
+    $('#quantidade_unitaria_servico').val('');
+    $('#codigo_servico').val('');
+    $('#id_codigo_servico').val('');
+    $('#descricao_servico').val('');
+    $('#id_servico').val('');
+    $('#grupo').val(null).selected = 'true';
+    $('#tem_imposto').val('0').selected = 'true';
+    $('#tem_reajuste').val('0').selected = 'true';
+    $('#mes_inicial_servico').val('1').selected = 'true';
+    $('#vigencia_servico').val('12').selected = 'true';
+    $('#dados_orcamento').removeAttr('style', 'display: block;');
+    $('#dados_orcamento').attr('style', 'display: none;');
+    $('#grupo').focus();
 }
 
-function vincularContrato() //Vincula um contrato existente ao contrato atual habilitando o campo e o autocomplete
+function exibirDetalhesOrcamento(id, ocultar)
 {
-
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'visualizarContratoOrcamento', id: id },
+        complete: function() {
+            if (ocultar) {
+                $("#formCadastro input").attr('readonly', 'readonly');
+                $("#formCadastro select").attr('readonly', 'readonly');
+                $("#formCadastro textarea").attr('readonly', 'readonly');
+                $('.hide_buttons').hide();
+                $("#salvarCadastro").hide();
+            } else {
+                $('#bt_inserir_orcamento').text("Alterar");
+                $('#bt_inserir_orcamento').removeAttr('onclick');
+                $('#bt_inserir_orcamento').attr('onclick', 'editarOrcamento(' + id + ');');
+                $('.hide_buttons').show();
+            }
+        },
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('#tem_imposto').val(data.dados.imposto).selected = 'true';
+            $('#tem_reajuste').val(data.dados.reajuste).selected = 'true';
+            $('#mes_inicial_servico').val(data.dados.mes_inicial).selected = 'true';
+            $('#vigencia_servico').val(data.dados.vigencia).selected = 'true';
+            $('#codigo_servico').val(data.dados.ds_codigo_servico);
+            $('#id_codigo_servico').val(data.dados.id_contrato_servicos);
+            $('#descricao_servico').val(data.dados.ds_contrato_servicos);
+            $('#id_servico').val(data.dados.id_contrato_servicos);
+            $('#grandeza').val(data.dados.ds_contrato_servicos_unidade);
+            $('#quantidade_unitaria_servico').val(data.dados.quantidade);
+            $('#valor_unitario_servico').val(accounting.formatMoney(data.dados.valor_unitario, "R$ ", 2, ".", ","));
+        }
+    });
 }
 
-function contratoClienteFornecedor() //Alternar entre o campo Cliente e Fornecedor dependendo do tipo de Contrato
+function editarOrcamento(id)
 {
+    'use strict';
+    var valor_unitario = accounting.unformat($('#valor_unitario_servico').val(), ",");
+    var valor_total = valor_unitario * accounting.unformat($('#quantidade_unitaria_servico').val(), ",");
+    var valor_impostos = accounting.unformat(valor_total, ",") * (accounting.unformat($('#imposto').val(), ",") * 0.01);
+    var valor_reajuste = accounting.unformat(valor_total, ",") * (accounting.unformat($('#reajuste').val(), ",") * 0.01);
+    var valor_total_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_reajuste, ",") : 0;
+    var valor_total_imposto = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_impostos, ",") : 0;
+    var array_dados = {
+        id: id,
+        id_servico: $('#id_servico').val(),
+        imposto: $('#tem_imposto').val(),
+        reajuste: $('#tem_reajuste').val(),
+        mes_inicial: $('#mes_inicial_servico').val(),
+        vigencia: $('#vigencia_servico').val(),
+        quantidade: $('#quantidade_unitaria_servico').val(),
+        valor_unitario: valor_unitario,
+        valor_total: valor_total,
+        valor_total_reajuste: valor_total_reajuste,
+        valor_impostos: valor_impostos,
+        valor_total_impostos: valor_total_imposto
+    };
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
+    $.ajax({
+        type: "POST",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'alterarContratoOrcamento', array_dados: array_dados },
+        complete: function() {},
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('.tr_remove_orc').remove();
+            limparDadosFormOrcamento();
+            montarTabelaOrcamento(data.dados.id_contrato, false);
+            swal({
+                title: "Alteração de Orçamento",
+                text: 'Orçamento alterado com sucesso!',
+                type: "success"
+            });
+        }
+    });
+}
 
+function excluirOrcamento(id)
+{
+    'use strict';
+    swal({
+        title: "Tem certeza que deseja excluir o registro?",
+        text: "O sistema irá excluir o registro selecionado com essa ação.",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, excluir!"
+    }).then((result) => {
+        var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: action,
+            data: { metodo: 'deletarContratoOrçamento', id: id },
+            complete: function() {},
+            error: function(data) {
+                if (data.status && data.status === 401) {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            },
+            success: function(data) {
+                $('.tr_remove_orc').remove();
+                limparDadosFormOrcamento();
+                montarTabelaOrcamento(data.dados, false);
+                swal({
+                    title: "Exclusão de Orçamento",
+                    text: 'Orçamento excluído com sucesso!',
+                    type: "success"
+                });
+            }
+        });
+    });
+}
+
+/*
+* Exercício
+* */
+function montarTabelaExercicio(id_contrato, visualizar)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'visualizarContratoExercicio', id: id_contrato },
+        complete: function() {
+            $('#tabela_exercicios').removeAttr('style', 'display: none;');
+            $('#tabela_exercicios').attr('style', 'display: table;');
+            if (visualizar) {
+                $('.hide_buttons').hide();
+            }
+        },
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('.tr_remove_exe_vis').remove();
+            var valor_global = 0;
+            var linhas = null;
+            $.each(data.dados, function(key, value) {
+                valor_global += accounting.unformat(value.valor_total);
+                var ds_imposto = (value.imposto === '1') ? 'Sim' : 'Não';
+                var ds_reajuste = (value.reajuste === '1') ? 'Sim' : 'Não';
+                linhas += '<tr class="tr_remove_exe_vis">';
+                linhas += '<td>'+ value.ds_codigo_servico +'</td>';
+                linhas += '<td>'+ value.ds_contrato_servicos +'<input name="res_id_contrato_servicos_item[]" type="hidden" value="'+ value.id_contrato_servicos +'" /></td>';
+                linhas += '<td>'+ value.ds_contrato_servicos_unidade +'</td>';
+                linhas += '<td>'+ ds_imposto +'<input name="res_imposto_item[]" type="hidden" value="'+ value.imposto +'" /></td>';
+                linhas += '<td>'+ ds_reajuste +'<input name="res_reajuste_item[]" type="hidden" value="'+ value.reajuste +'" /></td>';
+                linhas += '<td>'+ value.quantidade +'<input name="res_quantidade_item[]" type="hidden" value="'+ value.quantidade +'" /></td>';
+                linhas += '<td>'+ value.mes_inicial +'<input name="res_mes_inicial_item[]" type="hidden" value="'+ value.mes_inicial +'" /></td>';
+                linhas += '<td>'+ value.vigencia +'<input name="res_vigencia_item[]" type="hidden" value="'+ value.vigencia +'" /></td>';
+                linhas += '<td>'+ accounting.formatMoney(value.valor_unitario, "R$ ", 2, ".", ",") +'<input name="res_valor_unitario_item[]" type="hidden" value="'+ value.valor_unitario +'" /></td>';
+                linhas += '<td>'+ accounting.formatMoney(value.valor_total, "R$ ", 2, ".", ",") +'<input name="res_valor_total_item[]" type="hidden" value="'+ value.valor_total +'" /></td>';
+                linhas += '<td>'+ accounting.formatMoney(value.valor_total_reajuste, "R$ ", 2, ".", ",") +'<input name="res_valor_total_reajuste_item[]" type="hidden" value="'+ value.valor_total_reajuste +'" /></td>';
+                linhas += '<td>'+ accounting.formatMoney(value.valor_impostos, "R$ ", 2, ".", ",") +'<input name="res_valor_impostos_item[]" type="hidden" value="'+ value.valor_impostos +'" /></td>';
+                linhas += '<td>'+ accounting.formatMoney(value.valor_total_impostos, "R$ ", 2, ".", ",") +'<input name="res_valor_total_impostos_item[]" type="hidden" value="'+ value.valor_total_impostos +'" /></td>';
+                if (visualizar) {
+                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesExercicio(' + value.id_contrato_item + ', ' + true + ');" class="botoes_acao"><img src="public/images/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a></td>';
+                } else {
+                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesExercicio(' + value.id_contrato_item + ', ' + false + ');" class="botoes_acao"><img src="public/images/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>' +
+                        '<a href="javascript:void(0)" onclick="excluirExercicio(' + value.id_contrato_item + ');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+                }
+                linhas += '</tr>';
+            });
+            $("#tabela_exercicios").append(linhas);
+        }
+    });
+}
+
+function criarExercicio()
+{
+    'use strict';
+    limparDadosFormExercicio();
+    $('.hide_buttons').show();
+    $('#bt_inserir_exercicio').text("Inserir");
+    $('#bt_inserir_exercicio').removeAttr('onclick');
+    $('#bt_inserir_exercicio').attr('onclick', 'inserirExercicio();');
+    $('#dados_exercicio').removeAttr('style', 'display: none;');
+    $('#dados_exercicio').attr('style', 'display: block;');
+    $('#grupo').focus();
+}
+
+function inserirExercicio()
+{
+    'use strict';
+    //Dados
+    var codigo_servico = $('#codigo_servico').val();
+    var descricao_servico = $('#descricao_servico').val();
+    var id_servico = $('#id_servico').val();
+    var grandeza = $('#grandeza').val();
+    var quantidade_unitaria = $('#quantidade_unitaria_servico').val();
+    var ds_tem_imposto = document.getElementById("tem_imposto").options[document.getElementById("tem_imposto").selectedIndex].text;
+    var tem_imposto = $('#tem_imposto').val();
+    var ds_tem_reajuste = document.getElementById("tem_reajuste").options[document.getElementById("tem_reajuste").selectedIndex].text;
+    var tem_reajuste = $('#tem_reajuste').val();
+    var mes_inicial = $('#mes_inicial_servico').val();
+    var vigencia = $('#vigencia_servico').val();
+    var valor_unitario = accounting.unformat($('#valor_unitario_servico').val(), ",");
+    var valor_total = valor_unitario * accounting.unformat(quantidade_unitaria, ",");
+    var valor_impostos = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") * (accounting.unformat($('#imposto').val(), ",") * 0.01) : 0;
+    var valor_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") * (accounting.unformat($('#reajuste').val(), ",") * 0.01) : 0;
+    var valor_total_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_reajuste, ",") : 0;
+    var valor_total_imposto = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_impostos, ",") : 0;
+    if(id_servico !== '' && quantidade_unitaria > 0 && tem_imposto !== '' && tem_reajuste !== '' && mes_inicial !== '' && vigencia !== ''){//Campos Obrigatórios
+        var linhas = null;
+        linhas += '<tr class="tr_remove_exe">';
+        linhas += '<td>'+ codigo_servico +'</td>';
+        linhas += '<td>'+ descricao_servico +'<input name="id_contrato_servicos_item[]" type="hidden" value="'+ id_servico +'" /></td>';
+        linhas += '<td>'+ grandeza +'</td>';
+        linhas += '<td>'+ ds_tem_imposto +'<input name="imposto_item[]" type="hidden" value="'+ tem_imposto +'" /></td>';
+        linhas += '<td>'+ ds_tem_reajuste +'<input name="reajuste_item[]" type="hidden" value="'+ tem_reajuste +'" /></td>';
+        linhas += '<td>'+ quantidade_unitaria +'<input name="quantidade_item[]" type="hidden" value="'+ quantidade_unitaria +'" /></td>';
+        linhas += '<td>'+ mes_inicial +'<input name="mes_inicial_item[]" type="hidden" value="'+ mes_inicial +'" /></td>';
+        linhas += '<td>'+ vigencia +'<input name="vigencia_item[]" type="hidden" value="'+ vigencia +'" /></td>';
+        linhas += '<td>'+ accounting.formatMoney(valor_unitario, "R$ ", 2, ".", ",") +'<input name="valor_unitario_item[]" type="hidden" value="'+ valor_unitario +'" /></td>';
+        linhas += '<td>'+ accounting.formatMoney(valor_total, "R$ ", 2, ".", ",") +'<input name="valor_total_item[]" type="hidden" value="'+ valor_total +'" /></td>';
+        linhas += '<td>'+ accounting.formatMoney(valor_total_reajuste, "R$ ", 2, ".", ",") +'<input name="valor_total_reajuste_item[]" type="hidden" value="'+ valor_total_reajuste +'" /></td>';
+        linhas += '<td>'+ accounting.formatMoney(valor_impostos, "R$ ", 2, ".", ",") +'<input name="valor_impostos_item[]" type="hidden" value="'+ valor_impostos +'" /></td>';
+        linhas += '<td>'+ accounting.formatMoney(valor_total_imposto, "R$ ", 2, ".", ",") +'<input name="valor_total_impostos_item[]" type="hidden" value="'+ valor_total_imposto +'" /></td>';
+        linhas += '<td><a data-valor-total="'+ valor_total +'" href="javascript:void(0)" onclick="RemoveTableRow(this);removerValoresTotais(this)" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+        linhas += '</tr>';
+        $("#tabela_exercicios").append(linhas);
+        $('#tabela_exercicios').removeAttr('style','display: none;');
+        $('#tabela_exercicios').attr('style', 'display: table;');
+        limparDadosFormExercicio();
+    } else {
+        swal({
+            title: "Campos Obrigatórios!",
+            text: "Você precisa preencher todos os campos obrigatórios no formulário!",
+            type: "warning"
+        });
+    }
+}
+
+function cancelarExercicio()
+{
+    'use strict';
+    $('#bt_inserir_exercicio').text("Inserir");
+    $('#bt_inserir_exercicio').removeAttr('onclick');
+    $('#bt_inserir_exercicio').attr('onclick', 'inserirExercicio();');
+    verificarAlteracao();
+    limparDadosFormExercicio();
+}
+
+function limparDadosFormExercicio()
+{
+    'use strict';
+    $('#valor_unitario_servico').val('');
+    $('#quantidade_unitaria_servico').val('');
+    $('#codigo_servico').val('');
+    $('#id_codigo_servico').val('');
+    $('#descricao_servico').val('');
+    $('#id_servico').val('');
+    $('#grupo').val(null).selected = 'true';
+    $('#tem_imposto').val('0').selected = 'true';
+    $('#tem_reajuste').val('0').selected = 'true';
+    $('#mes_inicial_servico').val('1').selected = 'true';
+    $('#vigencia_servico').val('12').selected = 'true';
+    $('#dados_exercicio').removeAttr('style', 'display: block;');
+    $('#dados_exercicio').attr('style', 'display: none;');
+    $('#grupo').focus();
+}
+
+function exibirDetalhesExercicio(id, ocultar)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'visualizarContratoExercicio', id: id },
+        complete: function() {
+            if (ocultar) {
+                $("#formCadastro input").attr('readonly', 'readonly');
+                $("#formCadastro select").attr('readonly', 'readonly');
+                $("#formCadastro textarea").attr('readonly', 'readonly');
+                $('.hide_buttons').hide();
+                $("#salvarCadastro").hide();
+            } else {
+                $('#bt_inserir_exercicio').text("Alterar");
+                $('#bt_inserir_exercicio').removeAttr('onclick');
+                $('#bt_inserir_exercicio').attr('onclick', 'editarExercicio(' + id + ');');
+                $('.hide_buttons').show();
+            }
+        },
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('#tem_imposto').val(data.dados.imposto).selected = 'true';
+            $('#tem_reajuste').val(data.dados.reajuste).selected = 'true';
+            $('#mes_inicial_servico').val(data.dados.mes_inicial).selected = 'true';
+            $('#vigencia_servico').val(data.dados.vigencia).selected = 'true';
+            $('#codigo_servico').val(data.dados.ds_codigo_servico);
+            $('#id_codigo_servico').val(data.dados.id_contrato_servicos);
+            $('#descricao_servico').val(data.dados.ds_contrato_servicos);
+            $('#id_servico').val(data.dados.id_contrato_servicos);
+            $('#grandeza').val(data.dados.ds_contrato_servicos_unidade);
+            $('#quantidade_unitaria_servico').val(data.dados.quantidade);
+            $('#valor_unitario_servico').val(accounting.formatMoney(data.dados.valor_unitario, "R$ ", 2, ".", ","));
+        }
+    });
+}
+
+function editarExercicio(id)
+{
+    'use strict';
+    var valor_unitario = accounting.unformat($('#valor_unitario_servico').val(), ",");
+    var valor_total = valor_unitario * accounting.unformat($('#quantidade_unitaria_servico').val(), ",");
+    var valor_impostos = accounting.unformat(valor_total, ",") * (accounting.unformat($('#imposto').val(), ",") * 0.01);
+    var valor_reajuste = accounting.unformat(valor_total, ",") * (accounting.unformat($('#reajuste').val(), ",") * 0.01);
+    var valor_total_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_reajuste, ",") : 0;
+    var valor_total_imposto = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_impostos, ",") : 0;
+    var array_dados = {
+        id: id,
+        id_servico: $('#id_servico').val(),
+        imposto: $('#tem_imposto').val(),
+        reajuste: $('#tem_reajuste').val(),
+        mes_inicial: $('#mes_inicial_servico').val(),
+        vigencia: $('#vigencia_servico').val(),
+        quantidade: $('#quantidade_unitaria_servico').val(),
+        valor_unitario: valor_unitario,
+        valor_total: valor_total,
+        valor_total_reajuste: valor_total_reajuste,
+        valor_impostos: valor_impostos,
+        valor_total_impostos: valor_total_imposto
+    };
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
+    $.ajax({
+        type: "POST",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'alterarContratoExercicio', array_dados: array_dados },
+        complete: function() {},
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('.tr_remove_exe').remove();
+            limparDadosFormExercicio();
+            montarTabelaExercicio(data.dados.id_contrato, false);
+            swal({
+                title: "Alteração de Exercício",
+                text: 'Exercício alterado com sucesso!',
+                type: "success"
+            });
+        }
+    });
+}
+
+function excluirExercicio(id)
+{
+    'use strict';
+    swal({
+        title: "Tem certeza que deseja excluir o registro?",
+        text: "O sistema irá excluir o registro selecionado com essa ação.",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, excluir!"
+    }).then((result) => {
+        var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: action,
+            data: { metodo: 'deletarContratoExercicio', id: id },
+            complete: function() {},
+            error: function(data) {
+                if (data.status && data.status === 401) {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            },
+            success: function(data) {
+                $('.tr_remove_exe').remove();
+                limparDadosFormExercicio();
+                montarTabelaExercicio(data.dados, false);
+                swal({
+                    title: "Exclusão de Exercício",
+                    text: 'Exercício excluído com sucesso!',
+                    type: "success"
+                });
+            }
+        });
+    });
+}
+
+/*
+* Garantia
+* */
+function montarTabelaGarantia(id_contrato, visualizar)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'visualizarContratoGarantia', id: id_contrato },
+        complete: function() {
+            $('#tabela_garantias').removeAttr('style', 'display: none;');
+            $('#tabela_garantias').attr('style', 'display: table;');
+            if (visualizar) {
+                $('.hide_buttons').hide();
+            }
+        },
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('.tr_remove_gar_vis').remove();
+            var valor_global = 0;
+            var linhas = null;
+            $.each(data.dados, function(key, value) {
+                valor_global += accounting.unformat(value.valor_total);
+                var ds_imposto = (value.imposto === '1') ? 'Sim' : 'Não';
+                var ds_reajuste = (value.reajuste === '1') ? 'Sim' : 'Não';
+                linhas += '<tr class="tr_remove_gar_vis">';
+                linhas += '<td>'+ value.ds_codigo_servico +'</td>';
+                linhas += '<td>'+ value.ds_contrato_servicos +'<input name="res_id_contrato_servicos_item[]" type="hidden" value="'+ value.id_contrato_servicos +'" /></td>';
+                linhas += '<td>'+ value.ds_contrato_servicos_unidade +'</td>';
+                linhas += '<td>'+ ds_imposto +'<input name="res_imposto_item[]" type="hidden" value="'+ value.imposto +'" /></td>';
+                linhas += '<td>'+ ds_reajuste +'<input name="res_reajuste_item[]" type="hidden" value="'+ value.reajuste +'" /></td>';
+                linhas += '<td>'+ value.quantidade +'<input name="res_quantidade_item[]" type="hidden" value="'+ value.quantidade +'" /></td>';
+                linhas += '<td>'+ value.mes_inicial +'<input name="res_mes_inicial_item[]" type="hidden" value="'+ value.mes_inicial +'" /></td>';
+                linhas += '<td>'+ value.vigencia +'<input name="res_vigencia_item[]" type="hidden" value="'+ value.vigencia +'" /></td>';
+                linhas += '<td>'+ accounting.formatMoney(value.valor_unitario, "R$ ", 2, ".", ",") +'<input name="res_valor_unitario_item[]" type="hidden" value="'+ value.valor_unitario +'" /></td>';
+                linhas += '<td>'+ accounting.formatMoney(value.valor_total, "R$ ", 2, ".", ",") +'<input name="res_valor_total_item[]" type="hidden" value="'+ value.valor_total +'" /></td>';
+                linhas += '<td>'+ accounting.formatMoney(value.valor_total_reajuste, "R$ ", 2, ".", ",") +'<input name="res_valor_total_reajuste_item[]" type="hidden" value="'+ value.valor_total_reajuste +'" /></td>';
+                linhas += '<td>'+ accounting.formatMoney(value.valor_impostos, "R$ ", 2, ".", ",") +'<input name="res_valor_impostos_item[]" type="hidden" value="'+ value.valor_impostos +'" /></td>';
+                linhas += '<td>'+ accounting.formatMoney(value.valor_total_impostos, "R$ ", 2, ".", ",") +'<input name="res_valor_total_impostos_item[]" type="hidden" value="'+ value.valor_total_impostos +'" /></td>';
+                if (visualizar) {
+                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesGarantia(' + value.id_contrato_item + ', ' + true + ');" class="botoes_acao"><img src="public/images/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a></td>';
+                } else {
+                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesGarantia(' + value.id_contrato_item + ', ' + false + ');" class="botoes_acao"><img src="public/images/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>' +
+                        '<a href="javascript:void(0)" onclick="excluirGarantia(' + value.id_contrato_item + ');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+                }
+                linhas += '</tr>';
+            });
+            $("#tabela_garantias").append(linhas);
+        }
+    });
+}
+
+function criarGarantia()
+{
+    'use strict';
+    limparDadosFormGarantia();
+    $('.hide_buttons').show();
+    $('#bt_inserir_garantia').text("Inserir");
+    $('#bt_inserir_garantia').removeAttr('onclick');
+    $('#bt_inserir_garantia').attr('onclick', 'inserirGarantia();');
+    $('#dados_garantia').removeAttr('style', 'display: none;');
+    $('#dados_garantia').attr('style', 'display: block;');
+    $('#grupo').focus();
+}
+
+function inserirGarantia()
+{
+    'use strict';
+    //Dados
+    var codigo_servico = $('#codigo_servico').val();
+    var descricao_servico = $('#descricao_servico').val();
+    var id_servico = $('#id_servico').val();
+    var grandeza = $('#grandeza').val();
+    var quantidade_unitaria = $('#quantidade_unitaria_servico').val();
+    var ds_tem_imposto = document.getElementById("tem_imposto").options[document.getElementById("tem_imposto").selectedIndex].text;
+    var tem_imposto = $('#tem_imposto').val();
+    var ds_tem_reajuste = document.getElementById("tem_reajuste").options[document.getElementById("tem_reajuste").selectedIndex].text;
+    var tem_reajuste = $('#tem_reajuste').val();
+    var mes_inicial = $('#mes_inicial_servico').val();
+    var vigencia = $('#vigencia_servico').val();
+    var valor_unitario = accounting.unformat($('#valor_unitario_servico').val(), ",");
+    var valor_total = valor_unitario * accounting.unformat(quantidade_unitaria, ",");
+    var valor_impostos = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") * (accounting.unformat($('#imposto').val(), ",") * 0.01) : 0;
+    var valor_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") * (accounting.unformat($('#reajuste').val(), ",") * 0.01) : 0;
+    var valor_total_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_reajuste, ",") : 0;
+    var valor_total_imposto = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_impostos, ",") : 0;
+    if(id_servico !== '' && quantidade_unitaria > 0 && tem_imposto !== '' && tem_reajuste !== '' && mes_inicial !== '' && vigencia !== ''){//Campos Obrigatórios
+        var linhas = null;
+        linhas += '<tr class="tr_remove_gar">';
+        linhas += '<td>'+ codigo_servico +'</td>';
+        linhas += '<td>'+ descricao_servico +'<input name="id_contrato_servicos_item[]" type="hidden" value="'+ id_servico +'" /></td>';
+        linhas += '<td>'+ grandeza +'</td>';
+        linhas += '<td>'+ ds_tem_imposto +'<input name="imposto_item[]" type="hidden" value="'+ tem_imposto +'" /></td>';
+        linhas += '<td>'+ ds_tem_reajuste +'<input name="reajuste_item[]" type="hidden" value="'+ tem_reajuste +'" /></td>';
+        linhas += '<td>'+ quantidade_unitaria +'<input name="quantidade_item[]" type="hidden" value="'+ quantidade_unitaria +'" /></td>';
+        linhas += '<td>'+ mes_inicial +'<input name="mes_inicial_item[]" type="hidden" value="'+ mes_inicial +'" /></td>';
+        linhas += '<td>'+ vigencia +'<input name="vigencia_item[]" type="hidden" value="'+ vigencia +'" /></td>';
+        linhas += '<td>'+ accounting.formatMoney(valor_unitario, "R$ ", 2, ".", ",") +'<input name="valor_unitario_item[]" type="hidden" value="'+ valor_unitario +'" /></td>';
+        linhas += '<td>'+ accounting.formatMoney(valor_total, "R$ ", 2, ".", ",") +'<input name="valor_total_item[]" type="hidden" value="'+ valor_total +'" /></td>';
+        linhas += '<td>'+ accounting.formatMoney(valor_total_reajuste, "R$ ", 2, ".", ",") +'<input name="valor_total_reajuste_item[]" type="hidden" value="'+ valor_total_reajuste +'" /></td>';
+        linhas += '<td>'+ accounting.formatMoney(valor_impostos, "R$ ", 2, ".", ",") +'<input name="valor_impostos_item[]" type="hidden" value="'+ valor_impostos +'" /></td>';
+        linhas += '<td>'+ accounting.formatMoney(valor_total_imposto, "R$ ", 2, ".", ",") +'<input name="valor_total_impostos_item[]" type="hidden" value="'+ valor_total_imposto +'" /></td>';
+        linhas += '<td><a data-valor-total="'+ valor_total +'" href="javascript:void(0)" onclick="RemoveTableRow(this);removerValoresTotais(this)" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+        linhas += '</tr>';
+        $("#tabela_garantias").append(linhas);
+        $('#tabela_garantias').removeAttr('style','display: none;');
+        $('#tabela_garantias').attr('style', 'display: table;');
+        limparDadosFormGarantia();
+    } else {
+        swal({
+            title: "Campos Obrigatórios!",
+            text: "Você precisa preencher todos os campos obrigatórios no formulário!",
+            type: "warning"
+        });
+    }
+}
+
+function cancelarGarantia()
+{
+    'use strict';
+    $('#bt_inserir_garantia').text("Inserir");
+    $('#bt_inserir_garantia').removeAttr('onclick');
+    $('#bt_inserir_garantia').attr('onclick', 'inserirGarantia();');
+    verificarAlteracao();
+    limparDadosFormGarantia();
+}
+
+function limparDadosFormGarantia()
+{
+    'use strict';
+    $('#valor_unitario_servico').val('');
+    $('#quantidade_unitaria_servico').val('');
+    $('#codigo_servico').val('');
+    $('#id_codigo_servico').val('');
+    $('#descricao_servico').val('');
+    $('#id_servico').val('');
+    $('#grupo').val(null).selected = 'true';
+    $('#tem_imposto').val('0').selected = 'true';
+    $('#tem_reajuste').val('0').selected = 'true';
+    $('#mes_inicial_servico').val('1').selected = 'true';
+    $('#vigencia_servico').val('12').selected = 'true';
+    $('#dados_garantia').removeAttr('style', 'display: block;');
+    $('#dados_garantia').attr('style', 'display: none;');
+    $('#grupo').focus();
+}
+
+function exibirDetalhesGarantia(id, ocultar)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'visualizarContratoGarantia', id: id },
+        complete: function() {
+            if (ocultar) {
+                $("#formCadastro input").attr('readonly', 'readonly');
+                $("#formCadastro select").attr('readonly', 'readonly');
+                $("#formCadastro textarea").attr('readonly', 'readonly');
+                $('.hide_buttons').hide();
+                $("#salvarCadastro").hide();
+            } else {
+                $('#bt_inserir_garantia').text("Alterar");
+                $('#bt_inserir_garantia').removeAttr('onclick');
+                $('#bt_inserir_garantia').attr('onclick', 'editarGarantia(' + id + ');');
+                $('.hide_buttons').show();
+            }
+        },
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('#tem_imposto').val(data.dados.imposto).selected = 'true';
+            $('#tem_reajuste').val(data.dados.reajuste).selected = 'true';
+            $('#mes_inicial_servico').val(data.dados.mes_inicial).selected = 'true';
+            $('#vigencia_servico').val(data.dados.vigencia).selected = 'true';
+            $('#codigo_servico').val(data.dados.ds_codigo_servico);
+            $('#id_codigo_servico').val(data.dados.id_contrato_servicos);
+            $('#descricao_servico').val(data.dados.ds_contrato_servicos);
+            $('#id_servico').val(data.dados.id_contrato_servicos);
+            $('#grandeza').val(data.dados.ds_contrato_servicos_unidade);
+            $('#quantidade_unitaria_servico').val(data.dados.quantidade);
+            $('#valor_unitario_servico').val(accounting.formatMoney(data.dados.valor_unitario, "R$ ", 2, ".", ","));
+        }
+    });
+}
+
+function editarGarantia(id)
+{
+    'use strict';
+    var valor_unitario = accounting.unformat($('#valor_unitario_servico').val(), ",");
+    var valor_total = valor_unitario * accounting.unformat($('#quantidade_unitaria_servico').val(), ",");
+    var valor_impostos = accounting.unformat(valor_total, ",") * (accounting.unformat($('#imposto').val(), ",") * 0.01);
+    var valor_reajuste = accounting.unformat(valor_total, ",") * (accounting.unformat($('#reajuste').val(), ",") * 0.01);
+    var valor_total_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_reajuste, ",") : 0;
+    var valor_total_imposto = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_impostos, ",") : 0;
+    var array_dados = {
+        id: id,
+        id_servico: $('#id_servico').val(),
+        imposto: $('#tem_imposto').val(),
+        reajuste: $('#tem_reajuste').val(),
+        mes_inicial: $('#mes_inicial_servico').val(),
+        vigencia: $('#vigencia_servico').val(),
+        quantidade: $('#quantidade_unitaria_servico').val(),
+        valor_unitario: valor_unitario,
+        valor_total: valor_total,
+        valor_total_reajuste: valor_total_reajuste,
+        valor_impostos: valor_impostos,
+        valor_total_impostos: valor_total_imposto
+    };
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
+    $.ajax({
+        type: "POST",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'alterarContratoGarantia', array_dados: array_dados },
+        complete: function() {},
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('.tr_remove_gar_vis').remove();
+            limparDadosFormGarantia();
+            montarTabelaGarantia(data.dados.id_contrato, false);
+            swal({
+                title: "Alteração de Item",
+                text: 'Item alterado com sucesso!',
+                type: "success"
+            });
+        }
+    });
+}
+
+function excluirGarantia(id)
+{
+    'use strict';
+    swal({
+        title: "Tem certeza que deseja excluir o registro?",
+        text: "O sistema irá excluir o registro selecionado com essa ação.",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, excluir!"
+    }).then((result) => {
+        var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: action,
+            data: { metodo: 'deletarContratoGarantia', id: id },
+            complete: function() {},
+            error: function(data) {
+                if (data.status && data.status === 401) {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            },
+            success: function(data) {
+                $('.tr_remove_gar_vis').remove();
+                limparDadosFormGarantia();
+                montarTabelaGarantia(data.dados, false);
+                swal({
+                    title: "Exclusão de Item",
+                    text: 'Item excluído com sucesso!',
+                    type: "success"
+                });
+            }
+        });
+    });
 }

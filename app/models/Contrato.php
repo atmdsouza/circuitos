@@ -3,7 +3,6 @@
 namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Resultset;
 
 class Contrato extends \Phalcon\Mvc\Model
 {
@@ -866,7 +865,6 @@ class Contrato extends \Phalcon\Mvc\Model
         $query->where("Contrato.excluido = 0 AND (CONVERT(Contrato.id USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Contrato.numero USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Contrato.ano USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(Contrato.exercicio USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(ContratoProcesso.codigo_processo USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(ContratoProcesso.numero_processo USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Pessoa1.nome USING utf8) LIKE '%{$parameters}%'

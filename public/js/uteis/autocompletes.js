@@ -151,6 +151,16 @@ function autocompletarContratoVinculado(id_label, id_valor)
 
 }
 
+function autocompletarContrato(id_label, id_valor)
+{
+
+}
+
+function autocompletarPropostaComercial(id_label, id_valor)
+{
+
+}
+
 function autocompletarCliente(id_label, id_valor)
 {
     "use strict";
@@ -201,11 +211,6 @@ function autocompletarCliente(id_label, id_valor)
             }
         }
     });
-}
-
-function autocompletarContrato(id_label, id_valor)
-{
-
 }
 
 function autocompletarGrupo(id_label, id_valor)

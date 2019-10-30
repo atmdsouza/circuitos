@@ -15,7 +15,7 @@ Códigos LOV para o diagrama
 13 - Tipo Contato (Cargo Empresa)
 14 - Cluster
 15 - Tipo Equipamento
-16 - Tipo Movimento
+16 - Tipo Movimento Circuitos
 17 - Tipo Banda
 18 - Tipo Conectividade
 19 - Tipo Link
@@ -26,10 +26,15 @@ Códigos LOV para o diagrama
 24 - Localização Proposta
 25 - Status Proposta
 26 - Tipo Contrato
-27 -
-28 -
-29 -
+27 - Tipo Processo Contratação
+28 - Tipo Movimento Contrato
+29 - Tipo Modalidade de Contratação de Garantia
 30 -
+31 -
+32 -
+33 -
+34 -
+35 -
 */
 
 INSERT INTO bd_circuitosnavega.lov (tipo, descricao, codigoespecifico, valor, duracao) VALUES
