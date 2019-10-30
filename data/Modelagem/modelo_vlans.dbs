@@ -487,8 +487,11 @@
 		</table>
 		<table name="contrato_fiscal" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="id_contrato" type="int" jt="4" mandatory="y" >
+				<comment><![CDATA[Identificador de contrato]]></comment>
+			</column>
 			<column name="id_usuario" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="id_fiscal_suplente" type="int" length="10" decimal="0" jt="4" />
+			<column name="id_tipo_fiscal" type="int" jt="4" mandatory="y" />
 			<column name="data_criacao" type="timestamp" length="26" decimal="0" jt="93" />
 			<column name="documento_nomeacao" type="varchar" length="20" decimal="0" jt="12" />
 			<column name="ativo" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" >
@@ -502,40 +505,23 @@
 				<column name="id" />
 			</index>
 			<index name="fk_contrato_fiscal_contrato_fiscal1_idx" unique="NORMAL" >
-				<column name="id_fiscal_suplente" />
+				<column name="id_tipo_fiscal" />
 			</index>
 			<index name="fk_contrato_fiscal_usuario1_idx" unique="NORMAL" >
 				<column name="id_usuario" />
 			</index>
-			<fk name="fk_contrato_fiscal_contrato_fiscal1" to_schema="bd_circuitosnavega" to_table="contrato_fiscal" >
-				<fk_column name="id_fiscal_suplente" pk="id" />
-			</fk>
-			<fk name="fk_contrato_fiscal_usuario1" to_schema="bd_circuitosnavega" to_table="usuario" >
-				<fk_column name="id_usuario" pk="id" />
-			</fk>
-		</table>
-		<table name="contrato_fiscal_has_contrato" >
-			<column name="id_contrato_fiscal" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="id_contrato" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<index name="pk_contrato_fiscal_has_contrato" unique="PRIMARY_KEY" >
-				<column name="id_contrato_fiscal" />
+			<index name="idx_contrato_fiscal_contrato" unique="NORMAL" >
 				<column name="id_contrato" />
 			</index>
-			<index name="fk_contrato_fiscal_has_contrato_contrato1_idx" unique="NORMAL" >
-				<column name="id_contrato" />
-			</index>
-			<index name="fk_contrato_fiscal_has_contrato_contrato_fiscal1_idx" unique="NORMAL" >
-				<column name="id_contrato_fiscal" />
-			</index>
-			<fk name="fk_contrato_fiscal_has_contrato_contrato1" to_schema="bd_circuitosnavega" to_table="contrato" >
+			<fk name="fk_contrato_fiscal_contrato" to_schema="bd_circuitosnavega" to_table="contrato" >
 				<fk_column name="id_contrato" pk="id" />
-			</fk>
-			<fk name="fk_contrato_fiscal_has_contrato_contrato_fiscal1" to_schema="bd_circuitosnavega" to_table="contrato_fiscal" >
-				<fk_column name="id_contrato_fiscal" pk="id" />
 			</fk>
 		</table>
 		<table name="contrato_garantia" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="id_contrato" type="int" jt="4" mandatory="y" >
+				<comment><![CDATA[Identificador do contrato]]></comment>
+			</column>
 			<column name="id_modalidade" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="data_criacao" type="timestamp" length="26" decimal="0" jt="93" />
 			<column name="garantia_concretizada" type="boolean" length="1" decimal="0" jt="-7" >
@@ -560,8 +546,14 @@
 			<index name="fk_contrato_garantia_lov1_idx" unique="NORMAL" >
 				<column name="id_modalidade" />
 			</index>
+			<index name="idx_contrato_garantia_contrato" unique="NORMAL" >
+				<column name="id_contrato" />
+			</index>
 			<fk name="fk_contrato_garantia_lov1" to_schema="bd_circuitosnavega" to_table="lov" >
 				<fk_column name="id_modalidade" pk="id" />
+			</fk>
+			<fk name="fk_contrato_garantia_contrato" to_schema="bd_circuitosnavega" to_table="contrato" >
+				<fk_column name="id_contrato" pk="id" />
 			</fk>
 		</table>
 		<table name="contrato_garantia_objeto" >
@@ -582,26 +574,6 @@
 			</index>
 			<fk name="fk_contrato_garantia_objeto_contrato1" to_schema="bd_circuitosnavega" to_table="contrato" >
 				<fk_column name="id_contrato" pk="id" />
-			</fk>
-		</table>
-		<table name="contrato_has_contrato_garantia" >
-			<column name="id_contrato" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="id_contrato_garantia" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<index name="pk_contrato_has_contrato_garantia" unique="PRIMARY_KEY" >
-				<column name="id_contrato" />
-				<column name="id_contrato_garantia" />
-			</index>
-			<index name="fk_contrato_has_contrato_garantia_contrato1_idx" unique="NORMAL" >
-				<column name="id_contrato" />
-			</index>
-			<index name="fk_contrato_has_contrato_garantia_contrato_garantia1_idx" unique="NORMAL" >
-				<column name="id_contrato_garantia" />
-			</index>
-			<fk name="fk_contrato_has_contrato_garantia_contrato1" to_schema="bd_circuitosnavega" to_table="contrato" >
-				<fk_column name="id_contrato" pk="id" />
-			</fk>
-			<fk name="fk_contrato_has_contrato_garantia_contrato_garantia1" to_schema="bd_circuitosnavega" to_table="contrato_garantia" >
-				<fk_column name="id_contrato_garantia" pk="id" />
 			</fk>
 		</table>
 		<table name="contrato_indice_monetario" >
@@ -2112,12 +2084,7 @@ Externo]]></comment>
 		<comment><![CDATA[MySql]]></comment>
 		<entity schema="bd_circuitosnavega" name="cidade_digital" color="BED3F4" x="3344" y="384" />
 		<entity schema="bd_circuitosnavega" name="conectividade" color="BED3F4" x="3584" y="384" />
-		<entity schema="bd_circuitosnavega" name="contrato_arquivo_fisico" color="BEBEF4" x="1136" y="688" />
-		<entity schema="bd_circuitosnavega" name="contrato_fiscal" color="BEBEF4" x="1744" y="432" />
-		<entity schema="bd_circuitosnavega" name="contrato_fiscal_has_contrato" color="BEBEF4" x="2048" y="432" />
-		<entity schema="bd_circuitosnavega" name="contrato_garantia" color="BEBEF4" x="2048" y="736" />
 		<entity schema="bd_circuitosnavega" name="contrato_garantia_objeto" color="BEBEF4" x="1744" y="752" />
-		<entity schema="bd_circuitosnavega" name="contrato_has_contrato_garantia" color="BEBEF4" x="2352" y="736" />
 		<entity schema="bd_circuitosnavega" name="contrato_indice_monetario" color="C7F4BE" x="1104" y="432" />
 		<entity schema="bd_circuitosnavega" name="contrato_movimento" color="C7F4BE" x="1424" y="1008" />
 		<entity schema="bd_circuitosnavega" name="contrato_orcamento" color="BEBEF4" x="1120" y="96" />
@@ -2181,6 +2148,9 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="proposta_comercial" color="D1BEF4" x="112" y="1312" />
 		<entity schema="bd_circuitosnavega" name="proposta_comercial_item" color="D1BEF4" x="368" y="1840" />
 		<entity schema="bd_circuitosnavega" name="contrato" color="C7F4BE" x="1424" y="432" />
+		<entity schema="bd_circuitosnavega" name="contrato_arquivo_fisico" color="BEBEF4" x="1136" y="688" />
+		<entity schema="bd_circuitosnavega" name="contrato_garantia" color="BEBEF4" x="2048" y="736" />
+		<entity schema="bd_circuitosnavega" name="contrato_fiscal" color="BEBEF4" x="1744" y="432" />
 		<group name="Empresa" color="C4E0F9" >
 			<entity schema="bd_circuitosnavega" name="empresa" />
 			<entity schema="bd_circuitosnavega" name="empresa_parametros" />
@@ -2258,10 +2228,8 @@ Externo]]></comment>
 			<entity schema="bd_circuitosnavega" name="contrato_anexo" />
 			<entity schema="bd_circuitosnavega" name="contrato_arquivo_fisico" />
 			<entity schema="bd_circuitosnavega" name="contrato_fiscal" />
-			<entity schema="bd_circuitosnavega" name="contrato_fiscal_has_contrato" />
 			<entity schema="bd_circuitosnavega" name="contrato_garantia" />
 			<entity schema="bd_circuitosnavega" name="contrato_garantia_objeto" />
-			<entity schema="bd_circuitosnavega" name="contrato_has_contrato_garantia" />
 			<entity schema="bd_circuitosnavega" name="contrato_orcamento" />
 			<entity schema="bd_circuitosnavega" name="contrato_processo" />
 			<entity schema="bd_circuitosnavega" name="contrato" />

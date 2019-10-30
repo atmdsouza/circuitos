@@ -2112,7 +2112,6 @@ Externo]]></comment>
 		<comment><![CDATA[MySql]]></comment>
 		<entity schema="bd_circuitosnavega" name="cidade_digital" color="BED3F4" x="3344" y="384" />
 		<entity schema="bd_circuitosnavega" name="conectividade" color="BED3F4" x="3584" y="384" />
-		<entity schema="bd_circuitosnavega" name="contrato_arquivo_fisico" color="BEBEF4" x="1136" y="688" />
 		<entity schema="bd_circuitosnavega" name="contrato_fiscal" color="BEBEF4" x="1744" y="432" />
 		<entity schema="bd_circuitosnavega" name="contrato_fiscal_has_contrato" color="BEBEF4" x="2048" y="432" />
 		<entity schema="bd_circuitosnavega" name="contrato_garantia" color="BEBEF4" x="2048" y="736" />
@@ -2181,6 +2180,7 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="proposta_comercial" color="D1BEF4" x="112" y="1312" />
 		<entity schema="bd_circuitosnavega" name="proposta_comercial_item" color="D1BEF4" x="368" y="1840" />
 		<entity schema="bd_circuitosnavega" name="contrato" color="C7F4BE" x="1424" y="432" />
+		<entity schema="bd_circuitosnavega" name="contrato_arquivo_fisico" color="BEBEF4" x="1136" y="688" />
 		<group name="Empresa" color="C4E0F9" >
 			<entity schema="bd_circuitosnavega" name="empresa" />
 			<entity schema="bd_circuitosnavega" name="empresa_parametros" />
