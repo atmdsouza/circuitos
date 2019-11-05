@@ -29,7 +29,7 @@ Códigos LOV para o diagrama
 27 - Tipo Processo Contratação
 28 - Tipo Movimento Contrato
 29 - Tipo Modalidade de Contratação de Garantia
-30 -
+30 - Status Contrato (Vigente, Bloqueado, Suspenso, Encerrado)
 31 -
 32 -
 33 -

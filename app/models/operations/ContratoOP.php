@@ -2,11 +2,14 @@
 
 namespace Circuitos\Models\Operations;
 
+use Circuitos\Models\Contrato;
+use Circuitos\Models\ContratoExercicio;
+use Circuitos\Models\ContratoGarantia;
+use Circuitos\Models\ContratoOrcamento;
+use Phalcon\Http\Response as Response;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-use Phalcon\Http\Response as Response;
-
-use Circuitos\Models\Contrato;
+use Util\Util;
 
 class ContratoOP extends Contrato
 {
@@ -17,20 +20,108 @@ class ContratoOP extends Contrato
         return Contrato::pesquisarContrato($dados);
     }
 
-    public function cadastrar(Contrato $objArray)
+    public function cadastrar(Contrato $objArray, $arrObjContratoOrcamento, $arrObjContratoExercicio, $arrObjContratoGarantia)
     {
+        $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
+            //Contrato
             $objeto = new Contrato();
             $objeto->setTransaction($transaction);
-            $objeto->setIdCidadeDigital($objArray->getIdCidadeDigital());
-            $objeto->setIdTipo($objArray->getIdTipo());
-            $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
-            $objeto->setEndereco(mb_strtoupper($objArray->getEndereco(), $this->encode));
+            $objeto->setIdContratoPrincipal(($objArray->getIdContratoPrincipal()) ? $objArray->getIdContratoPrincipal() : null);
+            $objeto->setOrdem($this->getOrdemContrato($objArray->getIdContratoPrincipal()));
+            $objeto->setIdTipoContrato($objArray->getIdTipoContrato());
+            $objeto->setIdTipoProcesso($objArray->getIdTipoProcesso());
+            $objeto->setNumeroProcesso($objArray->getNumeroProcesso());
+            $objeto->setIdPropostaComercial(($objArray->getIdPropostaComercial()) ? $objArray->getIdPropostaComercial() : null);
+            $objeto->setIdFornecedor(($objArray->getIdFornecedor()) ? $objArray->getIdFornecedor() : null);
+            $objeto->setIdCliente(($objArray->getIdCliente()) ? $objArray->getIdCliente() : null);
+            $objeto->setIdStatus($objArray->getIdStatus());
+            $objeto->setDataCriacao(date('Y-m-d H:i:s'));
+            $objeto->setDataAssinatura($util->converterDataUSA($objArray->getDataAssinatura()));
+            $objeto->setDataPublicacao($util->converterDataUSA($objArray->getDataPublicacao()));
+            $objeto->setNumDiarioOficial(mb_strtoupper($objArray->getNumDiarioOficial(), $this->encode));
+            $objeto->setDataEncerramento($util->converterDataUSA($objArray->getDataEncerramento()));
+            $objeto->setVigenciaTipo($objArray->getVigenciaTipo());
+            $objeto->setVigenciaPrazo($objArray->getVigenciaPrazo());
+            $objeto->setNumero(mb_strtoupper($objArray->getNumero(), $this->encode));
+            $objeto->setAno($objArray->getAno());
+            $objeto->setValorGlobal($util->formataNumeroMoeda($objArray->getValorGlobal()));
+            $objeto->setValorMensal($util->formataNumeroMoeda($objArray->getValorMensal()));
+            $objeto->setObjeto(mb_strtoupper($objArray->getObjeto()));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível salvar a conectividade!");
+                $messages = $objeto->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao criar o contrato: " . $errors);
+            }
+            //Contrato Orçamento
+            if (count($arrObjContratoOrcamento) > 0){
+                foreach($arrObjContratoOrcamento as $objOrcamento){
+                    $objContratoOrcamento = new ContratoOrcamento();
+                    $objContratoOrcamento->setTransaction($transaction);
+                    $objContratoOrcamento->setIdContrato($objeto->getId());
+                    $objContratoOrcamento->setUnidadeOrcamentaria($objOrcamento->getUnidadeOrcamentaria());
+                    $objContratoOrcamento->setFonteOrcamentaria($objOrcamento->getFonteOrcamentaria());
+                    $objContratoOrcamento->setProgramaTrabalho($objOrcamento->getProgramaTrabalho());
+                    $objContratoOrcamento->setElementoDespesa($objOrcamento->getElementoDespesa());
+                    $objContratoOrcamento->setPi($objOrcamento->getPi());
+                    $objContratoOrcamento->setDataUpdate(date('Y-m-d H:i:s'));
+                    if ($objContratoOrcamento->save() == false) {
+                        $messages = $objContratoOrcamento->getMessages();
+                        $errors = "";
+                        for ($i = 0; $i < count($messages); $i++) {
+                            $errors .= "[".$messages[$i]."] ";
+                        }
+                        $transaction->rollback("Erro ao criar o contrato: " . $errors);
+                    }
+                }
+            }
+            //Contrato Exercício
+            if (count($arrObjContratoExercicio) > 0){
+                foreach($arrObjContratoExercicio as $objExercicio){
+                    $objContratoExercicio = new ContratoExercicio();
+                    $objContratoExercicio->setTransaction($transaction);
+                    $objContratoExercicio->setIdContrato($objeto->getId());
+                    $objContratoExercicio->setExercicio($objExercicio->getExercicio());
+                    $objContratoExercicio->setCompetenciaInicial($objExercicio->getCompetenciaInicial());
+                    $objContratoExercicio->setCompetenciaFinal($objExercicio->getCompetenciaFinal());
+                    $objContratoExercicio->setValorPrevisto($util->formataNumeroMoeda($objExercicio->getValorPrevisto()));
+                    $objContratoExercicio->setDataUpdate(date('Y-m-d H:i:s'));
+                    if ($objContratoExercicio->save() == false) {
+                        $messages = $objContratoExercicio->getMessages();
+                        $errors = "";
+                        for ($i = 0; $i < count($messages); $i++) {
+                            $errors .= "[".$messages[$i]."] ";
+                        }
+                        $transaction->rollback("Erro ao criar o contrato: " . $errors);
+                    }
+                }
+            }
+            //Contrato Garantia
+            if (count($arrObjContratoGarantia) > 0){
+                foreach($arrObjContratoGarantia as $objGarantia){
+                    $objContratoGarantia = new ContratoGarantia();
+                    $objContratoGarantia->setTransaction($transaction);
+                    $objContratoGarantia->setIdContrato($objeto->getId());
+                    $objContratoGarantia->setIdModalidade($objGarantia->getIdModalidade());
+                    $objContratoGarantia->setGarantiaConcretizada($objGarantia->getGarantiaConcretizada());
+                    $objContratoGarantia->setPercentual($util->formataNumeroMoeda($objGarantia->getPercentual()));
+                    $objContratoGarantia->setValor($util->formataNumeroMoeda($objGarantia->getValor()));
+                    $objContratoGarantia->setDataUpdate(date('Y-m-d H:i:s'));
+                    if ($objContratoGarantia->save() == false) {
+                        $messages = $objContratoGarantia->getMessages();
+                        $errors = "";
+                        for ($i = 0; $i < count($messages); $i++) {
+                            $errors .= "[".$messages[$i]."] ";
+                        }
+                        $transaction->rollback("Erro ao criar o contrato: " . $errors);
+                    }
+                }
             }
             $transaction->commit();
             return $objeto;
@@ -53,7 +144,7 @@ class ContratoOP extends Contrato
             $objeto->setEndereco(mb_strtoupper($objArray->getEndereco(), $this->encode));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $transaction->rollback("Não foi possível alterar o contrato!");
             }
             $transaction->commit();
             return $objeto;
@@ -73,7 +164,7 @@ class ContratoOP extends Contrato
             $objeto->setAtivo(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $transaction->rollback("Não foi possível alterar o contrato!");
             }
             $transaction->commit();
             return $objeto;
@@ -93,7 +184,7 @@ class ContratoOP extends Contrato
             $objeto->setAtivo(0);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $transaction->rollback("Não foi possível alterar o contrato!");
             }
             $transaction->commit();
             return $objeto;
@@ -113,7 +204,7 @@ class ContratoOP extends Contrato
             $objeto->setExcluido(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível excluir a conectividade!");
+                $transaction->rollback("Não foi possível excluir o contrato!");
             }
             $transaction->commit();
             return $objeto;
@@ -142,5 +233,21 @@ class ContratoOP extends Contrato
             var_dump($e->getMessage());
             return false;
         }
+    }
+
+    private function getOrdemContrato($id_contrato_principal = null)
+    {
+        $num_ordem = 1;
+//        if ($id_contrato_principal){
+//            $total = Contrato::totalContratoAgrupados($id_contrato_principal);
+//            if ($total === 0){
+//                $num_ordem = $total + 2;
+//            } else {
+//                $num_ordem = $total + 1;
+//            }
+//        } else {
+//            $num_ordem = 1;
+//        }
+        return $num_ordem;
     }
 }

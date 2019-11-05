@@ -31,18 +31,6 @@ class ContratoExercicio extends \Phalcon\Mvc\Model
 
     /**
      *
-     * @var string
-     */
-    protected $data_parcela;
-
-    /**
-     *
-     * @var double
-     */
-    protected $valor_parcela;
-
-    /**
-     *
      * @var integer
      */
     protected $ativo;
@@ -58,6 +46,18 @@ class ContratoExercicio extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $data_update;
+
+    /**
+     *
+     * @var string
+     */
+    protected $competencia_inicial;
+
+    /**
+     *
+     * @var string
+     */
+    protected $competencia_final;
 
     /**
      * Method to set the value of field id
@@ -112,32 +112,6 @@ class ContratoExercicio extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field data_parcela
-     *
-     * @param string $data_parcela
-     * @return $this
-     */
-    public function setDataParcela($data_parcela)
-    {
-        $this->data_parcela = $data_parcela;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field valor_parcela
-     *
-     * @param double $valor_parcela
-     * @return $this
-     */
-    public function setValorParcela($valor_parcela)
-    {
-        $this->valor_parcela = $valor_parcela;
-
-        return $this;
-    }
-
-    /**
      * Method to set the value of field ativo
      *
      * @param integer $ativo
@@ -172,6 +146,32 @@ class ContratoExercicio extends \Phalcon\Mvc\Model
     public function setDataUpdate($data_update)
     {
         $this->data_update = $data_update;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field competencia_inicial
+     *
+     * @param string $competencia_inicial
+     * @return $this
+     */
+    public function setCompetenciaInicial($competencia_inicial)
+    {
+        $this->competencia_inicial = $competencia_inicial;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field competencia_final
+     *
+     * @param string $competencia_final
+     * @return $this
+     */
+    public function setCompetenciaFinal($competencia_final)
+    {
+        $this->competencia_final = $competencia_final;
 
         return $this;
     }
@@ -217,26 +217,6 @@ class ContratoExercicio extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field data_parcela
-     *
-     * @return string
-     */
-    public function getDataParcela()
-    {
-        return $this->data_parcela;
-    }
-
-    /**
-     * Returns the value of field valor_parcela
-     *
-     * @return double
-     */
-    public function getValorParcela()
-    {
-        return $this->valor_parcela;
-    }
-
-    /**
      * Returns the value of field ativo
      *
      * @return integer
@@ -267,12 +247,33 @@ class ContratoExercicio extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field competencia_inicial
+     *
+     * @return string
+     */
+    public function getCompetenciaInicial()
+    {
+        return $this->competencia_inicial;
+    }
+
+    /**
+     * Returns the value of field competencia_final
+     *
+     * @return string
+     */
+    public function getCompetenciaFinal()
+    {
+        return $this->competencia_final;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("contrato_exercicio");
+        $this->hasMany('id', 'Circuitos\Models\ContratoAcompanhamentoFinanceiro', 'id_exercicio', ['alias' => 'ContratoAcompanhamentoFinanceiro']);
         $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
     }
 

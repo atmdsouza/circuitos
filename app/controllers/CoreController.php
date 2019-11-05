@@ -479,6 +479,18 @@ class CoreController extends ControllerBase
                 $objeto = new CoreOP();
                 return $objeto->cidadesDigitaisAtivas();
                 break;
+            case 'contratosAtivos':
+                $objeto = new CoreOP();
+                return $objeto->contratosAtivos();
+                break;
+            case 'contratosPrincipaisAtivos':
+                $objeto = new CoreOP();
+                return $objeto->contratosPrincipaisAtivos();
+                break;
+            case 'propostasComerciaisAtivas':
+                $objeto = new CoreOP();
+                return $objeto->propostasComerciaisAtivas();
+                break;
             case 'estacoesTeleconAtivas':
                 $objeto = new CoreOP();
                 return $objeto->estacoesTeleconAtivas();

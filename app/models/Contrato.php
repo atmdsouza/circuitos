@@ -35,12 +35,6 @@ class Contrato extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $id_processo_contratacao;
-
-    /**
-     *
-     * @var integer
-     */
     protected $id_fornecedor;
 
     /**
@@ -111,12 +105,6 @@ class Contrato extends \Phalcon\Mvc\Model
 
     /**
      *
-     * @var integer
-     */
-    protected $exercicio;
-
-    /**
-     *
      * @var string
      */
     protected $objeto;
@@ -126,12 +114,6 @@ class Contrato extends \Phalcon\Mvc\Model
      * @var double
      */
     protected $valor_global;
-
-    /**
-     *
-     * @var double
-     */
-    protected $valor_exercicio;
 
     /**
      *
@@ -156,6 +138,24 @@ class Contrato extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $data_update;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $id_tipo_processo;
+
+    /**
+     *
+     * @var string
+     */
+    protected $numero_processo;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $id_proposta_comercial;
 
     /**
      * Method to set the value of field id
@@ -205,19 +205,6 @@ class Contrato extends \Phalcon\Mvc\Model
     public function setIdTipoContrato($id_tipo_contrato)
     {
         $this->id_tipo_contrato = $id_tipo_contrato;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field id_processo_contratacao
-     *
-     * @param integer $id_processo_contratacao
-     * @return $this
-     */
-    public function setIdProcessoContratacao($id_processo_contratacao)
-    {
-        $this->id_processo_contratacao = $id_processo_contratacao;
 
         return $this;
     }
@@ -379,19 +366,6 @@ class Contrato extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field exercicio
-     *
-     * @param integer $exercicio
-     * @return $this
-     */
-    public function setExercicio($exercicio)
-    {
-        $this->exercicio = $exercicio;
-
-        return $this;
-    }
-
-    /**
      * Method to set the value of field objeto
      *
      * @param string $objeto
@@ -413,19 +387,6 @@ class Contrato extends \Phalcon\Mvc\Model
     public function setValorGlobal($valor_global)
     {
         $this->valor_global = $valor_global;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field valor_exercicio
-     *
-     * @param double $valor_exercicio
-     * @return $this
-     */
-    public function setValorExercicio($valor_exercicio)
-    {
-        $this->valor_exercicio = $valor_exercicio;
 
         return $this;
     }
@@ -483,6 +444,45 @@ class Contrato extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field id_tipo_processo
+     *
+     * @param integer $id_tipo_processo
+     * @return $this
+     */
+    public function setIdTipoProcesso($id_tipo_processo)
+    {
+        $this->id_tipo_processo = $id_tipo_processo;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field numero_processo
+     *
+     * @param string $numero_processo
+     * @return $this
+     */
+    public function setNumeroProcesso($numero_processo)
+    {
+        $this->numero_processo = $numero_processo;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field id_proposta_comercial
+     *
+     * @param integer $id_proposta_comercial
+     * @return $this
+     */
+    public function setIdPropostaComercial($id_proposta_comercial)
+    {
+        $this->id_proposta_comercial = $id_proposta_comercial;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field id
      *
      * @return integer
@@ -520,16 +520,6 @@ class Contrato extends \Phalcon\Mvc\Model
     public function getIdTipoContrato()
     {
         return $this->id_tipo_contrato;
-    }
-
-    /**
-     * Returns the value of field id_processo_contratacao
-     *
-     * @return integer
-     */
-    public function getIdProcessoContratacao()
-    {
-        return $this->id_processo_contratacao;
     }
 
     /**
@@ -653,16 +643,6 @@ class Contrato extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field exercicio
-     *
-     * @return integer
-     */
-    public function getExercicio()
-    {
-        return $this->exercicio;
-    }
-
-    /**
      * Returns the value of field objeto
      *
      * @return string
@@ -680,16 +660,6 @@ class Contrato extends \Phalcon\Mvc\Model
     public function getValorGlobal()
     {
         return $this->valor_global;
-    }
-
-    /**
-     * Returns the value of field valor_exercicio
-     *
-     * @return double
-     */
-    public function getValorExercicio()
-    {
-        return $this->valor_exercicio;
     }
 
     /**
@@ -733,6 +703,36 @@ class Contrato extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field id_tipo_processo
+     *
+     * @return integer
+     */
+    public function getIdTipoProcesso()
+    {
+        return $this->id_tipo_processo;
+    }
+
+    /**
+     * Returns the value of field numero_processo
+     *
+     * @return string
+     */
+    public function getNumeroProcesso()
+    {
+        return $this->numero_processo;
+    }
+
+    /**
+     * Returns the value of field id_proposta_comercial
+     *
+     * @return integer
+     */
+    public function getIdPropostaComercial()
+    {
+        return $this->id_proposta_comercial;
+    }
+
+    /**
      * Returns the value of field cliente
      *
      * @return string
@@ -773,13 +773,13 @@ class Contrato extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field Número Processo Contratação
+     * Returns the value of field Tipo Processo
      *
      * @return string
      */
-    public function getNumeroProcessoContratacao()
+    public function getTipoProcesso()
     {
-        return $this->ContratoProcesso->numero_processo;
+        return $this->Lov3->descricao;
     }
 
     /**
@@ -793,21 +793,25 @@ class Contrato extends \Phalcon\Mvc\Model
         $this->hasMany('id', 'Circuitos\Models\ContratoAnexo', 'id_contrato', ['alias' => 'ContratoAnexo']);
         $this->hasMany('id', 'Circuitos\Models\ContratoArquivoFisico', 'id_contrato', ['alias' => 'ContratoArquivoFisico']);
         $this->hasMany('id', 'Circuitos\Models\ContratoExercicio', 'id_contrato', ['alias' => 'ContratoExercicio']);
-        $this->hasMany('id', 'Circuitos\Models\ContratoFiscalHasContrato', 'id_contrato', ['alias' => 'ContratoFiscalHasContrato']);
-        $this->hasMany('id', 'Circuitos\Models\ContratoHasContratoGarantia', 'id_contrato', ['alias' => 'ContratoHasContratoGarantia']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoFiscal', 'id_contrato', ['alias' => 'ContratoFiscal']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoGarantia', 'id_contrato', ['alias' => 'ContratoGarantia']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoGarantiaObjeto', 'id_contrato', ['alias' => 'ContratoGarantiaObjeto']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoIndiceMonetario', 'id_contrato', ['alias' => 'ContratoIndiceMonetario']);
         $this->hasMany('id', 'Circuitos\Models\ContratoMovimento', 'id_contrato', ['alias' => 'ContratoMovimento']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoNaoConformidade', 'id_contrato', ['alias' => 'ContratoNaoConformidade']);
         $this->hasMany('id', 'Circuitos\Models\ContratoOrcamento', 'id_contrato', ['alias' => 'ContratoOrcamento']);
         $this->hasMany('id', 'Circuitos\Models\EstacaoTelecon', 'id_contrato', ['alias' => 'EstacaoTelecon']);
-        $this->hasMany('id', 'Circuitos\Models\SetEquipamento', 'id_contrato', ['alias' => 'SetEquipamento']);
-        $this->hasMany('id', 'Circuitos\Models\ContratoComponentes', 'id_contrato', ['alias' => 'ContratoComponentes']);
+        $this->hasMany('id', 'Circuitos\Models\SetEquipamentoComponentes', 'id_contrato', ['alias' => 'SetEquipamentoComponentes']);
+        $this->hasMany('id', 'Circuitos\Models\SetSegurancaComponentes', 'id_contrato', ['alias' => 'SetSegurancaComponentes']);
         $this->hasMany('id', 'Circuitos\Models\Terreno', 'id_contrato', ['alias' => 'Terreno']);
         $this->hasMany('id', 'Circuitos\Models\Torre', 'id_contrato', ['alias' => 'Torre']);
         $this->belongsTo('id_cliente', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Cliente']);
-        $this->belongsTo('id_contrato_principal', 'Circuitos\Models\Contrato', 'id', ['alias' => 'ContratoVinculado']);
-        $this->belongsTo('id_fornecedor', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Fornecedor']);
+        $this->belongsTo('id_contrato_principal', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
+        $this->belongsTo('id_fornecedor', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Cliente']);
         $this->belongsTo('id_tipo_contrato', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov1']);
         $this->belongsTo('id_status', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov2']);
-        $this->belongsTo('id_processo_contratacao', 'Circuitos\Models\ContratoProcesso', 'id', ['alias' => 'ContratoProcesso']);
+        $this->belongsTo('id_tipo_processo', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov3']);
+        $this->belongsTo('id_proposta_comercial', 'Circuitos\Models\PropostaComercial', 'id', ['alias' => 'PropostaComercial']);
     }
 
     /**
@@ -855,7 +859,6 @@ class Contrato extends \Phalcon\Mvc\Model
         $query->columns("Contrato.*");
         $query->leftJoin("Circuitos\Models\Lov", "Lov1.id = Contrato.id_tipo_contrato", "Lov1");
         $query->leftJoin("Circuitos\Models\Lov", "Lov2.id = Contrato.id_status", "Lov2");
-        $query->leftJoin("Circuitos\Models\ContratoProcesso", "ContratoProcesso.id = Contrato.id_processo_contratacao", "ContratoProcesso");
         $query->leftJoin("Circuitos\Models\Cliente", "Fornecedor.id = Contrato.id_fornecedor", "Fornecedor");
         $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa1.id = Fornecedor.id_pessoa", "Pessoa1");
         $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica1.id = Pessoa1.id", "PessoaJuridica1");
@@ -865,8 +868,7 @@ class Contrato extends \Phalcon\Mvc\Model
         $query->where("Contrato.excluido = 0 AND (CONVERT(Contrato.id USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Contrato.numero USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Contrato.ano USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(ContratoProcesso.codigo_processo USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(ContratoProcesso.numero_processo USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Contrato.numero_processo USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Pessoa1.nome USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(PessoaJuridica1.razaosocial USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Pessoa2.nome USING utf8) LIKE '%{$parameters}%'

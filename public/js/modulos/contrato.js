@@ -17,6 +17,8 @@ function inicializar()
         },
         order: [[7, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
     });
+    autocompletarContratoPrincipal('lid_contrato_principal','id_contrato_principal');
+    autocompletarPropostaComercial('lid_proposta_comercial','id_proposta_comercial');
 }
 
 function verificarAlteracao()
@@ -95,98 +97,86 @@ function salvar()
     var acao = $('#salvarCadastro').val();
     $("#formCadastro").validate({
         rules : {
-            id_cliente:{
+            numero_processo:{
                 required: true
             },
-            id_tipo_proposta:{
+            id_tipo_processo:{
                 required: true
             },
-            id_localizacao:{
+            id_tipo_contrato:{
                 required: true
             },
             id_status:{
                 required: true
             },
-            data_proposta:{
+            vincular_instrumento:{
+                required: true
+            },
+            data_assinatura:{
+                required: true
+            },
+            data_encerramento:{
+                required: true
+            },
+            vigencia_tipo:{
+                required: true,
+                maiorQueZero: true
+            },
+            vigencia_prazo:{
                 required: true
             },
             numero:{
                 required: true
             },
-            vencimento:{
+            ano:{
                 required: true
             },
             valor_global:{
-                required: true,
-                maiorQueZero: true
-            },
-            objetivo:{
                 required: true
             },
-            objetivo_especifico:{
-                required: true
-            },
-            descritivo:{
-                required: true
-            },
-            responsabilidade:{
-                required: true
-            },
-            condicoes_pgto:{
-                required: true
-            },
-            prazo_execucao:{
-                required: true
-            },
-            consideracoes:{
+            valor_mensal:{
                 required: true
             }
         },
         messages:{
-            id_cliente:{
-                required:"É necessário informar um Cliente"
+            numero_processo:{
+                required: "É necessário informar o Número do Processo"
             },
-            id_tipo_proposta:{
-                required: "É necessário informar um tipo de proposta"
-            },
-            id_localizacao:{
-                required: "É necessário informar um departamento"
+            id_tipo_processo:{
+                required: "É necessário informar o Tipo do Processo"
             },
             id_status:{
-                required: "É necessário informar um status"
+                required: "É necessário informar o Status"
             },
-            data_proposta:{
-                required: "É necessário informar a data da proposta"
+            id_tipo_contrato:{
+                required: "É necessário informar o Tipo do Contrato"
+            },
+            vincular_instrumento:{
+                required: "É necessário informar se existe instrumento principal"
+            },
+            data_assinatura:{
+                required: "É necessário informar a Data de Assinatura"
+            },
+            data_encerramento:{
+                required: "É necessário informar a Data de Encerramento"
+            },
+            vigencia_tipo:{
+                required: "É necessário informar o Tipo de Vigência"
+            },
+            vigencia_prazo:{
+                required: "É necessário informar o Prazo de Vigência"
             },
             numero:{
-                required: "É necessário informar o número da proposta"
+                required: "É necessário informar o Número"
             },
-            vencimento:{
-                required: "É necessário informar a data de vencimento"
+            ano:{
+                required: "É necessário informar o Ano"
             },
             valor_global:{
-                required: "É necessário informar o valor global"
+                required: "É necessário informar um Valor Global"
             },
-            objetivo:{
-                required: "É necessário informar um objetivo"
-            },
-            objetivo_especifico:{
-                required: "É necessário informar um objetivo específico"
-            },
-            descritivo:{
-                required: "É necessário informar um descritivo"
-            },
-            responsabilidade:{
-                required: "É necessário informar a responsabilidade"
-            },
-            condicoes_pgto:{
-                required: "É necessário informar as condições de pagamento"
-            },
-            prazo_execucao:{
-                required: "É necessário informar um prazo de execução"
-            },
-            consideracoes:{
-                required: "É necessário informar as considerações"
+            valor_mensal:{
+                required: "É necessário informar um Valor Mensal"
             }
         },
         submitHandler: function(form) {
@@ -465,7 +455,9 @@ function visualizar(id, ocultar)
             $('#condicoes_pgto').val(data.dados.condicoes_pgto);
             $('#prazo_execucao').val(data.dados.prazo_execucao);
             $('#consideracoes').val(data.dados.consideracoes);
+            montarTabelaOrcamento(data.dados.id, ocultar);
             montarTabelaGarantia(data.dados.id, ocultar);
+            montarTabelaExercicio(data.dados.id, ocultar);
         }
     });
 }
@@ -527,31 +519,19 @@ function montarTabelaOrcamento(id_contrato, visualizar)
         },
         success: function(data) {
             $('.tr_remove_orc_vis').remove();
-            var valor_global = 0;
             var linhas = null;
             $.each(data.dados, function(key, value) {
-                valor_global += accounting.unformat(value.valor_total);
-                var ds_imposto = (value.imposto === '1') ? 'Sim' : 'Não';
-                var ds_reajuste = (value.reajuste === '1') ? 'Sim' : 'Não';
                 linhas += '<tr class="tr_remove_orc_vis">';
-                linhas += '<td>'+ value.ds_codigo_servico +'</td>';
-                linhas += '<td>'+ value.ds_contrato_servicos +'<input name="res_id_contrato_servicos_item[]" type="hidden" value="'+ value.id_contrato_servicos +'" /></td>';
-                linhas += '<td>'+ value.ds_contrato_servicos_unidade +'</td>';
-                linhas += '<td>'+ ds_imposto +'<input name="res_imposto_item[]" type="hidden" value="'+ value.imposto +'" /></td>';
-                linhas += '<td>'+ ds_reajuste +'<input name="res_reajuste_item[]" type="hidden" value="'+ value.reajuste +'" /></td>';
-                linhas += '<td>'+ value.quantidade +'<input name="res_quantidade_item[]" type="hidden" value="'+ value.quantidade +'" /></td>';
-                linhas += '<td>'+ value.mes_inicial +'<input name="res_mes_inicial_item[]" type="hidden" value="'+ value.mes_inicial +'" /></td>';
-                linhas += '<td>'+ value.vigencia +'<input name="res_vigencia_item[]" type="hidden" value="'+ value.vigencia +'" /></td>';
-                linhas += '<td>'+ accounting.formatMoney(value.valor_unitario, "R$ ", 2, ".", ",") +'<input name="res_valor_unitario_item[]" type="hidden" value="'+ value.valor_unitario +'" /></td>';
-                linhas += '<td>'+ accounting.formatMoney(value.valor_total, "R$ ", 2, ".", ",") +'<input name="res_valor_total_item[]" type="hidden" value="'+ value.valor_total +'" /></td>';
-                linhas += '<td>'+ accounting.formatMoney(value.valor_total_reajuste, "R$ ", 2, ".", ",") +'<input name="res_valor_total_reajuste_item[]" type="hidden" value="'+ value.valor_total_reajuste +'" /></td>';
-                linhas += '<td>'+ accounting.formatMoney(value.valor_impostos, "R$ ", 2, ".", ",") +'<input name="res_valor_impostos_item[]" type="hidden" value="'+ value.valor_impostos +'" /></td>';
-                linhas += '<td>'+ accounting.formatMoney(value.valor_total_impostos, "R$ ", 2, ".", ",") +'<input name="res_valor_total_impostos_item[]" type="hidden" value="'+ value.valor_total_impostos +'" /></td>';
+                linhas += '<td>'+ value.unidade_orcamentaria +'<input name="res_unidade_orcamentaria[]" type="hidden" value="'+ value.unidade_orcamentaria +'" /></td>';
+                linhas += '<td>'+ value.fonte_orcamentaria +'<input name="res_fonte_orcamentaria[]" type="hidden" value="'+ value.fonte_orcamentaria +'" /></td>';
+                linhas += '<td>'+ value.programa_trabalho +'<input name="res_programa_trabalho[]" type="hidden" value="'+ value.programa_trabalho +'" /></td>';
+                linhas += '<td>'+ value.elemento_despesa +'<input name="res_elemento_despesa[]" type="hidden" value="'+ value.elemento_despesa +'" /></td>';
+                linhas += '<td>'+ value.pi +'<input name="res_pi[]" type="hidden" value="'+ value.pi +'" /></td>';
                 if (visualizar) {
-                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesOrcamento(' + value.id_contrato_item + ', ' + true + ');" class="botoes_acao"><img src="public/images/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a></td>';
+                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesOrcamento(' + value.id_contrato_orcamento + ', ' + true + ');" class="botoes_acao"><img src="public/images/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a></td>';
                 } else {
-                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesOrcamento(' + value.id_contrato_item + ', ' + false + ');" class="botoes_acao"><img src="public/images/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>' +
-                        '<a href="javascript:void(0)" onclick="excluirOrcamento(' + value.id_contrato_item + ');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesOrcamento(' + value.id_contrato_orcamento + ', ' + false + ');" class="botoes_acao"><img src="public/images/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>' +
+                        '<a href="javascript:void(0)" onclick="excluirOrcamento(' + value.id_contrato_orcamento + ');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
                 }
                 linhas += '</tr>';
             });
@@ -577,40 +557,20 @@ function inserirOrcamento()
 {
     'use strict';
     //Dados
-    var codigo_servico = $('#codigo_servico').val();
-    var descricao_servico = $('#descricao_servico').val();
-    var id_servico = $('#id_servico').val();
-    var grandeza = $('#grandeza').val();
-    var quantidade_unitaria = $('#quantidade_unitaria_servico').val();
-    var ds_tem_imposto = document.getElementById("tem_imposto").options[document.getElementById("tem_imposto").selectedIndex].text;
-    var tem_imposto = $('#tem_imposto').val();
-    var ds_tem_reajuste = document.getElementById("tem_reajuste").options[document.getElementById("tem_reajuste").selectedIndex].text;
-    var tem_reajuste = $('#tem_reajuste').val();
-    var mes_inicial = $('#mes_inicial_servico').val();
-    var vigencia = $('#vigencia_servico').val();
-    var valor_unitario = accounting.unformat($('#valor_unitario_servico').val(), ",");
-    var valor_total = valor_unitario * accounting.unformat(quantidade_unitaria, ",");
-    var valor_impostos = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") * (accounting.unformat($('#imposto').val(), ",") * 0.01) : 0;
-    var valor_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") * (accounting.unformat($('#reajuste').val(), ",") * 0.01) : 0;
-    var valor_total_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_reajuste, ",") : 0;
-    var valor_total_imposto = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_impostos, ",") : 0;
-    if(id_servico !== '' && quantidade_unitaria > 0 && tem_imposto !== '' && tem_reajuste !== '' && mes_inicial !== '' && vigencia !== ''){//Campos Obrigatórios
+    var unidade_orcamentaria = $('#v_unidade_orcamentaria').val();
+    var fonte_orcamentaria = $('#v_fonte_orcamentaria').val();
+    var programa_trabalho = $('#v_programa_trabalho').val();
+    var elemento_despesa = $('#v_elemento_despesa').val();
+    var pi = $('#v_pi').val();
+    if(unidade_orcamentaria !== '' && fonte_orcamentaria !== '' && programa_trabalho !== '' && elemento_despesa !== ''){//Campos Obrigatórios
         var linhas = null;
         linhas += '<tr class="tr_remove_orc">';
-        linhas += '<td>'+ codigo_servico +'</td>';
-        linhas += '<td>'+ descricao_servico +'<input name="id_contrato_servicos_item[]" type="hidden" value="'+ id_servico +'" /></td>';
-        linhas += '<td>'+ grandeza +'</td>';
-        linhas += '<td>'+ ds_tem_imposto +'<input name="imposto_item[]" type="hidden" value="'+ tem_imposto +'" /></td>';
-        linhas += '<td>'+ ds_tem_reajuste +'<input name="reajuste_item[]" type="hidden" value="'+ tem_reajuste +'" /></td>';
-        linhas += '<td>'+ quantidade_unitaria +'<input name="quantidade_item[]" type="hidden" value="'+ quantidade_unitaria +'" /></td>';
-        linhas += '<td>'+ mes_inicial +'<input name="mes_inicial_item[]" type="hidden" value="'+ mes_inicial +'" /></td>';
-        linhas += '<td>'+ vigencia +'<input name="vigencia_item[]" type="hidden" value="'+ vigencia +'" /></td>';
-        linhas += '<td>'+ accounting.formatMoney(valor_unitario, "R$ ", 2, ".", ",") +'<input name="valor_unitario_item[]" type="hidden" value="'+ valor_unitario +'" /></td>';
-        linhas += '<td>'+ accounting.formatMoney(valor_total, "R$ ", 2, ".", ",") +'<input name="valor_total_item[]" type="hidden" value="'+ valor_total +'" /></td>';
-        linhas += '<td>'+ accounting.formatMoney(valor_total_reajuste, "R$ ", 2, ".", ",") +'<input name="valor_total_reajuste_item[]" type="hidden" value="'+ valor_total_reajuste +'" /></td>';
-        linhas += '<td>'+ accounting.formatMoney(valor_impostos, "R$ ", 2, ".", ",") +'<input name="valor_impostos_item[]" type="hidden" value="'+ valor_impostos +'" /></td>';
-        linhas += '<td>'+ accounting.formatMoney(valor_total_imposto, "R$ ", 2, ".", ",") +'<input name="valor_total_impostos_item[]" type="hidden" value="'+ valor_total_imposto +'" /></td>';
-        linhas += '<td><a data-valor-total="'+ valor_total +'" href="javascript:void(0)" onclick="RemoveTableRow(this);removerValoresTotais(this)" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+        linhas += '<td>'+ unidade_orcamentaria +'<input name="unidade_orcamentaria[]" type="hidden" value="'+ unidade_orcamentaria +'" /></td>';
+        linhas += '<td>'+ fonte_orcamentaria +'<input name="fonte_orcamentaria[]" type="hidden" value="'+ fonte_orcamentaria +'" /></td>';
+        linhas += '<td>'+ programa_trabalho +'<input name="programa_trabalho[]" type="hidden" value="'+ programa_trabalho +'" /></td>';
+        linhas += '<td>'+ elemento_despesa +'<input name="elemento_despesa[]" type="hidden" value="'+ elemento_despesa +'" /></td>';
+        linhas += '<td>'+ pi +'<input name="pi[]" type="hidden" value="'+ pi +'" /></td>';
+        linhas += '<td><a href="javascript:void(0)" onclick="RemoveTableRow(this);" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
         linhas += '</tr>';
         $("#tabela_orcamentos").append(linhas);
         $('#tabela_orcamentos').removeAttr('style','display: none;');
@@ -638,17 +598,11 @@ function cancelarOrcamento()
 function limparDadosFormOrcamento()
 {
     'use strict';
-    $('#valor_unitario_servico').val('');
-    $('#quantidade_unitaria_servico').val('');
-    $('#codigo_servico').val('');
-    $('#id_codigo_servico').val('');
-    $('#descricao_servico').val('');
-    $('#id_servico').val('');
-    $('#grupo').val(null).selected = 'true';
-    $('#tem_imposto').val('0').selected = 'true';
-    $('#tem_reajuste').val('0').selected = 'true';
-    $('#mes_inicial_servico').val('1').selected = 'true';
-    $('#vigencia_servico').val('12').selected = 'true';
+    $('#v_unidade_orcamentaria').val('');
+    $('#v_fonte_orcamentaria').val('');
+    $('#v_programa_trabalho').val('');
+    $('#v_elemento_despesa').val('');
+    $('#v_pi').val('');
     $('#dados_orcamento').removeAttr('style', 'display: block;');
     $('#dados_orcamento').attr('style', 'display: none;');
     $('#grupo').focus();
@@ -826,26 +780,13 @@ function montarTabelaExercicio(id_contrato, visualizar)
         },
         success: function(data) {
             $('.tr_remove_exe_vis').remove();
-            var valor_global = 0;
             var linhas = null;
             $.each(data.dados, function(key, value) {
-                valor_global += accounting.unformat(value.valor_total);
-                var ds_imposto = (value.imposto === '1') ? 'Sim' : 'Não';
-                var ds_reajuste = (value.reajuste === '1') ? 'Sim' : 'Não';
                 linhas += '<tr class="tr_remove_exe_vis">';
-                linhas += '<td>'+ value.ds_codigo_servico +'</td>';
-                linhas += '<td>'+ value.ds_contrato_servicos +'<input name="res_id_contrato_servicos_item[]" type="hidden" value="'+ value.id_contrato_servicos +'" /></td>';
-                linhas += '<td>'+ value.ds_contrato_servicos_unidade +'</td>';
-                linhas += '<td>'+ ds_imposto +'<input name="res_imposto_item[]" type="hidden" value="'+ value.imposto +'" /></td>';
-                linhas += '<td>'+ ds_reajuste +'<input name="res_reajuste_item[]" type="hidden" value="'+ value.reajuste +'" /></td>';
-                linhas += '<td>'+ value.quantidade +'<input name="res_quantidade_item[]" type="hidden" value="'+ value.quantidade +'" /></td>';
-                linhas += '<td>'+ value.mes_inicial +'<input name="res_mes_inicial_item[]" type="hidden" value="'+ value.mes_inicial +'" /></td>';
-                linhas += '<td>'+ value.vigencia +'<input name="res_vigencia_item[]" type="hidden" value="'+ value.vigencia +'" /></td>';
-                linhas += '<td>'+ accounting.formatMoney(value.valor_unitario, "R$ ", 2, ".", ",") +'<input name="res_valor_unitario_item[]" type="hidden" value="'+ value.valor_unitario +'" /></td>';
-                linhas += '<td>'+ accounting.formatMoney(value.valor_total, "R$ ", 2, ".", ",") +'<input name="res_valor_total_item[]" type="hidden" value="'+ value.valor_total +'" /></td>';
-                linhas += '<td>'+ accounting.formatMoney(value.valor_total_reajuste, "R$ ", 2, ".", ",") +'<input name="res_valor_total_reajuste_item[]" type="hidden" value="'+ value.valor_total_reajuste +'" /></td>';
-                linhas += '<td>'+ accounting.formatMoney(value.valor_impostos, "R$ ", 2, ".", ",") +'<input name="res_valor_impostos_item[]" type="hidden" value="'+ value.valor_impostos +'" /></td>';
-                linhas += '<td>'+ accounting.formatMoney(value.valor_total_impostos, "R$ ", 2, ".", ",") +'<input name="res_valor_total_impostos_item[]" type="hidden" value="'+ value.valor_total_impostos +'" /></td>';
+                linhas += '<td>'+ value.exercicio +'<input name="res_exercicio[]" type="hidden" value="'+ value.exercicio +'" /></td>';
+                linhas += '<td>'+ value.competencia_inicial +'<input name="res_competencia_inicial[]" type="hidden" value="'+ value.competencia_inicial +'" /></td>';
+                linhas += '<td>'+ value.competencia_final +'<input name="res_competencia_final[]" type="hidden" value="'+ value.competencia_final +'" /></td>';
+                linhas += '<td>'+ value.valor_previsto +'<input name="res_valor_previsto[]" type="hidden" value="'+ value.valor_previsto +'" /></td>';
                 if (visualizar) {
                     linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesExercicio(' + value.id_contrato_item + ', ' + true + ');" class="botoes_acao"><img src="public/images/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a></td>';
                 } else {
@@ -876,40 +817,18 @@ function inserirExercicio()
 {
     'use strict';
     //Dados
-    var codigo_servico = $('#codigo_servico').val();
-    var descricao_servico = $('#descricao_servico').val();
-    var id_servico = $('#id_servico').val();
-    var grandeza = $('#grandeza').val();
-    var quantidade_unitaria = $('#quantidade_unitaria_servico').val();
-    var ds_tem_imposto = document.getElementById("tem_imposto").options[document.getElementById("tem_imposto").selectedIndex].text;
-    var tem_imposto = $('#tem_imposto').val();
-    var ds_tem_reajuste = document.getElementById("tem_reajuste").options[document.getElementById("tem_reajuste").selectedIndex].text;
-    var tem_reajuste = $('#tem_reajuste').val();
-    var mes_inicial = $('#mes_inicial_servico').val();
-    var vigencia = $('#vigencia_servico').val();
-    var valor_unitario = accounting.unformat($('#valor_unitario_servico').val(), ",");
-    var valor_total = valor_unitario * accounting.unformat(quantidade_unitaria, ",");
-    var valor_impostos = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") * (accounting.unformat($('#imposto').val(), ",") * 0.01) : 0;
-    var valor_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") * (accounting.unformat($('#reajuste').val(), ",") * 0.01) : 0;
-    var valor_total_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_reajuste, ",") : 0;
-    var valor_total_imposto = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_impostos, ",") : 0;
-    if(id_servico !== '' && quantidade_unitaria > 0 && tem_imposto !== '' && tem_reajuste !== '' && mes_inicial !== '' && vigencia !== ''){//Campos Obrigatórios
+    var exercicio = $('#v_exercicio').val();
+    var competencia_inicial = $('#v_competencia_inicial').val();
+    var competencia_final = $('#v_competencia_final').val();
+    var valor_previsto = $('#v_valor_previsto').val();
+    if(exercicio !== '' && competencia_inicial !== '' && competencia_final !== '' && valor_previsto !== ''){//Campos Obrigatórios
         var linhas = null;
         linhas += '<tr class="tr_remove_exe">';
-        linhas += '<td>'+ codigo_servico +'</td>';
-        linhas += '<td>'+ descricao_servico +'<input name="id_contrato_servicos_item[]" type="hidden" value="'+ id_servico +'" /></td>';
-        linhas += '<td>'+ grandeza +'</td>';
-        linhas += '<td>'+ ds_tem_imposto +'<input name="imposto_item[]" type="hidden" value="'+ tem_imposto +'" /></td>';
-        linhas += '<td>'+ ds_tem_reajuste +'<input name="reajuste_item[]" type="hidden" value="'+ tem_reajuste +'" /></td>';
-        linhas += '<td>'+ quantidade_unitaria +'<input name="quantidade_item[]" type="hidden" value="'+ quantidade_unitaria +'" /></td>';
-        linhas += '<td>'+ mes_inicial +'<input name="mes_inicial_item[]" type="hidden" value="'+ mes_inicial +'" /></td>';
-        linhas += '<td>'+ vigencia +'<input name="vigencia_item[]" type="hidden" value="'+ vigencia +'" /></td>';
-        linhas += '<td>'+ accounting.formatMoney(valor_unitario, "R$ ", 2, ".", ",") +'<input name="valor_unitario_item[]" type="hidden" value="'+ valor_unitario +'" /></td>';
-        linhas += '<td>'+ accounting.formatMoney(valor_total, "R$ ", 2, ".", ",") +'<input name="valor_total_item[]" type="hidden" value="'+ valor_total +'" /></td>';
-        linhas += '<td>'+ accounting.formatMoney(valor_total_reajuste, "R$ ", 2, ".", ",") +'<input name="valor_total_reajuste_item[]" type="hidden" value="'+ valor_total_reajuste +'" /></td>';
-        linhas += '<td>'+ accounting.formatMoney(valor_impostos, "R$ ", 2, ".", ",") +'<input name="valor_impostos_item[]" type="hidden" value="'+ valor_impostos +'" /></td>';
-        linhas += '<td>'+ accounting.formatMoney(valor_total_imposto, "R$ ", 2, ".", ",") +'<input name="valor_total_impostos_item[]" type="hidden" value="'+ valor_total_imposto +'" /></td>';
-        linhas += '<td><a data-valor-total="'+ valor_total +'" href="javascript:void(0)" onclick="RemoveTableRow(this);removerValoresTotais(this)" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+        linhas += '<td>'+ exercicio +'<input name="exercicio[]" type="hidden" value="'+ exercicio +'" /></td>';
+        linhas += '<td>'+ competencia_inicial +'<input name="competencia_inicial[]" type="hidden" value="'+ competencia_inicial +'" /></td>';
+        linhas += '<td>'+ competencia_final +'<input name="competencia_final[]" type="hidden" value="'+ competencia_final +'" /></td>';
+        linhas += '<td>'+ valor_previsto +'<input name="valor_previsto[]" type="hidden" value="'+ valor_previsto +'" /></td>';
+        linhas += '<td><a href="javascript:void(0)" onclick="RemoveTableRow(this);" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
         linhas += '</tr>';
         $("#tabela_exercicios").append(linhas);
         $('#tabela_exercicios').removeAttr('style','display: none;');
@@ -937,17 +856,10 @@ function cancelarExercicio()
 function limparDadosFormExercicio()
 {
     'use strict';
-    $('#valor_unitario_servico').val('');
-    $('#quantidade_unitaria_servico').val('');
-    $('#codigo_servico').val('');
-    $('#id_codigo_servico').val('');
-    $('#descricao_servico').val('');
-    $('#id_servico').val('');
-    $('#grupo').val(null).selected = 'true';
-    $('#tem_imposto').val('0').selected = 'true';
-    $('#tem_reajuste').val('0').selected = 'true';
-    $('#mes_inicial_servico').val('1').selected = 'true';
-    $('#vigencia_servico').val('12').selected = 'true';
+    $('#v_exercicio').val('');
+    $('#v_competencia_inicial').val('');
+    $('#v_competencia_final').val('');
+    $('#v_valor_previsto').val('');
     $('#dados_exercicio').removeAttr('style', 'display: block;');
     $('#dados_exercicio').attr('style', 'display: none;');
     $('#grupo').focus();
@@ -1125,26 +1037,14 @@ function montarTabelaGarantia(id_contrato, visualizar)
         },
         success: function(data) {
             $('.tr_remove_gar_vis').remove();
-            var valor_global = 0;
             var linhas = null;
             $.each(data.dados, function(key, value) {
-                valor_global += accounting.unformat(value.valor_total);
-                var ds_imposto = (value.imposto === '1') ? 'Sim' : 'Não';
-                var ds_reajuste = (value.reajuste === '1') ? 'Sim' : 'Não';
-                linhas += '<tr class="tr_remove_gar_vis">';
-                linhas += '<td>'+ value.ds_codigo_servico +'</td>';
-                linhas += '<td>'+ value.ds_contrato_servicos +'<input name="res_id_contrato_servicos_item[]" type="hidden" value="'+ value.id_contrato_servicos +'" /></td>';
-                linhas += '<td>'+ value.ds_contrato_servicos_unidade +'</td>';
-                linhas += '<td>'+ ds_imposto +'<input name="res_imposto_item[]" type="hidden" value="'+ value.imposto +'" /></td>';
-                linhas += '<td>'+ ds_reajuste +'<input name="res_reajuste_item[]" type="hidden" value="'+ value.reajuste +'" /></td>';
-                linhas += '<td>'+ value.quantidade +'<input name="res_quantidade_item[]" type="hidden" value="'+ value.quantidade +'" /></td>';
-                linhas += '<td>'+ value.mes_inicial +'<input name="res_mes_inicial_item[]" type="hidden" value="'+ value.mes_inicial +'" /></td>';
-                linhas += '<td>'+ value.vigencia +'<input name="res_vigencia_item[]" type="hidden" value="'+ value.vigencia +'" /></td>';
-                linhas += '<td>'+ accounting.formatMoney(value.valor_unitario, "R$ ", 2, ".", ",") +'<input name="res_valor_unitario_item[]" type="hidden" value="'+ value.valor_unitario +'" /></td>';
-                linhas += '<td>'+ accounting.formatMoney(value.valor_total, "R$ ", 2, ".", ",") +'<input name="res_valor_total_item[]" type="hidden" value="'+ value.valor_total +'" /></td>';
-                linhas += '<td>'+ accounting.formatMoney(value.valor_total_reajuste, "R$ ", 2, ".", ",") +'<input name="res_valor_total_reajuste_item[]" type="hidden" value="'+ value.valor_total_reajuste +'" /></td>';
-                linhas += '<td>'+ accounting.formatMoney(value.valor_impostos, "R$ ", 2, ".", ",") +'<input name="res_valor_impostos_item[]" type="hidden" value="'+ value.valor_impostos +'" /></td>';
-                linhas += '<td>'+ accounting.formatMoney(value.valor_total_impostos, "R$ ", 2, ".", ",") +'<input name="res_valor_total_impostos_item[]" type="hidden" value="'+ value.valor_total_impostos +'" /></td>';
+                var ds_garantia_concretizada = (value.garantia_concretizada === '1') ? 'Sim' : 'Não';
+                linhas += '<tr class="tr_remove_exe_vis">';
+                linhas += '<td>'+ value.ds_modalidade +'<input name="res_id_modalidade[]" type="hidden" value="'+ value.id_modalidade +'" /></td>';
+                linhas += '<td>'+ ds_garantia_concretizada +'<input name="res_garantia_concretizada[]" type="hidden" value="'+ value.garantia_concretizada +'" /></td>';
+                linhas += '<td>'+ value.percentual +'<input name="res_percentual[]" type="hidden" value="'+ value.percentual +'" /></td>';
+                linhas += '<td>'+ value.valor_garantia +'<input name="res_valor_garantia[]" type="hidden" value="'+ value.valor_garantia +'" /></td>';
                 if (visualizar) {
                     linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesGarantia(' + value.id_contrato_item + ', ' + true + ');" class="botoes_acao"><img src="public/images/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a></td>';
                 } else {
@@ -1175,40 +1075,20 @@ function inserirGarantia()
 {
     'use strict';
     //Dados
-    var codigo_servico = $('#codigo_servico').val();
-    var descricao_servico = $('#descricao_servico').val();
-    var id_servico = $('#id_servico').val();
-    var grandeza = $('#grandeza').val();
-    var quantidade_unitaria = $('#quantidade_unitaria_servico').val();
-    var ds_tem_imposto = document.getElementById("tem_imposto").options[document.getElementById("tem_imposto").selectedIndex].text;
-    var tem_imposto = $('#tem_imposto').val();
-    var ds_tem_reajuste = document.getElementById("tem_reajuste").options[document.getElementById("tem_reajuste").selectedIndex].text;
-    var tem_reajuste = $('#tem_reajuste').val();
-    var mes_inicial = $('#mes_inicial_servico').val();
-    var vigencia = $('#vigencia_servico').val();
-    var valor_unitario = accounting.unformat($('#valor_unitario_servico').val(), ",");
-    var valor_total = valor_unitario * accounting.unformat(quantidade_unitaria, ",");
-    var valor_impostos = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") * (accounting.unformat($('#imposto').val(), ",") * 0.01) : 0;
-    var valor_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") * (accounting.unformat($('#reajuste').val(), ",") * 0.01) : 0;
-    var valor_total_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_reajuste, ",") : 0;
-    var valor_total_imposto = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_impostos, ",") : 0;
-    if(id_servico !== '' && quantidade_unitaria > 0 && tem_imposto !== '' && tem_reajuste !== '' && mes_inicial !== '' && vigencia !== ''){//Campos Obrigatórios
+    var id_modalidade = $('#v_id_modalidade').val();
+    var ds_modalidade = document.getElementById("v_id_modalidade").options[document.getElementById("v_id_modalidade").selectedIndex].text;
+    var garantia_concretizada = $('#v_garantia_concretizada').val();
+    var ds_garantia_concretizada = (garantia_concretizada === '1') ? 'Sim' : 'Não';
+    var percentual = $('#v_percentual').val();
+    var valor_garantia = $('#v_valor_garantia').val();
+    if(id_modalidade !== '' && percentual !== '' && valor_garantia !== ''){//Campos Obrigatórios
         var linhas = null;
-        linhas += '<tr class="tr_remove_gar">';
-        linhas += '<td>'+ codigo_servico +'</td>';
-        linhas += '<td>'+ descricao_servico +'<input name="id_contrato_servicos_item[]" type="hidden" value="'+ id_servico +'" /></td>';
-        linhas += '<td>'+ grandeza +'</td>';
-        linhas += '<td>'+ ds_tem_imposto +'<input name="imposto_item[]" type="hidden" value="'+ tem_imposto +'" /></td>';
-        linhas += '<td>'+ ds_tem_reajuste +'<input name="reajuste_item[]" type="hidden" value="'+ tem_reajuste +'" /></td>';
-        linhas += '<td>'+ quantidade_unitaria +'<input name="quantidade_item[]" type="hidden" value="'+ quantidade_unitaria +'" /></td>';
-        linhas += '<td>'+ mes_inicial +'<input name="mes_inicial_item[]" type="hidden" value="'+ mes_inicial +'" /></td>';
-        linhas += '<td>'+ vigencia +'<input name="vigencia_item[]" type="hidden" value="'+ vigencia +'" /></td>';
-        linhas += '<td>'+ accounting.formatMoney(valor_unitario, "R$ ", 2, ".", ",") +'<input name="valor_unitario_item[]" type="hidden" value="'+ valor_unitario +'" /></td>';
-        linhas += '<td>'+ accounting.formatMoney(valor_total, "R$ ", 2, ".", ",") +'<input name="valor_total_item[]" type="hidden" value="'+ valor_total +'" /></td>';
-        linhas += '<td>'+ accounting.formatMoney(valor_total_reajuste, "R$ ", 2, ".", ",") +'<input name="valor_total_reajuste_item[]" type="hidden" value="'+ valor_total_reajuste +'" /></td>';
-        linhas += '<td>'+ accounting.formatMoney(valor_impostos, "R$ ", 2, ".", ",") +'<input name="valor_impostos_item[]" type="hidden" value="'+ valor_impostos +'" /></td>';
-        linhas += '<td>'+ accounting.formatMoney(valor_total_imposto, "R$ ", 2, ".", ",") +'<input name="valor_total_impostos_item[]" type="hidden" value="'+ valor_total_imposto +'" /></td>';
-        linhas += '<td><a data-valor-total="'+ valor_total +'" href="javascript:void(0)" onclick="RemoveTableRow(this);removerValoresTotais(this)" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+        linhas += '<tr class="tr_remove_exe">';
+        linhas += '<td>'+ ds_modalidade +'<input name="id_modalidade[]" type="hidden" value="'+ id_modalidade +'" /></td>';
+        linhas += '<td>'+ ds_garantia_concretizada +'<input name="garantia_concretizada[]" type="hidden" value="'+ garantia_concretizada +'" /></td>';
+        linhas += '<td>'+ percentual +'<input name="percentual[]" type="hidden" value="'+ percentual +'" /></td>';
+        linhas += '<td>'+ valor_garantia +'<input name="valor_garantia[]" type="hidden" value="'+ valor_garantia +'" /></td>';
+        linhas += '<td><a href="javascript:void(0)" onclick="RemoveTableRow(this);" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
         linhas += '</tr>';
         $("#tabela_garantias").append(linhas);
         $('#tabela_garantias').removeAttr('style','display: none;');
@@ -1236,17 +1116,10 @@ function cancelarGarantia()
 function limparDadosFormGarantia()
 {
     'use strict';
-    $('#valor_unitario_servico').val('');
-    $('#quantidade_unitaria_servico').val('');
-    $('#codigo_servico').val('');
-    $('#id_codigo_servico').val('');
-    $('#descricao_servico').val('');
-    $('#id_servico').val('');
-    $('#grupo').val(null).selected = 'true';
-    $('#tem_imposto').val('0').selected = 'true';
-    $('#tem_reajuste').val('0').selected = 'true';
-    $('#mes_inicial_servico').val('1').selected = 'true';
-    $('#vigencia_servico').val('12').selected = 'true';
+    $('#v_percentual').val('');
+    $('#v_valor_garantia').val('');
+    $('#v_id_modalidade').val(null).selected = 'true';
+    $('#v_garantia_concretizada').val('0').selected = 'true';
     $('#dados_garantia').removeAttr('style', 'display: block;');
     $('#dados_garantia').attr('style', 'display: none;');
     $('#grupo').focus();
