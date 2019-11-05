@@ -265,11 +265,7 @@
 			<column name="id_contrato_principal" type="int" length="10" decimal="0" jt="4" >
 				<comment><![CDATA[Id que referência novos instrumentos contratuais que serão responsáveis por expandir o contrato original]]></comment>
 			</column>
-			<column name="ordem" type="int" length="10" decimal="0" jt="4" mandatory="y" >
-				<defo>0</defo>
-			</column>
 			<column name="id_tipo_contrato" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="id_processo_contratacao" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="id_fornecedor" type="int" length="10" decimal="0" jt="4" />
 			<column name="id_cliente" type="int" length="10" decimal="0" jt="4" />
 			<column name="id_status" type="int" length="10" decimal="0" jt="4" mandatory="y" />
@@ -278,6 +274,9 @@
 			</column>
 			<column name="id_proposta_comercial" type="int" jt="4" >
 				<comment><![CDATA[Identificador da proposta comercial de origem]]></comment>
+			</column>
+			<column name="ordem" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<defo>0</defo>
 			</column>
 			<column name="numero_processo" type="int" jt="4" mandatory="y" >
 				<comment><![CDATA[Número do processo de contratação]]></comment>
@@ -330,9 +329,6 @@
 			</index>
 			<index name="fk_contrato_lov2_idx" unique="NORMAL" >
 				<column name="id_status" />
-			</index>
-			<index name="fk_contrato_processo_contratacao1_idx" unique="NORMAL" >
-				<column name="id_processo_contratacao" />
 			</index>
 			<index name="idx_contrato_proposta" unique="NORMAL" >
 				<column name="id_proposta_comercial" />
