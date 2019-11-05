@@ -629,6 +629,7 @@ $(document).ready(function () {
     $(".valid_credito").mask("00/0000"); //Validade do Cartão de Crédito
     $(".cs_credito").mask("000"); //Código de Segurança do Cartão de Crédito
     $(".perc").mask("000,00 %"); //Limite do Percentual
+    $(".competencia_ano").mask("00/0000"); //Competência/Ano
     $(".ano").mask("0000"); //Ano
     $(".cnpj").mask("00.000.000/0000-00"); //CNPJ
     $(".cpf").mask("000.000.000-00"); //CPF

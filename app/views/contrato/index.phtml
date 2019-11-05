@@ -179,6 +179,16 @@ $module = $this->router->getControllerName();
                                 Arquivo
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="#tab_historico" data-toggle="tab" aria-expanded="false" class="nav-link disabled">
+                                Histórico
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#tab_anexos" data-toggle="tab" aria-expanded="false" class="nav-link disabled">
+                                Anexos
+                            </a>
+                        </li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="tab_processo">
@@ -401,11 +411,11 @@ $module = $this->router->getControllerName();
                                                 </div>
                                                 <div class="form-group col-md-3">
                                                     <label for="v_percentual">Percentual <span class="required">*</span></label>
-                                                    <?php echo $this->tag->textField(["v_percentual", "size" => 120, "class" => "form-control", "id" => "v_percentual", "placeholder" => "Percentual"]) ?>
+                                                    <?php echo $this->tag->textField(["v_percentual", "size" => 120, "class" => "form-control valor_percentual", "id" => "v_percentual", "placeholder" => "Percentual"]) ?>
                                                 </div>
                                                 <div class="form-group col-md-3">
                                                     <label for="v_valor_garantia">Valor da Garantia <span class="required">*</span></label>
-                                                    <?php echo $this->tag->textField(["v_valor_garantia", "size" => 120, "class" => "form-control", "id" => "v_valor_garantia", "placeholder" => "Valor da Garantia"]) ?>
+                                                    <?php echo $this->tag->textField(["v_valor_garantia", "size" => 120, "class" => "form-control valor_monetario_limpo", "id" => "v_valor_garantia", "placeholder" => "Valor da Garantia"]) ?>
                                                 </div>
                                                 <div class="form-group col-md-3 botoes_forms_alinhamento">
                                                     <button type="button" name="bt_inserir_garantia" id="bt_inserir_garantia" class="btn btn-info btn-rounded waves-light w-md bt_menu_tabela hide_buttons" onclick="inserirGarantia();">Inserir</button>
@@ -432,10 +442,9 @@ $module = $this->router->getControllerName();
                                                     <thead>
                                                     <tr style="text-align: center;">
                                                         <td>Exercício</td>
+                                                        <td>Competência Inicial</td>
+                                                        <td>Competência Final</td>
                                                         <td>Valor Previsto</td>
-                                                        <td>Valor Parcela</td>
-                                                        <td>Data Parcela</td>
-                                                        <td>Número Processo Pagamento</td>
                                                         <td>Ações</td>
                                                     </tr>
                                                     </thead>
@@ -447,23 +456,19 @@ $module = $this->router->getControllerName();
                                             <div class="form-row">
                                                 <div class="form-group col-md-3">
                                                     <label for="v_exercicio">Exercício <span class="required">*</span></label>
-                                                    <?php echo $this->tag->textField(["v_exercicio", "size" => 120, "class" => "form-control", "id" => "v_exercicio", "placeholder" => "Exercício"]) ?>
+                                                    <?php echo $this->tag->textField(["v_exercicio", "size" => 120, "class" => "form-control ano", "id" => "v_exercicio", "placeholder" => "Exercício"]) ?>
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="v_competencia_inicial">Competência Inicial <span class="required">*</span></label>
+                                                    <?php echo $this->tag->textField(["v_competencia_inicial", "size" => 120, "class" => "form-control competencia_ano", "id" => "v_competencia_inicial", "placeholder" => "Competência Inicial"]) ?>
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="v_competencia_final">Competência Final <span class="required">*</span></label>
+                                                    <?php echo $this->tag->textField(["v_competencia_final", "size" => 120, "class" => "form-control competencia_ano", "id" => "v_competencia_final", "placeholder" => "Competência Final"]) ?>
                                                 </div>
                                                 <div class="form-group col-md-3">
                                                     <label for="v_valor_previsto">Valor Previsto <span class="required">*</span></label>
-                                                    <?php echo $this->tag->textField(["v_valor_previsto", "size" => 120, "class" => "form-control", "id" => "v_valor_previsto", "placeholder" => "Valor Previsto"]) ?>
-                                                </div>
-                                                <div class="form-group col-md-3">
-                                                    <label for="v_valor_parcela">Valor Parcela <span class="required">*</span></label>
-                                                    <?php echo $this->tag->textField(["v_valor_parcela", "size" => 120, "class" => "form-control", "id" => "v_valor_parcela", "placeholder" => "Valor Parcela"]) ?>
-                                                </div>
-                                                <div class="form-group col-md-3">
-                                                    <label for="v_data_parcela">Data Parcela <span class="required">*</span></label>
-                                                    <?php echo $this->tag->textField(["v_data_parcela", "size" => 120, "class" => "form-control", "id" => "v_data_parcela", "placeholder" => "Data Parcela"]) ?>
-                                                </div>
-                                                <div class="form-group col-md-3 botoes_forms_alinhamento">
-                                                    <label for="v_num_processo_pgto">Número Processo Pagamento </label>
-                                                    <?php echo $this->tag->textField(["v_num_processo_pgto", "size" => 120, "class" => "form-control", "id" => "v_num_processo_pgto", "placeholder" => "Número Processo Pagamento"]) ?>
+                                                    <?php echo $this->tag->textField(["v_valor_previsto", "size" => 120, "class" => "form-control valor_monetario_limpo", "id" => "v_valor_previsto", "placeholder" => "Valor Previsto"]) ?>
                                                 </div>
                                                 <div class="form-group col-md-3 botoes_forms_alinhamento">
                                                     <button type="button" name="bt_inserir_exercicio" id="bt_inserir_exercicio" class="btn btn-info btn-rounded waves-light w-md bt_menu_tabela hide_buttons" onclick="inserirExercicio();">Inserir</button>
@@ -494,6 +499,24 @@ $module = $this->router->getControllerName();
                             </div>
                         </div>
                         <div class="tab-pane fade" id="tab_arquivo">
+                            <div class="form-row">
+                                <div class="col-12">
+                                    <div class="form-row">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab_historico">
+                            <div class="form-row">
+                                <div class="col-12">
+                                    <div class="form-row">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab_anexos">
                             <div class="form-row">
                                 <div class="col-12">
                                     <div class="form-row">
