@@ -27,7 +27,7 @@ class Util {
       10/10/2010
      *      */
 
-    function mask($val, $mask) {
+    public function mask($val, $mask) {
         $maskared = '';
         $k = 0;
         for ($i = 0; $i <= strlen($mask) - 1; $i++) {
@@ -45,18 +45,18 @@ class Util {
 
     public function retiraAcentos($texto) {
         $array1 = array("á", "à", "â", "ã", "ä", "é", "è", "ê", "ë", "í", "ì", "î", "ï", "ó", "ò", "ô", "õ", "ö", "ú", "ù", "û", "ü", "ç"
-            , "Á", "À", "Â", "Ã", "Ä", "É", "È", "Ê", "Ë", "Í", "Ì", "Î", "Ï", "Ó", "Ò", "Ô", "Õ", "Ö", "Ú", "Ù", "Û", "Ü", "Ç");
+        , "Á", "À", "Â", "Ã", "Ä", "É", "È", "Ê", "Ë", "Í", "Ì", "Î", "Ï", "Ó", "Ò", "Ô", "Õ", "Ö", "Ú", "Ù", "Û", "Ü", "Ç");
         $array2 = array("a", "a", "a", "a", "a", "e", "e", "e", "e", "i", "i", "i", "i", "o", "o", "o", "o", "o", "u", "u", "u", "u", "c"
-            , "A", "A", "A", "A", "A", "E", "E", "E", "E", "I", "I", "I", "I", "O", "O", "O", "O", "O", "U", "U", "U", "U", "C");
+        , "A", "A", "A", "A", "A", "E", "E", "E", "E", "I", "I", "I", "I", "O", "O", "O", "O", "O", "U", "U", "U", "U", "C");
         return str_replace($array1, $array2, $texto);
     }
 
-    function converterParaMaiuscula($string) {
+    public function converterParaMaiuscula($string) {
         $maiuscula = strtoupper($string);
         return $maiuscula;
     }
 
-    function converterDataHoraParaBr($data_americana) {
+    public function converterDataHoraParaBr($data_americana) {
         if (!empty($data_americana)) {
             $data_americana = strtotime($data_americana);
             $data_br = date('d/m/Y H:i:s', $data_americana);
@@ -67,18 +67,18 @@ class Util {
         }
     }
 
-    function converterDataParaBr($data_americana) {
+    public function converterDataParaBr($data_americana) {
         if (!empty($data_americana)) {
             $data_americana = strtotime($data_americana);
             $data_br = date('d/m/Y', $data_americana);
-    
+
             return $data_br;
         } else {
             return null;
         }
     }
 
-    function converterDataHoraUSA($data_brasil) {
+    public function converterDataHoraUSA($data_brasil) {
 
         $data_brasil = strtotime($data_brasil); // Gera o timestamp de $data_mysql
         $data_usa = date('Y-m-d H:i:s', $data_brasil);
@@ -86,7 +86,7 @@ class Util {
         return $data_usa; //retorna o valor formatado para gravar no banco
     }
 
-    function converterDataUSA($data_brasil) {
+    public function converterDataUSA($data_brasil) {
 
         $data_brasil1 = $data_brasil;
         $data_brasil2 = explode('/', $data_brasil1);
@@ -96,14 +96,14 @@ class Util {
         return $data_usa; //retorna o valor formatado para gravar no banco
     }
 
-    function formataCpfCnpj($cpf_cnpj) {
+    public function formataCpfCnpj($cpf_cnpj) {
         $source = array('.', '/', '-', ',', '(', ')', ' ');
         $cpf_cnpj = str_replace($source, '', $cpf_cnpj);
 
         return $cpf_cnpj; //retorna o valor formatado para gravar no banco
     }
 
-    function formataFone($fone) {
+    public function formataFone($fone) {
         $source = array('(', ')', '-', ' ');
         $tel = str_replace($source, '', $fone);
         $ddd = substr($tel, 0, 2);
@@ -114,31 +114,32 @@ class Util {
 
         return $arr; //retorna o valor formatado para gravar no banco
     }
-    function formataNumeroTelefone($phone) {
+
+    public function formataNumeroTelefone($phone) {
         $phones = filter_var($phone, FILTER_SANITIZE_NUMBER_INT);
         $source = array('(', ')', '-', ' ');
         $tel = str_replace($source, '', $phones);
         return $tel;
     }
 
-    function formataNumeroMoeda($valor_americano) {
+    public function formataNumeroMoeda($valor_americano) {
         $valor = number_format($valor_americano, 2, '.', ''); //remove os pontos e substitui a virgula pelo ponto
         return $valor; //retorna o valor formatado para gravar no banco
     }
 
-    function formataMoedaReal($valor_americano) {
+    public function formataMoedaReal($valor_americano) {
         $valor = number_format($valor_americano, 2, ',', '.');
         return $valor; //retorna o valor formatado para gravar no banco
     }
 
-    function formataNumero($get_valor) {
+    public function formataNumero($get_valor) {
         $source = array('.', ',');
         $replace = array('', '.');
         $valor = str_replace($source, $replace, $get_valor); //remove os pontos e substitui a virgula pelo ponto
         return $valor; //retorna o valor formatado para gravar no banco
     }
 
-    function calculaTempo($data1, $data2) {
+    public function calculaTempo($data1, $data2) {
         $DataFuturo = $data2;
         $DataAtual = $data1;
 
@@ -189,8 +190,8 @@ class Util {
     public function recuperarLastId($tabela, $coluna) {
         $model = new Cadastros_Model_Cliente();
         $select = $model->fetchRow($model->select()
-                        ->setIntegrityCheck(false)
-                        ->from($tabela, "MAX($coluna) AS COLUNA")
+            ->setIntegrityCheck(false)
+            ->from($tabela, "MAX($coluna) AS COLUNA")
         );
         $lastId = (int) $select["COLUNA"];
         if ($lastId == null) {
@@ -219,8 +220,8 @@ class Util {
 
     /**
      * Função que calcula dias úteis no mês
-     * 
-     * @autor Carlos Maniero 
+     *
+     * @autor Carlos Maniero
      */
     public function dias_uteis($mes, $ano) {
         $uteis = 0;
@@ -355,14 +356,14 @@ class Util {
      * Função que cálcula um intervalo de 1 mes entre datas
      */
 
-    function datasArray($data_inicio, $data_fim = null) {
+    public function datasArray($data_inicio, $data_fim = null) {
         $data_fim = !$data_fim ? date('d-m-Y') : $data_fim;
 
         list($dia, $mes, $ano) = explode("-", $data_inicio);
 
         $dataInicial = getdate(strtotime($data_inicio));
         $dataFinal = getdate(strtotime($data_fim));
-        $dif = ( ($dataFinal[0] - $dataInicial[0]) / 86400 );
+        $dif = (($dataFinal[0] - $dataInicial[0]) / 86400);
         $meses = round($dif / 30) + 1;  // +1 serve para adiconar a data fim no array
 
         for ($x = 0; $x < $meses; $x++) {
@@ -376,7 +377,7 @@ class Util {
      * Função que retorna o último dia do mês baseado na data fornecida
      */
 
-    function ultimoDiaMes($data) {
+    public function ultimoDiaMes($data) {
         $date = new DateTime($data);
         $date->modify('last day of this month');
         return $date->format('Y-m-d');
@@ -417,7 +418,7 @@ class Util {
      * returned, otherwise an array containing
      * <i>string</i> will be returned.
      */
-    function diaUteisMes($data_inicial, $data_final) {
+    public function diaUteisMes($data_inicial, $data_final) {
         $util = new Recursos_Util();
         $data_inicio = explode("-", $data_inicial);
         $mes_inicio = $data_inicio[1];
@@ -467,14 +468,14 @@ class Util {
      * Funções para fazer Debug
      */
 
-    function debug_var($variavel) {
+    public function debug_var($variavel) {
         echo "<pre >";
         var_dump($variavel);
         echo "</pre>";
         die();
     }
 
-    function debug() {
+    public function debug() {
         $debug_arr = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
         $line = $debug_arr[0]['line'];
         $file = $debug_arr[0]['file'];
@@ -487,7 +488,7 @@ class Util {
         exit;
     }
 
-    function validate_email($email) {
+    public function validate_email($email) {
         if ($email) {
             $er = "/^(([0-9a-zA-Z]+[-._+&])*[0-9a-zA-Z]+@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}){0,1}$/";
             if (preg_match($er, $email)) {
@@ -505,7 +506,7 @@ class Util {
         }
     }
 
-    function formataTelefoneSMS($phone) {
+    public function formataTelefoneSMS($phone) {
         $phones = filter_var($phone, FILTER_SANITIZE_NUMBER_INT);
         $source = array('(', ')', '-', ' ');
         $tel = str_replace($source, '', $phones);
@@ -592,7 +593,7 @@ class Util {
         }
     }
 
-    function selecionaTelefone($id_cliente) {
+    public function selecionaTelefone($id_cliente) {
         $model_pedidos = new Pedidos_Model_Pedido();
         $util = new Recursos_Util();
         $cliente = $model_pedidos->findAuxiliar("CLIENTES", "CODIGOCLIENTE=$id_cliente");
@@ -629,7 +630,7 @@ class Util {
         }
     }
 
-    function dateRange($first, $last, $step = '+1 day', $format = 'Y-m-d') {
+    public function dateRange($first, $last, $step = '+1 day', $format = 'Y-m-d') {
         $dates = array();
         $current = strtotime($first);
         $last = strtotime($last);
@@ -639,6 +640,86 @@ class Util {
             $current = strtotime($step, $current);
         }
         return $dates;
+    }
+
+    public function removerFormatacaoNumero($strNumero)
+    {
+        $strNumero = trim(str_replace("R$", null, $strNumero));
+        $vetVirgula = explode(",", $strNumero);
+        if (count($vetVirgula) == 1)
+        {
+            $acentos = array(".");
+            $resultado = str_replace($acentos, "", $strNumero);
+            return $resultado;
+        }
+        else if (count($vetVirgula) != 2)
+        {
+            return $strNumero;
+        }
+        $strNumero = $vetVirgula[0];
+        $strDecimal = mb_substr($vetVirgula[1], 0, 2);
+        $acentos = array(".");
+        $resultado = str_replace($acentos, "", $strNumero);
+        $resultado = $resultado . "." . $strDecimal;
+        return $resultado;
+    }
+
+    public function converteExtenso($valor = 0, $bolExibirMoeda = false, $bolPalavraFeminina = false)
+    {
+        $valor = self::removerFormatacaoNumero($valor);
+        $singular = null;
+        $plural = null;
+        if ($bolExibirMoeda)
+        {
+            $singular = array("centavo", "real", "mil", "milhão", "bilhão", "trilhão", "quatrilhão");
+            $plural = array("centavos", "reais", "mil", "milhões", "bilhões", "trilhões","quatrilhões");
+        }
+        else
+        {
+            $singular = array("", "", "mil", "milhão", "bilhão", "trilhão", "quatrilhão");
+            $plural = array("", "", "mil", "milhões", "bilhões", "trilhões","quatrilhões");
+        }
+        $c = array("", "cem", "duzentos", "trezentos", "quatrocentos","quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos");
+        $d = array("", "dez", "vinte", "trinta", "quarenta", "cinquenta","sessenta", "setenta", "oitenta", "noventa");
+        $d10 = array("dez", "onze", "doze", "treze", "quatorze", "quinze","dezesseis", "dezesete", "dezoito", "dezenove");
+        $u = array("", "um", "dois", "três", "quatro", "cinco", "seis","sete", "oito", "nove");
+        if ($bolPalavraFeminina)
+        {
+            if ($valor == 1)
+                $u = array("", "uma", "duas", "três", "quatro", "cinco", "seis","sete", "oito", "nove");
+            else
+                $u = array("", "um", "duas", "três", "quatro", "cinco", "seis","sete", "oito", "nove");
+            $c = array("", "cem", "duzentas", "trezentas", "quatrocentas","quinhentas", "seiscentas", "setecentas", "oitocentas", "novecentas");
+        }
+        $z = 0;
+        $valor = number_format($valor, 2, ".", ".");
+        $inteiro = explode(".", $valor);
+        for ($i = 0; $i < count($inteiro); $i++)
+            for ($ii = mb_strlen($inteiro[$i]); $ii < 3; $ii++)
+                $inteiro[$i] = "0" . $inteiro[$i];
+        // $fim identifica onde que deve se dar junção de centenas por "e" ou por "," ;)
+        $rt = null;
+        $fim = count($inteiro) - ($inteiro[count($inteiro) - 1] > 0 ? 1 : 2);
+        for ($i = 0; $i < count($inteiro); $i++)
+        {
+            $valor = $inteiro[$i];
+            $rc = (($valor > 100) && ($valor < 200)) ? "cento" : $c[$valor[0]];
+            $rd = ($valor[1] < 2) ? "" : $d[$valor[1]];
+            $ru = ($valor > 0) ? (($valor[1] == 1) ? $d10[$valor[2]] : $u[$valor[2]]) : "";
+            $r = $rc . (($rc && ($rd || $ru)) ? " e " : "") . $rd . (($rd && $ru) ? " e " : "") . $ru;
+            $t = count($inteiro) - 1 - $i;
+            $r .= $r ? " " . ($valor > 1 ? $plural[$t] : $singular[$t]) : "";
+            if ($valor == "000")
+                $z++;
+            elseif ($z > 0)
+                $z--;
+            if (($t == 1) && ($z > 0) && ($inteiro[0] > 0))
+                $r .= (($z > 1) ? " de " : "") . $plural[$t];
+            if ($r)
+                $rt = $rt . ((($i > 0) && ($i <= $fim) && ($inteiro[0] > 0) && ($z < 1)) ? (($i < $fim) ? ", " : " e ") : " ") . $r;
+        }
+        $rt = mb_substr($rt, 1);
+        return($rt ? trim($rt) : "zero");
     }
 
 }

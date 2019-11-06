@@ -449,6 +449,162 @@ class ContratoOP extends Contrato
         }
     }
 
+    public function alterarContratoOrcamento(ContratoOrcamento $objCom)
+    {
+        try {
+            $manager = new TxManager();
+            $transaction = $manager->get();
+            $objetoComponente = ContratoOrcamento::findFirst('id='.$objCom->getId());
+            $objetoComponente->setTransaction($transaction);
+            $objetoComponente->setUnidadeOrcamentaria($objCom->getUnidadeOrcamentaria());
+            $objetoComponente->setFonteOrcamentaria($objCom->getFonteOrcamentaria());
+            $objetoComponente->setProgramaTrabalho($objCom->getProgramaTrabalho());
+            $objetoComponente->setElementoDespesa($objCom->getElementoDespesa());
+            $objetoComponente->setPi($objCom->getPi());
+            $objetoComponente->setDataUpdate(date('Y-m-d H:i:s'));
+            if ($objetoComponente->save() == false) {
+                $messages = $objetoComponente->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Não foi possível salvar o orçamento: " . $errors);
+            }
+            $transaction->commit();
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoComponente)));
+            return $response;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
+    }
+
+    public function deletarContratoOrcamento(ContratoOrcamento $objCom)
+    {
+        try {
+            $manager = new TxManager();
+            $transaction = $manager->get();
+            $objetoComponente = ContratoOrcamento::findFirst('id='.$objCom->getId());
+            $id_contrato = $objetoComponente->getIdContrato();
+            $objetoComponente->setTransaction($transaction);
+            if ($objetoComponente->delete() == false) {
+                $transaction->rollback("Não foi possível deletar o orçamento!");
+            }
+            $transaction->commit();
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $id_contrato)));
+            return $response;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
+    }
+
+    public function alterarContratoExercicio(ContratoExercicio $objCom)
+    {
+        $util = new Util();
+        try {
+            $manager = new TxManager();
+            $transaction = $manager->get();
+            $objetoComponente = ContratoExercicio::findFirst('id='.$objCom->getId());
+            $objetoComponente->setTransaction($transaction);
+            $objetoComponente->setExercicio($objCom->getExercicio());
+            $objetoComponente->setCompetenciaFinal($objCom->getCompetenciaFinal());
+            $objetoComponente->getCompetenciaInicial($objCom->getCompetenciaInicial());
+            $objetoComponente->setValorPrevisto($util->removerFormatacaoNumero($objCom->getValorPrevisto()));
+            $objetoComponente->setDataUpdate(date('Y-m-d H:i:s'));
+            if ($objetoComponente->save() == false) {
+                $messages = $objetoComponente->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Não foi possível salvar o exercício: " . $errors);
+            }
+            $transaction->commit();
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoComponente)));
+            return $response;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
+    }
+
+    public function deletarContratoExercicio(ContratoExercicio $objCom)
+    {
+        try {
+            $manager = new TxManager();
+            $transaction = $manager->get();
+            $objetoComponente = ContratoExercicio::findFirst('id='.$objCom->getId());
+            $id_contrato = $objetoComponente->getIdContrato();
+            $objetoComponente->setTransaction($transaction);
+            if ($objetoComponente->delete() == false) {
+                $transaction->rollback("Não foi possível deletar o exercício!");
+            }
+            $transaction->commit();
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $id_contrato)));
+            return $response;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
+    }
+
+    public function alterarContratoGarantia(ContratoGarantia $objCom)
+    {
+        $util = new Util();
+        try {
+            $manager = new TxManager();
+            $transaction = $manager->get();
+            $objetoComponente = ContratoGarantia::findFirst('id='.$objCom->getId());
+            $objetoComponente->setTransaction($transaction);
+            $objetoComponente->setIdModalidade($objCom->getIdModalidade());
+            $objetoComponente->setGarantiaConcretizada($objCom->getGarantiaConcretizada());
+            $objetoComponente->setPercentual($util->removerFormatacaoNumero($objCom->getPercentual()));
+            $objetoComponente->setValor($util->removerFormatacaoNumero($objCom->getValor()));
+            $objetoComponente->setDataUpdate(date('Y-m-d H:i:s'));
+            if ($objetoComponente->save() == false) {
+                $messages = $objetoComponente->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Não foi possível salvar a garantia: " . $errors);
+            }
+            $transaction->commit();
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoComponente)));
+            return $response;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
+    }
+
+    public function deletarContratoGarantia(ContratoGarantia $objCom)
+    {
+        try {
+            $manager = new TxManager();
+            $transaction = $manager->get();
+            $objetoComponente = ContratoGarantia::findFirst('id='.$objCom->getId());
+            $id_contrato = $objetoComponente->getIdContrato();
+            $objetoComponente->setTransaction($transaction);
+            if ($objetoComponente->delete() == false) {
+                $transaction->rollback("Não foi possível deletar a garantia!");
+            }
+            $transaction->commit();
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $id_contrato)));
+            return $response;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
+    }
+
     private function getOrdemContrato($id_contrato_principal = null)
     {
         $num_ordem = 1;

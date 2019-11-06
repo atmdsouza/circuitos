@@ -48,6 +48,9 @@ function confirmaCancelar(modal)
         }).then(() => {
             $("#"+modal).modal('hide');
             limparModalBootstrap(modal);
+            limparDadosFormOrcamento();
+            limparDadosFormExercicio();
+            limparDadosFormGarantia();
             mudou = false;
         }).catch(swal.noop);
     }
@@ -55,6 +58,9 @@ function confirmaCancelar(modal)
     {
         $("#"+modal).modal('hide');
         limparModalBootstrap(modal);
+        limparDadosFormOrcamento();
+        limparDadosFormExercicio();
+        limparDadosFormGarantia();
     }
 }
 
@@ -88,6 +94,7 @@ function criar()
     $("#formCadastro select").removeAttr('disabled', 'disabled');
     $("#formCadastro textarea").removeAttr('disabled', 'disabled');
     $("#salvarCadastro").val('criar');
+    $('#lid_contrato_principal').attr('disabled', 'disabled');
     $("#salvarCadastro").show();
     $("#modalCadastro").modal();
 }
@@ -646,6 +653,8 @@ function exibirDetalhesOrcamento(id, ocultar)
         url: action,
         data: { metodo: 'visualizarContratoOrcamento', id: id },
         complete: function() {
+            $('#dados_orcamento').removeAttr('style', 'display: none;');
+            $('#dados_orcamento').attr('style', 'display: block;');
             if (ocultar) {
                 $("#formCadastro input").attr('disabled', 'disabled');
                 $("#formCadastro select").attr('disabled', 'disabled');
@@ -669,17 +678,11 @@ function exibirDetalhesOrcamento(id, ocultar)
             }
         },
         success: function(data) {
-            $('#tem_imposto').val(data.dados.imposto).selected = 'true';
-            $('#tem_reajuste').val(data.dados.reajuste).selected = 'true';
-            $('#mes_inicial_servico').val(data.dados.mes_inicial).selected = 'true';
-            $('#vigencia_servico').val(data.dados.vigencia).selected = 'true';
-            $('#codigo_servico').val(data.dados.ds_codigo_servico);
-            $('#id_codigo_servico').val(data.dados.id_contrato_servicos);
-            $('#descricao_servico').val(data.dados.ds_contrato_servicos);
-            $('#id_servico').val(data.dados.id_contrato_servicos);
-            $('#grandeza').val(data.dados.ds_contrato_servicos_unidade);
-            $('#quantidade_unitaria_servico').val(data.dados.quantidade);
-            $('#valor_unitario_servico').val(accounting.formatMoney(data.dados.valor_unitario, "R$ ", 2, ".", ","));
+            $('#v_unidade_orcamentaria').val(data.dados.unidade_orcamentaria);
+            $('#v_fonte_orcamentaria').val(data.dados.fonte_orcamentaria);
+            $('#v_programa_trabalho').val(data.dados.programa_trabalho);
+            $('#v_elemento_despesa').val(data.dados.elemento_despesa);
+            $('#v_pi').val(data.dados.pi);
         }
     });
 }
@@ -687,25 +690,13 @@ function exibirDetalhesOrcamento(id, ocultar)
 function editarOrcamento(id)
 {
     'use strict';
-    var valor_unitario = accounting.unformat($('#valor_unitario_servico').val(), ",");
-    var valor_total = valor_unitario * accounting.unformat($('#quantidade_unitaria_servico').val(), ",");
-    var valor_impostos = accounting.unformat(valor_total, ",") * (accounting.unformat($('#imposto').val(), ",") * 0.01);
-    var valor_reajuste = accounting.unformat(valor_total, ",") * (accounting.unformat($('#reajuste').val(), ",") * 0.01);
-    var valor_total_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_reajuste, ",") : 0;
-    var valor_total_imposto = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_impostos, ",") : 0;
     var array_dados = {
         id: id,
-        id_servico: $('#id_servico').val(),
-        imposto: $('#tem_imposto').val(),
-        reajuste: $('#tem_reajuste').val(),
-        mes_inicial: $('#mes_inicial_servico').val(),
-        vigencia: $('#vigencia_servico').val(),
-        quantidade: $('#quantidade_unitaria_servico').val(),
-        valor_unitario: valor_unitario,
-        valor_total: valor_total,
-        valor_total_reajuste: valor_total_reajuste,
-        valor_impostos: valor_impostos,
-        valor_total_impostos: valor_total_imposto
+        unidade_orcamentaria: $('#v_unidade_orcamentaria').val(),
+        fonte_orcamentaria: $('#v_fonte_orcamentaria').val(),
+        programa_trabalho: $('#v_programa_trabalho').val(),
+        elemento_despesa: $('#v_elemento_despesa').val(),
+        pi: $('#v_pi').val()
     };
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
     $.ajax({
@@ -753,7 +744,7 @@ function excluirOrcamento(id)
             type: "POST",
             dataType: "JSON",
             url: action,
-            data: { metodo: 'deletarContratoOrçamento', id: id },
+            data: { metodo: 'deletarContratoOrcamento', id: id },
             complete: function() {},
             error: function(data) {
                 if (data.status && data.status === 401) {
@@ -903,6 +894,8 @@ function exibirDetalhesExercicio(id, ocultar)
         url: action,
         data: { metodo: 'visualizarContratoExercicio', id: id },
         complete: function() {
+            $('#dados_exercicio').removeAttr('style', 'display: none;');
+            $('#dados_exercicio').attr('style', 'display: block;');
             if (ocultar) {
                 $("#formCadastro input").attr('disabled', 'disabled');
                 $("#formCadastro select").attr('disabled', 'disabled');
@@ -926,17 +919,10 @@ function exibirDetalhesExercicio(id, ocultar)
             }
         },
         success: function(data) {
-            $('#tem_imposto').val(data.dados.imposto).selected = 'true';
-            $('#tem_reajuste').val(data.dados.reajuste).selected = 'true';
-            $('#mes_inicial_servico').val(data.dados.mes_inicial).selected = 'true';
-            $('#vigencia_servico').val(data.dados.vigencia).selected = 'true';
-            $('#codigo_servico').val(data.dados.ds_codigo_servico);
-            $('#id_codigo_servico').val(data.dados.id_contrato_servicos);
-            $('#descricao_servico').val(data.dados.ds_contrato_servicos);
-            $('#id_servico').val(data.dados.id_contrato_servicos);
-            $('#grandeza').val(data.dados.ds_contrato_servicos_unidade);
-            $('#quantidade_unitaria_servico').val(data.dados.quantidade);
-            $('#valor_unitario_servico').val(accounting.formatMoney(data.dados.valor_unitario, "R$ ", 2, ".", ","));
+            $('#v_exercicio').val(data.dados.exercicio);
+            $('#v_competencia_inicial').val(data.dados.competencia_inicial);
+            $('#v_competencia_final').val(data.dados.competencia_final);
+            $('#v_valor_previsto').val(accounting.formatMoney(data.dados.valor_previsto, '', 2, '.', ','));
         }
     });
 }
@@ -944,25 +930,12 @@ function exibirDetalhesExercicio(id, ocultar)
 function editarExercicio(id)
 {
     'use strict';
-    var valor_unitario = accounting.unformat($('#valor_unitario_servico').val(), ",");
-    var valor_total = valor_unitario * accounting.unformat($('#quantidade_unitaria_servico').val(), ",");
-    var valor_impostos = accounting.unformat(valor_total, ",") * (accounting.unformat($('#imposto').val(), ",") * 0.01);
-    var valor_reajuste = accounting.unformat(valor_total, ",") * (accounting.unformat($('#reajuste').val(), ",") * 0.01);
-    var valor_total_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_reajuste, ",") : 0;
-    var valor_total_imposto = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_impostos, ",") : 0;
     var array_dados = {
         id: id,
-        id_servico: $('#id_servico').val(),
-        imposto: $('#tem_imposto').val(),
-        reajuste: $('#tem_reajuste').val(),
-        mes_inicial: $('#mes_inicial_servico').val(),
-        vigencia: $('#vigencia_servico').val(),
-        quantidade: $('#quantidade_unitaria_servico').val(),
-        valor_unitario: valor_unitario,
-        valor_total: valor_total,
-        valor_total_reajuste: valor_total_reajuste,
-        valor_impostos: valor_impostos,
-        valor_total_impostos: valor_total_imposto
+        exercicio: $('#v_exercicio').val(),
+        competencia_inicial: $('#v_competencia_inicial').val(),
+        competencia_final: $('#v_competencia_final').val(),
+        valor_previsto: $('#v_valor_previsto').val()
     };
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
     $.ajax({
@@ -1111,7 +1084,7 @@ function inserirGarantia()
     var valor_garantia = $('#v_valor_garantia').val();
     if(id_modalidade !== '' && percentual !== '' && valor_garantia !== ''){//Campos Obrigatórios
         var linhas = null;
-        linhas += '<tr class="tr_remove_exe">';
+        linhas += '<tr class="tr_remove_gar">';
         linhas += '<td>'+ ds_modalidade +'<input name="id_modalidade[]" type="hidden" value="'+ id_modalidade +'" /></td>';
         linhas += '<td>'+ ds_garantia_concretizada +'<input name="garantia_concretizada[]" type="hidden" value="'+ garantia_concretizada +'" /></td>';
         linhas += '<td>'+ percentual +'<input name="percentual[]" type="hidden" value="'+ percentual +'" /></td>';
@@ -1163,6 +1136,8 @@ function exibirDetalhesGarantia(id, ocultar)
         url: action,
         data: { metodo: 'visualizarContratoGarantia', id: id },
         complete: function() {
+            $('#dados_garantia').removeAttr('style', 'display: none;');
+            $('#dados_garantia').attr('style', 'display: block;');
             if (ocultar) {
                 $("#formCadastro input").attr('disabled', 'disabled');
                 $("#formCadastro select").attr('disabled', 'disabled');
@@ -1186,17 +1161,10 @@ function exibirDetalhesGarantia(id, ocultar)
             }
         },
         success: function(data) {
-            $('#tem_imposto').val(data.dados.imposto).selected = 'true';
-            $('#tem_reajuste').val(data.dados.reajuste).selected = 'true';
-            $('#mes_inicial_servico').val(data.dados.mes_inicial).selected = 'true';
-            $('#vigencia_servico').val(data.dados.vigencia).selected = 'true';
-            $('#codigo_servico').val(data.dados.ds_codigo_servico);
-            $('#id_codigo_servico').val(data.dados.id_contrato_servicos);
-            $('#descricao_servico').val(data.dados.ds_contrato_servicos);
-            $('#id_servico').val(data.dados.id_contrato_servicos);
-            $('#grandeza').val(data.dados.ds_contrato_servicos_unidade);
-            $('#quantidade_unitaria_servico').val(data.dados.quantidade);
-            $('#valor_unitario_servico').val(accounting.formatMoney(data.dados.valor_unitario, "R$ ", 2, ".", ","));
+            $('#v_id_modalidade').val(data.dados.id_modalidade).selected = 'true';
+            $('#v_garantia_concretizada').val(data.dados.garantia_concretizada).selected = 'true';
+            $('#v_percentual').val(accounting.formatMoney(data.dados.percentual, '', 2, '.', ','));
+            $('#v_valor_garantia').val(accounting.formatMoney(data.dados.valor, '', 2, '.', ','));
         }
     });
 }
@@ -1204,25 +1172,12 @@ function exibirDetalhesGarantia(id, ocultar)
 function editarGarantia(id)
 {
     'use strict';
-    var valor_unitario = accounting.unformat($('#valor_unitario_servico').val(), ",");
-    var valor_total = valor_unitario * accounting.unformat($('#quantidade_unitaria_servico').val(), ",");
-    var valor_impostos = accounting.unformat(valor_total, ",") * (accounting.unformat($('#imposto').val(), ",") * 0.01);
-    var valor_reajuste = accounting.unformat(valor_total, ",") * (accounting.unformat($('#reajuste').val(), ",") * 0.01);
-    var valor_total_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_reajuste, ",") : 0;
-    var valor_total_imposto = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_impostos, ",") : 0;
     var array_dados = {
         id: id,
-        id_servico: $('#id_servico').val(),
-        imposto: $('#tem_imposto').val(),
-        reajuste: $('#tem_reajuste').val(),
-        mes_inicial: $('#mes_inicial_servico').val(),
-        vigencia: $('#vigencia_servico').val(),
-        quantidade: $('#quantidade_unitaria_servico').val(),
-        valor_unitario: valor_unitario,
-        valor_total: valor_total,
-        valor_total_reajuste: valor_total_reajuste,
-        valor_impostos: valor_impostos,
-        valor_total_impostos: valor_total_imposto
+        id_modalidade: $('#v_id_modalidade').val(),
+        garantia_concretizada: $('#v_garantia_concretizada').val(),
+        percentual: $('#v_percentual').val(),
+        valor_garantia: $('#v_valor_garantia').val()
     };
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
     $.ajax({

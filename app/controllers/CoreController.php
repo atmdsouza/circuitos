@@ -3,6 +3,9 @@
 namespace Circuitos\Controllers;
 
 use Circuitos\Models\Conectividade;
+use Circuitos\Models\ContratoExercicio;
+use Circuitos\Models\ContratoGarantia;
+use Circuitos\Models\ContratoOrcamento;
 use Circuitos\Models\Empresa;
 use Circuitos\Models\EndCidade;
 use Circuitos\Models\EndEndereco;
@@ -813,6 +816,58 @@ class CoreController extends ControllerBase
                 $objComponente = new PropostaComercialItem();
                 $objComponente->setId($dados['id']);
                 return $objeto->deletarPropostaItem($objComponente);
+                break;
+            case 'alterarContratoOrcamento':
+                $dados_form = $dados['array_dados'];
+                $objeto = new ContratoOP();
+                $objComponente = new ContratoOrcamento();
+                $objComponente->setId($dados_form['id']);
+                $objComponente->setUnidadeOrcamentaria($dados_form['unidade_orcamentaria']);
+                $objComponente->setFonteOrcamentaria($dados_form['fonte_orcamentaria']);
+                $objComponente->setProgramaTrabalho($dados_form['programa_trabalho']);
+                $objComponente->setElementoDespesa($dados_form['elemento_despesa']);
+                $objComponente->setPi($dados_form['pi']);
+                return $objeto->alterarContratoOrcamento($objComponente);
+                break;
+            case 'deletarContratoOrcamento':
+                $objeto = new ContratoOP();
+                $objComponente = new ContratoOrcamento();
+                $objComponente->setId($dados['id']);
+                return $objeto->deletarContratoOrcamento($objComponente);
+                break;
+            case 'alterarContratoExercicio':
+                $dados_form = $dados['array_dados'];
+                $objeto = new ContratoOP();
+                $objComponente = new ContratoExercicio();
+                $objComponente->setId($dados_form['id']);
+                $objComponente->setExercicio($dados_form['exercicio']);
+                $objComponente->setCompetenciaInicial($dados_form['competencia_inicial']);
+                $objComponente->setCompetenciaFinal($dados_form['competencia_final']);
+                $objComponente->setValorPrevisto($dados_form['valor_previsto']);
+                return $objeto->alterarContratoExercicio($objComponente);
+                break;
+            case 'deletarContratoExercicio':
+                $objeto = new ContratoOP();
+                $objComponente = new ContratoExercicio();
+                $objComponente->setId($dados['id']);
+                return $objeto->deletarContratoExercicio($objComponente);
+                break;
+            case 'alterarContratoGarantia':
+                $dados_form = $dados['array_dados'];
+                $objeto = new ContratoOP();
+                $objComponente = new ContratoGarantia();
+                $objComponente->setId($dados_form['id']);
+                $objComponente->setIdModalidade($dados_form['id_modalidade']);
+                $objComponente->setGarantiaConcretizada($dados_form['garantia_concretizada']);
+                $objComponente->setPercentual($dados_form['percentual']);
+                $objComponente->setValor($dados_form['valor_garantia']);
+                return $objeto->alterarContratoGarantia($objComponente);
+                break;
+            case 'deletarContratoGarantia':
+                $objeto = new ContratoOP();
+                $objComponente = new ContratoGarantia();
+                $objComponente->setId($dados['id']);
+                return $objeto->deletarContratoGarantia($objComponente);
                 break;
         }
     }
