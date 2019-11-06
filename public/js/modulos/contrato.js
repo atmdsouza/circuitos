@@ -19,6 +19,7 @@ function inicializar()
     });
     autocompletarContratoPrincipal('lid_contrato_principal','id_contrato_principal');
     autocompletarPropostaComercial('lid_proposta_comercial','id_proposta_comercial');
+    autocompletarClienteFornecedorParceiro('lid_cliente','id_cliente');
 }
 
 function verificarAlteracao()
@@ -109,6 +110,9 @@ function salvar()
             id_status:{
                 required: true
             },
+            lid_cliente:{
+                required: true
+            },
             vincular_instrumento:{
                 required: true
             },
@@ -147,6 +151,9 @@ function salvar()
             },
             id_status:{
                 required: "É necessário informar o Status"
+            },
+            lid_cliente:{
+                required: "É necessário informar um Cliente, Fornecedor ou Parceiro"
             },
             id_tipo_contrato:{
                 required: "É necessário informar o Tipo do Contrato"
@@ -487,6 +494,24 @@ function limpar()
     'use strict';
     $('#fieldPesquisa').val('');
     $('#formPesquisa').submit();
+}
+
+function vincularContrato()
+{
+    'use strict';
+    var vincular_instrumento = $('#vincular_instrumento').val();
+    if (vincular_instrumento === '1'){
+        $('#lid_contrato_principal').removeAttr('disabled');
+    } else {
+        $('#lid_contrato_principal').val('');
+        $('#id_contrato_principal').val('');
+        $('#lid_contrato_principal').attr('disabled', 'disabled');
+    }
+}
+
+function preencherDadosPropostaComercial()
+{
+    'use strict';
 }
 
 /*

@@ -101,6 +101,19 @@ class CoreOP
         return $response;
     }
 
+    public function listaClientesFornecedoresParceirosAtivos()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $clientes = Cliente::pesquisarClientesFornecedoresParceirosAtivos($dados['string']);
+        $array_dados = array();
+        foreach ($clientes as $cliente){
+            array_push($array_dados, ['id' => $cliente->getId(), 'nome' => $cliente->getClienteNome()]);
+        }
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $array_dados)));
+        return $response;
+    }
+
     public function cidadesDigitaisAtivas()
     {
         $dados = filter_input_array(INPUT_GET);

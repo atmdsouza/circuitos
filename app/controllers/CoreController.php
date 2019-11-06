@@ -519,6 +519,10 @@ class CoreController extends ControllerBase
                 $objeto = new CoreOP();
                 return $objeto->clientesAtivos();
                 break;
+            case 'listaClientesFornecedoresParceirosAtivos':
+                $objeto = new CoreOP();
+                return $objeto->listaClientesFornecedoresParceirosAtivos();
+                break;
             case 'modelosAtivos':
                 $objeto = new CoreOP();
                 return $objeto->modelosAtivos();

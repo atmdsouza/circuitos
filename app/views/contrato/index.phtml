@@ -52,10 +52,10 @@ $module = $this->router->getControllerName();
             <thead>
             <tr>
                 <th>Código</th>
-                <th>Número</th>
+                <th>Tipo</th>
+                <th>Número/Ano</th>
                 <th>Cliente/Fornecedor</th>
                 <th>Processo Contratação</th>
-                <th>Ano</th>
                 <th>Valor Global</th>
                 <th>Status</th>
                 <th>Ativo</th>
@@ -79,10 +79,10 @@ $module = $this->router->getControllerName();
                 ?>
                 <tr <?= $class_tr; ?>>
                     <td><?= $contrato->getId() ?></td>
-                    <td><?= $contrato->getNumero() ?></td>
+                    <td><?= $contrato->getTipoContrato() ?></td>
+                    <td><?= $contrato->getNumero() .'/'.$contrato->getAno() ?></td>
                     <td><?= $contrato->getCliente() ?></td>
                     <td><?= $contrato->getNumeroProcesso() ?></td>
-                    <td><?= $contrato->getAno() ?></td>
                     <td><?= $contrato->getValorGlobal() ?></td>
                     <td><?= $contrato->getStatus() ?></td>
                     <td><?= $ativo ?></td>
@@ -95,9 +95,6 @@ $module = $this->router->getControllerName();
                                 <a href="javascript:void(0)" class="botoes_acao" onclick="ativar(<?= $contrato->getId() ?>, '<?= $contrato->getNumero() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/reativar.png" title="Ativar" alt="Ativar" height="25" width="25"></a>
                             <?php endif; ?>
                         <?php else: ?>
-                            <?php if($acl->isAllowed($role, $module, 'editar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $contrato->getId() ?>, false);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
-                            <?php endif; ?>
                             <?php if($acl->isAllowed($role, $module, 'movimentar')): ?>
                                 <a href="javascript:void(0)" class="botoes_acao" onclick="movimentar(<?= $contrato->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/movimentar.png" title="Movimentar" alt="Movimentar" height="25" width="25"></a>
                             <?php endif; ?>
@@ -112,6 +109,9 @@ $module = $this->router->getControllerName();
                             <?php endif; ?>
                             <?php if($acl->isAllowed($role, $module, 'fiscalizar')): ?>
                                 <a href="javascript:void(0)" class="botoes_acao" onclick="fiscalizar(<?= $contrato->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/fiscalizar.png" title="Fiscalizar Contrato" alt="Fiscalizar Contrato" height="25" width="25"></a>
+                            <?php endif; ?>
+                            <?php if($acl->isAllowed($role, $module, 'editar')): ?>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $contrato->getId() ?>, false);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
                             <?php endif; ?>
                             <?php if($acl->isAllowed($role, $module, 'inativar')): ?>
                                 <a href="javascript:void(0)" class="botoes_acao" onclick="inativar(<?= $contrato->getId() ?>, '<?= $contrato->getNumero() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/desativar.png" title="Desativar" alt="Desativar" height="25" width="25"></a>
@@ -203,11 +203,6 @@ $module = $this->router->getControllerName();
                                             <label for="numero_processo">Número Processo <span class="required">*</span></label>
                                             <?= $this->tag->textField(["numero_processo", "size" => 200, "class" => "form-control", "id" => "numero_processo", "placeholder" => "Número de Acompanhamento do Processo"]) ?>
                                         </div>
-                                        <div class="form-group col-md-2 botoes_forms_alinhamento">
-                                            <label for="lid_proposta_comercial">Proposta Comercial </label>
-                                            <?php echo $this->tag->textField(["lid_proposta_comercial", "size" => 120, "class" => "form-control", "id" => "lid_proposta_comercial", "placeholder" => "Contrato a ser vinculado", "onkeyup" => "autocompletarPropostaComercial('lid_proposta_comercial','id_proposta_comercial');"]) ?>
-                                            <?php echo $this->tag->hiddenField(["id_proposta_comercial", "size" => 120, "class" => "form-control", "id" => "id_proposta_comercial"]) ?>
-                                        </div>
                                         <div class="form-group col-md-2">
                                             <label for="id_tipo_contrato">Tipo Contrato <span class="required">*</span></label>
                                             <?php echo $this->tag->select(["id_tipo_contrato", $tipos, "class" => "form-control", "id" => "id_tipo_contrato", "onchange" => "contratoClienteFornecedor();",
@@ -216,6 +211,11 @@ $module = $this->router->getControllerName();
                                                 "emptyText" => "Selecione o tipo de Contrato",
                                                 "emptyValue" => ""])
                                             ?>
+                                        </div>
+                                        <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                            <label for="lid_proposta_comercial">Proposta Comercial </label>
+                                            <?php echo $this->tag->textField(["lid_proposta_comercial", "size" => 120, "class" => "form-control", "id" => "lid_proposta_comercial", "placeholder" => "Proposta Comercial", "onkeyup" => "autocompletarPropostaComercial('lid_proposta_comercial','id_proposta_comercial');", "onblur" => "preencherDadosPropostaComercial();"]) ?>
+                                            <?php echo $this->tag->hiddenField(["id_proposta_comercial", "size" => 120, "class" => "form-control", "id" => "id_proposta_comercial"]) ?>
                                         </div>
                                         <div class="form-group col-md-2">
                                             <label for="vincular_instrumento">Vincular a outro Instrumento? <span class="required">*</span></label>
@@ -229,14 +229,9 @@ $module = $this->router->getControllerName();
                                             <?php echo $this->tag->textField(["lid_contrato_principal", "size" => 120, "disabled" => "true", "class" => "form-control", "id" => "lid_contrato_principal", "placeholder" => "Contrato a ser vinculado", "onkeyup" => "autocompletarContratoPrincipal('lid_contrato_principal','id_contrato_principal');"]) ?>
                                             <?php echo $this->tag->hiddenField(["id_contrato_principal", "size" => 120, "class" => "form-control", "id" => "id_contrato_principal"]) ?>
                                         </div>
-                                        <div id="div_fornecedor" class="form-group col-md-4" style="display: none;">
-                                            <label for="lid_fornecedor">Fornecedor <span class="required">*</span></label>
-                                            <?php echo $this->tag->textField(["lid_fornecedor", "size" => 120, "class" => "form-control", "id" => "lid_fornecedor", "placeholder" => "Fornecedor", "onkeyup" => "autocompletarFornecedor('lid_fornecedor','id_fornecedor');"]) ?>
-                                            <?php echo $this->tag->hiddenField(["id_fornecedor", "size" => 120, "class" => "form-control", "id" => "id_fornecedor"]) ?>
-                                        </div>
                                         <div id="div_cliente" class="form-group col-md-4">
-                                            <label for="lid_cliente">Cliente <span class="required">*</span></label>
-                                            <?php echo $this->tag->textField(["lid_cliente", "size" => 120, "class" => "form-control", "id" => "lid_cliente", "placeholder" => "Cliente", "onkeyup" => "autocompletarCliente('lid_cliente','id_cliente');"]) ?>
+                                            <label for="lid_cliente">Cliente / Fornecedor / Parceiro <span class="required">*</span></label>
+                                            <?php echo $this->tag->textField(["lid_cliente", "size" => 120, "class" => "form-control", "id" => "lid_cliente", "placeholder" => "Cliente / Fornecedor / Parceiro", "onkeyup" => "autocompletarClienteFornecedorParceiro('lid_cliente','id_cliente');"]) ?>
                                             <?php echo $this->tag->hiddenField(["id_cliente", "size" => 120, "class" => "form-control", "id" => "id_cliente"]) ?>
                                         </div>
                                         <div class="form-group col-md-2">

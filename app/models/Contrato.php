@@ -35,12 +35,6 @@ class Contrato extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $id_fornecedor;
-
-    /**
-     *
-     * @var integer
-     */
     protected $id_cliente;
 
     /**
@@ -205,19 +199,6 @@ class Contrato extends \Phalcon\Mvc\Model
     public function setIdTipoContrato($id_tipo_contrato)
     {
         $this->id_tipo_contrato = $id_tipo_contrato;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field id_fornecedor
-     *
-     * @param integer $id_fornecedor
-     * @return $this
-     */
-    public function setIdFornecedor($id_fornecedor)
-    {
-        $this->id_fornecedor = $id_fornecedor;
 
         return $this;
     }
@@ -523,16 +504,6 @@ class Contrato extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id_fornecedor
-     *
-     * @return integer
-     */
-    public function getIdFornecedor()
-    {
-        return $this->id_fornecedor;
-    }
-
-    /**
      * Returns the value of field id_cliente
      *
      * @return integer
@@ -807,7 +778,6 @@ class Contrato extends \Phalcon\Mvc\Model
         $this->hasMany('id', 'Circuitos\Models\Torre', 'id_contrato', ['alias' => 'Torre']);
         $this->belongsTo('id_cliente', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Cliente']);
         $this->belongsTo('id_contrato_principal', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
-        $this->belongsTo('id_fornecedor', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Cliente']);
         $this->belongsTo('id_tipo_contrato', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov1']);
         $this->belongsTo('id_status', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov2']);
         $this->belongsTo('id_tipo_processo', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov3']);
@@ -859,9 +829,6 @@ class Contrato extends \Phalcon\Mvc\Model
         $query->columns("Contrato.*");
         $query->leftJoin("Circuitos\Models\Lov", "Lov1.id = Contrato.id_tipo_contrato", "Lov1");
         $query->leftJoin("Circuitos\Models\Lov", "Lov2.id = Contrato.id_status", "Lov2");
-        $query->leftJoin("Circuitos\Models\Cliente", "Fornecedor.id = Contrato.id_fornecedor", "Fornecedor");
-        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa1.id = Fornecedor.id_pessoa", "Pessoa1");
-        $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica1.id = Pessoa1.id", "PessoaJuridica1");
         $query->leftJoin("Circuitos\Models\Cliente", "Cliente.id = Contrato.id_Cliente", "Cliente");
         $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa2.id = Cliente.id_pessoa", "Pessoa2");
         $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica2.id = Pessoa2.id", "PessoaJuridica2");
@@ -869,8 +836,6 @@ class Contrato extends \Phalcon\Mvc\Model
                         OR CONVERT(Contrato.numero USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Contrato.ano USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Contrato.numero_processo USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(Pessoa1.nome USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(PessoaJuridica1.razaosocial USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Pessoa2.nome USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(PessoaJuridica2.razaosocial USING utf8) LIKE '%{$parameters}%'
                         OR CONVERT(Lov1.descricao USING utf8) LIKE '%{$parameters}%'

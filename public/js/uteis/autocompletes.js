@@ -360,6 +360,58 @@ function autocompletarCliente(id_label, id_valor)
     });
 }
 
+function autocompletarClienteFornecedorParceiro(id_label, id_valor)
+{
+    "use strict";
+    //Autocomplete
+    var ac_cliente = $("#"+id_label);
+    var vl_cliente = $("#"+id_valor);
+    var string = ac_cliente.val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'listaClientesFornecedoresParceirosAtivos', string: string},
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao) {
+                listCliente = [];
+                $.each(data.dados, function (key, value) {
+                    listCliente.push({value: value.nome, data: value.id});
+                });
+                if(c === 0) {
+                    //Autocomplete
+                    ac_cliente.autocomplete({
+                        lookup: listCliente,
+                        onSelect: function (suggestion) {
+                            vl_cliente.val(suggestion.data);
+                        }
+                    });
+                    c++;
+                } else {
+                    //Autocomplete
+                    ac_cliente.autocomplete().setOptions( {
+                        lookup: listCliente
+                    });
+                }
+            } else {
+                vl_cliente.val("");
+                ac_cliente.val("");
+            }
+        }
+    });
+}
+
 function autocompletarGrupo(id_label, id_valor)
 {
     "use strict";

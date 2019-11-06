@@ -35,8 +35,7 @@ class ContratoOP extends Contrato
             $objeto->setIdTipoProcesso($objArray->getIdTipoProcesso());
             $objeto->setNumeroProcesso($objArray->getNumeroProcesso());
             $objeto->setIdPropostaComercial(($objArray->getIdPropostaComercial()) ? $objArray->getIdPropostaComercial() : null);
-            $objeto->setIdFornecedor(($objArray->getIdFornecedor()) ? $objArray->getIdFornecedor() : null);
-            $objeto->setIdCliente(($objArray->getIdCliente()) ? $objArray->getIdCliente() : null);
+            $objeto->setIdCliente($objArray->getIdCliente());
             $objeto->setIdStatus($objArray->getIdStatus());
             $objeto->setDataCriacao(date('Y-m-d H:i:s'));
             $objeto->setDataAssinatura($util->converterDataUSA($objArray->getDataAssinatura()));
