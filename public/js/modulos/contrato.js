@@ -20,6 +20,7 @@ function inicializar()
     autocompletarContratoPrincipal('lid_contrato_principal','id_contrato_principal');
     autocompletarPropostaComercial('lid_proposta_comercial','id_proposta_comercial');
     autocompletarClienteFornecedorParceiro('lid_cliente','id_cliente');
+    autocompletarUsuario('lid_usuario','v_id_usuario');
 }
 
 function verificarAlteracao()
@@ -484,17 +485,12 @@ function movimentar(id)
 
 }
 
-function atribuir(id)
-{
-
-}
-
 function fiscalizar(id)
 {
 
 }
 
-function acompanhar(id)
+function gerirFinanceiro(id)
 {
 
 }
@@ -524,9 +520,9 @@ function preencherDadosPropostaComercial()
     'use strict';
 }
 
-/*
+/**
 * Orçamento
-* */
+**/
 function montarTabelaOrcamento(id_contrato, visualizar)
 {
     'use strict';
@@ -769,9 +765,9 @@ function excluirOrcamento(id)
     });
 }
 
-/*
+/**
 * Exercício
-* */
+**/
 function montarTabelaExercicio(id_contrato, visualizar)
 {
     'use strict';
@@ -1008,9 +1004,9 @@ function excluirExercicio(id)
     });
 }
 
-/*
+/**
 * Garantia
-* */
+**/
 function montarTabelaGarantia(id_contrato, visualizar)
 {
     'use strict';
@@ -1248,4 +1244,86 @@ function excluirGarantia(id)
             }
         });
     });
+}
+
+/**
+ * Controle dos Fiscais de Contrato
+ **/
+function atribuir(id)
+{
+    'use strict';
+    $("#modalFiscalContrato").modal();
+}
+
+function confirmaCancelarFiscalContrato(seletor)
+{
+    'use strict';
+    $("#"+seletor).modal('hide');
+
+}
+
+function salvarFiscalContrato()
+{
+
+}
+
+function criarFiscal()
+{
+    'use strict';
+    limparDadosFormFiscal();
+    $('.hide_buttons').show();
+    $('#bt_inserir_fiscal').text("Inserir");
+    $('#bt_inserir_fiscal').removeAttr('onclick');
+    $('#bt_inserir_fiscal').attr('onclick', 'inserirFiscal();');
+    $('#dados_fiscal').removeAttr('style', 'display: none;');
+    $('#dados_fiscal').attr('style', 'display: block;');
+    $('#v_id_tipo_fiscal').focus();
+}
+
+function inserirFiscal()
+{
+
+}
+
+function cancelarFiscal()
+{
+
+}
+
+function verificarTiposExistentes()
+{
+
+}
+
+function limparDadosFormFiscal()
+{
+    'use strict';
+    $('#v_percentual').val('');
+    $('#v_valor_garantia').val('');
+    $('#v_id_modalidade').val(null).selected = 'true';
+    $('#v_garantia_concretizada').val('0').selected = 'true';
+    $('#dados_garantia').removeAttr('style', 'display: block;');
+    $('#dados_garantia').attr('style', 'display: none;');
+    $('#grupo').focus();
+}
+
+/**
+ * Controle das Movimentações de Contrato
+ **/
+function movimentar(id)
+{
+    'use strict';
+    $("#modalMovimentoContrato").modal();
+}
+
+function confirmaCancelarMovimentoContrato(seletor)
+{
+    'use strict';
+    $("#"+seletor).modal('hide');
+
+}
+
+function salvarMovimentoContrato()
+{
+
 }

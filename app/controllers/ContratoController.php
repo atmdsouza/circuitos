@@ -45,11 +45,13 @@ class ContratoController extends ControllerBase
         $tipos_movimentos = Lov::find("tipo=28 AND excluido=0 AND ativo=1");
         $tipos_modalidades = Lov::find("tipo=29 AND excluido=0 AND ativo=1");
         $status_contrato = Lov::find("tipo=30 AND excluido=0 AND ativo=1");
+        $tipos_fiscais = Lov::find("tipo=31 AND excluido=0 AND ativo=1");
         $this->view->tipos = $tipos;
         $this->view->tipos_processos = $tipos_processos;
         $this->view->tipos_movimentos = $tipos_movimentos;
         $this->view->tipos_modalidades = $tipos_modalidades;
         $this->view->status_contrato = $status_contrato;
+        $this->view->tipos_fiscais = $tipos_fiscais;
         $this->view->page = $contrato;
     }
 
@@ -245,4 +247,90 @@ class ContratoController extends ControllerBase
         }
         return $response;
     }
+
+    /**
+     * Created by PhpStorm.
+     * User: andre
+     * Date: 06/11/2019
+     * Time: 19:00
+     * Responsável por atribuir fiscais a um contrato
+     */
+    public function atribuirAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_POST);
+
+        return $response;
+    }
+
+    /**
+     * Created by PhpStorm.
+     * User: andre
+     * Date: 06/11/2019
+     * Time: 19:00
+     * Responsável por fiscalizar um contrato, atribuindo não conformidades a ele
+     */
+    public function fiscalizarAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_POST);
+
+        return $response;
+    }
+
+    /**
+     * Created by PhpStorm.
+     * User: andre
+     * Date: 06/11/2019
+     * Time: 19:00
+     * Responsável pela gestão financeira de um contrato, incluindo dados dos pagamentos para acompanhamento
+     */
+    public function gerirAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_POST);
+
+        return $response;
+    }
+
+    /**
+     * Created by PhpStorm.
+     * User: andre
+     * Date: 06/11/2019
+     * Time: 19:00
+     * Responsável por movimentações controladas de um contrato
+     */
+    public function movimentarAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_POST);
+
+        return $response;
+    }
+
+    /**
+     * Created by PhpStorm.
+     * User: andre
+     * Date: 06/11/2019
+     * Time: 19:00
+     * Responsável por vincular arquivos a um contrato
+     */
+    public function uploadAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_POST);
+
+        return $response;
+    }
+
 }

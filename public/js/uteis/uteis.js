@@ -670,6 +670,11 @@ jQuery.validator.addMethod("maiorQueZero", function(value, element) {
     return this.optional(element) || (parseFloat(value) > 0);
 }, "* O valor precisa ser maior que 0!");
 
-function carregar_arquivo(id_vinculado) {
+
+/**
+ * Função que controla o upload de arquivos para todas os módulos do sistema
+ * Funcionalidade Global
+ **/
+function carregarArquivo(id_vinculado) {
 
 }

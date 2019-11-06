@@ -30,11 +30,16 @@ Códigos LOV para o diagrama
 28 - Tipo Movimento Contrato
 29 - Tipo Modalidade de Contratação de Garantia
 30 - Status Contrato (Vigente, Bloqueado, Suspenso, Encerrado)
-31 -
+31 - Tipo Fiscal de Contrato
 32 -
 33 -
 34 -
 35 -
+36 -
+37 -
+38 -
+39 -
+40 -
 */
 
 INSERT INTO bd_circuitosnavega.lov (tipo, descricao, codigoespecifico, valor, duracao) VALUES

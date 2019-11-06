@@ -578,6 +578,10 @@ class CoreController extends ControllerBase
                 $objeto = new CoreOP();
                 return $objeto->codigoServicosAtivos();
                 break;
+            case 'listaUsuariosAtivos':
+                $objeto = new CoreOP();
+                return $objeto->listaUsuariosAtivos();
+                break;
         }
     }
 

@@ -21,6 +21,7 @@ use Circuitos\Models\SetSeguranca;
 use Circuitos\Models\Terreno;
 use Circuitos\Models\Torre;
 use Circuitos\Models\UnidadeConsumidora;
+use Circuitos\Models\Usuario;
 use Phalcon\Http\Response as Response;
 
 /**
@@ -368,6 +369,19 @@ class CoreOP
         $objeto = PropostaComercial::find("excluido=0 AND ativo=1 AND numero LIKE '%{$dados['string']}%'");
         $response = new Response();
         $response->setContent(json_encode(array("operacao" => True, "dados" => $objeto)));
+        return $response;
+    }
+
+    public function listaUsuariosAtivos()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $usuarios = Usuario::pesquisarUsuariosAtivos($dados['string']);
+        $array_dados = array();
+        foreach ($usuarios as $usuario){
+            array_push($array_dados, ['id' => $usuario->getId(), 'nome' => $usuario->getNomePessoaUsuario()]);
+        }
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $array_dados)));
         return $response;
     }
 }

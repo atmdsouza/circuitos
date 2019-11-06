@@ -39,10 +39,65 @@ var listContrato = [];
 var c1 = 0;
 var listContratoPrincipal = [];
 var c2 = 0;
+var listUsuario = [];
+var u1 = 0;
 
-/*
+/**
 * Sessão de Campos Autocomplete
 * */
+
+function autocompletarUsuario(id_label, id_valor)
+{
+    "use strict";
+    //Autocomplete
+    var ac_usuario = $("#"+id_label);
+    var vl_usuario = $("#"+id_valor);
+    var string = ac_usuario.val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'listaUsuariosAtivos', string: string},
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao) {
+                listUsuario = [];
+                $.each(data.dados, function (key, value) {
+                    listUsuario.push({value: value.nome, data: value.id});
+                });
+                if(u1 === 0) {
+                    //Autocomplete
+                    ac_usuario.autocomplete({
+                        lookup: listUsuario,
+                        onSelect: function (suggestion) {
+                            vl_usuario.val(suggestion.data);
+                        }
+                    });
+                    u1++;
+                } else {
+                    //Autocomplete
+                    ac_usuario.autocomplete().setOptions( {
+                        lookup: listUsuario
+                    });
+                }
+            } else {
+                vl_usuario.val("");
+                ac_usuario.val("");
+            }
+        }
+    });
+}
+
 function autocompletarCodigoServico(id_label, id_valor, id_grupo, id_subgrupo)
 {
     "use strict";
@@ -1181,7 +1236,7 @@ function autocompletarAgrupadora(id_label, id_valor)
     });
 }
 
-/*
+/**
 * Preenchimento automático de endereço
 * */
 function preencherEndereco(id_cep, id_endereco, id_numero, id_complemento, id_bairro, id_cidade, id_estado, id_sigla_estado, id_latitude, id_longitude)

@@ -101,10 +101,10 @@ $module = $this->router->getControllerName();
                                 <a href="javascript:void(0)" class="botoes_acao" onclick="movimentar(<?= $contrato->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/movimentar.png" title="Movimentar" alt="Movimentar" height="25" width="25"></a>
                             <?php endif; ?>
                             <?php if($acl->isAllowed($role, $module, 'upload')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="carregar_arquivo(<?= $contrato->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/upload.png" title="Enviar Arquivos" alt="Enviar Arquivos" height="25" width="25"></a>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="carregarArquivo(<?= $contrato->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/upload.png" title="Enviar Arquivos" alt="Enviar Arquivos" height="25" width="25"></a>
                             <?php endif; ?>
-                            <?php if($acl->isAllowed($role, $module, 'acompanhar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="acompanhar(<?= $contrato->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/acompanhar_financeiro.png" title="Acompanhar Financeiro" alt="Acompanhar Financeiro" height="25" width="25"></a>
+                            <?php if($acl->isAllowed($role, $module, 'gerir')): ?>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="gerirFinanceiro(<?= $contrato->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/acompanhar_financeiro.png" title="Gestão Financeira" alt="Gestão Financeira" height="25" width="25"></a>
                             <?php endif; ?>
                             <?php if($acl->isAllowed($role, $module, 'atribuir')): ?>
                                 <a href="javascript:void(0)" class="botoes_acao" onclick="atribuir(<?= $contrato->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/fiscal.png" title="Fiscais do Contrato" alt="Fiscais do Contrato" height="25" width="25"></a>
@@ -190,112 +190,108 @@ $module = $this->router->getControllerName();
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="tab_contrato">
                             <div class="form-row">
-                                <div class="col-12">
-                                    <div class="form-row">
-                                        <div class="form-group col-md-2">
-                                            <label for="id_tipo_processo">Tipo Processo <span class="required">*</span></label>
-                                            <?php echo $this->tag->select(["id_tipo_processo", $tipos_processos, "class" => "form-control", "id" => "id_tipo_processo", "onchange" => "",
-                                                "using" => ["id", "descricao",],
-                                                "useEmpty" => true,
-                                                "emptyText" => "Selecione o tipo de Processo",
-                                                "emptyValue" => ""])
-                                            ?>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label for="numero_processo">Número Processo <span class="required">*</span></label>
-                                            <?= $this->tag->textField(["numero_processo", "size" => 200, "class" => "form-control", "id" => "numero_processo", "placeholder" => "Número de Acompanhamento do Processo"]) ?>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label for="id_tipo_contrato">Tipo Contrato <span class="required">*</span></label>
-                                            <?php echo $this->tag->select(["id_tipo_contrato", $tipos, "class" => "form-control", "id" => "id_tipo_contrato", "onchange" => "contratoClienteFornecedor();",
-                                                "using" => ["id", "descricao",],
-                                                "useEmpty" => true,
-                                                "emptyText" => "Selecione o tipo de Contrato",
-                                                "emptyValue" => ""])
-                                            ?>
-                                        </div>
-                                        <div class="form-group col-md-2 botoes_forms_alinhamento">
-                                            <label for="lid_proposta_comercial">Proposta Comercial </label>
-                                            <?php echo $this->tag->textField(["lid_proposta_comercial", "size" => 120, "class" => "form-control", "id" => "lid_proposta_comercial", "placeholder" => "Proposta Comercial", "onkeyup" => "autocompletarPropostaComercial('lid_proposta_comercial','id_proposta_comercial');", "onblur" => "preencherDadosPropostaComercial();"]) ?>
-                                            <?php echo $this->tag->hiddenField(["id_proposta_comercial", "size" => 120, "class" => "form-control", "id" => "id_proposta_comercial"]) ?>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label for="vincular_instrumento">Vincular a outro Instrumento? <span class="required">*</span></label>
-                                            <select id="vincular_instrumento" name="vincular_instrumento" class="form-control" onchange="vincularContrato();">
-                                                <option value="1">Sim</option>
-                                                <option value="0" selected>Não</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group col-md-2 botoes_forms_alinhamento">
-                                            <label for="lid_contrato_principal">Contrato Principal </label>
-                                            <?php echo $this->tag->textField(["lid_contrato_principal", "size" => 120, "class" => "form-control", "id" => "lid_contrato_principal", "placeholder" => "Contrato a ser vinculado", "onkeyup" => "autocompletarContratoPrincipal('lid_contrato_principal','id_contrato_principal');"]) ?>
-                                            <?php echo $this->tag->hiddenField(["id_contrato_principal", "size" => 120, "class" => "form-control", "id" => "id_contrato_principal"]) ?>
-                                        </div>
-                                        <div id="div_cliente" class="form-group col-md-4">
-                                            <label for="lid_cliente">Cliente / Fornecedor / Parceiro <span class="required">*</span></label>
-                                            <?php echo $this->tag->textField(["lid_cliente", "size" => 120, "class" => "form-control", "id" => "lid_cliente", "placeholder" => "Cliente / Fornecedor / Parceiro", "onkeyup" => "autocompletarClienteFornecedorParceiro('lid_cliente','id_cliente');"]) ?>
-                                            <?php echo $this->tag->hiddenField(["id_cliente", "size" => 120, "class" => "form-control", "id" => "id_cliente"]) ?>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label for="id_status">Status Contrato <span class="required">*</span></label>
-                                            <?php echo $this->tag->select(["id_status", $status_contrato, "class" => "form-control", "id" => "id_status",
-                                                "using" => ["id", "descricao",],
-                                                "useEmpty" => true,
-                                                "emptyText" => "Selecione o status de Contrato",
-                                                "emptyValue" => ""])
-                                            ?>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label for="data_assinatura">Data de Assinatura <span class="required">*</span></label>
-                                            <?= $this->tag->textField(["data_assinatura", "size" => 200, "class" => "form-control data", "id" => "data_assinatura", "placeholder" => "Data de Assinatura do Contrato"]) ?>
-                                        </div>
-                                        <div class="form-group col-md-2 botoes_forms_alinhamento">
-                                            <label for="data_publicacao">Data de Publicação </label>
-                                            <?= $this->tag->textField(["data_publicacao", "size" => 200, "class" => "form-control data", "id" => "data_publicacao", "placeholder" => "Data de Publicação do Contrato"]) ?>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label for="data_encerramento">Data de Encerramento <span class="required">*</span></label>
-                                            <?= $this->tag->textField(["data_encerramento", "size" => 200, "class" => "form-control data", "id" => "data_encerramento", "placeholder" => "Data de Encerramento do Contrato"]) ?>
-                                        </div>
-                                        <div class="form-group col-md-2 botoes_forms_alinhamento">
-                                            <label for="num_diario_oficial">Número Diário Oficial </label>
-                                            <?= $this->tag->textField(["num_diario_oficial", "size" => 200, "class" => "form-control", "id" => "num_diario_oficial", "placeholder" => "Número Diário Oficial"]) ?>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label for="vigencia_tipo">Tipo de Vigência <span class="required">*</span></label>
-                                            <select id="vigencia_tipo" name="vigencia_tipo" class="form-control">
-                                                <option value="0">Dia</option>
-                                                <option value="1" selected>Mês</option>
-                                                <option value="2">Ano</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label for="vigencia_prazo">Prazo de Vigência <span class="required">*</span></label>
-                                            <?= $this->tag->textField(["vigencia_prazo", "size" => 200, "class" => "form-control", "id" => "vigencia_prazo", "placeholder" => "Prazo de Vigência"]) ?>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label for="numero">Número <span class="required">*</span></label>
-                                            <?= $this->tag->textField(["numero", "size" => 200, "class" => "form-control", "id" => "numero", "placeholder" => "Número do Contrato"]) ?>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label for="ano">Ano <span class="required">*</span></label>
-                                            <?= $this->tag->textField(["ano", "size" => 200, "class" => "form-control ano", "id" => "ano", "placeholder" => "Ano do Contrato"]) ?>
-                                        </div>
-                                        <div class="form-group col-md-2">
-                                            <label for="valor_global">Valor Global <span class="required">*</span></label>
-                                            <?= $this->tag->textField(["valor_global", "size" => 200, "class" => "form-control valor_monetario_limpo", "id" => "valor_global", "placeholder" => "Valor Global do Contrato"]) ?>
-                                        </div>
-                                        <div class="form-group col-md-2 botoes_forms_alinhamento">
-                                            <label for="valor_mensal botoes_forms_alinhamento">Valor Mensal </label>
-                                            <?= $this->tag->textField(["valor_mensal", "size" => 200, "class" => "form-control valor_monetario_limpo", "id" => "valor_mensal", "placeholder" => "Valor Mensal do Contrato"]) ?>
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-12">
-                                            <label for="objeto">Objeto <span class="required">*</span></label>
-                                            <?php echo $this->tag->textArea(["objeto", "style" => "resize: none", "size" => 800, "class" => "form-control", "id" => "objeto", "placeholder" => "Objeto contratual"]) ?>
-                                        </div>
-                                    </div>
+                                <div class="form-group col-md-2">
+                                    <label for="id_tipo_processo">Tipo Processo <span class="required">*</span></label>
+                                    <?php echo $this->tag->select(["id_tipo_processo", $tipos_processos, "class" => "form-control", "id" => "id_tipo_processo", "onchange" => "",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione o tipo de Processo",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="numero_processo">Número Processo <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["numero_processo", "size" => 200, "class" => "form-control", "id" => "numero_processo", "placeholder" => "Número de Acompanhamento do Processo"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="id_tipo_contrato">Tipo Contrato <span class="required">*</span></label>
+                                    <?php echo $this->tag->select(["id_tipo_contrato", $tipos, "class" => "form-control", "id" => "id_tipo_contrato", "onchange" => "contratoClienteFornecedor();",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione o tipo de Contrato",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                    <label for="lid_proposta_comercial">Proposta Comercial </label>
+                                    <?php echo $this->tag->textField(["lid_proposta_comercial", "size" => 120, "class" => "form-control", "id" => "lid_proposta_comercial", "placeholder" => "Proposta Comercial", "onkeyup" => "autocompletarPropostaComercial('lid_proposta_comercial','id_proposta_comercial');", "onblur" => "preencherDadosPropostaComercial();"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_proposta_comercial", "size" => 120, "class" => "form-control", "id" => "id_proposta_comercial"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="vincular_instrumento">Vincular a outro Instrumento? <span class="required">*</span></label>
+                                    <select id="vincular_instrumento" name="vincular_instrumento" class="form-control" onchange="vincularContrato();">
+                                        <option value="1">Sim</option>
+                                        <option value="0" selected>Não</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                    <label for="lid_contrato_principal">Contrato Principal </label>
+                                    <?php echo $this->tag->textField(["lid_contrato_principal", "size" => 120, "class" => "form-control", "id" => "lid_contrato_principal", "placeholder" => "Contrato a ser vinculado", "onkeyup" => "autocompletarContratoPrincipal('lid_contrato_principal','id_contrato_principal');"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_contrato_principal", "size" => 120, "class" => "form-control", "id" => "id_contrato_principal"]) ?>
+                                </div>
+                                <div id="div_cliente" class="form-group col-md-4">
+                                    <label for="lid_cliente">Cliente / Fornecedor / Parceiro <span class="required">*</span></label>
+                                    <?php echo $this->tag->textField(["lid_cliente", "size" => 120, "class" => "form-control", "id" => "lid_cliente", "placeholder" => "Cliente / Fornecedor / Parceiro", "onkeyup" => "autocompletarClienteFornecedorParceiro('lid_cliente','id_cliente');"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_cliente", "size" => 120, "class" => "form-control", "id" => "id_cliente"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="id_status">Status Contrato <span class="required">*</span></label>
+                                    <?php echo $this->tag->select(["id_status", $status_contrato, "class" => "form-control", "id" => "id_status",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione o status de Contrato",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="data_assinatura">Data de Assinatura <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["data_assinatura", "size" => 200, "class" => "form-control data", "id" => "data_assinatura", "placeholder" => "Data de Assinatura do Contrato"]) ?>
+                                </div>
+                                <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                    <label for="data_publicacao">Data de Publicação </label>
+                                    <?= $this->tag->textField(["data_publicacao", "size" => 200, "class" => "form-control data", "id" => "data_publicacao", "placeholder" => "Data de Publicação do Contrato"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="data_encerramento">Data de Encerramento <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["data_encerramento", "size" => 200, "class" => "form-control data", "id" => "data_encerramento", "placeholder" => "Data de Encerramento do Contrato"]) ?>
+                                </div>
+                                <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                    <label for="num_diario_oficial">Número Diário Oficial </label>
+                                    <?= $this->tag->textField(["num_diario_oficial", "size" => 200, "class" => "form-control", "id" => "num_diario_oficial", "placeholder" => "Número Diário Oficial"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="vigencia_tipo">Tipo de Vigência <span class="required">*</span></label>
+                                    <select id="vigencia_tipo" name="vigencia_tipo" class="form-control">
+                                        <option value="0">Dia</option>
+                                        <option value="1" selected>Mês</option>
+                                        <option value="2">Ano</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="vigencia_prazo">Prazo de Vigência <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["vigencia_prazo", "size" => 200, "class" => "form-control", "id" => "vigencia_prazo", "placeholder" => "Prazo de Vigência"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="numero">Número <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["numero", "size" => 200, "class" => "form-control", "id" => "numero", "placeholder" => "Número do Contrato"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="ano">Ano <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["ano", "size" => 200, "class" => "form-control ano", "id" => "ano", "placeholder" => "Ano do Contrato"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="valor_global">Valor Global <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["valor_global", "size" => 200, "class" => "form-control valor_monetario_limpo", "id" => "valor_global", "placeholder" => "Valor Global do Contrato"]) ?>
+                                </div>
+                                <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                    <label for="valor_mensal botoes_forms_alinhamento">Valor Mensal </label>
+                                    <?= $this->tag->textField(["valor_mensal", "size" => 200, "class" => "form-control valor_monetario_limpo", "id" => "valor_mensal", "placeholder" => "Valor Mensal do Contrato"]) ?>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="objeto">Objeto <span class="required">*</span></label>
+                                    <?php echo $this->tag->textArea(["objeto", "style" => "resize: none", "size" => 800, "class" => "form-control", "id" => "objeto", "placeholder" => "Objeto contratual"]) ?>
                                 </div>
                             </div>
                         </div>
@@ -514,3 +510,117 @@ $module = $this->router->getControllerName();
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<!--Modal Inclusão de Fiscal-->
+<div id="modalFiscalContrato" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalFiscalContrato" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" onclick="confirmaCancelarFiscalContrato('modalFiscalContrato');">×</button>
+                <h5 class="modal-title" id="modalFiscalContrato">Fiscais do Contrato</h5>
+            </div>
+            <form id="formFiscalContrato">
+                <input type="hidden" id="token" name="<?= $token['tokenKey'] ?>" value="<?= $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
+                <div class="modal-body">
+                    <!--Corpo do Modal-->
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <button type="button" name="bt_novo_fiscal" id="bt_novo_fiscal" class="btn btn-success btn-rounded waves-light w-md hide_buttons" onclick="criarFiscal();">Novo</button>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-12" id="div_tabela_fiscais">
+                            <table id="tabela_fiscais" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%"  style="display: none;">
+                                <thead>
+                                <tr style="text-align: center;">
+                                    <th>Tipo de Fiscal</th>
+                                    <th>Nome Fiscal</th>
+                                    <th>Data Nomeação</th>
+                                    <th>Documento Nomeação</th>
+                                    <th>Ações</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="dados_fiscal" style="display: none;">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="v_id_tipo_fiscal">Tipo de Fiscal <span class="required">*</span></label>
+                                <?php echo $this->tag->select(["v_id_tipo_fiscal", $tipos_fiscais, "class" => "form-control", "id" => "v_id_tipo_fiscal", "onchange" => "verificarTiposExistentes();",
+                                    "using" => ["id", "descricao",],
+                                    "useEmpty" => true,
+                                    "emptyText" => "Selecione o tipo de Fiscal",
+                                    "emptyValue" => ""])
+                                ?>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="lid_usuario">Nome Fiscal <span class="required">*</span></label>
+                                <?php echo $this->tag->textField(["lid_usuario", "size" => 120, "class" => "form-control", "id" => "lid_usuario", "placeholder" => "Contrato a ser vinculado", "onkeyup" => "autocompletarUsuario('lid_usuario','v_id_usuario');"]) ?>
+                                <?php echo $this->tag->hiddenField(["v_id_usuario", "size" => 120, "class" => "form-control", "id" => "v_id_usuario"]) ?>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="v_data_nomeacao">Data Nomeação <span class="required">*</span></label>
+                                <?php echo $this->tag->textField(["v_data_nomeacao", "size" => 120, "class" => "form-control data", "id" => "v_data_nomeacao", "placeholder" => "Data em que foi nomeado"]) ?>
+                            </div>
+                            <div class="form-group col-md-6 botoes_forms_alinhamento">
+                                <label for="v_documento_nomeacao">Documento de Nomeação </label>
+                                <?php echo $this->tag->textField(["v_documento_nomeacao", "size" => 120, "class" => "form-control", "id" => "v_documento_nomeacao", "placeholder" => "Documento de nomeação"]) ?>
+                            </div>
+                            <div class="form-group col-md-6 botoes_forms_alinhamento">
+                                <button type="button" name="bt_inserir_fiscal" id="bt_inserir_fiscal" class="btn btn-info btn-rounded waves-light w-md bt_menu_tabela hide_buttons" onclick="inserirFiscal();">Inserir</button>
+                                <button type="button" name="bt_cancelar_fiscal" id="bt_cancelar_fiscal" class="btn btn-danger btn-rounded waves-light w-md bt_menu_tabela" onclick="cancelarFiscal();">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group col-md-6">
+                        <p class="texto_rodape">Os campos com <span class="required">*</span> são obrigatórios!</p>
+                    </div>
+                    <div class="form-group col-md-6 botoes_rodape">
+                        <input type="hidden" id="id_contrato_fiscal" name="id_contrato_fiscal" value=""><!-- Manter como hidden -->
+                        <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="confirmaCancelarFiscalContrato('modalFiscalContrato');">Fechar</button>
+                        <button id="salvarFiscalContrato" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light" onclick="salvarFiscalContrato();" value="">Salvar</button>
+                    </div>
+                </div><!-- /.modal-footer -->
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!--Modal de Movimento de Contrato-->
+<div id="modalMovimentoContrato" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalMovimentoContrato" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-sg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" onclick="confirmaCancelarMovimentoContrato('modalMovimentoContrato');">×</button>
+                <h5 class="modal-title" id="modalMovimentoContrato">Movimentação de Contrato</h5>
+            </div>
+            <form id="formMovimentoContrato">
+                <input type="hidden" id="token" name="<?= $token['tokenKey'] ?>" value="<?= $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
+                <div class="modal-body">
+                    <!--Corpo do Modal-->
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group col-md-6">
+                        <p class="texto_rodape">Os campos com <span class="required">*</span> são obrigatórios!</p>
+                    </div>
+                    <div class="form-group col-md-6 botoes_rodape">
+                        <input type="hidden" id="id_contrato_movimento" name="id_contrato_movimento" value=""><!-- Manter como hidden -->
+                        <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="confirmaCancelarMovimentoContrato('modalMovimentoContrato');">Fechar</button>
+                        <button id="salvarMovimentoContrato" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light" onclick="salvarMovimentoContrato();" value="">Salvar</button>
+                    </div>
+                </div><!-- /.modal-footer -->
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!--Modal de Upload-->
+
+<!--Modal de Gestão Financeira-->
+
+<!--Modal de Fiscalização e Não Conformidades-->
+
