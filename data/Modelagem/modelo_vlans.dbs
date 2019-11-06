@@ -496,6 +496,9 @@
 			<column name="id_usuario" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="id_tipo_fiscal" type="int" jt="4" mandatory="y" />
 			<column name="data_criacao" type="timestamp" length="26" decimal="0" jt="93" />
+			<column name="data_nomeacao" type="date" jt="91" mandatory="y" >
+				<comment><![CDATA[Data em que o usuário foi nomeado a fiscal do contrato.]]></comment>
+			</column>
 			<column name="documento_nomeacao" type="varchar" length="20" decimal="0" jt="12" />
 			<column name="ativo" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" >
 				<defo>1</defo>
@@ -2120,10 +2123,10 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="contrato_acompanhamento_financeiro" color="C1D8EE" x="1680" y="96" />
 		<entity schema="bd_circuitosnavega" name="contrato_acompanhamento_financeiro_nota" color="C1D8EE" x="2048" y="80" />
 		<entity schema="bd_circuitosnavega" name="contrato_nao_conformidade" color="C1D8EE" x="1776" y="288" />
-		<entity schema="bd_circuitosnavega" name="contrato_fiscal" color="BEBEF4" x="1776" y="480" />
 		<entity schema="bd_circuitosnavega" name="unidade_consumidora" color="C7F4BE" x="3024" y="112" />
 		<entity schema="bd_circuitosnavega" name="contrato_exercicio" color="C7F4BE" x="1456" y="192" />
 		<entity schema="bd_circuitosnavega" name="contrato" color="C7F4BE" x="1424" y="448" />
+		<entity schema="bd_circuitosnavega" name="contrato_fiscal" color="BEBEF4" x="1776" y="480" />
 		<group name="Empresa" color="C4E0F9" >
 			<entity schema="bd_circuitosnavega" name="empresa" />
 			<entity schema="bd_circuitosnavega" name="empresa_parametros" />
