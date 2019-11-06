@@ -714,13 +714,23 @@ class Contrato extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field Fornecedor
+     * Returns the value of field Contrato Principal
      *
      * @return string
      */
-    public function getFornecedor()
+    public function getContratoPrincipal()
     {
-        return $this->Fornecedor->Pessoa->nome;
+        return $this->ContratoPrincipal->numero . '/' . $this->ContratoPrincipal->ano;
+    }
+
+    /**
+     * Returns the value of field Proposta Comercial
+     *
+     * @return string
+     */
+    public function getPropostaComercial()
+    {
+        return $this->PropostaComercial->numero;
     }
 
     /**
@@ -777,7 +787,7 @@ class Contrato extends \Phalcon\Mvc\Model
         $this->hasMany('id', 'Circuitos\Models\Terreno', 'id_contrato', ['alias' => 'Terreno']);
         $this->hasMany('id', 'Circuitos\Models\Torre', 'id_contrato', ['alias' => 'Torre']);
         $this->belongsTo('id_cliente', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Cliente']);
-        $this->belongsTo('id_contrato_principal', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
+        $this->belongsTo('id_contrato_principal', 'Circuitos\Models\Contrato', 'id', ['alias' => 'ContratoPrincipal']);
         $this->belongsTo('id_tipo_contrato', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov1']);
         $this->belongsTo('id_status', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov2']);
         $this->belongsTo('id_tipo_processo', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov3']);

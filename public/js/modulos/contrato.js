@@ -84,9 +84,9 @@ function criar()
     $('#tabela_exercicios').attr('style', 'display: none;');
     $('#tabela_garantias').removeAttr('style', 'display: table;');
     $('#tabela_garantias').attr('style', 'display: none;');
-    $("#formCadastro input").removeAttr('readonly', 'readonly');
-    $("#formCadastro select").removeAttr('readonly', 'readonly');
-    $("#formCadastro textarea").removeAttr('readonly', 'readonly');
+    $("#formCadastro input").removeAttr('disabled', 'disabled');
+    $("#formCadastro select").removeAttr('disabled', 'disabled');
+    $("#formCadastro textarea").removeAttr('disabled', 'disabled');
     $("#salvarCadastro").val('criar');
     $("#salvarCadastro").show();
     $("#modalCadastro").modal();
@@ -416,14 +416,14 @@ function visualizar(id, ocultar)
         data: {metodo: 'visualizarContrato', id: id},
         complete: function () {
             if (ocultar) {
-                $("#formCadastro input").attr('readonly', 'readonly');
-                $("#formCadastro select").attr('readonly', 'readonly');
-                $("#formCadastro textarea").attr('readonly', 'readonly');
+                $("#formCadastro input").attr('disabled', 'disabled');
+                $("#formCadastro select").attr('disabled', 'disabled');
+                $("#formCadastro textarea").attr('disabled', 'disabled');
                 $("#salvarCadastro").hide();
             } else {
-                $("#formCadastro input").removeAttr('readonly', 'readonly');
-                $("#formCadastro select").removeAttr('readonly', 'readonly');
-                $("#formCadastro textarea").removeAttr('readonly', 'readonly');
+                $("#formCadastro input").removeAttr('disabled', 'disabled');
+                $("#formCadastro select").removeAttr('disabled', 'disabled');
+                $("#formCadastro textarea").removeAttr('disabled', 'disabled');
                 $("#salvarCadastro").val('editar');
                 $("#salvarCadastro").show();
                 $('.hide_buttons').show();
@@ -442,26 +442,29 @@ function visualizar(id, ocultar)
         },
         success: function (data) {
             $('#id').val(data.dados.id);
-            $('#lid_cliente').val(data.dados.ds_cliente);
+            $('#lid_contrato_principal').val(data.descricao.ds_contrato_principal);
+            $('#id_contrato_principal').val(data.dados.id_contrato_principal);
+            $('#lid_cliente').val(data.descricao.ds_cliente);
             $('#id_cliente').val(data.dados.id_cliente);
+            $('#lid_proposta_comercial').val(data.descricao.ds_proposta_comercial);
+            $('#id_proposta_comercial').val(data.dados.id_proposta_comercial);
+            $('#id_tipo_contrato').val(data.dados.id_tipo_contrato).selected = "true";
             $('#id_status').val(data.dados.id_status).selected = "true";
-            $('#id_tipo_proposta').val(data.dados.id_tipo_proposta).selected = "true";
-            $('#id_localizacao').val(data.dados.id_localizacao).selected = "true";
-            $('#data_proposta').val(data.dados.data_proposta);
+            $('#id_tipo_processo').val(data.dados.id_tipo_processo).selected = "true";
+            $('#vigencia_tipo').val(data.dados.vigencia_tipo).selected = "true";
+            $('#vincular_instrumento').val((data.dados.id_contrato_principal) ? 1 : 0).selected = "true";
             $('#numero').val(data.dados.numero);
-            $('#vencimento').val(data.dados.vencimento);
-            $('#reajuste').val(data.dados.reajuste);
-            $('#desconto').val(data.dados.desconto);
-            $('#imposto').val(data.dados.imposto);
-            $('#encargos').val(data.dados.encargos);
-            $('#valor_global').val(data.dados.valor_global);
-            $('#objetivo').val(data.dados.objetivo);
+            $('#numero_processo').val(data.dados.numero_processo);
+            $('#ano').val(data.dados.ano);
+            $('#data_assinatura').val(formataDataBR(data.dados.data_assinatura));
+            $('#data_publicacao').val(formataDataBR(data.dados.data_publicacao));
+            $('#num_diario_oficial').val(data.dados.num_diario_oficial);
+            $('#data_encerramento').val(formataDataBR(data.dados.data_encerramento));
+            $('#vigencia_prazo').val(data.dados.vigencia_prazo);
+            $('#objeto').val(data.dados.objeto);
             $('#objetivo_especifico').val(data.dados.objetivo_especifico);
-            $('#descritivo').val(data.dados.descritivo);
-            $('#responsabilidade').val(data.dados.responsabilidade);
-            $('#condicoes_pgto').val(data.dados.condicoes_pgto);
-            $('#prazo_execucao').val(data.dados.prazo_execucao);
-            $('#consideracoes').val(data.dados.consideracoes);
+            $('#valor_global').val(accounting.formatMoney(data.dados.valor_global, '', 2, '.', ','));
+            $('#valor_mensal').val(accounting.formatMoney(data.dados.valor_mensal, '', 2, '.', ','));
             montarTabelaOrcamento(data.dados.id, ocultar);
             montarTabelaGarantia(data.dados.id, ocultar);
             montarTabelaExercicio(data.dados.id, ocultar);
@@ -525,7 +528,7 @@ function montarTabelaOrcamento(id_contrato, visualizar)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: { metodo: 'visualizarContratoOrcamento', id: id_contrato },
+        data: { metodo: 'visualizarContratoOrcamentos', id: id_contrato },
         complete: function() {
             $('#tabela_orcamentos').removeAttr('style', 'display: none;');
             $('#tabela_orcamentos').attr('style', 'display: table;');
@@ -644,9 +647,9 @@ function exibirDetalhesOrcamento(id, ocultar)
         data: { metodo: 'visualizarContratoOrcamento', id: id },
         complete: function() {
             if (ocultar) {
-                $("#formCadastro input").attr('readonly', 'readonly');
-                $("#formCadastro select").attr('readonly', 'readonly');
-                $("#formCadastro textarea").attr('readonly', 'readonly');
+                $("#formCadastro input").attr('disabled', 'disabled');
+                $("#formCadastro select").attr('disabled', 'disabled');
+                $("#formCadastro textarea").attr('disabled', 'disabled');
                 $('.hide_buttons').hide();
                 $("#salvarCadastro").hide();
             } else {
@@ -786,7 +789,7 @@ function montarTabelaExercicio(id_contrato, visualizar)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: { metodo: 'visualizarContratoExercicio', id: id_contrato },
+        data: { metodo: 'visualizarContratoExercicios', id: id_contrato },
         complete: function() {
             $('#tabela_exercicios').removeAttr('style', 'display: none;');
             $('#tabela_exercicios').attr('style', 'display: table;');
@@ -811,12 +814,12 @@ function montarTabelaExercicio(id_contrato, visualizar)
                 linhas += '<td>'+ value.exercicio +'<input name="res_exercicio[]" type="hidden" value="'+ value.exercicio +'" /></td>';
                 linhas += '<td>'+ value.competencia_inicial +'<input name="res_competencia_inicial[]" type="hidden" value="'+ value.competencia_inicial +'" /></td>';
                 linhas += '<td>'+ value.competencia_final +'<input name="res_competencia_final[]" type="hidden" value="'+ value.competencia_final +'" /></td>';
-                linhas += '<td>'+ value.valor_previsto +'<input name="res_valor_previsto[]" type="hidden" value="'+ value.valor_previsto +'" /></td>';
+                linhas += '<td>'+ accounting.formatMoney(value.valor_previsto, '', 2, '.', ',') +'<input name="res_valor_previsto[]" type="hidden" value="'+ value.valor_previsto +'" /></td>';
                 if (visualizar) {
-                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesExercicio(' + value.id_contrato_item + ', ' + true + ');" class="botoes_acao"><img src="public/images/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a></td>';
+                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesExercicio(' + value.id_contrato_exercicio + ', ' + true + ');" class="botoes_acao"><img src="public/images/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a></td>';
                 } else {
-                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesExercicio(' + value.id_contrato_item + ', ' + false + ');" class="botoes_acao"><img src="public/images/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>' +
-                        '<a href="javascript:void(0)" onclick="excluirExercicio(' + value.id_contrato_item + ');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesExercicio(' + value.id_contrato_exercicio + ', ' + false + ');" class="botoes_acao"><img src="public/images/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>' +
+                        '<a href="javascript:void(0)" onclick="excluirExercicio(' + value.id_contrato_exercicio + ');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
                 }
                 linhas += '</tr>';
             });
@@ -901,9 +904,9 @@ function exibirDetalhesExercicio(id, ocultar)
         data: { metodo: 'visualizarContratoExercicio', id: id },
         complete: function() {
             if (ocultar) {
-                $("#formCadastro input").attr('readonly', 'readonly');
-                $("#formCadastro select").attr('readonly', 'readonly');
-                $("#formCadastro textarea").attr('readonly', 'readonly');
+                $("#formCadastro input").attr('disabled', 'disabled');
+                $("#formCadastro select").attr('disabled', 'disabled');
+                $("#formCadastro textarea").attr('disabled', 'disabled');
                 $('.hide_buttons').hide();
                 $("#salvarCadastro").hide();
             } else {
@@ -1043,7 +1046,7 @@ function montarTabelaGarantia(id_contrato, visualizar)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: { metodo: 'visualizarContratoGarantia', id: id_contrato },
+        data: { metodo: 'visualizarContratoGarantias', id: id_contrato },
         complete: function() {
             $('#tabela_garantias').removeAttr('style', 'display: none;');
             $('#tabela_garantias').attr('style', 'display: table;');
@@ -1065,16 +1068,16 @@ function montarTabelaGarantia(id_contrato, visualizar)
             var linhas = null;
             $.each(data.dados, function(key, value) {
                 var ds_garantia_concretizada = (value.garantia_concretizada === '1') ? 'Sim' : 'Não';
-                linhas += '<tr class="tr_remove_exe_vis">';
+                linhas += '<tr class="tr_remove_gar_vis">';
                 linhas += '<td>'+ value.ds_modalidade +'<input name="res_id_modalidade[]" type="hidden" value="'+ value.id_modalidade +'" /></td>';
                 linhas += '<td>'+ ds_garantia_concretizada +'<input name="res_garantia_concretizada[]" type="hidden" value="'+ value.garantia_concretizada +'" /></td>';
-                linhas += '<td>'+ value.percentual +'<input name="res_percentual[]" type="hidden" value="'+ value.percentual +'" /></td>';
-                linhas += '<td>'+ value.valor_garantia +'<input name="res_valor_garantia[]" type="hidden" value="'+ value.valor_garantia +'" /></td>';
+                linhas += '<td>'+ accounting.formatMoney(value.percentual, '', 2, '.', ',') +'<input name="res_percentual[]" type="hidden" value="'+ value.percentual +'" /></td>';
+                linhas += '<td>'+ accounting.formatMoney(value.valor, '', 2, '.', ',') +'<input name="res_valor_garantia[]" type="hidden" value="'+ value.valor +'" /></td>';
                 if (visualizar) {
-                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesGarantia(' + value.id_contrato_item + ', ' + true + ');" class="botoes_acao"><img src="public/images/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a></td>';
+                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesGarantia(' + value.id_contrato_garantia + ', ' + true + ');" class="botoes_acao"><img src="public/images/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a></td>';
                 } else {
-                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesGarantia(' + value.id_contrato_item + ', ' + false + ');" class="botoes_acao"><img src="public/images/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>' +
-                        '<a href="javascript:void(0)" onclick="excluirGarantia(' + value.id_contrato_item + ');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+                    linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesGarantia(' + value.id_contrato_garantia + ', ' + false + ');" class="botoes_acao"><img src="public/images/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>' +
+                        '<a href="javascript:void(0)" onclick="excluirGarantia(' + value.id_contrato_garantia + ');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
                 }
                 linhas += '</tr>';
             });
@@ -1161,9 +1164,9 @@ function exibirDetalhesGarantia(id, ocultar)
         data: { metodo: 'visualizarContratoGarantia', id: id },
         complete: function() {
             if (ocultar) {
-                $("#formCadastro input").attr('readonly', 'readonly');
-                $("#formCadastro select").attr('readonly', 'readonly');
-                $("#formCadastro textarea").attr('readonly', 'readonly');
+                $("#formCadastro input").attr('disabled', 'disabled');
+                $("#formCadastro select").attr('disabled', 'disabled');
+                $("#formCadastro textarea").attr('disabled', 'disabled');
                 $('.hide_buttons').hide();
                 $("#salvarCadastro").hide();
             } else {

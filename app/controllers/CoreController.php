@@ -609,6 +609,30 @@ class CoreController extends ControllerBase
                 $objeto = new ContratoOP();
                 return $objeto->visualizarContrato($dados['id']);
                 break;
+            case 'visualizarContratoOrcamentos':
+                $objeto = new ContratoOP();
+                return $objeto->visualizarContratoOrcamentos($dados['id']);
+                break;
+            case 'visualizarContratoGarantias':
+                $objeto = new ContratoOP();
+                return $objeto->visualizarContratoGarantias($dados['id']);
+                break;
+            case 'visualizarContratoExercicios':
+                $objeto = new ContratoOP();
+                return $objeto->visualizarContratoExercicios($dados['id']);
+                break;
+            case 'visualizarContratoOrcamento':
+                $objeto = new ContratoOP();
+                return $objeto->visualizarContratoOrcamento($dados['id']);
+                break;
+            case 'visualizarContratoGarantia':
+                $objeto = new ContratoOP();
+                return $objeto->visualizarContratoGarantia($dados['id']);
+                break;
+            case 'visualizarContratoExercicio':
+                $objeto = new ContratoOP();
+                return $objeto->visualizarContratoExercicio($dados['id']);
+                break;
             case 'visualizarConectividade':
                 $objeto = new ConectividadeOP();
                 return $objeto->visualizarConectividade($dados['id']);

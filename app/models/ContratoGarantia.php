@@ -60,6 +60,12 @@ class ContratoGarantia extends \Phalcon\Mvc\Model
     protected $data_update;
 
     /**
+     *
+     * @var integer
+     */
+    protected $id_contrato;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -177,6 +183,19 @@ class ContratoGarantia extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field id_contrato
+     *
+     * @param integer $id_contrato
+     * @return $this
+     */
+    public function setIdContrato($id_contrato)
+    {
+        $this->id_contrato = $id_contrato;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field id
      *
      * @return integer
@@ -267,24 +286,34 @@ class ContratoGarantia extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field id_contrato
+     *
+     * @return integer
+     */
+    public function getIdContrato()
+    {
+        return $this->id_contrato;
+    }
+
+    /**
+     * Returns the value of field modalidade
+     *
+     * @return string
+     */
+    public function getModalidade()
+    {
+        return $this->Lov->descricao;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
     {
         $this->setSchema("bd_circuitosnavega");
         $this->setSource("contrato_garantia");
-        $this->hasMany('id', 'Circuitos\Models\ContratoHasContratoGarantia', 'id_contrato_garantia', ['alias' => 'ContratoHasContratoGarantia']);
+        $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
         $this->belongsTo('id_modalidade', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
-    }
-
-    /**
-     * Returns table name mapped in the model.
-     *
-     * @return string
-     */
-    public function getSource()
-    {
-        return 'contrato_garantia';
     }
 
     /**
@@ -307,6 +336,16 @@ class ContratoGarantia extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Returns table name mapped in the model.
+     *
+     * @return string
+     */
+    public function getSource()
+    {
+        return 'contrato_garantia';
     }
 
 }
