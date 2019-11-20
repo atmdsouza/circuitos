@@ -37,7 +37,7 @@ class Infra
 
     public function getVersao()
     {
-        return '2.01.01';
+        return '2.01.02';//Correção do cadastro de perfil
     }
 
     public function getCaminhoRelatorios()
