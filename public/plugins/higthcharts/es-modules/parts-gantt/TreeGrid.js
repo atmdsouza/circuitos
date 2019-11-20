@@ -12,11 +12,12 @@
 'use strict';
 import H from '../parts/Globals.js';
 import U from '../parts/Utilities.js';
-var defined = U.defined, isNumber = U.isNumber, isString = U.isString;
 import './GridAxis.js';
 import Tree from './Tree.js';
 import mixinTreeSeries from '../mixins/tree-series.js';
 import '../modules/broken-axis.src.js';
+
+var defined = U.defined, isNumber = U.isNumber, isString = U.isString;
 var addEvent = H.addEvent, argsToArray = function (args) {
     return Array.prototype.slice.call(args, 1);
 }, extend = H.extend, find = H.find, fireEvent = H.fireEvent, getLevelOptions = mixinTreeSeries.getLevelOptions, merge = H.merge, isBoolean = function (x) {

@@ -10,6 +10,7 @@
  *
  * */
 import H from '../../parts/Globals.js';
+
 var Chart = H.Chart, addEvent = H.addEvent;
 /* eslint-disable no-invalid-this, valid-jsdoc */
 H.dragNodesMixin = {

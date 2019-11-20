@@ -14,21 +14,25 @@ import H from './Globals.js';
  */
 /**
  * @interface Highcharts.DataGroupingInfoObject
- */ /**
-* @name Highcharts.DataGroupingInfoObject#length
-* @type {number}
-*/ /**
-* @name Highcharts.DataGroupingInfoObject#options
-* @type {Highcharts.SeriesOptionsType|undefined}
-*/ /**
-* @name Highcharts.DataGroupingInfoObject#start
-* @type {number}
-*/
+ */
+/**
+ * @name Highcharts.DataGroupingInfoObject#length
+ * @type {number}
+ */
+/**
+ * @name Highcharts.DataGroupingInfoObject#options
+ * @type {Highcharts.SeriesOptionsType|undefined}
+ */
+/**
+ * @name Highcharts.DataGroupingInfoObject#start
+ * @type {number}
+ */
 import U from './Utilities.js';
-var defined = U.defined, isNumber = U.isNumber;
 import './Axis.js';
 import './Series.js';
 import './Tooltip.js';
+
+var defined = U.defined, isNumber = U.isNumber;
 var addEvent = H.addEvent, arrayMax = H.arrayMax, arrayMin = H.arrayMin, Axis = H.Axis, correctFloat = H.correctFloat, defaultPlotOptions = H.defaultPlotOptions, extend = H.extend, format = H.format, merge = H.merge, pick = H.pick, Point = H.Point, Series = H.Series, Tooltip = H.Tooltip;
 /* ************************************************************************** *
  *  Start data grouping module                                                *

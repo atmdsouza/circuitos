@@ -11,22 +11,25 @@
 import H from '../parts/Globals.js';
 /**
  * @interface Highcharts.PointOptionsObject
- */ /**
-* Heatmap series only. Point padding for a single point.
-* @name Highcharts.PointOptionsObject#pointPadding
-* @type {number|undefined}
-*/ /**
-* Heatmap series only. The value of the point, resulting in a color controled
-* by options as set in the colorAxis configuration.
-* @name Highcharts.PointOptionsObject#value
-* @type {number|null|undefined}
-*/
+ */
+/**
+ * Heatmap series only. Point padding for a single point.
+ * @name Highcharts.PointOptionsObject#pointPadding
+ * @type {number|undefined}
+ */
+/**
+ * Heatmap series only. The value of the point, resulting in a color controled
+ * by options as set in the colorAxis configuration.
+ * @name Highcharts.PointOptionsObject#value
+ * @type {number|null|undefined}
+ */
 import '../parts/Utilities.js';
 import '../parts/Options.js';
 import '../parts/Point.js';
 import '../parts/Series.js';
 import '../parts/Legend.js';
 import './ColorSeriesMixin.js';
+
 var colorPointMixin = H.colorPointMixin, colorSeriesMixin = H.colorSeriesMixin, LegendSymbolMixin = H.LegendSymbolMixin, merge = H.merge, noop = H.noop, pick = H.pick, Series = H.Series, seriesType = H.seriesType, seriesTypes = H.seriesTypes;
 /**
  * @private

@@ -11,10 +11,10 @@
 import H from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
+import derivedSeriesMixin from '../mixins/derived-series.js';
+
 var isNumber = U.isNumber,
     objectEach = U.objectEach;
-
-import derivedSeriesMixin from '../mixins/derived-series.js';
 
 var seriesType = H.seriesType,
     correctFloat = H.correctFloat,

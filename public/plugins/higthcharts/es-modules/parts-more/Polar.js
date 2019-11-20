@@ -10,10 +10,10 @@
 'use strict';
 import H from '../parts/Globals.js';
 import U from '../parts/Utilities.js';
-var splat = U.splat;
 import '../parts/Pointer.js';
 import '../parts/Series.js';
-import '../parts/Pointer.js';
+
+var splat = U.splat;
 // Extensions for polar charts. Additionally, much of the geometry required for
 // polar charts is gathered in RadialAxes.js.
 var pick = H.pick, Pointer = H.Pointer, Series = H.Series, seriesTypes = H.seriesTypes, wrap = H.wrap, seriesProto = Series.prototype, pointerProto = Pointer.prototype, colProto;

@@ -12,6 +12,7 @@ import H from '../parts/Globals.js';
 import '../parts/Utilities.js';
 import '../parts/Options.js';
 import './BoxPlotSeries.js';
+
 var noop = H.noop, seriesType = H.seriesType, seriesTypes = H.seriesTypes;
 /**
  * Error bars are a graphical representation of the variability of data and are

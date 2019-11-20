@@ -82,12 +82,12 @@
 import H from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
-var isObject = U.isObject,
-    objectEach = U.objectEach;
-
 import '../parts/Options.js';
 import '../parts/Chart.js';
 import chartNavigationMixin from '../mixins/navigation.js';
+
+var isObject = U.isObject,
+    objectEach = U.objectEach;
 
 // create shortcuts
 var defaultOptions = H.defaultOptions,

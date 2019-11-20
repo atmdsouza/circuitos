@@ -10,11 +10,12 @@
 'use strict';
 import H from '../parts/Globals.js';
 import U from '../parts/Utilities.js';
-var isNumber = U.isNumber, pInt = U.pInt;
 import '../parts/Options.js';
 import '../parts/Point.js';
 import '../parts/Series.js';
 import '../parts/Interaction.js';
+
+var isNumber = U.isNumber, pInt = U.pInt;
 var merge = H.merge, noop = H.noop, pick = H.pick, Series = H.Series, seriesType = H.seriesType, TrackerMixin = H.TrackerMixin;
 /**
  * Gauges are circular plots displaying one or more values with a dial pointing

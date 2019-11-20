@@ -10,6 +10,7 @@
 'use strict';
 import H from './Globals.js';
 import './Utilities.js';
+
 var charts = H.charts, extend = H.extend, noop = H.noop, pick = H.pick, Pointer = H.Pointer;
 /* eslint-disable no-invalid-this, valid-jsdoc */
 // Support for touch devices

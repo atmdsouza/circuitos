@@ -14,11 +14,11 @@
 import H from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
-var isNumber = U.isNumber;
-
 import '../parts/Color.js';
 import '../parts/Series.js';
 import '../parts/Options.js';
+
+var isNumber = U.isNumber;
 
 var win = H.win,
     doc = win.document,

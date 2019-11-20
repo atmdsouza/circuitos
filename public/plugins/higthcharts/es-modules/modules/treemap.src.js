@@ -13,16 +13,16 @@ import mixinTreeSeries from '../mixins/tree-series.js';
 import drawPoint from '../mixins/draw-point.js';
 
 import U from '../parts/Utilities.js';
+import '../parts/Options.js';
+import '../parts/Series.js';
+import '../parts/Color.js';
+
 var defined = U.defined,
     isArray = U.isArray,
     isNumber = U.isNumber,
     isObject = U.isObject,
     isString = U.isString,
     objectEach = U.objectEach;
-
-import '../parts/Options.js';
-import '../parts/Series.js';
-import '../parts/Color.js';
 
 var seriesType = H.seriesType,
     seriesTypes = H.seriesTypes,

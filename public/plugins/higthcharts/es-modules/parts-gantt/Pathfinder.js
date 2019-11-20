@@ -34,9 +34,10 @@ import H from '../parts/Globals.js';
  */
 import '../parts/Point.js';
 import U from '../parts/Utilities.js';
-var defined = U.defined, objectEach = U.objectEach, splat = U.splat;
 import pathfinderAlgorithms from 'PathfinderAlgorithms.js';
 import 'ArrowSymbols.js';
+
+var defined = U.defined, objectEach = U.objectEach, splat = U.splat;
 var deg2rad = H.deg2rad, extend = H.extend, addEvent = H.addEvent, merge = H.merge, pick = H.pick, max = Math.max, min = Math.min;
 /*
  @todo:

@@ -11,9 +11,9 @@
 import H from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
-var isNumber = U.isNumber;
-
 import onSeriesMixin from '../mixins/on-series.js';
+
+var isNumber = U.isNumber;
 
 var noop = H.noop,
     pick = H.pick,

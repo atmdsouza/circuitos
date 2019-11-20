@@ -13,20 +13,24 @@
 import H from '../parts/Globals.js';
 /**
  * @interface Highcharts.BubbleLegendFormatterContextObject
- */ /**
-* The center y position of the range.
-* @name Highcharts.BubbleLegendFormatterContextObject#center
-* @type {number}
-*/ /**
-* The radius of the bubble range.
-* @name Highcharts.BubbleLegendFormatterContextObject#radius
-* @type {number}
-*/ /**
-* The bubble value.
-* @name Highcharts.BubbleLegendFormatterContextObject#value
-* @type {number}
-*/
+ */
+/**
+ * The center y position of the range.
+ * @name Highcharts.BubbleLegendFormatterContextObject#center
+ * @type {number}
+ */
+/**
+ * The radius of the bubble range.
+ * @name Highcharts.BubbleLegendFormatterContextObject#radius
+ * @type {number}
+ */
+/**
+ * The bubble value.
+ * @name Highcharts.BubbleLegendFormatterContextObject#value
+ * @type {number}
+ */
 import U from '../parts/Utilities.js';
+
 var isNumber = U.isNumber, objectEach = U.objectEach;
 var Series = H.Series, Legend = H.Legend, Chart = H.Chart, addEvent = H.addEvent, wrap = H.wrap, color = H.color, numberFormat = H.numberFormat, merge = H.merge, noop = H.noop, pick = H.pick, stableSort = H.stableSort, setOptions = H.setOptions, arrayMin = H.arrayMin, arrayMax = H.arrayMax;
 setOptions({

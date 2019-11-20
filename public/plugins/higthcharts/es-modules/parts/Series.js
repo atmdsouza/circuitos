@@ -11,14 +11,16 @@
 import H from './Globals.js';
 /**
  * @interface Highcharts.PointOptionsObject
- */ /**
-* Individual point events
-* @name Highcharts.PointOptionsObject#events
-* @type {Highcharts.PlotSeriesPointEventsOptions}
-*/ /**
-* @name Highcharts.PointOptionsObject#marker
-* @type {Highcharts.PlotSeriesPointMarkerOptions}
-*/
+ */
+/**
+ * Individual point events
+ * @name Highcharts.PointOptionsObject#events
+ * @type {Highcharts.PlotSeriesPointEventsOptions}
+ */
+/**
+ * @name Highcharts.PointOptionsObject#marker
+ * @type {Highcharts.PlotSeriesPointMarkerOptions}
+ */
 /**
  * Function callback when a series has been animated.
  *
@@ -34,15 +36,17 @@ import H from './Globals.js';
  * Event information regarding completed animation of a series.
  *
  * @interface Highcharts.SeriesAfterAnimateEventObject
- */ /**
-* Animated series.
-* @name Highcharts.SeriesAfterAnimateEventObject#target
-* @type {Highcharts.Series}
-*/ /**
-* Event type.
-* @name Highcharts.SeriesAfterAnimateEventObject#type
-* @type {"afterAnimate"}
-*/
+ */
+/**
+ * Animated series.
+ * @name Highcharts.SeriesAfterAnimateEventObject#target
+ * @type {Highcharts.Series}
+ */
+/**
+ * Event type.
+ * @name Highcharts.SeriesAfterAnimateEventObject#type
+ * @type {"afterAnimate"}
+ */
 /**
  * Function callback when the checkbox next to the series' name in the legend is
  * clicked.
@@ -59,23 +63,27 @@ import H from './Globals.js';
  * Event information regarding check of a series box.
  *
  * @interface Highcharts.SeriesCheckboxClickEventObject
- */ /**
-* Whether the box has been checked.
-* @name Highcharts.SeriesCheckboxClickEventObject#checked
-* @type {boolean}
-*/ /**
-* Related series.
-* @name Highcharts.SeriesCheckboxClickEventObject#item
-* @type {Highcharts.Series}
-*/ /**
-* Related series.
-* @name Highcharts.SeriesCheckboxClickEventObject#target
-* @type {Highcharts.Series}
-*/ /**
-* Event type.
-* @name Highcharts.SeriesCheckboxClickEventObject#type
-* @type {"checkboxClick"}
-*/
+ */
+/**
+ * Whether the box has been checked.
+ * @name Highcharts.SeriesCheckboxClickEventObject#checked
+ * @type {boolean}
+ */
+/**
+ * Related series.
+ * @name Highcharts.SeriesCheckboxClickEventObject#item
+ * @type {Highcharts.Series}
+ */
+/**
+ * Related series.
+ * @name Highcharts.SeriesCheckboxClickEventObject#target
+ * @type {Highcharts.Series}
+ */
+/**
+ * Event type.
+ * @name Highcharts.SeriesCheckboxClickEventObject#type
+ * @type {"checkboxClick"}
+ */
 /**
  * Function callback when a series is clicked. Return false to cancel toogle
  * actions.
@@ -93,11 +101,12 @@ import H from './Globals.js';
  *
  * @interface Highcharts.SeriesClickEventObject
  * @extends global.Event
- */ /**
-* Nearest point on the graph.
-* @name Highcharts.SeriesClickEventObject#point
-* @type {Highcharts.Point}
-*/
+ */
+/**
+ * Nearest point on the graph.
+ * @name Highcharts.SeriesClickEventObject#point
+ * @type {Highcharts.Point}
+ */
 /**
  * Gets fired when the series is hidden after chart generation time, either by
  * clicking the legend item or by calling `.hide()`.
@@ -133,23 +142,27 @@ import H from './Globals.js';
  * Information about the event.
  *
  * @interface Highcharts.SeriesLegendItemClickEventObject
- */ /**
-* Related browser event.
-* @name Highcharts.SeriesLegendItemClickEventObject#browserEvent
-* @type {global.PointerEvent}
-*/ /**
-* Prevent the default action of toggle the visibility of the series.
-* @name Highcharts.SeriesLegendItemClickEventObject#preventDefault
-* @type {Function}
-*/ /**
-* Related series.
-* @name Highcharts.SeriesCheckboxClickEventObject#target
-* @type {Highcharts.Series}
-*/ /**
-* Event type.
-* @name Highcharts.SeriesCheckboxClickEventObject#type
-* @type {"checkboxClick"}
-*/
+ */
+/**
+ * Related browser event.
+ * @name Highcharts.SeriesLegendItemClickEventObject#browserEvent
+ * @type {global.PointerEvent}
+ */
+/**
+ * Prevent the default action of toggle the visibility of the series.
+ * @name Highcharts.SeriesLegendItemClickEventObject#preventDefault
+ * @type {Function}
+ */
+/**
+ * Related series.
+ * @name Highcharts.SeriesCheckboxClickEventObject#target
+ * @type {Highcharts.Series}
+ */
+/**
+ * Event type.
+ * @name Highcharts.SeriesCheckboxClickEventObject#type
+ * @type {"checkboxClick"}
+ */
 /**
  * Gets fired when the mouse leaves the graph.
  *
@@ -176,19 +189,23 @@ import H from './Globals.js';
  * Translation and scale for the plot area of a series.
  *
  * @interface Highcharts.SeriesPlotBoxObject
- */ /**
-* @name Highcharts.SeriesPlotBoxObject#scaleX
-* @type {number}
-*/ /**
-* @name Highcharts.SeriesPlotBoxObject#scaleY
-* @type {number}
-*/ /**
-* @name Highcharts.SeriesPlotBoxObject#translateX
-* @type {number}
-*/ /**
-* @name Highcharts.SeriesPlotBoxObject#translateY
-* @type {number}
-*/
+ */
+/**
+ * @name Highcharts.SeriesPlotBoxObject#scaleX
+ * @type {number}
+ */
+/**
+ * @name Highcharts.SeriesPlotBoxObject#scaleY
+ * @type {number}
+ */
+/**
+ * @name Highcharts.SeriesPlotBoxObject#translateX
+ * @type {number}
+ */
+/**
+ * @name Highcharts.SeriesPlotBoxObject#translateY
+ * @type {number}
+ */
 /**
  * Gets fired when the series is shown after chart generation time, either by
  * clicking the legend item or by calling `.show()`.
@@ -202,11 +219,12 @@ import H from './Globals.js';
  *        Event that occured.
  */
 import U from './Utilities.js';
-var defined = U.defined, erase = U.erase, isArray = U.isArray, isNumber = U.isNumber, isString = U.isString, objectEach = U.objectEach, splat = U.splat;
 import './Options.js';
 import './Legend.js';
 import './Point.js';
 import './SvgRenderer.js';
+
+var defined = U.defined, erase = U.erase, isArray = U.isArray, isNumber = U.isNumber, isString = U.isString, objectEach = U.objectEach, splat = U.splat;
 var addEvent = H.addEvent, animObject = H.animObject, arrayMax = H.arrayMax, arrayMin = H.arrayMin, correctFloat = H.correctFloat, defaultOptions = H.defaultOptions, defaultPlotOptions = H.defaultPlotOptions, extend = H.extend, fireEvent = H.fireEvent, LegendSymbolMixin = H.LegendSymbolMixin, // @todo add as a requirement
 merge = H.merge, pick = H.pick, Point = H.Point, // @todo  add as a requirement
 removeEvent = H.removeEvent, SVGElement = H.SVGElement, syncTimeout = H.syncTimeout, win = H.win;

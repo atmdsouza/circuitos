@@ -12,11 +12,11 @@
 import H from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
-var isNumber = U.isNumber,
-    objectEach = U.objectEach;
-
 import '../parts/Axis.js';
 import '../parts/Pointer.js';
+
+var isNumber = U.isNumber,
+    objectEach = U.objectEach;
 
 var hasTouch = H.hasTouch,
     merge = H.merge,

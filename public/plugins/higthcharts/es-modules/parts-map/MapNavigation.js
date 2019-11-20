@@ -10,8 +10,9 @@
 'use strict';
 import H from '../parts/Globals.js';
 import U from '../parts/Utilities.js';
-var objectEach = U.objectEach;
 import '../parts/Chart.js';
+
+var objectEach = U.objectEach;
 var addEvent = H.addEvent, Chart = H.Chart, doc = H.doc, extend = H.extend, merge = H.merge, pick = H.pick;
 /* eslint-disable no-invalid-this, valid-jsdoc */
 /**

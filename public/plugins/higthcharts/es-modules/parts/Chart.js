@@ -23,19 +23,20 @@ import H from './Globals.js';
  *
  * @interface Highcharts.TitleObject
  * @extends Highcharts.SVGElement
- */ /**
-* Modify options for the title.
-*
-* @function Highcharts.TitleObject#update
-*
-* @param {Highcharts.TitleOptions} titleOptions
-*        Options to modify.
-*
-* @param {boolean} [redraw=true]
-*        Whether to redraw the chart after the title is altered. If doing more
-*        operations on the chart, it is a good idea to set redraw to false and
-*        call {@link Chart#redraw} after.
-*/
+ */
+/**
+ * Modify options for the title.
+ *
+ * @function Highcharts.TitleObject#update
+ *
+ * @param {Highcharts.TitleOptions} titleOptions
+ *        Options to modify.
+ *
+ * @param {boolean} [redraw=true]
+ *        Whether to redraw the chart after the title is altered. If doing more
+ *        operations on the chart, it is a good idea to set redraw to false and
+ *        call {@link Chart#redraw} after.
+ */
 /**
  * The chart subtitle. The subtitle has an `update` method that
  * allows modifying the options directly or indirectly via
@@ -43,25 +44,27 @@ import H from './Globals.js';
  *
  * @interface Highcharts.SubtitleObject
  * @extends Highcharts.SVGElement
- */ /**
-* Modify options for the subtitle.
-*
-* @function Highcharts.SubtitleObject#update
-*
-* @param {Highcharts.SubtitleOptions} subtitleOptions
-*        Options to modify.
-*
-* @param {boolean} [redraw=true]
-*        Whether to redraw the chart after the subtitle is altered. If doing
-*        more operations on the chart, it is a good idea to set redraw to false
-*        and call {@link Chart#redraw} after.
-*/
+ */
+/**
+ * Modify options for the subtitle.
+ *
+ * @function Highcharts.SubtitleObject#update
+ *
+ * @param {Highcharts.SubtitleOptions} subtitleOptions
+ *        Options to modify.
+ *
+ * @param {boolean} [redraw=true]
+ *        Whether to redraw the chart after the subtitle is altered. If doing
+ *        more operations on the chart, it is a good idea to set redraw to false
+ *        and call {@link Chart#redraw} after.
+ */
 import U from './Utilities.js';
-var defined = U.defined, erase = U.erase, isArray = U.isArray, isNumber = U.isNumber, isObject = U.isObject, isString = U.isString, objectEach = U.objectEach, pInt = U.pInt, splat = U.splat;
 import './Axis.js';
 import './Legend.js';
 import './Options.js';
 import './Pointer.js';
+
+var defined = U.defined, erase = U.erase, isArray = U.isArray, isNumber = U.isNumber, isObject = U.isObject, isString = U.isString, objectEach = U.objectEach, pInt = U.pInt, splat = U.splat;
 var addEvent = H.addEvent, animate = H.animate, animObject = H.animObject, attr = H.attr, doc = H.doc, Axis = H.Axis, // @todo add as requirement
 createElement = H.createElement, defaultOptions = H.defaultOptions, discardElement = H.discardElement, charts = H.charts, css = H.css, extend = H.extend, find = H.find, fireEvent = H.fireEvent, Legend = H.Legend, // @todo add as requirement
 marginNames = H.marginNames, merge = H.merge, Pointer = H.Pointer, // @todo add as requirement

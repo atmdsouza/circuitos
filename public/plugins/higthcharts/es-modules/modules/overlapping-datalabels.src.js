@@ -12,10 +12,10 @@
 import H from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
+import '../parts/Chart.js';
+
 var isArray = U.isArray,
     objectEach = U.objectEach;
-
-import '../parts/Chart.js';
 
 var Chart = H.Chart,
     pick = H.pick,

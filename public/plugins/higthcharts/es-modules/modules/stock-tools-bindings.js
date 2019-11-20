@@ -40,6 +40,7 @@
 import H from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
+
 var defined = U.defined,
     isNumber = U.isNumber;
 

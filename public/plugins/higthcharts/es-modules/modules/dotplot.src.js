@@ -19,8 +19,9 @@
 'use strict';
 import H from '../parts/Globals.js';
 import U from '../parts/Utilities.js';
-var objectEach = U.objectEach;
 import '../parts/Series.js';
+
+var objectEach = U.objectEach;
 var extend = H.extend, pick = H.pick, seriesType = H.seriesType;
 /**
  * @private

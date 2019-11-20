@@ -10,6 +10,7 @@
 'use strict';
 import H from '../parts/Globals.js';
 import U from '../parts/Utilities.js';
+
 var defined = U.defined;
 var noop = H.noop, seriesTypes = H.seriesTypes;
 /**

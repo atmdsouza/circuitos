@@ -15,56 +15,62 @@ import H from '../parts/Globals.js';
  * @interface Highcharts.SankeyNodeObject
  * @extends Highcharts.Point
  * @product highcharts
- */ /**
-* The color of the auto generated node.
-*
-* @name Highcharts.SankeyNodeObject#color
-* @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
-*/ /**
-* The color index of the auto generated node, especially for use in styled
-* mode.
-*
-* @name Highcharts.SankeyNodeObject#colorIndex
-* @type {number}
-*/ /**
-* An optional column index of where to place the node. The default behaviour is
-* to place it next to the preceding node.
-*
-* @see {@link https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/plotoptions/sankey-node-column/|Highcharts-Demo:}
-*      Specified node column
-*
-* @name Highcharts.SankeyNodeObject#column
-* @type {number}
-* @since 6.0.5
-*/ /**
-* The id of the auto-generated node, refering to the `from` or `to` setting of
-* the link.
-*
-* @name Highcharts.SankeyNodeObject#id
-* @type {string}
-*/ /**
-* The name to display for the node in data labels and tooltips. Use this when
-* the name is different from the `id`. Where the id must be unique for each
-* node, this is not necessary for the name.
-*
-* @see {@link https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/css/sankey/|Highcharts-Demo:}
-*         Sankey diagram with node options
-*
-* @name Highcharts.SankeyNodeObject#name
-* @type {string}
-* @product highcharts
-*/ /**
-* The vertical offset of a node in terms of weight. Positive values shift the
-* node downwards, negative shift it upwards.
-*
-* @see {@link https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/plotoptions/sankey-node-column/|Highcharts-Demo:}
-*         Specified node offset
-*
-* @name Highcharts.SankeyNodeObject#offset
-* @type {number}
-* @default 0
-* @since 6.0.5
-*/
+ */
+/**
+ * The color of the auto generated node.
+ *
+ * @name Highcharts.SankeyNodeObject#color
+ * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+ */
+/**
+ * The color index of the auto generated node, especially for use in styled
+ * mode.
+ *
+ * @name Highcharts.SankeyNodeObject#colorIndex
+ * @type {number}
+ */
+/**
+ * An optional column index of where to place the node. The default behaviour is
+ * to place it next to the preceding node.
+ *
+ * @see {@link https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/plotoptions/sankey-node-column/|Highcharts-Demo:}
+ *      Specified node column
+ *
+ * @name Highcharts.SankeyNodeObject#column
+ * @type {number}
+ * @since 6.0.5
+ */
+/**
+ * The id of the auto-generated node, refering to the `from` or `to` setting of
+ * the link.
+ *
+ * @name Highcharts.SankeyNodeObject#id
+ * @type {string}
+ */
+/**
+ * The name to display for the node in data labels and tooltips. Use this when
+ * the name is different from the `id`. Where the id must be unique for each
+ * node, this is not necessary for the name.
+ *
+ * @see {@link https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/css/sankey/|Highcharts-Demo:}
+ *         Sankey diagram with node options
+ *
+ * @name Highcharts.SankeyNodeObject#name
+ * @type {string}
+ * @product highcharts
+ */
+/**
+ * The vertical offset of a node in terms of weight. Positive values shift the
+ * node downwards, negative shift it upwards.
+ *
+ * @see {@link https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/plotoptions/sankey-node-column/|Highcharts-Demo:}
+ *         Specified node offset
+ *
+ * @name Highcharts.SankeyNodeObject#offset
+ * @type {number}
+ * @default 0
+ * @since 6.0.5
+ */
 /**
  * Formatter callback function.
  *
@@ -81,12 +87,13 @@ import H from '../parts/Globals.js';
  *
  * @interface Highcharts.SeriesSankeyDataLabelsFormatterContextObject
  * @extends Highcharts.DataLabelsFormatterContextObject
- */ /**
-* The node object. The node name, if defined, is available through
-* `this.point.name`.
-* @name Highcharts.SeriesSankeyDataLabelsFormatterContextObject#point
-* @type {Highcharts.SankeyNodeObject}
-*/
+ */
+/**
+ * The node object. The node name, if defined, is available through
+ * `this.point.name`.
+ * @name Highcharts.SeriesSankeyDataLabelsFormatterContextObject#point
+ * @type {Highcharts.SankeyNodeObject}
+ */
 /**
  * Options for the series data labels, appearing next to each data point.
  *
@@ -105,31 +112,34 @@ import H from '../parts/Globals.js';
  *
  * @interface Highcharts.SeriesSankeyDataLabelsOptionsObject
  * @extends Highcharts.DataLabelsOptionsObject
- */ /**
-* The
-* [format string](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting)
-* specifying what to show for _nodes_ in the sankey diagram. By default the
-* `nodeFormatter` returns `{point.name}`.
-*
-* @see {@link https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/plotoptions/sankey-link-datalabels|Highcharts-Demo:}
-*      Node and link data labels
-*
-* @name Highcharts.SeriesSankeyDataLabelsOptionsObject#nodeFormat
-* @type {string|undefined}
-*/ /**
-* Callback to format data labels for _nodes_ in the sankey diagram. The
-* `nodeFormat` option takes precedence over the `nodeFormatter`.
-*
-* @name Highcharts.SeriesSankeyDataLabelsOptionsObject#nodeFormatter
-* @type {Highcharts.SeriesSankeyDataLabelsFormatterCallbackFunction|undefined}
-* @default function () { return this.point.name; }
-* @since 6.0.2
-*/
+ */
+/**
+ * The
+ * [format string](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting)
+ * specifying what to show for _nodes_ in the sankey diagram. By default the
+ * `nodeFormatter` returns `{point.name}`.
+ *
+ * @see {@link https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/plotoptions/sankey-link-datalabels|Highcharts-Demo:}
+ *      Node and link data labels
+ *
+ * @name Highcharts.SeriesSankeyDataLabelsOptionsObject#nodeFormat
+ * @type {string|undefined}
+ */
+/**
+ * Callback to format data labels for _nodes_ in the sankey diagram. The
+ * `nodeFormat` option takes precedence over the `nodeFormatter`.
+ *
+ * @name Highcharts.SeriesSankeyDataLabelsOptionsObject#nodeFormatter
+ * @type {Highcharts.SeriesSankeyDataLabelsFormatterCallbackFunction|undefined}
+ * @default function () { return this.point.name; }
+ * @since 6.0.2
+ */
 import U from '../parts/Utilities.js';
-var defined = U.defined, isObject = U.isObject;
 import '../parts/Options.js';
 import '../mixins/nodes.js';
 import mixinTreeSeries from '../mixins/tree-series.js';
+
+var defined = U.defined, isObject = U.isObject;
 // Note: replace this with destructuring assignment in the future
 var getLevelOptions = mixinTreeSeries.getLevelOptions;
 var find = H.find, merge = H.merge, seriesType = H.seriesType, pick = H.pick, Point = H.Point;

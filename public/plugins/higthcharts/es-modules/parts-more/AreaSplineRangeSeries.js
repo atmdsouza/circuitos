@@ -11,6 +11,7 @@
 import H from '../parts/Globals.js';
 import '../parts/Utilities.js';
 import '../parts/Options.js';
+
 var seriesType = H.seriesType, seriesTypes = H.seriesTypes;
 /**
  * The area spline range is a cartesian series type with higher and

@@ -23,6 +23,7 @@ import H from './Globals.js';
  */
 import './Chart.js';
 import U from './Utilities.js';
+
 var isArray = U.isArray, isObject = U.isObject, objectEach = U.objectEach, splat = U.splat;
 var Chart = H.Chart, pick = H.pick;
 /**

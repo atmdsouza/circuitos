@@ -11,6 +11,7 @@
 import H from '../parts/Globals.js';
 import '../parts/Utilities.js';
 import '../parts/Options.js';
+
 var noop = H.noop, pick = H.pick, seriesType = H.seriesType, seriesTypes = H.seriesTypes;
 /**
  * The boxplot series type.

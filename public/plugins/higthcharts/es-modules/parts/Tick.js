@@ -13,19 +13,23 @@ import H from './Globals.js';
  * Optional parameters for the tick.
  * @private
  * @interface Highcharts.TickParametersObject
- */ /**
-* Set category for the tick.
-* @name Highcharts.TickParametersObject#category
-* @type {string|undefined}
-*/ /**
-* @name Highcharts.TickParametersObject#options
-* @type {Highcharts.Dictionary<any>|undefined}
-*/ /**
-* Set tickmarkOffset for the tick.
-* @name Highcharts.TickParametersObject#tickmarkOffset
-* @type {number|undefined}
-*/
+ */
+/**
+ * Set category for the tick.
+ * @name Highcharts.TickParametersObject#category
+ * @type {string|undefined}
+ */
+/**
+ * @name Highcharts.TickParametersObject#options
+ * @type {Highcharts.Dictionary<any>|undefined}
+ */
+/**
+ * Set tickmarkOffset for the tick.
+ * @name Highcharts.TickParametersObject#tickmarkOffset
+ * @type {number|undefined}
+ */
 import U from './Utilities.js';
+
 var defined = U.defined, isNumber = U.isNumber;
 var correctFloat = H.correctFloat, destroyObjectProperties = H.destroyObjectProperties, fireEvent = H.fireEvent, merge = H.merge, pick = H.pick, deg2rad = H.deg2rad;
 /* eslint-disable no-invalid-this, valid-jsdoc */

@@ -10,6 +10,7 @@
 'use strict';
 import H from './Globals.js';
 import './Utilities.js';
+
 var Axis = H.Axis, getMagnitude = H.getMagnitude, normalizeTickInterval = H.normalizeTickInterval, timeUnits = H.timeUnits;
 /* eslint-disable valid-jsdoc */
 /**

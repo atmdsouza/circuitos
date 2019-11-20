@@ -2,11 +2,11 @@
 import H from './../../parts/Globals.js';
 
 import U from './../../parts/Utilities.js';
-var isNumber = U.isNumber;
-
 import './../../parts/SvgRenderer.js';
 import controllableMixin from './controllableMixin.js';
 import MockPoint from './../MockPoint.js';
+
+var isNumber = U.isNumber;
 
 
 /**

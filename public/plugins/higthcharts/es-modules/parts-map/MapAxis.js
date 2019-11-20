@@ -11,6 +11,7 @@
 import H from '../parts/Globals.js';
 import '../parts/Utilities.js';
 import '../parts/Axis.js';
+
 var addEvent = H.addEvent, Axis = H.Axis, pick = H.pick;
 /* eslint-disable no-invalid-this */
 // Override to use the extreme coordinates from the SVG shape, not the data

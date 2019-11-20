@@ -10,6 +10,7 @@
  * */
 'use strict';
 import H from '../parts/Globals.js';
+
 /**
  * Creates an arrow symbol. Like a triangle, except not filled.
  * ```

@@ -41,10 +41,10 @@
 import H from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
-var isNumber = U.isNumber;
-
 import '../parts/Chart.js';
 import '../parts/Series.js';
+
+var isNumber = U.isNumber;
 
 var labelDistance = 3,
     addEvent = H.addEvent,

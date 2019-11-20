@@ -10,6 +10,7 @@
 'use strict';
 import H from '../parts/Globals.js';
 import '../parts/Utilities.js';
+
 var error = H.error;
 /* eslint-disable no-invalid-this, valid-jsdoc */
 var requiredIndicatorMixin = {

@@ -15,11 +15,12 @@ import H from '../parts/Globals.js';
  * @typedef {"linear"|"logarithmic"} Highcharts.ColorAxisTypeValue
  */
 import U from '../parts/Utilities.js';
-var erase = U.erase, isNumber = U.isNumber;
 import '../parts/Axis.js';
 import '../parts/Chart.js';
 import '../parts/Color.js';
 import '../parts/Legend.js';
+
+var erase = U.erase, isNumber = U.isNumber;
 var addEvent = H.addEvent, Axis = H.Axis, Chart = H.Chart, color = H.color, ColorAxis, extend = H.extend, Legend = H.Legend, LegendSymbolMixin = H.LegendSymbolMixin, noop = H.noop, merge = H.merge, pick = H.pick;
 /* eslint-disable no-invalid-this, valid-jsdoc */
 /**
