@@ -13,13 +13,13 @@
 import H from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
-var isArray = U.isArray,
-    isNumber = U.isNumber,
-    isObject = U.isObject;
-
 import drawPoint from '../mixins/draw-point.js';
 import polygon from '../mixins/polygon.js';
 import '../parts/Series.js';
+
+var isArray = U.isArray,
+    isNumber = U.isNumber,
+    isObject = U.isObject;
 
 var extend = H.extend,
     merge = H.merge,

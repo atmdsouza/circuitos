@@ -18,69 +18,78 @@ import H from './Globals.js';
  * Options to align the element relative to the chart or another box.
  *
  * @interface Highcharts.AlignObject
- */ /**
-* Horizontal alignment. Can be one of `left`, `center` and `right`.
-*
-* @name Highcharts.AlignObject#align
-* @type {Highcharts.AlignValue|undefined}
-*
-* @default left
-*/ /**
-* Vertical alignment. Can be one of `top`, `middle` and `bottom`.
-*
-* @name Highcharts.AlignObject#verticalAlign
-* @type {Highcharts.VerticalAlignValue|undefined}
-*
-* @default top
-*/ /**
-* Horizontal pixel offset from alignment.
-*
-* @name Highcharts.AlignObject#x
-* @type {number|undefined}
-*
-* @default 0
-*/ /**
-* Vertical pixel offset from alignment.
-*
-* @name Highcharts.AlignObject#y
-* @type {number|undefined}
-*
-* @default 0
-*/ /**
-* Use the `transform` attribute with translateX and translateY custom
-* attributes to align this elements rather than `x` and `y` attributes.
-*
-* @name Highcharts.AlignObject#alignByTranslate
-* @type {boolean|undefined}
-*
-* @default false
-*/
+ */
+/**
+ * Horizontal alignment. Can be one of `left`, `center` and `right`.
+ *
+ * @name Highcharts.AlignObject#align
+ * @type {Highcharts.AlignValue|undefined}
+ *
+ * @default left
+ */
+/**
+ * Vertical alignment. Can be one of `top`, `middle` and `bottom`.
+ *
+ * @name Highcharts.AlignObject#verticalAlign
+ * @type {Highcharts.VerticalAlignValue|undefined}
+ *
+ * @default top
+ */
+/**
+ * Horizontal pixel offset from alignment.
+ *
+ * @name Highcharts.AlignObject#x
+ * @type {number|undefined}
+ *
+ * @default 0
+ */
+/**
+ * Vertical pixel offset from alignment.
+ *
+ * @name Highcharts.AlignObject#y
+ * @type {number|undefined}
+ *
+ * @default 0
+ */
+/**
+ * Use the `transform` attribute with translateX and translateY custom
+ * attributes to align this elements rather than `x` and `y` attributes.
+ *
+ * @name Highcharts.AlignObject#alignByTranslate
+ * @type {boolean|undefined}
+ *
+ * @default false
+ */
 /**
  * Bounding box of an element.
  *
  * @interface Highcharts.BBoxObject
  * @extends Highcharts.PositionObject
- */ /**
-* Height of the bounding box.
-*
-* @name Highcharts.BBoxObject#height
-* @type {number}
-*/ /**
-* Width of the bounding box.
-*
-* @name Highcharts.BBoxObject#width
-* @type {number}
-*/ /**
-* Horizontal position of the bounding box.
-*
-* @name Highcharts.BBoxObject#x
-* @type {number}
-*/ /**
-* Vertical position of the bounding box.
-*
-* @name Highcharts.BBoxObject#y
-* @type {number}
-*/
+ */
+/**
+ * Height of the bounding box.
+ *
+ * @name Highcharts.BBoxObject#height
+ * @type {number}
+ */
+/**
+ * Width of the bounding box.
+ *
+ * @name Highcharts.BBoxObject#width
+ * @type {number}
+ */
+/**
+ * Horizontal position of the bounding box.
+ *
+ * @name Highcharts.BBoxObject#x
+ * @type {number}
+ */
+/**
+ * Vertical position of the bounding box.
+ *
+ * @name Highcharts.BBoxObject#y
+ * @type {number}
+ */
 /**
  * A clipping rectangle that can be applied to one or more {@link SVGElement}
  * instances. It is instanciated with the {@link SVGRenderer#clipRect} function
@@ -101,97 +110,113 @@ import H from './Globals.js';
  * The font metrics.
  *
  * @interface Highcharts.FontMetricsObject
- */ /**
-* The baseline relative to the top of the box.
-*
-* @name Highcharts.FontMetricsObject#b
-* @type {number}
-*/ /**
-* The font size.
-*
-* @name Highcharts.FontMetricsObject#f
-* @type {number}
-*/ /**
-* The line height.
-*
-* @name Highcharts.FontMetricsObject#h
-* @type {number}
-*/
+ */
+/**
+ * The baseline relative to the top of the box.
+ *
+ * @name Highcharts.FontMetricsObject#b
+ * @type {number}
+ */
+/**
+ * The font size.
+ *
+ * @name Highcharts.FontMetricsObject#f
+ * @type {number}
+ */
+/**
+ * The line height.
+ *
+ * @name Highcharts.FontMetricsObject#h
+ * @type {number}
+ */
 /**
  * An object containing `x` and `y` properties for the position of an element.
  *
  * @interface Highcharts.PositionObject
- */ /**
-* X position of the element.
-* @name Highcharts.PositionObject#x
-* @type {number}
-*/ /**
-* Y position of the element.
-* @name Highcharts.PositionObject#y
-* @type {number}
-*/
+ */
+/**
+ * X position of the element.
+ * @name Highcharts.PositionObject#x
+ * @type {number}
+ */
+/**
+ * Y position of the element.
+ * @name Highcharts.PositionObject#y
+ * @type {number}
+ */
 /**
  * A rectangle.
  *
  * @interface Highcharts.RectangleObject
- */ /**
-* Height of the rectangle.
-* @name Highcharts.RectangleObject#height
-* @type {number}
-*/ /**
-* Width of the rectangle.
-* @name Highcharts.RectangleObject#width
-* @type {number}
-*/ /**
-* Horizontal position of the rectangle.
-* @name Highcharts.RectangleObject#x
-* @type {number}
-*/ /**
-* Vertical position of the rectangle.
-* @name Highcharts.RectangleObject#y
-* @type {number}
-*/
+ */
+/**
+ * Height of the rectangle.
+ * @name Highcharts.RectangleObject#height
+ * @type {number}
+ */
+/**
+ * Width of the rectangle.
+ * @name Highcharts.RectangleObject#width
+ * @type {number}
+ */
+/**
+ * Horizontal position of the rectangle.
+ * @name Highcharts.RectangleObject#x
+ * @type {number}
+ */
+/**
+ * Vertical position of the rectangle.
+ * @name Highcharts.RectangleObject#y
+ * @type {number}
+ */
 /**
  * The shadow options.
  *
  * @interface Highcharts.ShadowOptionsObject
- */ /**
-* The shadow color.
-* @name    Highcharts.ShadowOptionsObject#color
-* @type    {Highcharts.ColorString|undefined}
-* @default #000000
-*/ /**
-* The horizontal offset from the element.
-*
-* @name    Highcharts.ShadowOptionsObject#offsetX
-* @type    {number|undefined}
-* @default 1
-*/ /**
-* The vertical offset from the element.
-* @name    Highcharts.ShadowOptionsObject#offsetY
-* @type    {number|undefined}
-* @default 1
-*/ /**
-* The shadow opacity.
-*
-* @name    Highcharts.ShadowOptionsObject#opacity
-* @type    {number|undefined}
-* @default 0.15
-*/ /**
-* The shadow width or distance from the element.
-* @name    Highcharts.ShadowOptionsObject#width
-* @type    {number|undefined}
-* @default 3
-*/
+ */
+/**
+ * The shadow color.
+ * @name    Highcharts.ShadowOptionsObject#color
+ * @type    {Highcharts.ColorString|undefined}
+ * @default #000000
+ */
+/**
+ * The horizontal offset from the element.
+ *
+ * @name    Highcharts.ShadowOptionsObject#offsetX
+ * @type    {number|undefined}
+ * @default 1
+ */
+/**
+ * The vertical offset from the element.
+ * @name    Highcharts.ShadowOptionsObject#offsetY
+ * @type    {number|undefined}
+ * @default 1
+ */
+/**
+ * The shadow opacity.
+ *
+ * @name    Highcharts.ShadowOptionsObject#opacity
+ * @type    {number|undefined}
+ * @default 0.15
+ */
+/**
+ * The shadow width or distance from the element.
+ * @name    Highcharts.ShadowOptionsObject#width
+ * @type    {number|undefined}
+ * @default 3
+ */
 /**
  * @interface Highcharts.SizeObject
- */ /**
-* @name Highcharts.SizeObject#height
-* @type {number}
-*/ /**
-* @name Highcharts.SizeObject#width
-* @type {number}
-*/
+ */
+/**
+ * @name Highcharts.SizeObject#height
+ * @type {number}
+ */
+/**
+ * @name Highcharts.SizeObject#width
+ * @type {number}
+ */
 /**
  * An object of key-value pairs for SVG attributes. Attributes in Highcharts
  * elements for the most parts correspond to SVG, but some are specific to
@@ -209,70 +234,89 @@ import H from './Globals.js';
  * }
  *
  * @interface Highcharts.SVGAttributes
- */ /**
-* @name Highcharts.SVGAttributes#[key:string]
-* @type {*}
-*/ /**
-* @name Highcharts.SVGAttributes#d
-* @type {string|Highcharts.SVGPathArray|undefined}
-*/ /**
-* @name Highcharts.SVGAttributes#fill
-* @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject|undefined}
-*/ /**
-* @name Highcharts.SVGAttributes#inverted
-* @type {boolean|undefined}
-*/ /**
-* @name Highcharts.SVGAttributes#matrix
-* @type {Array<number>|undefined}
-*/ /**
-* @name Highcharts.SVGAttributes#rotation
-* @type {number|undefined}
-*/ /**
-* @name Highcharts.SVGAttributes#rotationOriginX
-* @type {number|undefined}
-*/ /**
-* @name Highcharts.SVGAttributes#rotationOriginY
-* @type {number|undefined}
-*/ /**
-* @name Highcharts.SVGAttributes#scaleX
-* @type {number|undefined}
-*/ /**
-* @name Highcharts.SVGAttributes#scaleY
-* @type {number|undefined}
-*/ /**
-* @name Highcharts.SVGAttributes#stroke
-* @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject|undefined}
-*/ /**
-* @name Highcharts.SVGAttributes#style
-* @type {string|Highcharts.CSSObject|undefined}
-*/ /**
-* @name Highcharts.SVGAttributes#translateX
-* @type {number|undefined}
-*/ /**
-* @name Highcharts.SVGAttributes#translateY
-* @type {number|undefined}
-*/ /**
-* @name Highcharts.SVGAttributes#zIndex
-* @type {number|undefined}
-*/
+ */
+/**
+ * @name Highcharts.SVGAttributes#[key:string]
+ * @type {*}
+ */
+/**
+ * @name Highcharts.SVGAttributes#d
+ * @type {string|Highcharts.SVGPathArray|undefined}
+ */
+/**
+ * @name Highcharts.SVGAttributes#fill
+ * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject|undefined}
+ */
+/**
+ * @name Highcharts.SVGAttributes#inverted
+ * @type {boolean|undefined}
+ */
+/**
+ * @name Highcharts.SVGAttributes#matrix
+ * @type {Array<number>|undefined}
+ */
+/**
+ * @name Highcharts.SVGAttributes#rotation
+ * @type {number|undefined}
+ */
+/**
+ * @name Highcharts.SVGAttributes#rotationOriginX
+ * @type {number|undefined}
+ */
+/**
+ * @name Highcharts.SVGAttributes#rotationOriginY
+ * @type {number|undefined}
+ */
+/**
+ * @name Highcharts.SVGAttributes#scaleX
+ * @type {number|undefined}
+ */
+/**
+ * @name Highcharts.SVGAttributes#scaleY
+ * @type {number|undefined}
+ */
+/**
+ * @name Highcharts.SVGAttributes#stroke
+ * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject|undefined}
+ */
+/**
+ * @name Highcharts.SVGAttributes#style
+ * @type {string|Highcharts.CSSObject|undefined}
+ */
+/**
+ * @name Highcharts.SVGAttributes#translateX
+ * @type {number|undefined}
+ */
+/**
+ * @name Highcharts.SVGAttributes#translateY
+ * @type {number|undefined}
+ */
+/**
+ * @name Highcharts.SVGAttributes#zIndex
+ * @type {number|undefined}
+ */
 /**
  * Serialized form of an SVG definition, including children. Some key
  * property names are reserved: tagName, textContent, and children.
  *
  * @interface Highcharts.SVGDefinitionObject
- */ /**
-* @name Highcharts.SVGDefinitionObject#[key:string]
-* @type {number|string|Array<Highcharts.SVGDefinitionObject>|undefined}
-*/ /**
-* @name Highcharts.SVGDefinitionObject#children
-* @type {Array<Highcharts.SVGDefinitionObject>|undefined}
-*/ /**
-* @name Highcharts.SVGDefinitionObject#tagName
-* @type {string|undefined}
-*/ /**
-* @name Highcharts.SVGDefinitionObject#textContent
-* @type {string|undefined}
-*/
+ */
+/**
+ * @name Highcharts.SVGDefinitionObject#[key:string]
+ * @type {number|string|Array<Highcharts.SVGDefinitionObject>|undefined}
+ */
+/**
+ * @name Highcharts.SVGDefinitionObject#children
+ * @type {Array<Highcharts.SVGDefinitionObject>|undefined}
+ */
+/**
+ * @name Highcharts.SVGDefinitionObject#tagName
+ * @type {string|undefined}
+ */
+/**
+ * @name Highcharts.SVGDefinitionObject#textContent
+ * @type {string|undefined}
+ */
 /**
  * An SVG DOM element. The type is a reference to the regular SVGElement in the
  * global scope.
@@ -299,28 +343,35 @@ import H from './Globals.js';
  * or custom shapes. Extendable by adding to {@link SVGRenderer#symbols}.
  *
  * @interface Highcharts.SymbolDictionary
- */ /**
-* @name Highcharts.SymbolDictionary#[key:string]
-* @type {Function|undefined}
-*/ /**
-* @name Highcharts.SymbolDictionary#arc
-* @type {Function|undefined}
-*/ /**
-* @name Highcharts.SymbolDictionary#callout
-* @type {Function|undefined}
-*/ /**
-* @name Highcharts.SymbolDictionary#circle
-* @type {Function|undefined}
-*/ /**
-* @name Highcharts.SymbolDictionary#diamond
-* @type {Function|undefined}
-*/ /**
-* @name Highcharts.SymbolDictionary#square
-* @type {Function|undefined}
-*/ /**
-* @name Highcharts.SymbolDictionary#triangle
-* @type {Function|undefined}
-*/
+ */
+/**
+ * @name Highcharts.SymbolDictionary#[key:string]
+ * @type {Function|undefined}
+ */
+/**
+ * @name Highcharts.SymbolDictionary#arc
+ * @type {Function|undefined}
+ */
+/**
+ * @name Highcharts.SymbolDictionary#callout
+ * @type {Function|undefined}
+ */
+/**
+ * @name Highcharts.SymbolDictionary#circle
+ * @type {Function|undefined}
+ */
+/**
+ * @name Highcharts.SymbolDictionary#diamond
+ * @type {Function|undefined}
+ */
+/**
+ * @name Highcharts.SymbolDictionary#square
+ * @type {Function|undefined}
+ */
+/**
+ * @name Highcharts.SymbolDictionary#triangle
+ * @type {Function|undefined}
+ */
 /**
  * Can be one of `arc`, `callout`, `circle`, `diamond`, `square`, `triangle`,
  * and `triangle-down`. Symbols are used internally for point markers, button
@@ -333,39 +384,45 @@ import H from './Globals.js';
  * Additional options, depending on the actual symbol drawn.
  *
  * @interface Highcharts.SymbolOptionsObject
- */ /**
-* The anchor X position for the `callout` symbol. This is where the chevron
-* points to.
-*
-* @name Highcharts.SymbolOptionsObject#anchorX
-* @type {number|undefined}
-*/ /**
-* The anchor Y position for the `callout` symbol. This is where the chevron
-* points to.
-*
-* @name Highcharts.SymbolOptionsObject#anchorY
-* @type {number|undefined}
-*/ /**
-* The end angle of an `arc` symbol.
-*
-* @name Highcharts.SymbolOptionsObject#end
-* @type {number|undefined}
-*/ /**
-* Whether to draw `arc` symbol open or closed.
-*
-* @name Highcharts.SymbolOptionsObject#open
-* @type {boolean|undefined}
-*/ /**
-* The radius of an `arc` symbol, or the border radius for the `callout` symbol.
-*
-* @name Highcharts.SymbolOptionsObject#r
-* @type {number|undefined}
-*/ /**
-* The start angle of an `arc` symbol.
-*
-* @name Highcharts.SymbolOptionsObject#start
-* @type {number|undefined}
-*/
+ */
+/**
+ * The anchor X position for the `callout` symbol. This is where the chevron
+ * points to.
+ *
+ * @name Highcharts.SymbolOptionsObject#anchorX
+ * @type {number|undefined}
+ */
+/**
+ * The anchor Y position for the `callout` symbol. This is where the chevron
+ * points to.
+ *
+ * @name Highcharts.SymbolOptionsObject#anchorY
+ * @type {number|undefined}
+ */
+/**
+ * The end angle of an `arc` symbol.
+ *
+ * @name Highcharts.SymbolOptionsObject#end
+ * @type {number|undefined}
+ */
+/**
+ * Whether to draw `arc` symbol open or closed.
+ *
+ * @name Highcharts.SymbolOptionsObject#open
+ * @type {boolean|undefined}
+ */
+/**
+ * The radius of an `arc` symbol, or the border radius for the `callout` symbol.
+ *
+ * @name Highcharts.SymbolOptionsObject#r
+ * @type {number|undefined}
+ */
+/**
+ * The start angle of an `arc` symbol.
+ *
+ * @name Highcharts.SymbolOptionsObject#start
+ * @type {number|undefined}
+ */
 /**
  * The vertical alignment of an element.
  *
@@ -373,8 +430,9 @@ import H from './Globals.js';
  */
 /* eslint-disable no-invalid-this, valid-jsdoc */
 import U from './Utilities.js';
-var defined = U.defined, erase = U.erase, isArray = U.isArray, isNumber = U.isNumber, isObject = U.isObject, isString = U.isString, objectEach = U.objectEach, pInt = U.pInt, splat = U.splat;
 import './Color.js';
+
+var defined = U.defined, erase = U.erase, isArray = U.isArray, isNumber = U.isNumber, isObject = U.isObject, isString = U.isString, objectEach = U.objectEach, pInt = U.pInt, splat = U.splat;
 var SVGElement, SVGRenderer, addEvent = H.addEvent, animate = H.animate, attr = H.attr, charts = H.charts, color = H.color, css = H.css, createElement = H.createElement, deg2rad = H.deg2rad, destroyObjectProperties = H.destroyObjectProperties, doc = H.doc, extend = H.extend, hasTouch = H.hasTouch, isFirefox = H.isFirefox, isMS = H.isMS, isWebKit = H.isWebKit, merge = H.merge, noop = H.noop, pick = H.pick, removeEvent = H.removeEvent, stop = H.stop, svg = H.svg, SVG_NS = H.SVG_NS, symbolSizes = H.symbolSizes, win = H.win;
 /**
  * The SVGElement prototype is a JavaScript wrapper for SVG elements used in the

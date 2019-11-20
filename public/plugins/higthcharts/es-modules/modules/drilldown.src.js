@@ -130,13 +130,13 @@
 import H from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
-var objectEach = U.objectEach;
-
 import '../parts/Options.js';
 import '../parts/Chart.js';
 import '../parts/Series.js';
 import '../parts/ColumnSeries.js';
 import '../parts/Tick.js';
+
+var objectEach = U.objectEach;
 
 var animObject = H.animObject,
     noop = H.noop,

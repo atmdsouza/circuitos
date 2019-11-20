@@ -7,22 +7,26 @@ import H from '../parts/Globals.js';
 /**
  * @private
  * @interface Highcharts.PolygonPointObject
- */ /**
-* @name Highcharts.PolygonPointObject#0
-* @type {number}
-*/ /**
-* @name Highcharts.PolygonPointObject#1
-* @type {number}
-*/
+ */
+/**
+ * @name Highcharts.PolygonPointObject#0
+ * @type {number}
+ */
+/**
+ * @name Highcharts.PolygonPointObject#1
+ * @type {number}
+ */
 /**
  * @private
  * @interface Highcharts.PolygonObject
  * @extends Array<Highcharts.PolygonPointObject>
- */ /**
-* @name Highcharts.PolygonObject#axes
-* @type {Array<PolygonPointObject>}
-*/
+ */
+/**
+ * @name Highcharts.PolygonObject#axes
+ * @type {Array<PolygonPointObject>}
+ */
 import U from '../parts/Utilities.js';
+
 var isArray = U.isArray, isNumber = U.isNumber;
 var deg2rad = H.deg2rad, find = H.find;
 /* eslint-disable no-invalid-this, valid-jsdoc */

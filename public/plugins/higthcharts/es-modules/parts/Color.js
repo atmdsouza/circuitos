@@ -39,80 +39,94 @@ import H from './Globals.js';
  * }
  *
  * @interface Highcharts.GradientColorObject
- */ /**
-* Holds an object that defines the start position and the end position relative
-* to the shape.
-* @name Highcharts.GradientColorObject#linearGradient
-* @type {Highcharts.LinearGradientColorObject|undefined}
-*/ /**
-* Holds an object that defines the center position and the radius.
-* @name Highcharts.GradientColorObject#radialGradient
-* @type {Highcharts.RadialGradientColorObject|undefined}
-*/ /**
-* The first item in each tuple is the position in the gradient, where 0 is the
-* start of the gradient and 1 is the end of the gradient. Multiple stops can be
-* applied. The second item is the color for each stop. This color can also be
-* given in the rgba format.
-* @name Highcharts.GradientColorObject#stops
-* @type {Array<Highcharts.GradientColorStopObject>}
-*/
+ */
+/**
+ * Holds an object that defines the start position and the end position relative
+ * to the shape.
+ * @name Highcharts.GradientColorObject#linearGradient
+ * @type {Highcharts.LinearGradientColorObject|undefined}
+ */
+/**
+ * Holds an object that defines the center position and the radius.
+ * @name Highcharts.GradientColorObject#radialGradient
+ * @type {Highcharts.RadialGradientColorObject|undefined}
+ */
+/**
+ * The first item in each tuple is the position in the gradient, where 0 is the
+ * start of the gradient and 1 is the end of the gradient. Multiple stops can be
+ * applied. The second item is the color for each stop. This color can also be
+ * given in the rgba format.
+ * @name Highcharts.GradientColorObject#stops
+ * @type {Array<Highcharts.GradientColorStopObject>}
+ */
 /**
  * Color stop tuple.
  *
  * @see Highcharts.GradientColorObject
  *
  * @interface Highcharts.GradientColorStopObject
- */ /**
-* @name Highcharts.GradientColorStopObject#0
-* @type {number}
-*/ /**
-* @name Highcharts.GradientColorStopObject#1
-* @type {Highcharts.ColorString}
-*/ /**
-* @name Highcharts.GradoentColorStopObject#color
-* @type {Highcharts.Color|undefined}
-*/
+ */
+/**
+ * @name Highcharts.GradientColorStopObject#0
+ * @type {number}
+ */
+/**
+ * @name Highcharts.GradientColorStopObject#1
+ * @type {Highcharts.ColorString}
+ */
+/**
+ * @name Highcharts.GradoentColorStopObject#color
+ * @type {Highcharts.Color|undefined}
+ */
 /**
  * Defines the start position and the end position for a gradient relative
  * to the shape. Start position (x1, y1) and end position (x2, y2) are relative
  * to the shape, where 0 means top/left and 1 is bottom/right.
  *
  * @interface Highcharts.LinearGradientColorObject
- */ /**
-* Start horizontal position of the gradient. Float ranges 0-1.
-* @name Highcharts.LinearGradientColorObject#x1
-* @type {number}
-*/ /**
-* End horizontal position of the gradient. Float ranges 0-1.
-* @name Highcharts.LinearGradientColorObject#x2
-* @type {number}
-*/ /**
-* Start vertical position of the gradient. Float ranges 0-1.
-* @name Highcharts.LinearGradientColorObject#y1
-* @type {number}
-*/ /**
-* End vertical position of the gradient. Float ranges 0-1.
-* @name Highcharts.LinearGradientColorObject#y2
-* @type {number}
-*/
+ */
+/**
+ * Start horizontal position of the gradient. Float ranges 0-1.
+ * @name Highcharts.LinearGradientColorObject#x1
+ * @type {number}
+ */
+/**
+ * End horizontal position of the gradient. Float ranges 0-1.
+ * @name Highcharts.LinearGradientColorObject#x2
+ * @type {number}
+ */
+/**
+ * Start vertical position of the gradient. Float ranges 0-1.
+ * @name Highcharts.LinearGradientColorObject#y1
+ * @type {number}
+ */
+/**
+ * End vertical position of the gradient. Float ranges 0-1.
+ * @name Highcharts.LinearGradientColorObject#y2
+ * @type {number}
+ */
 /**
  * Defines the center position and the radius for a gradient.
  *
  * @interface Highcharts.RadialGradientColorObject
- */ /**
-* Center horizontal position relative to the shape. Float ranges 0-1.
-* @name Highcharts.RadialGradientColorObject#cx
-* @type {number}
-*/ /**
-* Center vertical position relative to the shape. Float ranges 0-1.
-* @name Highcharts.RadialGradientColorObject#cy
-* @type {number}
-*/ /**
-* Radius relative to the shape. Float ranges 0-1.
-* @name Highcharts.RadialGradientColorObject#r
-* @type {number}
-*/
+ */
+/**
+ * Center horizontal position relative to the shape. Float ranges 0-1.
+ * @name Highcharts.RadialGradientColorObject#cx
+ * @type {number}
+ */
+/**
+ * Center vertical position relative to the shape. Float ranges 0-1.
+ * @name Highcharts.RadialGradientColorObject#cy
+ * @type {number}
+ */
+/**
+ * Radius relative to the shape. Float ranges 0-1.
+ * @name Highcharts.RadialGradientColorObject#r
+ * @type {number}
+ */
 import U from './Utilities.js';
+
 var isNumber = U.isNumber, pInt = U.pInt;
 var merge = H.merge;
 /* eslint-disable no-invalid-this, valid-jsdoc */

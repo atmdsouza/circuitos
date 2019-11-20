@@ -12,6 +12,7 @@ import H from './Globals.js';
 import './Utilities.js';
 import './Options.js';
 import './Series.js';
+
 var Series = H.Series, seriesType = H.seriesType;
 /**
  * Scatter series type.

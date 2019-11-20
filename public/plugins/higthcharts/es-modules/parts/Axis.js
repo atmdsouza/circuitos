@@ -12,40 +12,47 @@ import H from './Globals.js';
 /**
  * Options for the path on the Axis to be calculated.
  * @interface Highcharts.AxisPlotLinePathOptionsObject
- */ /**
-* Axis value.
-* @name Highcharts.AxisPlotLinePathOptionsObject#value
-* @type {number|undefined}
-*/ /**
-* Line width used for calculation crisp line coordinates. Defaults to 1.
-* @name Highcharts.AxisPlotLinePathOptionsObject#lineWidth
-* @type {number|undefined}
-*/ /**
-* If `false`, the function will return null when it falls outside the axis
-* bounds. If `true`, the function will return a path aligned to the plot area
-* sides if it falls outside. If `pass`, it will return a path outside.
-* @name Highcharts.AxisPlotLinePathOptionsObject#force
-* @type {string|boolean|undefined}
-*/ /**
-* Used in Highstock. When `true`, plot paths (crosshair, plotLines, gridLines)
-* will be rendered on all axes when defined on the first axis.
-* @name Highcharts.AxisPlotLinePathOptionsObject#acrossPanes
-* @type {boolean|undefined}
-*/ /**
-* Use old coordinates (for resizing and rescaling).
-* If not set, defaults to `false`.
-* @name Highcharts.AxisPlotLinePathOptionsObject#old
-* @type {boolean|undefined}
-*/ /**
-* If given, return the plot line path of a pixel position on the axis.
-* @name Highcharts.AxisPlotLinePathOptionsObject#translatedValue
-* @type {number|undefined}
-*/ /**
-* Used in Polar axes. Reverse the positions for concatenation of polygonal
-* plot bands
-* @name Highcharts.AxisPlotLinePathOptionsObject#reverse
-* @type {boolean|undefined}
-*/
+ */
+/**
+ * Axis value.
+ * @name Highcharts.AxisPlotLinePathOptionsObject#value
+ * @type {number|undefined}
+ */
+/**
+ * Line width used for calculation crisp line coordinates. Defaults to 1.
+ * @name Highcharts.AxisPlotLinePathOptionsObject#lineWidth
+ * @type {number|undefined}
+ */
+/**
+ * If `false`, the function will return null when it falls outside the axis
+ * bounds. If `true`, the function will return a path aligned to the plot area
+ * sides if it falls outside. If `pass`, it will return a path outside.
+ * @name Highcharts.AxisPlotLinePathOptionsObject#force
+ * @type {string|boolean|undefined}
+ */
+/**
+ * Used in Highstock. When `true`, plot paths (crosshair, plotLines, gridLines)
+ * will be rendered on all axes when defined on the first axis.
+ * @name Highcharts.AxisPlotLinePathOptionsObject#acrossPanes
+ * @type {boolean|undefined}
+ */
+/**
+ * Use old coordinates (for resizing and rescaling).
+ * If not set, defaults to `false`.
+ * @name Highcharts.AxisPlotLinePathOptionsObject#old
+ * @type {boolean|undefined}
+ */
+/**
+ * If given, return the plot line path of a pixel position on the axis.
+ * @name Highcharts.AxisPlotLinePathOptionsObject#translatedValue
+ * @type {number|undefined}
+ */
+/**
+ * Used in Polar axes. Reverse the positions for concatenation of polygonal
+ * plot bands
+ * @name Highcharts.AxisPlotLinePathOptionsObject#reverse
+ * @type {boolean|undefined}
+ */
 /**
  * Options for crosshairs on axes.
  *
@@ -63,25 +70,31 @@ import H from './Globals.js';
  */
 /**
  * @interface Highcharts.AxisLabelsFormatterContextObject
- */ /**
-* @name Highcharts.AxisLabelsFormatterContextObject#axis
-* @type {Highcharts.Axis}
-*/ /**
-* @name Highcharts.AxisLabelsFormatterContextObject#chart
-* @type {Highcharts.Chart}
-*/ /**
-* @name Highcharts.AxisLabelsFormatterContextObject#isFirst
-* @type {boolean}
-*/ /**
-* @name Highcharts.AxisLabelsFormatterContextObject#isLast
-* @type {boolean}
-*/ /**
-* @name Highcharts.AxisLabelsFormatterContextObject#pos
-* @type {number}
-*/ /**
-* @name Highcharts.AxisLabelsFormatterContextObject#value
-* @type {number}
-*/
+ */
+/**
+ * @name Highcharts.AxisLabelsFormatterContextObject#axis
+ * @type {Highcharts.Axis}
+ */
+/**
+ * @name Highcharts.AxisLabelsFormatterContextObject#chart
+ * @type {Highcharts.Chart}
+ */
+/**
+ * @name Highcharts.AxisLabelsFormatterContextObject#isFirst
+ * @type {boolean}
+ */
+/**
+ * @name Highcharts.AxisLabelsFormatterContextObject#isLast
+ * @type {boolean}
+ */
+/**
+ * @name Highcharts.AxisLabelsFormatterContextObject#pos
+ * @type {number}
+ */
+/**
+ * @name Highcharts.AxisLabelsFormatterContextObject#value
+ * @type {number}
+ */
 /**
  * Options for axes.
  *
@@ -96,22 +109,27 @@ import H from './Globals.js';
  */
 /**
  * @interface Highcharts.AxisPointBreakEventObject
- */ /**
-* @name Highcharts.AxisPointBreakEventObject#brk
-* @type {Highcharts.Dictionary<number>}
-*/ /**
-* @name Highcharts.AxisPointBreakEventObject#point
-* @type {Highcharts.Point}
-*/ /**
-* @name Highcharts.AxisPointBreakEventObject#preventDefault
-* @type {Function}
-*/ /**
-* @name Highcharts.AxisPointBreakEventObject#target
-* @type {Highcharts.SVGElement}
-*/ /**
-* @name Highcharts.AxisPointBreakEventObject#type
-* @type {"pointBreak"|"pointInBreak"}
-*/
+ */
+/**
+ * @name Highcharts.AxisPointBreakEventObject#brk
+ * @type {Highcharts.Dictionary<number>}
+ */
+/**
+ * @name Highcharts.AxisPointBreakEventObject#point
+ * @type {Highcharts.Point}
+ */
+/**
+ * @name Highcharts.AxisPointBreakEventObject#preventDefault
+ * @type {Function}
+ */
+/**
+ * @name Highcharts.AxisPointBreakEventObject#target
+ * @type {Highcharts.SVGElement}
+ */
+/**
+ * @name Highcharts.AxisPointBreakEventObject#type
+ * @type {"pointBreak"|"pointInBreak"}
+ */
 /**
  * @callback Highcharts.AxisSetExtremesEventCallbackFunction
  *
@@ -122,19 +140,23 @@ import H from './Globals.js';
 /**
  * @interface Highcharts.AxisSetExtremesEventObject
  * @extends Highcharts.ExtremesObject
- */ /**
-* @name Highcharts.AxisSetExtremesEventObject#preventDefault
-* @type {Function}
-*/ /**
-* @name Highcharts.AxisSetExtremesEventObject#target
-* @type {Highcharts.SVGElement}
-*/ /**
-* @name Highcharts.AxisSetExtremesEventObject#trigger
-* @type {Highcharts.AxisExtremesTriggerValue|string}
-*/ /**
-* @name Highcharts.AxisSetExtremesEventObject#type
-* @type {"setExtremes"}
-*/
+ */
+/**
+ * @name Highcharts.AxisSetExtremesEventObject#preventDefault
+ * @type {Function}
+ */
+/**
+ * @name Highcharts.AxisSetExtremesEventObject#target
+ * @type {Highcharts.SVGElement}
+ */
+/**
+ * @name Highcharts.AxisSetExtremesEventObject#trigger
+ * @type {Highcharts.AxisExtremesTriggerValue|string}
+ */
+/**
+ * @name Highcharts.AxisSetExtremesEventObject#type
+ * @type {"setExtremes"}
+ */
 /**
  * @callback Highcharts.AxisTickPositionerCallbackFunction
  *
@@ -160,37 +182,43 @@ import H from './Globals.js';
  * function.
  *
  * @interface Highcharts.ExtremesObject
- */ /**
-* The maximum value of the axis' associated series.
-* @name Highcharts.ExtremesObject#dataMax
-* @type {number}
-*/ /**
-* The minimum value of the axis' associated series.
-* @name Highcharts.ExtremesObject#dataMin
-* @type {number}
-*/ /**
-* The maximum axis value, either automatic or set manually. If the `max` option
-* is not set, `maxPadding` is 0 and `endOnTick` is false, this value will be
-* the same as `dataMax`.
-* @name Highcharts.ExtremesObject#max
-* @type {number}
-*/ /**
-* The minimum axis value, either automatic or set manually. If the `min` option
-* is not set, `minPadding` is 0 and `startOnTick` is false, this value will be
-* the same as `dataMin`.
-* @name Highcharts.ExtremesObject#min
-* @type {number}
-*/ /**
-* The user defined maximum, either from the `max` option or from a zoom or
-* `setExtremes` action.
-* @name Highcharts.ExtremesObject#userMax
-* @type {number}
-*/ /**
-* The user defined minimum, either from the `min` option or from a zoom or
-* `setExtremes` action.
-* @name Highcharts.ExtremesObject#userMin
-* @type {number}
-*/
+ */
+/**
+ * The maximum value of the axis' associated series.
+ * @name Highcharts.ExtremesObject#dataMax
+ * @type {number}
+ */
+/**
+ * The minimum value of the axis' associated series.
+ * @name Highcharts.ExtremesObject#dataMin
+ * @type {number}
+ */
+/**
+ * The maximum axis value, either automatic or set manually. If the `max` option
+ * is not set, `maxPadding` is 0 and `endOnTick` is false, this value will be
+ * the same as `dataMax`.
+ * @name Highcharts.ExtremesObject#max
+ * @type {number}
+ */
+/**
+ * The minimum axis value, either automatic or set manually. If the `min` option
+ * is not set, `minPadding` is 0 and `startOnTick` is false, this value will be
+ * the same as `dataMin`.
+ * @name Highcharts.ExtremesObject#min
+ * @type {number}
+ */
+/**
+ * The user defined maximum, either from the `max` option or from a zoom or
+ * `setExtremes` action.
+ * @name Highcharts.ExtremesObject#userMax
+ * @type {number}
+ */
+/**
+ * The user defined minimum, either from the `min` option or from a zoom or
+ * `setExtremes` action.
+ * @name Highcharts.ExtremesObject#userMin
+ * @type {number}
+ */
 /**
  * Formatter function for the text of a crosshair label.
  *
@@ -205,10 +233,11 @@ import H from './Globals.js';
  * @return {string}
  */
 import U from './Utilities.js';
-var defined = U.defined, isArray = U.isArray, isNumber = U.isNumber, isString = U.isString, objectEach = U.objectEach, splat = U.splat;
 import './Color.js';
 import './Options.js';
 import './Tick.js';
+
+var defined = U.defined, isArray = U.isArray, isNumber = U.isNumber, isString = U.isString, objectEach = U.objectEach, splat = U.splat;
 var addEvent = H.addEvent, animObject = H.animObject, arrayMax = H.arrayMax, arrayMin = H.arrayMin, color = H.color, correctFloat = H.correctFloat, defaultOptions = H.defaultOptions, deg2rad = H.deg2rad, destroyObjectProperties = H.destroyObjectProperties, extend = H.extend, fireEvent = H.fireEvent, format = H.format, getMagnitude = H.getMagnitude, merge = H.merge, normalizeTickInterval = H.normalizeTickInterval, pick = H.pick, removeEvent = H.removeEvent, seriesTypes = H.seriesTypes, syncTimeout = H.syncTimeout, Tick = H.Tick;
 /* eslint-disable no-invalid-this, valid-jsdoc */
 /**

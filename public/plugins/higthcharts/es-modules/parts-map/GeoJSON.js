@@ -13,31 +13,36 @@ import H from '../parts/Globals.js';
  * Result object of a map transformation.
  *
  * @interface Highcharts.MapCoordinateObject
- */ /**
-* X coordinate on the map.
-* @name Highcharts.MapCoordinateObject#x
-* @type {number}
-*/ /**
-* Y coordinate on the map.
-* @name Highcharts.MapCoordinateObject#y
-* @type {number|null}
-*/
+ */
+/**
+ * X coordinate on the map.
+ * @name Highcharts.MapCoordinateObject#x
+ * @type {number}
+ */
+/**
+ * Y coordinate on the map.
+ * @name Highcharts.MapCoordinateObject#y
+ * @type {number|null}
+ */
 /**
  * A latitude/longitude object.
  *
  * @interface Highcharts.MapLatLonObject
- */ /**
-* The latitude.
-* @name Highcharts.MapLatLonObject#lat
-* @type {number}
-*/ /**
-* The longitude.
-* @name Highcharts.MapLatLonObject#lon
-* @type {number}
-*/
+ */
+/**
+ * The latitude.
+ * @name Highcharts.MapLatLonObject#lat
+ * @type {number}
+ */
+/**
+ * The longitude.
+ * @name Highcharts.MapLatLonObject#lon
+ * @type {number}
+ */
 import '../parts/Utilities.js';
 import '../parts/Options.js';
 import '../parts/Chart.js';
+
 var Chart = H.Chart, extend = H.extend, format = H.format, merge = H.merge, win = H.win, wrap = H.wrap;
 /* eslint-disable no-invalid-this, valid-jsdoc */
 /**

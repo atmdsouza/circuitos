@@ -15,44 +15,53 @@ import H from './Globals.js';
  * @product highcharts
  *
  * @interface Highcharts.StackItemObject
- */ /**
-* Alignment settings
-* @name Highcharts.StackItemObject#alignOptions
-* @type {Highcharts.AlignObject}
-*/ /**
-* Related axis
-* @name Highcharts.StackItemObject#axis
-* @type {Highcharts.Axis}
-*/ /**
-* Cumulative value of the stacked data points
-* @name Highcharts.StackItemObject#cumulative
-* @type {number}
-*/ /**
-* True if on the negative side
-* @name Highcharts.StackItemObject#isNegative
-* @type {boolean}
-*/ /**
-* Related SVG element
-* @name Highcharts.StackItemObject#label
-* @type {Highcharts.SVGElement}
-*/ /**
-* Related stack options
-* @name Highcharts.StackItemObject#options
-* @type {Highcharts.YAxisStackLabelsOptions}
-*/ /**
-* Total value of the stacked data points
-* @name Highcharts.StackItemObject#total
-* @type {number}
-*/ /**
-* Shared x value of the stack
-* @name Highcharts.StackItemObject#x
-* @type {number}
-*/
+ */
+/**
+ * Alignment settings
+ * @name Highcharts.StackItemObject#alignOptions
+ * @type {Highcharts.AlignObject}
+ */
+/**
+ * Related axis
+ * @name Highcharts.StackItemObject#axis
+ * @type {Highcharts.Axis}
+ */
+/**
+ * Cumulative value of the stacked data points
+ * @name Highcharts.StackItemObject#cumulative
+ * @type {number}
+ */
+/**
+ * True if on the negative side
+ * @name Highcharts.StackItemObject#isNegative
+ * @type {boolean}
+ */
+/**
+ * Related SVG element
+ * @name Highcharts.StackItemObject#label
+ * @type {Highcharts.SVGElement}
+ */
+/**
+ * Related stack options
+ * @name Highcharts.StackItemObject#options
+ * @type {Highcharts.YAxisStackLabelsOptions}
+ */
+/**
+ * Total value of the stacked data points
+ * @name Highcharts.StackItemObject#total
+ * @type {number}
+ */
+/**
+ * Shared x value of the stack
+ * @name Highcharts.StackItemObject#x
+ * @type {number}
+ */
 import U from './Utilities.js';
-var defined = U.defined, objectEach = U.objectEach;
 import './Axis.js';
 import './Chart.js';
 import './Series.js';
+
+var defined = U.defined, objectEach = U.objectEach;
 var Axis = H.Axis, Chart = H.Chart, correctFloat = H.correctFloat, destroyObjectProperties = H.destroyObjectProperties, format = H.format, pick = H.pick, Series = H.Series;
 /* eslint-disable no-invalid-this, valid-jsdoc */
 /**

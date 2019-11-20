@@ -14,36 +14,41 @@ import H from './Globals.js';
  *
  * @private
  * @interface Highcharts.ColumnMetricsObject
- */ /**
-* Width of the columns.
-* @name Highcharts.ColumnMetricsObject#width
-* @type {number}
-*/ /**
-* Offset of the columns.
-* @name Highcharts.ColumnMetricsObject#offset
-* @type {number}
-*/
+ */
+/**
+ * Width of the columns.
+ * @name Highcharts.ColumnMetricsObject#width
+ * @type {number}
+ */
+/**
+ * Offset of the columns.
+ * @name Highcharts.ColumnMetricsObject#offset
+ * @type {number}
+ */
 /**
  * @interface Highcharts.PointOptionsObject
- */ /**
-* A name for the dash style to use for the column or bar. Overrides dashStyle
-* on the series. In styled mode, the stroke dash-array can be set with the same
-* classes as listed under {@link Highcharts.PointOptionsObject#color}.
-* @name Highcharts.PointOptionsObject#dashStyle
-* @type {Highcharts.DashStyleValue|undefined}
-*/ /**
+ */
+/**
+ * A name for the dash style to use for the column or bar. Overrides dashStyle
+ * on the series. In styled mode, the stroke dash-array can be set with the same
+ * classes as listed under {@link Highcharts.PointOptionsObject#color}.
+ * @name Highcharts.PointOptionsObject#dashStyle
+ * @type {Highcharts.DashStyleValue|undefined}
+ */
+/**
 
-* A pixel value specifying a fixed width for the column or bar. Overrides
-* pointWidth on the series.
-* @name Highcharts.PointOptionsObject#pointWidth
-* @type {number|undefined}
-*/
+ * A pixel value specifying a fixed width for the column or bar. Overrides
+ * pointWidth on the series.
+ * @name Highcharts.PointOptionsObject#pointWidth
+ * @type {number|undefined}
+ */
 import U from './Utilities.js';
-var defined = U.defined, isNumber = U.isNumber;
 import './Color.js';
 import './Legend.js';
 import './Series.js';
 import './Options.js';
+
+var defined = U.defined, isNumber = U.isNumber;
 var animObject = H.animObject, color = H.color, extend = H.extend, LegendSymbolMixin = H.LegendSymbolMixin, merge = H.merge, noop = H.noop, pick = H.pick, Series = H.Series, seriesType = H.seriesType, svg = H.svg;
 /**
  * The column series type.

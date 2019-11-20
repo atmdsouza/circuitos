@@ -10,6 +10,7 @@
 'use strict';
 import H from './Globals.js';
 import U from './Utilities.js';
+
 var defined = U.defined, isNumber = U.isNumber, isString = U.isString, splat = U.splat;
 /**
  * Callback function to format the text of the tooltip from scratch.

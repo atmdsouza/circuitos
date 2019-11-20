@@ -94,6 +94,7 @@ class ControleAcessoController extends ControllerBase
                 $controleacesso->setName($params["nome_perfil"]);
                 $controleacesso->setDescription($params["descricao_perfil"]);
                 $controleacesso->setExcluido(0);
+                $controleacesso->setAtivo(1);
                 if ($controleacesso->save() == false) {
                     $messages = $controleacesso->getMessages();
                     $errors = "";
@@ -234,23 +235,11 @@ class ControleAcessoController extends ControllerBase
             "controle_acesso"                               => ["buscarPermissoes"],
             "equipamento"                                   => ["formEquipamento", "carregaModelos", "validaNumeroPatrimonio", "validaNumeroSerie"],
             "fabricante"                                    => ["formFabricante"],
-            "modelo"                                        => ["formModelo"],
-            "conectividade"                                 => [""],
-            "contrato"                                      => [""],
-            "estacao_telecon"                               => [""],
-            "proposta_comercial"                            => [""],
-            "proposta_comercial_servico"                    => [""],
-            "proposta_comercial_servico_grupo"              => [""],
-            "proposta_comercial_servico_unidade"            => [""],
-            "set_seguranca"                                 => [""],
-            "set_esquipamento"                              => [""],
-            "terreno"                                       => [""],
-            "torre"                                         => [""],
-            "unidade_consumidora"                           => [""],
+            "modelo"                                        => ["formModelo"]
         );
         $modulos = ["session", "usuario", "core", "error", "index", "cidade_digital", "circuitos", "cliente", "cliente_unidade", "empresa", "lov", "controle_acesso", "equipamento", "fabricante", "modelo",
                     "conectividade", "contrato", "estacao_telecon", "proposta_comercial", "proposta_comercial_servico", "proposta_comercial_servico_grupo", "proposta_comercial_servico_unidade", "set_seguranca",
-                    "set_esquipamento", "terreno", "torre", "unidade_consumidora"];
+                    "set_equipamento", "terreno", "torre", "unidade_consumidora"];
         //Permissões Padrão
         foreach ($modulos as $modulo)
         {

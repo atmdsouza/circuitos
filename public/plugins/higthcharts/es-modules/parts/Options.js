@@ -31,23 +31,27 @@ import H from './Globals.js';
  * access the series options that were passed to the `addSeries` method.
  *
  * @interface Highcharts.ChartAddSeriesEventObject
- */ /**
-* The series options that were passed to the `addSeries` method.
-* @name Highcharts.ChartAddSeriesEventObject#options
-* @type {Highcharts.SeriesOptionsType}
-*/ /**
-* Prevents the default behaviour of the event.
-* @name Highcharts.ChartAddSeriesEventObject#preventDefault
-* @type {Function}
-*/ /**
-* The event target.
-* @name Highcharts.ChartAddSeriesEventObject#target
-* @type {Highcharts.Chart}
-*/ /**
-* The event type.
-* @name Highcharts.ChartAddSeriesEventObject#type
-* @type {"addSeries"}
-*/
+ */
+/**
+ * The series options that were passed to the `addSeries` method.
+ * @name Highcharts.ChartAddSeriesEventObject#options
+ * @type {Highcharts.SeriesOptionsType}
+ */
+/**
+ * Prevents the default behaviour of the event.
+ * @name Highcharts.ChartAddSeriesEventObject#preventDefault
+ * @type {Function}
+ */
+/**
+ * The event target.
+ * @name Highcharts.ChartAddSeriesEventObject#target
+ * @type {Highcharts.Chart}
+ */
+/**
+ * The event type.
+ * @name Highcharts.ChartAddSeriesEventObject#type
+ * @type {"addSeries"}
+ */
 /**
  * Gets fired when clicking on the plot background.
  *
@@ -65,34 +69,39 @@ import H from './Globals.js';
  * Contains an axes of the clicked spot.
  *
  * @interface Highcharts.ChartClickEventAxisObject
- */ /**
-* Axis at the clicked spot.
-* @name Highcharts.ChartClickEventAxisObject#axis
-* @type {Highcharts.Axis}
-*/ /**
-* Axis value at the clicked spot.
-* @name Highcharts.ChartClickEventAxisObject#value
-* @type {number}
-*/
+ */
+/**
+ * Axis at the clicked spot.
+ * @name Highcharts.ChartClickEventAxisObject#axis
+ * @type {Highcharts.Axis}
+ */
+/**
+ * Axis value at the clicked spot.
+ * @name Highcharts.ChartClickEventAxisObject#value
+ * @type {number}
+ */
 /**
  * Contains information about the clicked spot on the chart. Remember the unit
  * of a datetime axis is milliseconds since 1970-01-01 00:00:00.
  *
  * @interface Highcharts.ChartClickEventObject
  * @extends Highcharts.PointerEventObject
- */ /**
-* Information about the x-axis on the clicked spot.
-* @name Highcharts.ChartClickEventObject#xAxis
-* @type {Array<Highcharts.ChartClickEventAxisObject>}
-*/ /**
-* Information about the y-axis on the clicked spot.
-* @name Highcharts.ChartClickEventObject#yAxis
-* @type {Array<Highcharts.ChartClickEventAxisObject>}
-*/ /**
-* Information about the z-axis on the clicked spot.
-* @name Highcharts.ChartClickEventObject#zAxis
-* @type {Array<Highcharts.ChartClickEventAxisObject>|undefined}
-*/
+ */
+/**
+ * Information about the x-axis on the clicked spot.
+ * @name Highcharts.ChartClickEventObject#xAxis
+ * @type {Array<Highcharts.ChartClickEventAxisObject>}
+ */
+/**
+ * Information about the y-axis on the clicked spot.
+ * @name Highcharts.ChartClickEventObject#yAxis
+ * @type {Array<Highcharts.ChartClickEventAxisObject>}
+ */
+/**
+ * Information about the z-axis on the clicked spot.
+ * @name Highcharts.ChartClickEventObject#zAxis
+ * @type {Array<Highcharts.ChartClickEventAxisObject>|undefined}
+ */
 /**
  * Gets fired when the chart is finished loading.
  *
@@ -157,37 +166,43 @@ import H from './Globals.js';
  *
  * @interface Highcharts.ChartSelectionContextObject
  * @extends global.Event
- */ /**
-* Arrays containing the axes of each dimension and each axis' min and max
-* values.
-* @name Highcharts.ChartSelectionContextObject#xAxis
-* @type {Array<Highcharts.ChartSelectionAxisContextObject>}
-*/ /**
-* Arrays containing the axes of each dimension and each axis' min and max
-* values.
-* @name Highcharts.ChartSelectionContextObject#yAxis
-* @type {Array<Highcharts.ChartSelectionAxisContextObject>}
-*/
+ */
+/**
+ * Arrays containing the axes of each dimension and each axis' min and max
+ * values.
+ * @name Highcharts.ChartSelectionContextObject#xAxis
+ * @type {Array<Highcharts.ChartSelectionAxisContextObject>}
+ */
+/**
+ * Arrays containing the axes of each dimension and each axis' min and max
+ * values.
+ * @name Highcharts.ChartSelectionContextObject#yAxis
+ * @type {Array<Highcharts.ChartSelectionAxisContextObject>}
+ */
 /**
  * Axis context of the selection.
  *
  * @interface Highcharts.ChartSelectionAxisContextObject
- */ /**
-* The selected Axis.
-* @name Highcharts.ChartSelectionAxisContextObject#axis
-* @type {Highcharts.Axis}
-*/ /**
-* The maximum axis value, either automatic or set manually.
-* @name Highcharts.ChartSelectionAxisContextObject#max
-* @type {number}
-*/ /**
-* The minimum axis value, either automatic or set manually.
-* @name Highcharts.ChartSelectionAxisContextObject#min
-* @type {number}
-*/
+ */
+/**
+ * The selected Axis.
+ * @name Highcharts.ChartSelectionAxisContextObject#axis
+ * @type {Highcharts.Axis}
+ */
+/**
+ * The maximum axis value, either automatic or set manually.
+ * @name Highcharts.ChartSelectionAxisContextObject#max
+ * @type {number}
+ */
+/**
+ * The minimum axis value, either automatic or set manually.
+ * @name Highcharts.ChartSelectionAxisContextObject#min
+ * @type {number}
+ */
 import './Color.js';
 import './Utilities.js';
 import './Time.js';
+
 var color = H.color, isTouchDevice = H.isTouchDevice, merge = H.merge, svg = H.svg;
 /* ************************************************************************** *
  * Handle the options                                                         *

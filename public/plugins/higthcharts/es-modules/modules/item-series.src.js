@@ -13,11 +13,11 @@
 import H from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
+import '../parts/Series.js';
+
 var defined = U.defined,
     isNumber = U.isNumber,
     objectEach = U.objectEach;
-
-import '../parts/Series.js';
 
 var extend = H.extend,
     merge = H.merge,

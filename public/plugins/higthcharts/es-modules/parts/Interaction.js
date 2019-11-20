@@ -11,28 +11,31 @@
 import H from './Globals.js';
 /**
  * @interface Highcharts.PointEventsOptionsObject
- */ /**
-* Fires when the point is selected either programmatically or following a click
-* on the point. One parameter, `event`, is passed to the function. Returning
-* `false` cancels the operation.
-* @name Highcharts.PointEventsOptionsObject#select
-* @type {Highcharts.PointSelectCallbackFunction}
-*/ /**
-* Fires when the point is unselected either programmatically or following a
-* click on the point. One parameter, `event`, is passed to the function.
-* Returning `false` cancels the operation.
-* @name Highcharts.PointEventsOptionsObject#unselect
-* @type {Highcharts.PointUnselectCallbackFunction}
-*/
+ */
+/**
+ * Fires when the point is selected either programmatically or following a click
+ * on the point. One parameter, `event`, is passed to the function. Returning
+ * `false` cancels the operation.
+ * @name Highcharts.PointEventsOptionsObject#select
+ * @type {Highcharts.PointSelectCallbackFunction}
+ */
+/**
+ * Fires when the point is unselected either programmatically or following a
+ * click on the point. One parameter, `event`, is passed to the function.
+ * Returning `false` cancels the operation.
+ * @name Highcharts.PointEventsOptionsObject#unselect
+ * @type {Highcharts.PointUnselectCallbackFunction}
+ */
 /**
  * Information about the select/unselect event.
  *
  * @interface Highcharts.PointInteractionEventObject
  * @extends global.Event
- */ /**
-* @name Highcharts.PointInteractionEventObject#accumulate
-* @type {boolean}
-*/
+ */
+/**
+ * @name Highcharts.PointInteractionEventObject#accumulate
+ * @type {boolean}
+ */
 /**
  * Gets fired when the point is selected either programmatically or following a
  * click on the point.
@@ -58,12 +61,13 @@ import H from './Globals.js';
  *        Event that occured.
  */
 import U from './Utilities.js';
-var defined = U.defined, isArray = U.isArray, isObject = U.isObject, objectEach = U.objectEach;
 import './Chart.js';
 import './Options.js';
 import './Legend.js';
 import './Point.js';
 import './Series.js';
+
+var defined = U.defined, isArray = U.isArray, isObject = U.isObject, objectEach = U.objectEach;
 var addEvent = H.addEvent, Chart = H.Chart, createElement = H.createElement, css = H.css, defaultOptions = H.defaultOptions, defaultPlotOptions = H.defaultPlotOptions, extend = H.extend, fireEvent = H.fireEvent, hasTouch = H.hasTouch, Legend = H.Legend, merge = H.merge, pick = H.pick, Point = H.Point, Series = H.Series, seriesTypes = H.seriesTypes, svg = H.svg, TrackerMixin;
 /* eslint-disable valid-jsdoc */
 /**

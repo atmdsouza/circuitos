@@ -28,75 +28,84 @@ import H from '../../parts/Globals.js';
  * @interface Highcharts.SeriesNetworkgraphDataLabelsFormatterContextObject
  * @extends Highcharts.DataLabelsFormatterContextObject
  * @since 7.0.0
- */ /**
-* The color of the node.
-* @name Highcharts.SeriesNetworkgraphDataLabelsFormatterContextObject#color
-* @type {Highcharts.ColorString}
-* @since 7.0.0
-*/ /**
-* The point (node) object. The node name, if defined, is available through
-* `this.point.name`. Arrays: `this.point.linksFrom` and `this.point.linksTo`
-* contains all nodes connected to this point.
-* @name Highcharts.SeriesNetworkgraphDataLabelsFormatterContextObject#point
-* @type {Highcharts.Point}
-* @since 7.0.0
-*/ /**
-* The ID of the node.
-* @name Highcharts.SeriesNetworkgraphDataLabelsFormatterContextObject#key
-* @type {string}
-* @since 7.0.0
-*/
+ */
+/**
+ * The color of the node.
+ * @name Highcharts.SeriesNetworkgraphDataLabelsFormatterContextObject#color
+ * @type {Highcharts.ColorString}
+ * @since 7.0.0
+ */
+/**
+ * The point (node) object. The node name, if defined, is available through
+ * `this.point.name`. Arrays: `this.point.linksFrom` and `this.point.linksTo`
+ * contains all nodes connected to this point.
+ * @name Highcharts.SeriesNetworkgraphDataLabelsFormatterContextObject#point
+ * @type {Highcharts.Point}
+ * @since 7.0.0
+ */
+/**
+ * The ID of the node.
+ * @name Highcharts.SeriesNetworkgraphDataLabelsFormatterContextObject#key
+ * @type {string}
+ * @since 7.0.0
+ */
 /**
  * Data labels options
  *
  * @interface Highcharts.SeriesNetworkgraphDataLabelsOptionsObject
  * @extends Highcharts.DataLabelsOptionsObject
  * @since 7.0.0
- */ /**
-* The
-* [format string](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting)
-* specifying what to show for _node_ in the networkgraph. In v7.0 defaults to
-* `{key}`, since v7.1 defaults to `undefined` and `formatter` is used instead.
-* @name Highcharts.SeriesNetworkgraphDataLabelsOptionsObject#format
-* @type {string|undefined}
-* @since 7.0.0
-*/ /**
-* Callback JavaScript function to format the data label for a node. Note that
-* if a `format` is defined, the format takes precedence and the formatter is
-* ignored.
-* @name Highcharts.SeriesNetworkgraphDataLabelsOptionsObject#formatter
-* @type {Highcharts.SeriesNetworkgraphDataLabelsFormatterCallbackFunction|undefined}
-* @since 7.0.0
-*/ /**
-* The
-* [format string](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting)
-* specifying what to show for _links_ in the networkgraph. (Default:
-* `undefined`)
-* @name Highcharts.SeriesNetworkgraphDataLabelsOptionsObject#linkFormat
-* @type {string|undefined}
-* @since 7.1.0
-*/ /**
-* Callback to format data labels for _links_ in the sankey diagram. The
-* `linkFormat` option takes precedence over the `linkFormatter`.
-* @name Highcharts.SeriesNetworkgraphDataLabelsOptionsObject#linkFormatter
-* @type {Highcharts.SeriesNetworkgraphDataLabelsFormatterCallbackFunction|undefined}
-* @since 7.1.0
-*/ /**
-* Options for a _link_ label text which should follow link connection. Border
-* and background are disabled for a label that follows a path.
-* **Note:** Only SVG-based renderer supports this option. Setting `useHTML` to
-* true will disable this option.
-* @see {@link Highcharts.SeriesNetworkDataLabelsTextPath#textPath}
-* @name Highcharts.SeriesNetworkgraphDataLabelsOptionsObject#linkTextPath
-* @type {Highcharts.DataLabelsTextPathOptionsObject|undefined}
-* @since 7.1.0
-*/
+ */
+/**
+ * The
+ * [format string](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting)
+ * specifying what to show for _node_ in the networkgraph. In v7.0 defaults to
+ * `{key}`, since v7.1 defaults to `undefined` and `formatter` is used instead.
+ * @name Highcharts.SeriesNetworkgraphDataLabelsOptionsObject#format
+ * @type {string|undefined}
+ * @since 7.0.0
+ */
+/**
+ * Callback JavaScript function to format the data label for a node. Note that
+ * if a `format` is defined, the format takes precedence and the formatter is
+ * ignored.
+ * @name Highcharts.SeriesNetworkgraphDataLabelsOptionsObject#formatter
+ * @type {Highcharts.SeriesNetworkgraphDataLabelsFormatterCallbackFunction|undefined}
+ * @since 7.0.0
+ */
+/**
+ * The
+ * [format string](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting)
+ * specifying what to show for _links_ in the networkgraph. (Default:
+ * `undefined`)
+ * @name Highcharts.SeriesNetworkgraphDataLabelsOptionsObject#linkFormat
+ * @type {string|undefined}
+ * @since 7.1.0
+ */
+/**
+ * Callback to format data labels for _links_ in the sankey diagram. The
+ * `linkFormat` option takes precedence over the `linkFormatter`.
+ * @name Highcharts.SeriesNetworkgraphDataLabelsOptionsObject#linkFormatter
+ * @type {Highcharts.SeriesNetworkgraphDataLabelsFormatterCallbackFunction|undefined}
+ * @since 7.1.0
+ */
+/**
+ * Options for a _link_ label text which should follow link connection. Border
+ * and background are disabled for a label that follows a path.
+ * **Note:** Only SVG-based renderer supports this option. Setting `useHTML` to
+ * true will disable this option.
+ * @see {@link Highcharts.SeriesNetworkDataLabelsTextPath#textPath}
+ * @name Highcharts.SeriesNetworkgraphDataLabelsOptionsObject#linkTextPath
+ * @type {Highcharts.DataLabelsTextPathOptionsObject|undefined}
+ * @since 7.1.0
+ */
 import U from '../../parts/Utilities.js';
-var defined = U.defined;
 import '../../parts/Options.js';
 import '../../mixins/nodes.js';
 import '/layouts.js';
 import '/draggable-nodes.js';
+
+var defined = U.defined;
 var addEvent = H.addEvent, seriesType = H.seriesType, seriesTypes = H.seriesTypes, pick = H.pick, Point = H.Point, Series = H.Series, dragNodesMixin = H.dragNodesMixin;
 /**
  * @private

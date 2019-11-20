@@ -43,16 +43,19 @@ import Highcharts from '../parts/Globals.js';
  * Structure for alternative date formats to parse.
  *
  * @interface Highcharts.DataDateFormatObject
- */ /**
-* @name Highcharts.DataDateFormatObject#alternative
-* @type {string|undefined}
-*/ /**
-* @name Highcharts.DataDateFormatObject#parser
-* @type {Highcharts.DataDateFormatCallbackFunction}
-*/ /**
-* @name Highcharts.DataDateFormatObject#regex
-* @type {global.RegExp}
-*/
+ */
+/**
+ * @name Highcharts.DataDateFormatObject#alternative
+ * @type {string|undefined}
+ */
+/**
+ * @name Highcharts.DataDateFormatObject#parser
+ * @type {Highcharts.DataDateFormatCallbackFunction}
+ */
+/**
+ * @name Highcharts.DataDateFormatObject#regex
+ * @type {global.RegExp}
+ */
 /**
  * Possible types for a data item in a column or row.
  *
@@ -84,9 +87,10 @@ import Highcharts from '../parts/Globals.js';
  *         continue async.
  */
 import U from '../parts/Utilities.js';
-var defined = U.defined, isNumber = U.isNumber, objectEach = U.objectEach, splat = U.splat;
 import '../parts/Chart.js';
 import '../mixins/ajax.js';
+
+var defined = U.defined, isNumber = U.isNumber, objectEach = U.objectEach, splat = U.splat;
 // Utilities
 var addEvent = Highcharts.addEvent, Chart = Highcharts.Chart, win = Highcharts.win, doc = win.document, pick = Highcharts.pick, merge = Highcharts.merge, fireEvent = Highcharts.fireEvent, SeriesBuilder;
 /**

@@ -11,6 +11,7 @@
 'use strict';
 import H from '../parts/Globals.js';
 import U from '../parts/Utilities.js';
+
 var defined = U.defined, erase = U.erase, isArray = U.isArray, isNumber = U.isNumber;
 var addEvent = H.addEvent, argsToArray = function (args) {
     return Array.prototype.slice.call(args, 1);

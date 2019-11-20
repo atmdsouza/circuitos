@@ -11,6 +11,7 @@
 'use strict';
 import H from '../parts/Globals.js';
 import '../parts/Utilities.js';
+
 var min = Math.min, max = Math.max, abs = Math.abs, pick = H.pick;
 /**
  * Get index of last obstacle before xMin. Employs a type of binary search, and

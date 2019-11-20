@@ -11,6 +11,7 @@
 import H from './Globals.js';
 import './Utilities.js';
 import './Point.js';
+
 var Point = H.Point, seriesType = H.seriesType, seriesTypes = H.seriesTypes;
 /**
  * The ohlc series type.

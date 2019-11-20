@@ -11,13 +11,13 @@
 import H from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
-var defined = U.defined,
-    erase = U.erase,
-    splat = U.splat;
-
 import '../parts/Axis.js';
 import '../parts/Chart.js';
 import '../parts/Series.js';
+
+var defined = U.defined,
+    erase = U.erase,
+    splat = U.splat;
 
 // Extensions for parallel coordinates plot.
 var Axis = H.Axis,
