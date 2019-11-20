@@ -3,7 +3,6 @@
 namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Resultset;
 
 class UnidadeConsumidora extends \Phalcon\Mvc\Model
 {

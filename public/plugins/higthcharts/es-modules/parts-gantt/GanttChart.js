@@ -12,8 +12,9 @@
 'use strict';
 import H from '../parts/Globals.js';
 import U from '../parts/Utilities.js';
-var isArray = U.isArray, splat = U.splat;
 import 'GanttSeries.js';
+
+var isArray = U.isArray, splat = U.splat;
 var merge = H.merge, Chart = H.Chart;
 /**
  * Factory function for Gantt charts.

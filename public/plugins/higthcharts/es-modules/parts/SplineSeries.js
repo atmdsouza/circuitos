@@ -12,6 +12,7 @@ import H from './Globals.js';
 import './Utilities.js';
 import './Options.js';
 import './Series.js';
+
 var pick = H.pick, seriesType = H.seriesType;
 /**
  * Spline series type.

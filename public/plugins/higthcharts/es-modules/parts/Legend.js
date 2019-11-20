@@ -26,30 +26,35 @@ import Highcharts from './Globals.js';
  * Information about the legend click event.
  *
  * @interface Highcharts.PointLegendItemClickEventObject
- */ /**
-* Related browser event.
-* @name Highcharts.PointLegendItemClickEventObject#browserEvent
-* @type {Highcharts.PointerEvent}
-*/ /**
-* Prevent the default action of toggle the visibility of the point.
-* @name Highcharts.PointLegendItemClickEventObject#preventDefault
-* @type {Function}
-*/ /**
-* Related point.
-* @name Highcharts.PointLegendItemClickEventObject#target
-* @type {Highcharts.Point}
-*/ /**
-* Event type.
-* @name Highcharts.PointLegendItemClickEventObject#type
-* @type {"legendItemClick"}
-*/
+ */
+/**
+ * Related browser event.
+ * @name Highcharts.PointLegendItemClickEventObject#browserEvent
+ * @type {Highcharts.PointerEvent}
+ */
+/**
+ * Prevent the default action of toggle the visibility of the point.
+ * @name Highcharts.PointLegendItemClickEventObject#preventDefault
+ * @type {Function}
+ */
+/**
+ * Related point.
+ * @name Highcharts.PointLegendItemClickEventObject#target
+ * @type {Highcharts.Point}
+ */
+/**
+ * Event type.
+ * @name Highcharts.PointLegendItemClickEventObject#type
+ * @type {"legendItemClick"}
+ */
 /**
  * @interface Highcharts.PointOptionsObject
- */ /**
-* The sequential index of the data point in the legend.
-* @name Highcharts.PointOptionsObject#legendIndex
-* @type {number|undefined}
-*/
+ */
+/**
+ * The sequential index of the data point in the legend.
+ * @name Highcharts.PointOptionsObject#legendIndex
+ * @type {number|undefined}
+ */
 /**
  * Gets fired when the legend item belonging to a series is clicked. The default
  * action is to toggle the visibility of the series. This can be prevented by
@@ -67,24 +72,29 @@ import Highcharts from './Globals.js';
  * Information about the legend click event.
  *
  * @interface Highcharts.SeriesLegendItemClickEventObject
- */ /**
-* Related browser event.
-* @name Highcharts.SeriesLegendItemClickEventObject#browserEvent
-* @type {Highcharts.PointerEvent}
-*/ /**
-* Prevent the default action of toggle the visibility of the series.
-* @name Highcharts.SeriesLegendItemClickEventObject#preventDefault
-* @type {Function}
-*/ /**
-* Related series.
-* @name Highcharts.SeriesLegendItemClickEventObject#target
-* @type {Highcharts.Series}
-*/ /**
-* Event type.
-* @name Highcharts.SeriesLegendItemClickEventObject#type
-* @type {"legendItemClick"}
-*/
+ */
+/**
+ * Related browser event.
+ * @name Highcharts.SeriesLegendItemClickEventObject#browserEvent
+ * @type {Highcharts.PointerEvent}
+ */
+/**
+ * Prevent the default action of toggle the visibility of the series.
+ * @name Highcharts.SeriesLegendItemClickEventObject#preventDefault
+ * @type {Function}
+ */
+/**
+ * Related series.
+ * @name Highcharts.SeriesLegendItemClickEventObject#target
+ * @type {Highcharts.Series}
+ */
+/**
+ * Event type.
+ * @name Highcharts.SeriesLegendItemClickEventObject#type
+ * @type {"legendItemClick"}
+ */
 import U from './Utilities.js';
+
 var defined = U.defined, isNumber = U.isNumber;
 var H = Highcharts, addEvent = H.addEvent, css = H.css, discardElement = H.discardElement, fireEvent = H.fireEvent, isFirefox = H.isFirefox, marginNames = H.marginNames, merge = H.merge, pick = H.pick, setAnimation = H.setAnimation, stableSort = H.stableSort, win = H.win, wrap = H.wrap;
 /* eslint-disable no-invalid-this, valid-jsdoc */

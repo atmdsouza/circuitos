@@ -11,6 +11,7 @@
  * */
 'use strict';
 import H from '../parts/Globals.js';
+
 var addEvent = H.addEvent, Axis = H.Axis, PlotLineOrBand = H.PlotLineOrBand, merge = H.merge, wrap = H.wrap;
 var defaultConfig = {
     /**

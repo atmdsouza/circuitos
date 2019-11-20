@@ -3,11 +3,11 @@ import H from './../../parts/Globals.js';
 import './../../parts/Chart.js';
 
 import U from './../../parts/Utilities.js';
+import './../../parts/SvgRenderer.js';
+
 var defined = U.defined,
     objectEach = U.objectEach,
     splat = U.splat;
-
-import './../../parts/SvgRenderer.js';
 
 /**
  * Options for configuring markers for annotations.

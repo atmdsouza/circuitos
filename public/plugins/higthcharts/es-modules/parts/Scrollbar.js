@@ -10,9 +10,10 @@
 'use strict';
 import H from './Globals.js';
 import U from './Utilities.js';
-var defined = U.defined;
 import './Axis.js';
 import './Options.js';
+
+var defined = U.defined;
 var addEvent = H.addEvent, Axis = H.Axis, correctFloat = H.correctFloat, defaultOptions = H.defaultOptions, destroyObjectProperties = H.destroyObjectProperties, fireEvent = H.fireEvent, hasTouch = H.hasTouch, isTouchDevice = H.isTouchDevice, merge = H.merge, pick = H.pick, removeEvent = H.removeEvent, swapXY;
 /**
  *

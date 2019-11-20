@@ -9,12 +9,12 @@
 import H from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
+import chartNavigationMixin from '../mixins/navigation.js';
+
 var isArray = U.isArray,
     isNumber = U.isNumber,
     isObject = U.isObject,
     objectEach = U.objectEach;
-
-import chartNavigationMixin from '../mixins/navigation.js';
 
 var doc = H.doc,
     win = H.win,

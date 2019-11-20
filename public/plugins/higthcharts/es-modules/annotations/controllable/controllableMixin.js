@@ -2,13 +2,13 @@
 import H from './../../parts/Globals.js';
 
 import U from './../../parts/Utilities.js';
-var isObject = U.isObject,
-    isString = U.isString,
-    splat = U.splat;
-
 import './../../parts/Tooltip.js';
 import ControlPoint from './../ControlPoint.js';
 import MockPoint from './../MockPoint.js';
+
+var isObject = U.isObject,
+    isString = U.isString,
+    splat = U.splat;
 
 /**
  * It provides methods for handling points, control points

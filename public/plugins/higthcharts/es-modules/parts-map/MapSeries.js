@@ -16,6 +16,7 @@ import '../parts/Point.js';
 import '../parts/ScatterSeries.js';
 import '../parts/Series.js';
 import U from '../parts/Utilities.js';
+
 var isArray = U.isArray, isNumber = U.isNumber, objectEach = U.objectEach, splat = U.splat;
 var colorPointMixin = H.colorPointMixin, colorSeriesMixin = H.colorSeriesMixin, extend = H.extend, LegendSymbolMixin = H.LegendSymbolMixin, merge = H.merge, noop = H.noop, pick = H.pick, Point = H.Point, Series = H.Series, seriesType = H.seriesType, seriesTypes = H.seriesTypes;
 /**

@@ -14,6 +14,7 @@ import H from '../parts/Globals.js';
 import '../parts/Utilities.js';
 import '../parts/Axis.js';
 import '../parts/SvgRenderer.js';
+
 var addEvent = H.addEvent, Axis = H.Axis, SVGRenderer = H.SVGRenderer, VMLRenderer = H.VMLRenderer;
 if (VMLRenderer) {
     H.setOptions({ animate: false });

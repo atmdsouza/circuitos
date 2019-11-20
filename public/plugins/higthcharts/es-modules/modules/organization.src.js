@@ -40,6 +40,7 @@
 'use strict';
 
 import H from '../parts/Globals.js';
+
 var pick = H.pick;
 
 var base = H.seriesTypes.sankey.prototype;

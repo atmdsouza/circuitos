@@ -12,13 +12,14 @@
 'use strict';
 import H from '../parts/Globals.js';
 import U from '../parts/Utilities.js';
-var isNumber = U.isNumber, splat = U.splat;
 import 'CurrentDateIndicator.js';
 import 'GridAxis.js';
 import '../modules/static-scale.src.js';
 import 'TreeGrid.js';
 import 'Pathfinder.js';
 import '../modules/xrange.src.js';
+
+var isNumber = U.isNumber, splat = U.splat;
 var dateFormat = H.dateFormat, merge = H.merge, pick = H.pick, seriesType = H.seriesType, seriesTypes = H.seriesTypes, Series = H.Series, parent = seriesTypes.xrange;
 /**
  * @private

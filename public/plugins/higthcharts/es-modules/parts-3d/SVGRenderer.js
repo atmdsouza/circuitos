@@ -12,9 +12,10 @@
 'use strict';
 import H from '../parts/Globals.js';
 import U from '../parts/Utilities.js';
-var defined = U.defined, objectEach = U.objectEach;
 import '../parts/Color.js';
 import '../parts/SvgRenderer.js';
+
+var defined = U.defined, objectEach = U.objectEach;
 var cos = Math.cos, PI = Math.PI, sin = Math.sin;
 var animObject = H.animObject, charts = H.charts, color = H.color, deg2rad = H.deg2rad, extend = H.extend, merge = H.merge, perspective = H.perspective, pick = H.pick, SVGElement = H.SVGElement, SVGRenderer = H.SVGRenderer, 
 // internal:

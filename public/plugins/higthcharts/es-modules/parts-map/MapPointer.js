@@ -11,6 +11,7 @@
 import H from '../parts/Globals.js';
 import '../parts/Utilities.js';
 import '../parts/Pointer.js';
+
 var extend = H.extend, pick = H.pick, Pointer = H.Pointer, wrap = H.wrap;
 /* eslint-disable no-invalid-this */
 // Extend the Pointer

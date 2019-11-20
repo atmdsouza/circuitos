@@ -10,6 +10,7 @@
 'use strict';
 import H from '../parts/Globals.js';
 import '../parts/Utilities.js';
+
 var defaultPlotOptions = H.defaultPlotOptions, merge = H.merge, noop = H.noop, pick = H.pick, seriesType = H.seriesType, seriesTypes = H.seriesTypes;
 var colProto = seriesTypes.column.prototype;
 /**

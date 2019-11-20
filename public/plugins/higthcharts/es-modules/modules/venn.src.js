@@ -18,18 +18,17 @@ import geometry from '../mixins/geometry.js';
 import geometryCircles from '../mixins/geometry-circles.js';
 
 import NelderMeadModule from '../mixins/nelder-mead.js';
-// TODO: replace with individual imports
-var nelderMead = NelderMeadModule.nelderMead;
-
 import H from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
+import '../parts/Series.js';
+// TODO: replace with individual imports
+var nelderMead = NelderMeadModule.nelderMead;
+
 var isArray = U.isArray,
     isNumber = U.isNumber,
     isObject = U.isObject,
     isString = U.isString;
-
-import '../parts/Series.js';
 
 var addEvent = H.addEvent,
     color = H.Color,

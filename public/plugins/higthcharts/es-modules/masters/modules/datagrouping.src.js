@@ -11,4 +11,5 @@
  */
 'use strict';
 import dataGrouping from '../../parts/DataGrouping.js';
+
 export default dataGrouping;

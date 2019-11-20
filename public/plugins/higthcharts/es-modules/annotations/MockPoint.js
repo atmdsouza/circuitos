@@ -1,10 +1,10 @@
 import H from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
-var defined = U.defined;
-
 import '../parts/Axis.js';
 import '../parts/Series.js';
+
+var defined = U.defined;
 
 /**
  * A mock point label configuration.

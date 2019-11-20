@@ -15,12 +15,12 @@
 import Highcharts from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
-var defined = U.defined,
-    isObject = U.isObject;
-
 import '../parts/Chart.js';
 import '../mixins/ajax.js';
 import '../mixins/download-url.js';
+
+var defined = U.defined,
+    isObject = U.isObject;
 
 var pick = Highcharts.pick,
     win = Highcharts.win,

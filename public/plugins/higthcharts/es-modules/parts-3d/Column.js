@@ -11,6 +11,7 @@
 import H from '../parts/Globals.js';
 import '../parts/Utilities.js';
 import '../parts/Series.js';
+
 var addEvent = H.addEvent, perspective = H.perspective, pick = H.pick, Series = H.Series, seriesTypes = H.seriesTypes, svg = H.svg, wrap = H.wrap;
 /**
  * Depth of the columns in a 3D column chart. Requires `highcharts-3d.js`.

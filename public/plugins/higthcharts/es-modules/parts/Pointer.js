@@ -13,90 +13,105 @@ import Highcharts from './Globals.js';
  * One position in relation to an axis.
  *
  * @interface Highcharts.PointerAxisCoordinateObject
- */ /**
-* Related axis.
-*
-* @name Highcharts.PointerAxisCoordinateObject#axis
-* @type {Highcharts.Axis}
-*/ /**
-* Axis value.
-*
-* @name Highcharts.PointerAxisCoordinateObject#value
-* @type {number}
-*/
+ */
+/**
+ * Related axis.
+ *
+ * @name Highcharts.PointerAxisCoordinateObject#axis
+ * @type {Highcharts.Axis}
+ */
+/**
+ * Axis value.
+ *
+ * @name Highcharts.PointerAxisCoordinateObject#value
+ * @type {number}
+ */
 /**
  * Positions in terms of axis values.
  *
  * @interface Highcharts.PointerAxisCoordinatesObject
- */ /**
-* Positions on the x-axis.
-* @name Highcharts.PointerAxisCoordinatesObject#xAxis
-* @type {Array<Highcharts.PointerAxisCoordinateObject>}
-*/ /**
-* Positions on the y-axis.
-* @name Highcharts.PointerAxisCoordinatesObject#yAxis
-* @type {Array<Highcharts.PointerAxisCoordinateObject>}
-*/
+ */
+/**
+ * Positions on the x-axis.
+ * @name Highcharts.PointerAxisCoordinatesObject#xAxis
+ * @type {Array<Highcharts.PointerAxisCoordinateObject>}
+ */
+/**
+ * Positions on the y-axis.
+ * @name Highcharts.PointerAxisCoordinatesObject#yAxis
+ * @type {Array<Highcharts.PointerAxisCoordinateObject>}
+ */
 /**
  * Pointer coordinates.
  *
  * @interface Highcharts.PointerCoordinatesObject
- */ /**
-* @name Highcharts.PointerCoordinatesObject#chartX
-* @type {number}
-*/ /**
-* @name Highcharts.PointerCoordinatesObject#chartY
-* @type {number}
-*/
+ */
+/**
+ * @name Highcharts.PointerCoordinatesObject#chartX
+ * @type {number}
+ */
+/**
+ * @name Highcharts.PointerCoordinatesObject#chartY
+ * @type {number}
+ */
 /**
  * A native browser mouse or touch event, extended with position information
  * relative to the {@link Chart.container}.
  *
  * @interface Highcharts.PointerEventObject
  * @extends global.PointerEvent
- */ /**
-* The X coordinate of the pointer interaction relative to the chart.
-*
-* @name Highcharts.PointerEventObject#chartX
-* @type {number}
-*/ /**
-* The Y coordinate of the pointer interaction relative to the chart.
-*
-* @name Highcharts.PointerEventObject#chartY
-* @type {number}
-*/
+ */
+/**
+ * The X coordinate of the pointer interaction relative to the chart.
+ *
+ * @name Highcharts.PointerEventObject#chartX
+ * @type {number}
+ */
+/**
+ * The Y coordinate of the pointer interaction relative to the chart.
+ *
+ * @name Highcharts.PointerEventObject#chartY
+ * @type {number}
+ */
 /**
  * Axis-specific data of a selection.
  *
  * @interface Highcharts.SelectDataObject
- */ /**
-* @name Highcharts.SelectDataObject#axis
-* @type {Highcharts.Axis}
-*/ /**
-* @name Highcharts.SelectDataObject#max
-* @type {number}
-*/ /**
-* @name Highcharts.SelectDataObject#min
-* @type {number}
-*/
+ */
+/**
+ * @name Highcharts.SelectDataObject#axis
+ * @type {Highcharts.Axis}
+ */
+/**
+ * @name Highcharts.SelectDataObject#max
+ * @type {number}
+ */
+/**
+ * @name Highcharts.SelectDataObject#min
+ * @type {number}
+ */
 /**
  * Object for select events.
  *
  * @interface Highcharts.SelectEventObject
- */ /**
-* @name Highcharts.SelectEventObject#originalEvent
-* @type {global.Event}
-*/ /**
-* @name Highcharts.SelectEventObject#xAxis
-* @type {Array<Highcharts.SelectDataObject>}
-*/ /**
-* @name Highcharts.SelectEventObject#yAxis
-* @type {Array<Highcharts.SelectDataObject>}
-*/
+ */
+/**
+ * @name Highcharts.SelectEventObject#originalEvent
+ * @type {global.Event}
+ */
+/**
+ * @name Highcharts.SelectEventObject#xAxis
+ * @type {Array<Highcharts.SelectDataObject>}
+ */
+/**
+ * @name Highcharts.SelectEventObject#yAxis
+ * @type {Array<Highcharts.SelectDataObject>}
+ */
 import U from './Utilities.js';
-var defined = U.defined, isNumber = U.isNumber, isObject = U.isObject, objectEach = U.objectEach, splat = U.splat;
 import './Tooltip.js';
 import './Color.js';
+
+var defined = U.defined, isNumber = U.isNumber, isObject = U.isObject, objectEach = U.objectEach, splat = U.splat;
 var H = Highcharts, addEvent = H.addEvent, attr = H.attr, charts = H.charts, color = H.color, css = H.css, extend = H.extend, find = H.find, fireEvent = H.fireEvent, offset = H.offset, pick = H.pick, Tooltip = H.Tooltip;
 /* eslint-disable no-invalid-this, valid-jsdoc */
 /**

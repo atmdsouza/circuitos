@@ -13,13 +13,14 @@ import H from '../parts/Globals.js';
  * @typedef {"area"|"width"} Highcharts.BubbleSizeByValue
  */
 import U from '../parts/Utilities.js';
-var isNumber = U.isNumber, pInt = U.pInt;
 import '../parts/Axis.js';
 import '../parts/Color.js';
 import '../parts/Point.js';
 import '../parts/Series.js';
 import '../parts/ScatterSeries.js';
 import './BubbleLegend.js';
+
+var isNumber = U.isNumber, pInt = U.pInt;
 var arrayMax = H.arrayMax, arrayMin = H.arrayMin, Axis = H.Axis, color = H.color, noop = H.noop, pick = H.pick, Point = H.Point, Series = H.Series, seriesType = H.seriesType, seriesTypes = H.seriesTypes;
 /**
  * A bubble series is a three dimensional series type where each point renders

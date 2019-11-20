@@ -11,10 +11,6 @@
 import H from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
-var defined = U.defined,
-    erase = U.erase,
-    splat = U.splat;
-
 import '../parts/Chart.js';
 import controllableMixin from './controllable/controllableMixin.js';
 import ControllableRect from './controllable/ControllableRect.js';
@@ -25,6 +21,10 @@ import ControllableLabel from './controllable/ControllableLabel.js';
 import eventEmitterMixin from './eventEmitterMixin.js';
 import MockPoint from './MockPoint.js';
 import ControlPoint from './ControlPoint.js';
+
+var defined = U.defined,
+    erase = U.erase,
+    splat = U.splat;
 
 var merge = H.merge,
     addEvent = H.addEvent,

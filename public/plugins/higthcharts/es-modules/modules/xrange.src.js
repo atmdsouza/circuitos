@@ -13,13 +13,15 @@
 import H from '../parts/Globals.js';
 /**
  * @interface Highcharts.PointOptionsObject
- */ /**
-* The ending X value of the range point.
-* @name Highcharts.PointOptionsObject#x2
-* @type {number|undefined}
-* @requires modules/xrange
-*/
+ */
+/**
+ * The ending X value of the range point.
+ * @name Highcharts.PointOptionsObject#x2
+ * @type {number|undefined}
+ * @requires modules/xrange
+ */
 import U from '../parts/Utilities.js';
+
 var defined = U.defined, isNumber = U.isNumber, isObject = U.isObject;
 var addEvent = H.addEvent, color = H.color, columnType = H.seriesTypes.column, correctFloat = H.correctFloat, merge = H.merge, pick = H.pick, seriesType = H.seriesType, seriesTypes = H.seriesTypes, Axis = H.Axis, Point = H.Point, Series = H.Series;
 /**

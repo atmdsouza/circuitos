@@ -10,6 +10,7 @@
 'use strict';
 import Highcharts from './Globals.js';
 import U from './Utilities.js';
+
 var defined = U.defined, isObject = U.isObject, objectEach = U.objectEach, splat = U.splat;
 /**
  * Normalized interval.

@@ -12,6 +12,7 @@
 'use strict';
 import H from '../parts/Globals.js';
 import '../parts/Utilities.js';
+
 var addEvent = H.addEvent, perspective = H.perspective, pick = H.pick;
 /* eslint-disable no-invalid-this */
 // Wrap the translate method to post-translate points into 3D perspective

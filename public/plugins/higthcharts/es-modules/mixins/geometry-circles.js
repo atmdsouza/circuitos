@@ -4,6 +4,7 @@
  *
  * */
 import geometry from './geometry.js';
+
 var getAngleBetweenPoints = geometry.getAngleBetweenPoints, getCenterOfPoints = geometry.getCenterOfPoints, getDistanceBetweenPoints = geometry.getDistanceBetweenPoints;
 /**
  * @private

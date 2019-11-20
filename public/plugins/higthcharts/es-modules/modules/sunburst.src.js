@@ -45,15 +45,15 @@
 import H from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
-var isNumber = U.isNumber,
-    isObject = U.isObject,
-    isString = U.isString;
-
 import '../mixins/centered-series.js';
 import drawPoint from '../mixins/draw-point.js';
 import mixinTreeSeries from '../mixins/tree-series.js';
 import '../parts/Series.js';
 import './treemap.src.js';
+
+var isNumber = U.isNumber,
+    isObject = U.isObject,
+    isString = U.isString;
 
 var CenteredSeriesMixin = H.CenteredSeriesMixin,
     Series = H.Series,

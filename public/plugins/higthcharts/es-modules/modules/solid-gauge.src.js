@@ -21,11 +21,11 @@
 import H from '../parts/Globals.js';
 
 import U from '../parts/Utilities.js';
-var isNumber = U.isNumber,
-    pInt = U.pInt;
-
 import '../parts/Options.js';
 import '../parts-more/GaugeSeries.js';
+
+var isNumber = U.isNumber,
+    pInt = U.pInt;
 
 var pick = H.pick,
     wrap = H.wrap,
