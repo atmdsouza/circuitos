@@ -37,12 +37,12 @@ class Infra
 
     public function getVersao()
     {
-        return '2.01.02';//Correção do cadastro de perfil
+        return '2.01.03';//Correção dos tipos de lista de valores, nomenclatura do modal de estação telecon
     }
 
     public function getCaminhoRelatorios()
     {
-        return '/circuitos/public/relatorios/';
-//        return '/public/relatorios/';
+//        return '/circuitos/public/relatorios/';
+        return '/public/relatorios/';
     }
 }
