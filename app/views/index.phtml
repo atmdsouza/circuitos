@@ -1,4 +1,7 @@
-<?php use Util\Infra; $infra = new Infra(); ?>
+<?php use Auth\Autentica;
+use Util\Infra;
+
+$infra = new Infra(); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -127,7 +130,6 @@
         <div class="slimscroll-menu" id="remove-scroll">
 
             <?php
-            use Auth\Autentica;
             $auth = new Autentica();
             $security_plugin = new SecurityPlugin();
             $acl = $security_plugin->getAcl();
@@ -220,7 +222,7 @@
                                 if ($acl->isAllowed($role, 'estacao_telecon', 'index'))
                                 {
                                     ?>
-                                    <li><?php echo $this->tag->linkTo(["estacao_telecon", "Estação Telecon"]) ?></li>
+                                    <li><?php echo $this->tag->linkTo(["estacao_telecon", "Estação Telecom"]) ?></li>
                                     <?php
                                 }
                                 if ($acl->isAllowed($role, 'torre', 'index'))
