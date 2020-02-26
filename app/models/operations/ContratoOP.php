@@ -64,11 +64,10 @@ class ContratoOP extends Contrato
                     $objContratoOrcamento = new ContratoOrcamento();
                     $objContratoOrcamento->setTransaction($transaction);
                     $objContratoOrcamento->setIdContrato($objeto->getId());
-                    $objContratoOrcamento->setUnidadeOrcamentaria($objOrcamento->getUnidadeOrcamentaria());
+                    $objContratoOrcamento->setFuncionalProgramatica($objOrcamento->getFuncionalProgramatica());
                     $objContratoOrcamento->setFonteOrcamentaria($objOrcamento->getFonteOrcamentaria());
                     $objContratoOrcamento->setProgramaTrabalho($objOrcamento->getProgramaTrabalho());
                     $objContratoOrcamento->setElementoDespesa($objOrcamento->getElementoDespesa());
-                    $objContratoOrcamento->setPi($objOrcamento->getPi());
                     $objContratoOrcamento->setDataUpdate(date('Y-m-d H:i:s'));
                     if ($objContratoOrcamento->save() == false) {
                         $messages = $objContratoOrcamento->getMessages();
@@ -173,11 +172,10 @@ class ContratoOP extends Contrato
                     $objContratoOrcamento = new ContratoOrcamento();
                     $objContratoOrcamento->setTransaction($transaction);
                     $objContratoOrcamento->setIdContrato($objeto->getId());
-                    $objContratoOrcamento->setUnidadeOrcamentaria($objOrcamento->getUnidadeOrcamentaria());
+                    $objContratoOrcamento->setFuncionalProgramatica($objOrcamento->getFuncionalProgramatica());
                     $objContratoOrcamento->setFonteOrcamentaria($objOrcamento->getFonteOrcamentaria());
                     $objContratoOrcamento->setProgramaTrabalho($objOrcamento->getProgramaTrabalho());
                     $objContratoOrcamento->setElementoDespesa($objOrcamento->getElementoDespesa());
-                    $objContratoOrcamento->setPi($objOrcamento->getPi());
                     $objContratoOrcamento->setDataUpdate(date('Y-m-d H:i:s'));
                     if ($objContratoOrcamento->save() == false) {
                         $messages = $objContratoOrcamento->getMessages();
@@ -327,7 +325,7 @@ class ContratoOP extends Contrato
             foreach ($objetosComponentes as $objetoComponente){
                 $objTransporte = new \stdClass();
                 $objTransporte->id_contrato_orcamento = $objetoComponente->getId();
-                $objTransporte->unidade_orcamentaria = $objetoComponente->getUnidadeOrcamentaria();
+                $objTransporte->unidade_orcamentaria = $objetoComponente->getFuncionalProgramatica();
                 $objTransporte->fonte_orcamentaria = $objetoComponente->getFonteOrcamentaria();
                 $objTransporte->programa_trabalho = $objetoComponente->getProgramaTrabalho();
                 $objTransporte->elemento_despesa = $objetoComponente->getElementoDespesa();
@@ -396,7 +394,7 @@ class ContratoOP extends Contrato
             $objetoComponente = ContratoOrcamento::findFirst('id=' . $id);
             $objTransporte = new \stdClass();
             $objTransporte->id_contrato_orcamento = $objetoComponente->getId();
-            $objTransporte->unidade_orcamentaria = $objetoComponente->getUnidadeOrcamentaria();
+            $objTransporte->unidade_orcamentaria = $objetoComponente->getFuncionalProgramatica();
             $objTransporte->fonte_orcamentaria = $objetoComponente->getFonteOrcamentaria();
             $objTransporte->programa_trabalho = $objetoComponente->getProgramaTrabalho();
             $objTransporte->elemento_despesa = $objetoComponente->getElementoDespesa();
@@ -456,7 +454,7 @@ class ContratoOP extends Contrato
             $transaction = $manager->get();
             $objetoComponente = ContratoOrcamento::findFirst('id='.$objCom->getId());
             $objetoComponente->setTransaction($transaction);
-            $objetoComponente->setUnidadeOrcamentaria($objCom->getUnidadeOrcamentaria());
+            $objetoComponente->setFuncionalProgramatica($objCom->getFuncionalProgramatica());
             $objetoComponente->setFonteOrcamentaria($objCom->getFonteOrcamentaria());
             $objetoComponente->setProgramaTrabalho($objCom->getProgramaTrabalho());
             $objetoComponente->setElementoDespesa($objCom->getElementoDespesa());

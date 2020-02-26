@@ -74,13 +74,12 @@ class ContratoController extends ControllerBase
             $contrato = new Contrato($params);
             //Contrato Orçamento
             $arrayCtOrcamento = array();
-            foreach ($params['unidade_orcamentaria'] as $key => $unidade_orcamentaria){
+            foreach ($params['funcional_programatica'] as $key => $funcional_programatica){
                 $contrato_orcamento = new ContratoOrcamento();
-                $contrato_orcamento->setUnidadeOrcamentaria($unidade_orcamentaria);
+                $contrato_orcamento->setFuncionalProgramatica($funcional_programatica);
                 $contrato_orcamento->setFonteOrcamentaria($params['fonte_orcamentaria'][$key]);
                 $contrato_orcamento->setProgramaTrabalho($params['programa_trabalho'][$key]);
                 $contrato_orcamento->setElementoDespesa($params['elemento_despesa'][$key]);
-                $contrato_orcamento->setPi($params['pi'][$key]);
                 array_push($arrayCtOrcamento, $contrato_orcamento);
             }
             //Contrato Exercicio
@@ -133,13 +132,12 @@ class ContratoController extends ControllerBase
             $contrato = new Contrato($params);
             //Contrato Orçamento
             $arrayCtOrcamento = array();
-            foreach ($params['unidade_orcamentaria'] as $key => $unidade_orcamentaria){
+            foreach ($params['funcional_programatica'] as $key => $funcional_programatica){
                 $contrato_orcamento = new ContratoOrcamento();
-                $contrato_orcamento->setUnidadeOrcamentaria($unidade_orcamentaria);
+                $contrato_orcamento->setFuncionalProgramatica($funcional_programatica);
                 $contrato_orcamento->setFonteOrcamentaria($params['fonte_orcamentaria'][$key]);
                 $contrato_orcamento->setProgramaTrabalho($params['programa_trabalho'][$key]);
                 $contrato_orcamento->setElementoDespesa($params['elemento_despesa'][$key]);
-                $contrato_orcamento->setPi($params['pi'][$key]);
                 array_push($arrayCtOrcamento, $contrato_orcamento);
             }
             //Contrato Exercicio

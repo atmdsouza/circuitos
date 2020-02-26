@@ -553,11 +553,10 @@ function montarTabelaOrcamento(id_contrato, visualizar)
             var linhas = null;
             $.each(data.dados, function(key, value) {
                 linhas += '<tr class="tr_remove_orc_vis">';
-                linhas += '<td>'+ value.unidade_orcamentaria +'<input name="res_unidade_orcamentaria[]" type="hidden" value="'+ value.unidade_orcamentaria +'" /></td>';
+                linhas += '<td>'+ value.funcional_programatica +'<input name="res_funcional_programatica[]" type="hidden" value="'+ value.funcional_programatica +'" /></td>';
                 linhas += '<td>'+ value.fonte_orcamentaria +'<input name="res_fonte_orcamentaria[]" type="hidden" value="'+ value.fonte_orcamentaria +'" /></td>';
                 linhas += '<td>'+ value.programa_trabalho +'<input name="res_programa_trabalho[]" type="hidden" value="'+ value.programa_trabalho +'" /></td>';
                 linhas += '<td>'+ value.elemento_despesa +'<input name="res_elemento_despesa[]" type="hidden" value="'+ value.elemento_despesa +'" /></td>';
-                linhas += '<td>'+ value.pi +'<input name="res_pi[]" type="hidden" value="'+ value.pi +'" /></td>';
                 if (visualizar) {
                     linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesOrcamento(' + value.id_contrato_orcamento + ', ' + true + ');" class="botoes_acao"><img src="public/images/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a></td>';
                 } else {
@@ -588,19 +587,17 @@ function inserirOrcamento()
 {
     'use strict';
     //Dados
-    var unidade_orcamentaria = $('#v_unidade_orcamentaria').val();
+    var funcional_programatica = $('#v_funcional_programatica').val();
     var fonte_orcamentaria = $('#v_fonte_orcamentaria').val();
     var programa_trabalho = $('#v_programa_trabalho').val();
     var elemento_despesa = $('#v_elemento_despesa').val();
-    var pi = $('#v_pi').val();
-    if(unidade_orcamentaria !== '' && fonte_orcamentaria !== '' && programa_trabalho !== '' && elemento_despesa !== ''){//Campos Obrigatórios
+    if(funcional_programatica !== '' && fonte_orcamentaria !== '' && programa_trabalho !== '' && elemento_despesa !== ''){//Campos Obrigatórios
         var linhas = null;
         linhas += '<tr class="tr_remove_orc">';
-        linhas += '<td>'+ unidade_orcamentaria +'<input name="unidade_orcamentaria[]" type="hidden" value="'+ unidade_orcamentaria +'" /></td>';
+        linhas += '<td>'+ funcional_programatica +'<input name="funcional_programatica[]" type="hidden" value="'+ funcional_programatica +'" /></td>';
         linhas += '<td>'+ fonte_orcamentaria +'<input name="fonte_orcamentaria[]" type="hidden" value="'+ fonte_orcamentaria +'" /></td>';
         linhas += '<td>'+ programa_trabalho +'<input name="programa_trabalho[]" type="hidden" value="'+ programa_trabalho +'" /></td>';
         linhas += '<td>'+ elemento_despesa +'<input name="elemento_despesa[]" type="hidden" value="'+ elemento_despesa +'" /></td>';
-        linhas += '<td>'+ pi +'<input name="pi[]" type="hidden" value="'+ pi +'" /></td>';
         linhas += '<td><a href="javascript:void(0)" onclick="RemoveTableRow(this);" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
         linhas += '</tr>';
         $("#tabela_orcamentos").append(linhas);
@@ -629,11 +626,10 @@ function cancelarOrcamento()
 function limparDadosFormOrcamento()
 {
     'use strict';
-    $('#v_unidade_orcamentaria').val('');
+    $('#v_funcional_programatica').val('');
     $('#v_fonte_orcamentaria').val('');
     $('#v_programa_trabalho').val('');
     $('#v_elemento_despesa').val('');
-    $('#v_pi').val('');
     $('#dados_orcamento').removeAttr('style', 'display: block;');
     $('#dados_orcamento').attr('style', 'display: none;');
     $('#grupo').focus();
@@ -674,11 +670,10 @@ function exibirDetalhesOrcamento(id, ocultar)
             }
         },
         success: function(data) {
-            $('#v_unidade_orcamentaria').val(data.dados.unidade_orcamentaria);
+            $('#v_funcional_programatica').val(data.dados.funcional_programatica);
             $('#v_fonte_orcamentaria').val(data.dados.fonte_orcamentaria);
             $('#v_programa_trabalho').val(data.dados.programa_trabalho);
             $('#v_elemento_despesa').val(data.dados.elemento_despesa);
-            $('#v_pi').val(data.dados.pi);
         }
     });
 }
@@ -688,11 +683,10 @@ function editarOrcamento(id)
     'use strict';
     var array_dados = {
         id: id,
-        unidade_orcamentaria: $('#v_unidade_orcamentaria').val(),
+        funcional_programatica: $('#v_funcional_programatica').val(),
         fonte_orcamentaria: $('#v_fonte_orcamentaria').val(),
         programa_trabalho: $('#v_programa_trabalho').val(),
         elemento_despesa: $('#v_elemento_despesa').val(),
-        pi: $('#v_pi').val()
     };
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
     $.ajax({
