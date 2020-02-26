@@ -3,8 +3,6 @@
  * @var \Phalcon\Mvc\View\Engine\Php $this
  */
 
-use Phalcon\Tag;
-
 ?>
 
 <?php echo $this->getContent(); ?>
@@ -38,83 +36,98 @@ use Phalcon\Tag;
     <div class="card-box">
         <table id="tb_lov" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
             <thead>
-                <tr>
-                    <th>Código</th>
-                    <th>Tipo</th>
-                    <th>Descrição</th>
-                    <th>Código Específico</th>
-                    <th>Valor</th>
-                    <th>Duração</th>
-                </tr>
+            <tr>
+                <th>Código</th>
+                <th>Tipo</th>
+                <th>Descrição</th>
+                <th>Código Específico</th>
+                <th>Valor</th>
+                <th>Duração</th>
+            </tr>
             </thead>
             <tbody>
             <?php foreach ($page->items as $lov): ?>
-            <?php                
+                <?php
                 switch($lov->tipo){
                     case '1':
-                    $lovtipo = "Tipo Unidade";
-                    break;
+                        $lovtipo = "Tipo Unidade";
+                        break;
                     case '2':
-                    $lovtipo = "Usa Contrato";
-                    break;
+                        $lovtipo = "Usa Contrato";
+                        break;
                     case '3':
-                    $lovtipo = "Função";
-                    break;
+                        $lovtipo = "Função";
+                        break;
                     case '4':
-                    $lovtipo = "Esfera";
-                    break;
+                        $lovtipo = "Esfera";
+                        break;
                     case '5':
-                    $lovtipo = "Setor";
-                    break;
+                        $lovtipo = "Setor";
+                        break;
                     case '6':
-                    $lovtipo = "Status";
-                    break;
+                        $lovtipo = "Status";
+                        break;
                     case '7':
-                    $lovtipo = "Enlace";
-                    break;
+                        $lovtipo = "Enlace";
+                        break;
                     case '8':
-                    $lovtipo = "Tipo Email";
-                    break;
+                        $lovtipo = "Tipo Email";
+                        break;
                     case '9':
-                    $lovtipo = "Tipo Cliente (PF/PJ)";
-                    break;
+                        $lovtipo = "Tipo Cliente (PF/PJ)";
+                        break;
                     case '10':
-                    $lovtipo = "Sexo";
-                    break;
+                        $lovtipo = "Sexo";
+                        break;
                     case '11':
-                    $lovtipo = "Tipo Endereço";
-                    break;
+                        $lovtipo = "Tipo Endereço";
+                        break;
                     case '12':
-                    $lovtipo = "Tipo Telefone";
-                    break;
+                        $lovtipo = "Tipo Telefone";
+                        break;
                     case '13':
-                    $lovtipo = "Tipo Contato (Cargo Empresa)";
-                    break;
+                        $lovtipo = "Tipo Contato (Cargo Empresa)";
+                        break;
                     case '14':
-                    $lovtipo = "Cluster";
-                    break;
+                        $lovtipo = "Cluster";
+                        break;
                     case '15':
-                    $lovtipo = "Tipo Equipamento";
-                    break;
+                        $lovtipo = "Tipo Equipamento";
+                        break;
                     case '16':
-                    $lovtipo = "Tipo Movimento";
-                    break;
+                        $lovtipo = "Tipo Movimento";
+                        break;
                     case '17':
-                    $lovtipo = "Tipo Banda";
-                    break;
+                        $lovtipo = "Tipo Banda";
+                        break;
                     case '18':
-                    $lovtipo = "Tipo Conectividade";
-                    break;
+                        $lovtipo = "Tipo Conectividade";
+                        break;
+                    case '19':
+                        $lovtipo = "Tipo Link";
+                        break;
+                    case '21':
+                        $lovtipo = "Tipo Componente de Set de Segurança";
+                        break;
+                    case '22':
+                        $lovtipo = "Tipo de Torre";
+                        break;
+                    case '23':
+                        $lovtipo = "Tipo de Proposta";
+                        break;
+                    case '26':
+                        $lovtipo = "Tipo de Contrato";
+                        break;
                 }
-            ?>
-                    <tr>
-                        <td><?php echo $lov->id ?></td>
-                        <td><?php echo $lovtipo ?></td>
-                        <td><?php echo $lov->descricao ?></td>
-                        <td><?php echo $lov->codigoespecifico ?></td>
-                        <td><?php echo $lov->valor ?></td>
-                        <td><?php echo $lov->duracao ?></td>
-                    </tr>
+                ?>
+                <tr>
+                    <td><?php echo $lov->id ?></td>
+                    <td><?php echo $lovtipo ?></td>
+                    <td><?php echo $lov->descricao ?></td>
+                    <td><?php echo $lov->codigoespecifico ?></td>
+                    <td><?php echo $lov->valor ?></td>
+                    <td><?php echo $lov->duracao ?></td>
+                </tr>
             <?php endforeach; ?>
             </tbody>
         </table>

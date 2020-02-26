@@ -2,14 +2,12 @@
 
 namespace Circuitos\Controllers;
 
-use Phalcon\Paginator\Adapter\Model as Paginator;
+use Auth\Autentica;
+use Circuitos\Models\Lov;
+use Phalcon\Http\Response as Response;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-use Phalcon\Http\Response as Response;
-
-use Circuitos\Models\Lov;
-
-use Auth\Autentica;
+use Phalcon\Paginator\Adapter\Model as Paginator;
 use Util\TokenManager;
 
 class LovController extends ControllerBase
@@ -66,7 +64,11 @@ class LovController extends ControllerBase
             "16" => "Tipo Movimento",
             "17" => "Tipo Banda",
             "18" => "Tipo Conectividade",
-            "19" => "Tipo Link"
+            "19" => "Tipo Link",
+            "21" => "Tipo Componente de Set de Segurança",
+            "22" => "Tipo de Torre",
+            "23" => "Tipo de Proposta",
+            "26" => "Tipo de Contrato"
         ];
         $paginator = new Paginator([
             'data' => $lov,
