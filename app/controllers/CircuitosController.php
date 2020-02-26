@@ -2,29 +2,26 @@
 
 namespace Circuitos\Controllers;
 
-use Phalcon\Mvc\Model\Criteria;
-use Phalcon\Paginator\Adapter\Model as Paginator;
-use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
-use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-use Phalcon\Http\Response as Response;
-
-use Circuitos\Models\Circuitos;
+use Auth\Autentica;
 use Circuitos\Models\CidadeDigital;
-use Circuitos\Models\Conectividade;
-use Circuitos\Models\Movimentos;
+use Circuitos\Models\Circuitos;
 use Circuitos\Models\Cliente;
 use Circuitos\Models\ClienteUnidade;
-use Circuitos\Models\Fabricante;
-use Circuitos\Models\Modelo;
+use Circuitos\Models\Conectividade;
 use Circuitos\Models\Equipamento;
+use Circuitos\Models\Fabricante;
 use Circuitos\Models\Lov;
-use Circuitos\Models\PessoaEndereco;
+use Circuitos\Models\Modelo;
+use Circuitos\Models\Movimentos;
 use Circuitos\Models\PessoaContato;
-
-use Auth\Autentica;
-use Util\Util;
-use Util\TokenManager;
+use Circuitos\Models\PessoaEndereco;
+use Phalcon\Http\Response as Response;
+use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
+use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
+use Phalcon\Paginator\Adapter\Model as Paginator;
 use Util\Relatorio;
+use Util\TokenManager;
+use Util\Util;
 
 class CircuitosController extends ControllerBase
 {
@@ -118,6 +115,7 @@ class CircuitosController extends ControllerBase
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
+        $util = new Util();
         $response = new Response();
         $dados = filter_input_array(INPUT_GET);
         $circuitos = Circuitos::findFirst("id={$dados["id_circuitos"]}");
@@ -157,6 +155,7 @@ class CircuitosController extends ControllerBase
             "id_banda" => $circuitos->getIdBanda(),
             "observacao" => $circuitos->getObservacao(),
             "data_ativacao" => $circuitos->getDataAtivacao(),
+            "data_desinstalacao" => $util->converterDataParaBr($circuitos->getDataDesinstalacao()),
         );
         $banda = Lov::find(array(
             "tipo = 17"
@@ -233,6 +232,7 @@ class CircuitosController extends ControllerBase
             "observacao" => $circuitos->getObservacao(),
             "data_ativacao" => $util->converterDataHoraParaBr($circuitos->getDataAtivacao()),
             "data_atualizacao" => $util->converterDataHoraParaBr($circuitos->getDataAtualizacao()),
+            "data_desinstalacao" => $util->converterDataParaBr($circuitos->getDataDesinstalacao()),
             "numserie" => $circuitos->getEquipamentoSerie(),
             "numpatrimonio" => $circuitos->getEquipamentoPatrimonio()
         );
@@ -302,6 +302,7 @@ class CircuitosController extends ControllerBase
         //Desabilita o layout para o ajax
         $this->view->disable();
         //Instanciando classes
+        $util = new Util();
         $auth = new Autentica();
         $response = new Response();
         $manager = new TxManager();
@@ -346,6 +347,7 @@ class CircuitosController extends ControllerBase
                 $circuitos->setIdBanda($params["banda"]);
                 $circuitos->setObservacao(mb_strtoupper($params["observacao"], $this->encode));
                 $circuitos->setDataAtivacao(date("Y-m-d H:i:s"));
+                $circuitos->setDataDesinstalacao($util->converterDataUSA($params["data_desinstalacao"]));
                 if ($circuitos->save() == false) {
                     $messages = $circuitos->getMessages();
                     $errors = "";
@@ -420,6 +422,7 @@ class CircuitosController extends ControllerBase
                 $circuitos->setTag($params["tag"]);
                 $circuitos->setObservacao(mb_strtoupper($params["observacao"], $this->encode));
                 $circuitos->setDataAtualizacao(date("Y-m-d H:i:s"));
+                $circuitos->setDataDesinstalacao($util->converterDataUSA($params["data_desinstalacao"]));
                 if ($circuitos->save() == false) {
                     $messages = $circuitos->getMessages();
                     $errors = "";

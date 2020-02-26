@@ -1306,6 +1306,7 @@ $(".bt_edit").on("click", function(){
             $("#ip_gerencia").val(data.dados.ip_gerencia);
             $("#ip_gerencia").attr("disabled", "true");
             $("#tag").val(data.dados.tag);
+            $("#data_desinstalacao").val(data.dados.data_desinstalacao);
             $("#observacao").val(data.dados.observacao);
             $("#modalcircuitos").modal();
         }
@@ -1371,6 +1372,7 @@ $(".bt_visual").on("click", function(){
             $("#observacaov").val(data.dados.observacao);
             $("#dtativacaov").val(data.dados.data_ativacao);
             $("#dtatualizacaov").val(data.dados.data_atualizacao);
+            $("#data_desinstalacaov").val(data.dados.data_desinstalacao);
             $("#numpatserv").val(data.dados.numpatrimonio + " / " + data.dados.numserie);
             //Bloco de movimmentos
             var linhas;
