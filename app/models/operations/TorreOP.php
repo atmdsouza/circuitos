@@ -2,12 +2,10 @@
 
 namespace Circuitos\Models\Operations;
 
+use Circuitos\Models\Torre;
+use Phalcon\Http\Response as Response;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-use Phalcon\Http\Response as Response;
-
-use Circuitos\Models\Torre;
-
 use Util\Util;
 
 class TorreOP extends Torre
@@ -35,6 +33,8 @@ class TorreOP extends Torre
             $objeto->setPropriedadeProdepa($objArray->getPropriedadeProdepa());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
             $objeto->setAltura($util->formataNumero($objArray->getAltura()));
+            $objeto->setLatitude($objArray->getLatitude());
+            $objeto->setLongitude($objArray->getLongitude());
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
                 $transaction->rollback("Não foi possível salvar a conectividade!");
@@ -63,6 +63,8 @@ class TorreOP extends Torre
             $objeto->setPropriedadeProdepa($objArray->getPropriedadeProdepa());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
             $objeto->setAltura($util->formataNumero($objArray->getAltura()));
+            $objeto->setLatitude($objArray->getLatitude());
+            $objeto->setLongitude($objArray->getLongitude());
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
                 $transaction->rollback("Não foi possível alterar a conectividade!");
@@ -149,6 +151,8 @@ class TorreOP extends Torre
                 'desc_fornecedor' => $objeto->getFornecedor(),
                 'descricao' => $objeto->getDescricao(),
                 'altura' => $util->formataMoedaReal($objeto->getAltura()),
+                'latitude' => $objeto->getLatitude(),
+                'longitude' => $objeto->getLongitude(),
                 'propriedade_prodepa' => $objeto->getPropriedadeProdepa()
             );
             $response = new Response();

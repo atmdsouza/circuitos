@@ -3,7 +3,6 @@
 namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Resultset;
 
 class Torre extends \Phalcon\Mvc\Model
 {
@@ -67,6 +66,18 @@ class Torre extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $data_update;
+
+    /**
+     *
+     * @var string
+     */
+    protected $latitude;
+
+    /**
+     *
+     * @var string
+     */
+    protected $longitude;
 
     /**
      * Method to set the value of field id
@@ -319,6 +330,42 @@ class Torre extends \Phalcon\Mvc\Model
     public function getContrato()
     {
         return $this->Contrato->numero;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLatitude()
+    {
+        return $this->latitude;
+    }
+
+    /**
+     * @param string $latitude
+     */
+    public function setLatitude( $latitude)
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLongitude()
+    {
+        return $this->longitude;
+    }
+
+    /**
+     * @param string $longitude
+     */
+    public function setLongitude($longitude)
+    {
+        $this->longitude = $longitude;
+
+        return $this;
     }
 
     /**

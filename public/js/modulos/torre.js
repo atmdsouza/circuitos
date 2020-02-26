@@ -64,6 +64,10 @@ function confirmaCancelar(modal)
 function criar()
 {
     'use strict';
+    if ($('#propriedade_prodepa').val() === '-1'){
+        $('#lid_fornecedor').val('PRODEPA');
+        $('#id_fornecedor').val(-1);
+    }
     $("#formCadastro input").removeAttr('readonly', 'readonly');
     $("#formCadastro select").removeAttr('readonly', 'readonly');
     $("#formCadastro textarea").removeAttr('readonly', 'readonly');
@@ -107,6 +111,8 @@ function editar(id)
             $('#id_fornecedor').val(data.dados.id_fornecedor);
             $('#descricao').val(data.dados.descricao);
             $('#altura').val(data.dados.altura);
+            $('#latitude').val(data.dados.latitude);
+            $('#longitude').val(data.dados.longitude);
             $('#propriedade_prodepa').val(data.dados.propriedade_prodepa).selected = "true";
         }
     });
@@ -380,6 +386,8 @@ function visualizar(id)
             $('#id_fornecedor').val(data.dados.id_fornecedor);
             $('#descricao').val(data.dados.descricao);
             $('#altura').val(data.dados.altura);
+            $('#latitude').val(data.dados.latitude);
+            $('#longitude').val(data.dados.longitude);
             $('#propriedade_prodepa').val(data.dados.propriedade_prodepa).selected = "true";
         }
     });
