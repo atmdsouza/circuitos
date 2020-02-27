@@ -37,7 +37,7 @@ class Infra
 
     public function getVersao()
     {
-        return '2.01.03';//Correção dos tipos de lista de valores, nomenclatura do modal de estação telecon
+        return '2.01.04';//Correções solicitadas pelo Igor em 05/02/2020
     }
 
     public function getCaminhoRelatorios()
