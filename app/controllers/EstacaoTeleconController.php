@@ -4,6 +4,7 @@ namespace Circuitos\Controllers;
 
 use Auth\Autentica;
 use Circuitos\Models\EstacaoTelecon;
+use Circuitos\Models\Lov;
 use Circuitos\Models\Operations\EstacaoTeleconOP;
 use Phalcon\Http\Response as Response;
 use Util\TokenManager;
@@ -36,7 +37,12 @@ class EstacaoTeleconController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $estacaoteleconOP = new EstacaoTeleconOP();
         $estacaotelecon = $estacaoteleconOP->listar($dados['pesquisa']);
+        $tipo_estacaotelecon = Lov::find(array(
+            "tipo = 32",
+            "order" => "descricao"
+        ));
         $this->view->page = $estacaotelecon;
+        $this->view->tipo_estacaotelecon = $tipo_estacaotelecon;
     }
 
     public function criarAction()

@@ -2,11 +2,10 @@
 
 namespace Circuitos\Models\Operations;
 
+use Circuitos\Models\EstacaoTelecon;
+use Phalcon\Http\Response as Response;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-use Phalcon\Http\Response as Response;
-
-use Circuitos\Models\EstacaoTelecon;
 
 class EstacaoTeleconOP extends EstacaoTelecon
 {
@@ -22,6 +21,7 @@ class EstacaoTeleconOP extends EstacaoTelecon
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
+            $tipo_estacao_telecon = ($objArray->getIdTipoEstacaoTelecon()) ? $objArray->getIdTipoEstacaoTelecon() : null;
             $cidadedigital = ($objArray->getIdCidadeDigital()) ? $objArray->getIdCidadeDigital() : null;
             $contrato = ($objArray->getIdContrato()) ? $objArray->getIdContrato() : null;
             $terreno = ($objArray->getIdTerreno()) ? $objArray->getIdTerreno() : null;
@@ -33,6 +33,7 @@ class EstacaoTeleconOP extends EstacaoTelecon
             $objeto->setTransaction($transaction);
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
             $objeto->setIdCidadeDigital($cidadedigital);
+            $objeto->setIdTipoEstacaoTelecon($tipo_estacao_telecon);
             $objeto->setIdContrato($contrato);
             $objeto->setIdTerreno($terreno);
             $objeto->setIdTorre($torre);
@@ -41,7 +42,7 @@ class EstacaoTeleconOP extends EstacaoTelecon
             $objeto->setIdUnidadeConsumidora($unidadeconsumidora);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível salvar a estação telecon!");
+                $transaction->rollback("Não foi possível salvar a estação telecom!");
             }
             $transaction->commit();
             return $objeto;
@@ -56,6 +57,7 @@ class EstacaoTeleconOP extends EstacaoTelecon
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
+            $tipo_estacao_telecon = ($objArray->getIdTipoEstacaoTelecon()) ? $objArray->getIdTipoEstacaoTelecon() : null;
             $cidadedigital = ($objArray->getIdCidadeDigital()) ? $objArray->getIdCidadeDigital() : null;
             $contrato = ($objArray->getIdContrato()) ? $objArray->getIdContrato() : null;
             $terreno = ($objArray->getIdTerreno()) ? $objArray->getIdTerreno() : null;
@@ -67,6 +69,7 @@ class EstacaoTeleconOP extends EstacaoTelecon
             $objeto->setTransaction($transaction);
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
             $objeto->setIdCidadeDigital($cidadedigital);
+            $objeto->setIdTipoEstacaoTelecon($tipo_estacao_telecon);
             $objeto->setIdContrato($contrato);
             $objeto->setIdTerreno($terreno);
             $objeto->setIdTorre($torre);
@@ -75,7 +78,7 @@ class EstacaoTeleconOP extends EstacaoTelecon
             $objeto->setIdUnidadeConsumidora($unidadeconsumidora);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a estação telecon!");
+                $transaction->rollback("Não foi possível alterar a estação telecom!");
             }
             $transaction->commit();
             return $objeto;
@@ -152,6 +155,7 @@ class EstacaoTeleconOP extends EstacaoTelecon
             $objetoArray = array(
                 'id' => $objeto->getId(),
                 'descricao' => $objeto->getDescricao(),
+                'id_tipo_estacao_telecon' => $objeto->getIdTipoEstacaoTelecon(),
                 'id_cidade_digital' => $objeto->getIdCidadeDigital(),
                 'desc_cidade_digital' => $objeto->getNomeCidadeDigital(),
                 'id_contrato' => ($objeto->getIdContrato()) ? $objeto->getIdContrato() : null,

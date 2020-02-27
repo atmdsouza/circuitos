@@ -3,7 +3,6 @@
 namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Resultset;
 
 class EstacaoTelecon extends \Phalcon\Mvc\Model
 {
@@ -55,6 +54,12 @@ class EstacaoTelecon extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $id_unidade_consumidora;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $id_tipo_estacao_telecon;
 
     /**
      *
@@ -527,6 +532,34 @@ class EstacaoTelecon extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return int
+     */
+    public function getIdTipoEstacaoTelecon()
+    {
+        return $this->id_tipo_estacao_telecon;
+    }
+
+    /**
+     * @param int $id_tipo_estacao_telecon
+     */
+    public function setIdTipoEstacaoTelecon($id_tipo_estacao_telecon)
+    {
+        $this->id_tipo_estacao_telecon = $id_tipo_estacao_telecon;
+
+        return $this;
+    }
+
+    /**
+     * Returns the value of field Contrato
+     *
+     * @return string
+     */
+    public function getTipoEstacaoTelecon()
+    {
+        return $this->Lov->descricao;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -540,6 +573,7 @@ class EstacaoTelecon extends \Phalcon\Mvc\Model
         $this->belongsTo('id_terreno', 'Circuitos\Models\Terreno', 'id', ['alias' => 'Terreno']);
         $this->belongsTo('id_torre', 'Circuitos\Models\Torre', 'id', ['alias' => 'Torre']);
         $this->belongsTo('id_unidade_consumidora', 'Circuitos\Models\UnidadeConsumidora', 'id', ['alias' => 'UnidadeConsumidora']);
+        $this->belongsTo("id_tipo_estacao_telecon", "Circuitos\Models\Lov", "id", ["alias" => "Lov"]);
     }
 
     /**

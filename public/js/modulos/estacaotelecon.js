@@ -101,6 +101,7 @@ function editar(id)
         },
         success: function (data) {
             $('#id').val(data.dados.id);
+            $('#id_tipo_estacao_telecon').val(data.dados.id_tipo_estacao_telecon).selected="true";
             $('#descricao').val(data.dados.descricao);
             $('#lid_cidade_digital').val(data.dados.desc_cidade_digital);
             $('#id_cidade_digital').val(data.dados.id_cidade_digital);
@@ -381,6 +382,7 @@ function visualizar(id)
         },
         success: function (data) {
             $('#id').val(data.dados.id);
+            $('#id_tipo_estacao_telecon').val(data.dados.id_tipo_estacao_telecon).selected="true";
             $('#descricao').val(data.dados.descricao);
             $('#lid_cidade_digital').val(data.dados.desc_cidade_digital);
             $('#id_cidade_digital').val(data.dados.id_cidade_digital);
