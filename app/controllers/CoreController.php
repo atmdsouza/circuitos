@@ -420,26 +420,19 @@ class CoreController extends ControllerBase
     {
         $logger = new FileAdapter(BASE_PATH . "/logs/systemlog.log");
         $empresa = Empresa::findFirst("id={$id_empresa}");
-        $host=$empresa->getHostEmpresa();
-        $user=$empresa->getMailUserEmpresa();
-        $pass=$empresa->getMailPswEmpresa();
-        $smtlssl=$empresa->getMailSmtpEmpresa();
-        $port=$empresa->getMailPortEmpresa();
-        $from=$empresa->getEMailEmpresa();
-        $from_name=$empresa->getNomeEmpresa();
 
         $mail = new PHPMailer(true);
         try {
             //Server settings
             $mail->isSMTP();
-            $mail->Host = $host;
+            $mail->Host = $empresa->getHostEmpresa();
             $mail->SMTPAuth = true;
-            $mail->Username = $user;
-            $mail->Password = $pass;
-            $mail->SMTPSecure = $smtlssl;
-            $mail->Port = $port;
+            $mail->Username = $empresa->getMailUserEmpresa();
+            $mail->Password = $empresa->getMailPswEmpresa();
+            $mail->SMTPSecure = $empresa->getMailSmtpEmpresa();
+            $mail->Port = $empresa->getMailPortEmpresa();
             //Recipients
-            $mail->setFrom($from,  $from_name);
+            $mail->setFrom($empresa->getEMailEmpresa(),  $empresa->getNomeEmpresa());
             $mail->addAddress($address, $address_name);
             //Attachments
             if($attach){
