@@ -129,11 +129,41 @@ function salvar()
         rules : {
             descricao:{
                 required: true
+            },
+            lid_cidade_digital:{
+                required: true
+            },
+            id_tipo_estacao_telecon:{
+                required: true
+            },
+            lid_terreno:{
+                required: true
+            },
+            lid_torre:{
+                required: true
+            },
+            lid_set_equipamento:{
+                required: true
             }
         },
         messages:{
             descricao:{
-                required:"É necessário informar uma Descrição"
+                required:"É necessário informar uma descrição"
+            },
+            lid_cidade_digital:{
+                required: "É necessário informar uma cidade digital"
+            },
+            id_tipo_estacao_telecon:{
+                required: "É necessário informar um tipo de estação telecom"
+            },
+            lid_terreno:{
+                required: "É necessário informar um terreno"
+            },
+            lid_torre:{
+                required: "É necessário informar uma torre"
+            },
+            lid_set_equipamento:{
+                required: "É necessário informar um set de equipamentos"
             }
         },
         submitHandler: function(form) {

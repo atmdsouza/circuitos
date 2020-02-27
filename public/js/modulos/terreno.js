@@ -131,11 +131,47 @@ function salvar()
         rules : {
             descricao:{
                 required: true
+            },
+            cep:{
+                required: true
+            },
+            endereco:{
+                required: true
+            },
+            numero:{
+                required: true
+            },
+            bairro:{
+                required: true
+            },
+            cidade:{
+                required: true
+            },
+            estado:{
+                required: true
             }
         },
         messages:{
             descricao:{
-                required:"É necessário informar uma Descrição"
+                required: "É necessário informar uma descrição"
+            },
+            cep:{
+                required: "É necessário informar um cep"
+            },
+            endereco:{
+                required: "É necessário informar um endereço"
+            },
+            numero:{
+                required: "É necessário informar um número"
+            },
+            bairro:{
+                required: "É necessário informar um bairro"
+            },
+            cidade:{
+                required: "É necessário informar uma cidade"
+            },
+            estado:{
+                required: "É necessário informar um estado"
             }
         },
         submitHandler: function(form) {
