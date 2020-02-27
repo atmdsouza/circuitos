@@ -61,14 +61,17 @@ class LovController extends ControllerBase
             "13" => "Tipo Contato (Cargo Empresa)",
             "14" => "Cluster",
             "15" => "Tipo Equipamento",
-            "16" => "Tipo Movimento",
             "17" => "Tipo Banda",
             "18" => "Tipo Conectividade",
             "19" => "Tipo Link",
             "21" => "Tipo Componente de Set de Segurança",
             "22" => "Tipo de Torre",
             "23" => "Tipo de Proposta",
-            "26" => "Tipo de Contrato"
+            "26" => "Tipo de Contrato",
+            "27" => "Tipo de Processo de Contratação",
+            "29" => "Tipo de Modalidade de Contratação de Garantia",
+            "31" => "Tipo de Fiscal de Contrato",
+            "32" => "Tipo de Estação Telecom"
         ];
         $paginator = new Paginator([
             'data' => $lov,

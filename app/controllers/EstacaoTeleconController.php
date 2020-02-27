@@ -2,13 +2,11 @@
 
 namespace Circuitos\Controllers;
 
-use Phalcon\Http\Response as Response;
-
+use Auth\Autentica;
+use Circuitos\Models\EstacaoTelecon;
 use Circuitos\Models\Lov;
 use Circuitos\Models\Operations\EstacaoTeleconOP;
-use Circuitos\Models\EstacaoTelecon;
-
-use Auth\Autentica;
+use Phalcon\Http\Response as Response;
 use Util\TokenManager;
 
 class EstacaoTeleconController extends ControllerBase
@@ -17,7 +15,7 @@ class EstacaoTeleconController extends ControllerBase
 
     public function initialize()
     {
-        $this->tag->setTitle("Estação Telecon");
+        $this->tag->setTitle("Estação Telecom");
         parent::initialize();
         //Voltando o usuário não autenticado para a página de login
         $auth = new Autentica();
@@ -39,7 +37,12 @@ class EstacaoTeleconController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $estacaoteleconOP = new EstacaoTeleconOP();
         $estacaotelecon = $estacaoteleconOP->listar($dados['pesquisa']);
+        $tipo_estacaotelecon = Lov::find(array(
+            "tipo = 32",
+            "order" => "descricao"
+        ));
         $this->view->page = $estacaotelecon;
+        $this->view->tipo_estacaotelecon = $tipo_estacaotelecon;
     }
 
     public function criarAction()
@@ -50,9 +53,9 @@ class EstacaoTeleconController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-        $titulo = 'Cadastro de Estação Telecon';
-        $msg = 'Estação Telecon cadastrada com sucesso!';
-        $error_msg = 'Erro ao cadastrar uma Estação Telecon!';
+        $titulo = 'Cadastro de Estação Telecom';
+        $msg = 'Estação Telecom cadastrada com sucesso!';
+        $error_msg = 'Erro ao cadastrar uma Estação Telecom!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -77,9 +80,9 @@ class EstacaoTeleconController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-        $titulo = 'Alteração de EstacaoTelecon';
-        $msg = 'EstacaoTelecon alterada com sucesso!';
-        $error_msg = 'Erro ao alterar uma EstacaoTelecon!';
+        $titulo = 'Alteração de Estação Telecom';
+        $msg = 'Estação Telecom alterada com sucesso!';
+        $error_msg = 'Erro ao alterar uma Estação Telecom!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -102,9 +105,9 @@ class EstacaoTeleconController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Reativação de EstacaoTelecon';
-        $msg = 'EstacaoTelecon reativada com sucesso!';
-        $error_msg = 'Erro ao reativar uma EstacaoTelecon!';
+        $titulo = 'Reativação de Estação Telecom';
+        $msg = 'Estação Telecom reativada com sucesso!';
+        $error_msg = 'Erro ao reativar uma Estação Telecom!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -127,9 +130,9 @@ class EstacaoTeleconController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Desativação de EstacaoTelecon';
-        $msg = 'EstacaoTelecon desativada com sucesso!';
-        $error_msg = 'Erro ao desativar uma EstacaoTelecon!';
+        $titulo = 'Desativação de Estação Telecom';
+        $msg = 'Estação Telecom desativada com sucesso!';
+        $error_msg = 'Erro ao desativar uma Estação Telecom!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -152,9 +155,9 @@ class EstacaoTeleconController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Exclusão de EstacaoTelecon';
-        $msg = 'EstacaoTelecon excluída com sucesso!';
-        $error_msg = 'Erro ao excluir a EstacaoTelecon!';
+        $titulo = 'Exclusão de Estação Telecom';
+        $msg = 'Estação Telecom excluída com sucesso!';
+        $error_msg = 'Erro ao excluir a Estação Telecom!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido

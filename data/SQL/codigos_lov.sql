@@ -26,10 +26,20 @@ Códigos LOV para o diagrama
 24 - Localização Proposta
 25 - Status Proposta
 26 - Tipo Contrato
-27 -
-28 -
-29 -
-30 -
+27 - Tipo Processo Contratação
+28 - Tipo Movimento Contrato
+29 - Tipo Modalidade de Contratação de Garantia
+30 - Status Contrato (Vigente, Bloqueado, Suspenso, Encerrado)
+31 - Tipo Fiscal de Contrato
+32 - Tipo de Estação Telecom
+33 -
+34 -
+35 -
+36 -
+37 -
+38 -
+39 -
+40 -
 */
 
 INSERT INTO bd_circuitosnavega.lov (tipo, descricao, codigoespecifico, valor, duracao) VALUES

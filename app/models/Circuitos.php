@@ -3,9 +3,6 @@
 namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Resultset;
-
-use Circuitos\Models\Lov;
 
 class Circuitos extends \Phalcon\Mvc\Model
 {
@@ -165,6 +162,18 @@ class Circuitos extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $data_atualizacao;
+
+    /**
+     *
+     * @var string
+     */
+    protected $data_desinstalacao;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $id_empresa_departamento;
 
     /**
      * Method to set the value of field id
@@ -495,6 +504,8 @@ class Circuitos extends \Phalcon\Mvc\Model
     public function setIdConectividade($id_conectividade)
     {
         $this->id_conectividade = $id_conectividade;
+
+        return $this;
     }
 
     /**
@@ -1078,6 +1089,43 @@ class Circuitos extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return string
+     */
+    public function getDataDesinstalacao()
+    {
+        return $this->data_desinstalacao;
+    }
+
+    /**
+     * @param string $data_desinstalacao
+     */
+    public function setDataDesinstalacao($data_desinstalacao)
+    {
+        $this->data_desinstalacao = $data_desinstalacao;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIdEmpresaDepartamento()
+    {
+        return $this->id_empresa_departamento;
+    }
+
+    /**
+     * @param int $id_empresa_departamento
+     */
+    public function setIdEmpresaDepartamento($id_empresa_departamento)
+    {
+        $this->id_empresa_departamento = $id_empresa_departamento;
+
+        return $this;
+    }
+
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -1097,6 +1145,7 @@ class Circuitos extends \Phalcon\Mvc\Model
         $this->belongsTo("id_tipolink", "Circuitos\Models\Lov", "id", ["alias" => "Lov6"]);
         $this->belongsTo("id_cidadedigital", "Circuitos\Models\CidadeDigital", "id", ["alias" => "CidadeDigital"]);
         $this->belongsTo("id_conectividade", "Circuitos\Models\Conectividade", "id", ["alias" => "Conectividade"]);
+        $this->belongsTo("id_empresa_departamento", "Circuitos\Models\EmpresaDepartamento", "id", ["alias" => "EmpresaDepartamento"]);
     }
 
     /**
