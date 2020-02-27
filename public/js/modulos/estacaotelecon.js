@@ -391,7 +391,7 @@ function visualizar(id)
             $('#lid_terreno').val(data.dados.desc_terreno);
             $('#id_terreno').val(data.dados.id_terreno);
             $('#lid_set_equipamento').val(data.dados.desc_set_equipamento);
-            $('#id_set_equipamento').val(data.dados.id_set_equipamento);
+            $('#id_set_equipamento').val(data.dados.id_set_equipamento);c
             $('#lid_set_seguranca').val(data.dados.desc_set_seguranca);
             $('#id_set_seguranca').val(data.dados.id_set_seguranca);
             $('#lid_unidade_consumidora').val(data.dados.desc_unidade_consumidora);
@@ -405,4 +405,47 @@ function limpar()
     'use strict';
     $('#fieldPesquisa').val('');
     $('#formPesquisa').submit();
+}
+
+function nomenclaturaAutomaticaET()
+{
+    'use strict';
+    var string_et = $('#descricao').val();
+    var id_cidade_digital = $('#id_cidade_digital').val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxSelect");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'getNomeCidadeCidadeDigital', id: id_cidade_digital},
+        complete: function () {
+        },
+        error: function (data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (string_et == '' || string_et == null){
+                $('#descricao').val("Estação Telecom de " + data.dados);
+            } else {
+                swal({
+                    title: "Tem certeza que deseja substituir a descrição \""+ string_et +"\"?",
+                    text: "O sistema irá substituir a descrição \""+ string_et +"\" com essa ação. Essa é uma ação irreversível!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Sim, substituir!"
+                }).then((result) => {
+                    $('#descricao').val("Estação Telecom de " + data.dados);
+                });
+            }
+        }
+    });
+
 }

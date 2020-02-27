@@ -2,6 +2,7 @@
 
 namespace Circuitos\Controllers;
 
+use Circuitos\Models\CidadeDigital;
 use Circuitos\Models\Conectividade;
 use Circuitos\Models\Empresa;
 use Circuitos\Models\EndCidade;
@@ -787,17 +788,17 @@ class CoreController extends ControllerBase
                 $objeto = new PropostaComercialServicoGrupoOP();
                 return $objeto->selectSubGrupo($dados['id']);
                 break;
-        }
-        //Desabilita o layout para o ajax
-        $this->view->disable();
-        $dados = filter_input_array(INPUT_GET);
-        switch ($dados['metodo']) {
             case 'selectIdServico':
                 $objeto = new PropostaComercialServicoOP();
                 return $objeto->selectIdServico($dados['id']);
                 break;
+            case 'getNomeCidadeCidadeDigital':
+                $obj = new CidadeDigital();
+                $obj->setId($dados['id']);
+                $objeto = new CidadeDigitalOP();
+                return $objeto->getNomeCidadeCidadeDigital($obj);
+                break;
         }
-
     }
 
 }
