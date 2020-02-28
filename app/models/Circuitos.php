@@ -1125,6 +1125,16 @@ class Circuitos extends \Phalcon\Mvc\Model
         return $this;
     }
 
+    /**
+     * Returns the value of Departamento
+     *
+     * @return string
+     */
+    public function getNomeDepartamento()
+    {
+        return $this->EmpresaDepartamento->descricao;
+    }
+
 
     /**
      * Initialize method for model.

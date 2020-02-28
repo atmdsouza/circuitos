@@ -272,17 +272,26 @@ use Util\Util;
                                     <label for="tag">TAG <span class="required">*</span></label>
                                     <?php echo $this->tag->textField(["tag", "size" => 120, "class" => "form-control", "id" => "tag", "placeholder" => "TAG"]) ?>
                                 </div>
-                                <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                <div class="form-group col-md-3 botoes_forms_alinhamento">
                                     <label for="ssid">SSID</label> <!-- Antigo ccode -->
                                     <?php echo $this->tag->textField(["ssid", "size" => 30, "class" => "form-control", "id" => "ssid", "placeholder" => "SSID"]) ?>
                                 </div>
-                                <div class="form-group col-md-2">
+                                <div class="form-group col-md-3">
                                     <label for="chamado">Chamado <span class="required">*</span></label>
                                     <?php echo $this->tag->textField(["chamado", "size" => 120, "class" => "form-control", "id" => "chamado", "placeholder" => "Chamado"]) ?>
                                 </div>
-                                <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                <div class="form-group col-md-3 botoes_forms_alinhamento">
                                     <label for="data_desinstalacao">Data de Desinstalação </label>
                                     <?php echo $this->tag->textField(["data_desinstalacao", "size" => 120, "class" => "form-control data", "id" => "data_desinstalacao", "placeholder" => "Data de Desinstalação"]) ?>
+                                </div>
+                                <div class="form-group col-md-3 botoes_forms_alinhamento">
+                                    <label for="id_empresa_departamento">Departamento </label>
+                                    <?php echo $this->tag->select(["id_empresa_departamento", $departamentos, "class" => "form-control", "id" => "id_empresa_departamento",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione o Departamento",
+                                        "emptyValue" => ""])
+                                    ?>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -513,6 +522,15 @@ use Util\Util;
                                 <div class="form-group col-md-3">
                                     <label for="data_desinstalacaov">Data de Desinstalação </label>
                                     <?php echo $this->tag->textField(["data_desinstalacaov", "size" => 120, "readonly" => "true", "class" => "form-control data", "id" => "data_desinstalacaov", "placeholder" => "Data de Desinstalação"]) ?>
+                                </div>
+                                <div class="form-group col-md-3 botoes_forms_alinhamento">
+                                    <label for="id_empresa_departamentov">Departamento </label>
+                                    <?php echo $this->tag->select(["id_empresa_departamentov", $departamentos, "disabled" => "true", "class" => "form-control", "id" => "id_empresa_departamentov",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione o Departamento",
+                                        "emptyValue" => ""])
+                                    ?>
                                 </div>
                             </div>
                             <div class="form-row">

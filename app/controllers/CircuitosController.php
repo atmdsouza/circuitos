@@ -8,6 +8,7 @@ use Circuitos\Models\Circuitos;
 use Circuitos\Models\Cliente;
 use Circuitos\Models\ClienteUnidade;
 use Circuitos\Models\Conectividade;
+use Circuitos\Models\EmpresaDepartamento;
 use Circuitos\Models\Equipamento;
 use Circuitos\Models\Fabricante;
 use Circuitos\Models\Lov;
@@ -58,27 +59,36 @@ class CircuitosController extends ControllerBase
 
         $circuitos = Circuitos::pesquisarCircuitos($dados["pesquisa"]);
 
-        $statuscircuito = Lov::find(array(
-            "tipo=6",
+        $departamentos = EmpresaDepartamento::find(array(
+            "excluido = 0 AND ativo = 1",
             "order" => "descricao"
         ));
-        $usacontrato = Lov::find("tipo=2");
+        $statuscircuito = Lov::find(array(
+            "tipo=6 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
+        ));
+        $usacontrato = Lov::find(array(
+            "tipo = 2 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
+        ));
         $funcao = Lov::find(array(
-            "tipo = 3",
+            "tipo = 3 AND excluido = 0 AND ativo = 1",
             "order" => "descricao"
         ));
         $tipoacesso = Lov::find(array(
-            "tipo = 7",
+            "tipo = 7 AND excluido = 0 AND ativo = 1",
             "order" => "descricao"
         ));
         $banda = Lov::find(array(
-            "tipo = 17"
+            "tipo = 17 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
         ));
         $tipolink = Lov::find(array(
-            "tipo = 19"
+            "tipo = 19 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
         ));
         $tipomovimento = Lov::find(array(
-            "tipo = 16 AND valor >= 4",
+            "tipo = 16 AND valor >= 4 AND excluido = 0 AND ativo = 1",
             "order" => "descricao"
         ));
         $cidadedigital = CidadeDigital::find(array(
@@ -109,6 +119,7 @@ class CircuitosController extends ControllerBase
         $this->view->tipolink = $tipolink;
         $this->view->unidades = $unidades;
         $this->view->cidadedigital = $cidadedigital;
+        $this->view->departamentos = $departamentos;
     }
 
     public function formCircuitosAction()
@@ -141,6 +152,7 @@ class CircuitosController extends ControllerBase
             "id_tipolink" => $circuitos->getIdTipolink(),
             "id_cidadedigital" => $circuitos->getIdCidadedigital(),
             "id_conectividade" => $circuitos->getIdConectividade(),
+            "id_empresa_departamento" => $circuitos->getIdEmpresaDepartamento(),
             "lid_cidadedigital" => $circuitos->getCidadeDigitalNome(),
             "lid_conectividade" => $circuitos->getConectividadeNome(),
             "designacao" => $circuitos->getDesignacao(),
@@ -217,6 +229,7 @@ class CircuitosController extends ControllerBase
             "id_tipolink" => $circuitos->getIdTipolink(),
             "id_cidadedigital" => $circuitos->getIdCidadedigital(),
             "id_conectividade" => $circuitos->getIdConectividade(),
+            "id_empresa_departamento" => $circuitos->getIdEmpresaDepartamento(),
             "lid_cidadedigital" => $circuitos->getCidadeDigitalNome(),
             "lid_conectividade" => $circuitos->getConectividadeNome(),
             "designacao" => $circuitos->getDesignacao(),
@@ -335,6 +348,7 @@ class CircuitosController extends ControllerBase
                 $circuitos->setIdTipolink($params["id_tipolink"]);
                 $circuitos->setIdCidadedigital($params["id_cidadedigital"]);
                 $circuitos->setIdConectividade($params["id_conectividade"]);
+                $circuitos->setIdEmpresaDepartamento((!empty($params["id_empresa_departamento"])) ? $params["id_empresa_departamento"] : null);
                 $circuitos->setDesignacao($vl_designacao);
                 $circuitos->setDesignacaoAnterior(mb_strtoupper($params["designacao_anterior"], $this->encode));
                 $circuitos->setUf(mb_strtoupper($cidade_estado[0]["uf"], $this->encode));
@@ -416,6 +430,7 @@ class CircuitosController extends ControllerBase
                 $circuitos->setIdFuncao($params["id_funcao"]);
                 $circuitos->setIdTipoacesso($params["id_tipoacesso"]);
                 $circuitos->setIdTipolink($params["id_tipolink"]);
+                $circuitos->setIdEmpresaDepartamento((!empty($params["id_empresa_departamento"])) ? $params["id_empresa_departamento"] : null);
                 $circuitos->setDesignacaoAnterior(mb_strtoupper($params["designacao_anterior"], $this->encode));
                 $circuitos->setSsid($params["ssid"]);
                 $circuitos->setChamado($params["chamado"]);

@@ -1294,6 +1294,7 @@ $(".bt_edit").on("click", function(){
             $("#id_funcao").val(data.dados.id_funcao).selected = "true";
             $("#id_tipoacesso").val(data.dados.id_tipoacesso).selected = "true";
             $("#banda").val(data.dados.id_banda).selected = "true";
+            $("#id_empresa_departamento").val(data.dados.id_empresa_departamento).selected = "true";
             $("#banda").attr("disabled", "true");
             $("#designacao").val(data.dados.designacao);
             $("#designacao_anterior").val(data.dados.designacao_anterior);
@@ -1360,6 +1361,7 @@ $(".bt_visual").on("click", function(){
             $("#id_funcaov").val(data.dados.id_funcao).selected = "true";
             $("#id_tipoacessov").val(data.dados.id_tipoacesso).selected = "true";
             $("#bandav").val(data.dados.id_banda).selected = "true";
+            $("#id_empresa_departamentov").val(data.dados.id_empresa_departamento).selected = "true";
             $("#designacaov").val(data.dados.designacao);
             $("#designacao_anteriorv").val(data.dados.designacao_anterior);
             $("#ufv").val(data.dados.uf);
