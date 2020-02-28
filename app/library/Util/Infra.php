@@ -47,7 +47,7 @@ class Infra
 
     public function getCaminhoRelatorios()
     {
-//        return '/circuitos/public/relatorios/';
-        return '/public/relatorios/';
+        return '/circuitos/public/relatorios/';
+//        return '/public/relatorios/';
     }
 }
