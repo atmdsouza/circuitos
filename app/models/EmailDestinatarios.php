@@ -4,6 +4,7 @@ namespace Circuitos\Models;
 
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Email as EmailValidator;
+use Util\Infra;
 
 class EmailDestinatarios extends \Phalcon\Mvc\Model
 {
@@ -383,7 +384,8 @@ class EmailDestinatarios extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("email_destinatarios");
         $this->belongsTo('id_tipo_destinatario', 'CircuitosModels\Lov', 'id', ['alias' => 'Lov']);
         $this->belongsTo('id_usuario', 'CircuitosModels\Usuario', 'id', ['alias' => 'Usuario']);

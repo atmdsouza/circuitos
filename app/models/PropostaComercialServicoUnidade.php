@@ -3,6 +3,7 @@
 namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
+use Util\Infra;
 
 class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
 {
@@ -186,7 +187,8 @@ class PropostaComercialServicoUnidade extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("proposta_comercial_servico_unidade");
         $this->hasMany('id', 'Circuitos\Models\PropostaComercialServico', 'id_proposta_comercial_servico_unidade', ['alias' => 'PropostaComercialServico']);
     }

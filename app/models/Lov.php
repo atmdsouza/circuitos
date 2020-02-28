@@ -3,7 +3,7 @@
 namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Resultset;
+use Util\Infra;
 
 class Lov extends \Phalcon\Mvc\Model
 {
@@ -259,7 +259,8 @@ class Lov extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("lov");
         $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_contrato', ['alias' => 'Circuitos']);
         $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_status', ['alias' => 'Circuitos']);

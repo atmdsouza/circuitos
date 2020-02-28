@@ -2,11 +2,11 @@
 
 namespace Circuitos\Models;
 
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\Email as EmailValidator;
-use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Resultset;
+use Phalcon\Validation;
+use Phalcon\Validation\Validator\Email as EmailValidator;
+use Util\Infra;
 
 class PessoaEmail extends \Phalcon\Mvc\Model
 {
@@ -256,7 +256,8 @@ class PessoaEmail extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("pessoa_email");
         $this->belongsTo('id_tipoemail', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
         $this->belongsTo('id_pessoa', 'Circuitos\Models\Pessoa', 'id', ['alias' => 'Pessoa']);

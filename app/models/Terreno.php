@@ -3,7 +3,7 @@
 namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Resultset;
+use Util\Infra;
 
 class Terreno extends \Phalcon\Mvc\Model
 {
@@ -642,7 +642,8 @@ class Terreno extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("terreno");
         $this->hasMany('id', 'Circuitos\Models\EstacaoTelecon', 'id_terreno', ['alias' => 'EstacaoTelecon']);
         $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);

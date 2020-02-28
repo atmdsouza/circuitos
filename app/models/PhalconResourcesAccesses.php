@@ -2,6 +2,8 @@
 
 namespace Circuitos\Models;
 
+use Util\Infra;
+
 class PhalconResourcesAccesses extends \Phalcon\Mvc\Model
 {
 
@@ -68,7 +70,8 @@ class PhalconResourcesAccesses extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("phalcon_resources_accesses");
         $this->belongsTo('access_name', 'Circuitos\Models\PhalconAccessList', 'access_name', ['alias' => 'PhalconAccessList']);
         $this->belongsTo('resources_name', 'Circuitos\Models\PhalconResources', 'name', ['alias' => 'PhalconResources']);

@@ -3,6 +3,7 @@
 namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
+use Util\Infra;
 
 class UnidadeConsumidora extends \Phalcon\Mvc\Model
 {
@@ -254,7 +255,8 @@ class UnidadeConsumidora extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("unidade_consumidora");
         $this->hasMany('id', 'Circuitos\Models\EstacaoTelecon', 'id_unidade_consumidora', ['alias' => 'EstacaoTelecon']);
         $this->hasMany('id', 'Circuitos\Models\UnidadeConsumidora', 'id_conta_agrupadora', ['alias' => 'UnidadeConsumidora']);

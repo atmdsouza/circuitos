@@ -2,6 +2,8 @@
 
 namespace Circuitos\Models;
 
+use Util\Infra;
+
 class Anexos extends \Phalcon\Mvc\Model
 {
 
@@ -242,7 +244,8 @@ class Anexos extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("anexos");
         $this->hasMany('id', 'Circuitos\Models\CircuitosAnexo', 'id_anexo', ['alias' => 'CircuitosAnexo']);
         $this->hasMany('id', 'Circuitos\Models\ContratoAcompanhamentoFinanceiroNotaAnexo', 'id_anexo', ['alias' => 'ContratoAcompanhamentoFinanceiroNotaAnexo']);

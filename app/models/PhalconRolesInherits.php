@@ -2,6 +2,8 @@
 
 namespace Circuitos\Models;
 
+use Util\Infra;
+
 class PhalconRolesInherits extends \Phalcon\Mvc\Model
 {
 
@@ -68,7 +70,8 @@ class PhalconRolesInherits extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("phalcon_roles_inherits");
         $this->belongsTo('roles_name', 'Circuitos\Models\PhalconRoles', 'name', ['alias' => 'PhalconRoles']);
     }

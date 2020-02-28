@@ -4,6 +4,7 @@ namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Resultset;
+use Util\Infra;
 
 class Fabricante extends \Phalcon\Mvc\Model
 {
@@ -91,7 +92,8 @@ class Fabricante extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("fabricante");
         $this->hasMany('id', 'Circuitos\Models\Equipamento', 'id_fabricante', ['alias' => 'Equipamento']);
         $this->hasMany('id', 'Circuitos\Models\Modelo', 'id_fabricante', ['alias' => 'Modelo']);
