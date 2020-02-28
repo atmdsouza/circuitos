@@ -2,12 +2,11 @@
 
 namespace Circuitos\Models\Operations;
 
-use Phalcon\Http\Response as Response;
-
 use Circuitos\Models\CidadeDigital;
 use Circuitos\Models\Cliente;
-use Circuitos\Models\EndEndereco;
+use Circuitos\Models\EmpresaDepartamento;
 use Circuitos\Models\EndCidade;
+use Circuitos\Models\EndEndereco;
 use Circuitos\Models\Equipamento;
 use Circuitos\Models\EstacaoTelecon;
 use Circuitos\Models\Fabricante;
@@ -16,11 +15,12 @@ use Circuitos\Models\Modelo;
 use Circuitos\Models\PropostaComercialServico;
 use Circuitos\Models\PropostaComercialServicoGrupo;
 use Circuitos\Models\PropostaComercialServicoUnidade;
-use Circuitos\Models\Terreno;
-use Circuitos\Models\Torre;
 use Circuitos\Models\SetEquipamento;
 use Circuitos\Models\SetSeguranca;
+use Circuitos\Models\Terreno;
+use Circuitos\Models\Torre;
 use Circuitos\Models\UnidadeConsumidora;
+use Phalcon\Http\Response as Response;
 
 /**
  * Class CoreOP
@@ -94,6 +94,19 @@ class CoreOP
         $array_dados = array();
         foreach ($clientes as $cliente){
             array_push($array_dados, ['id' => $cliente->getId(), 'nome' => $cliente->getClienteNome()]);
+        }
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $array_dados)));
+        return $response;
+    }
+
+    public function departamentosAtivos()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $departamentos = EmpresaDepartamento::pesquisarDepartamentosAtivos($dados['string']);
+        $array_dados = array();
+        foreach ($departamentos as $departamento){
+            array_push($array_dados, ['id' => $departamento->getId(), 'nome' => $departamento->getDescricao()]);
         }
         $response = new Response();
         $response->setContent(json_encode(array("operacao" => True, "dados" => $array_dados)));

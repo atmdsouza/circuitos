@@ -153,7 +153,7 @@
                         </li>
                     </ul>
                     <div class="tab-content">
-                        <div class="tab-pane fade" id="tab_configuracoes">
+                        <div class="tab-pane fade show active" id="tab_configuracoes">
                             <div class="form-row">
                                 <div class="col-4">
                                     <h6>Módulo "Cadastro de Empresa"</h6>
@@ -178,6 +178,45 @@
                                             <div class="posicao_unitaria">
                                                 <input id="empresadeletarEmpresa" name="empresa.deletarEmpresa" class="permissao_unitaria permissao_unitaria_empresa permissao_unitaria_global" type="checkbox" value="empresa.deletarEmpresa"/>
                                                 <label for="empresadeletarEmpresa">Deletar Empresa</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <h6>Módulo "Cadastro de Departamento"</h6>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-12">
+                                            <div class="posicao_total">
+                                                <input id="empresa_departamentoacesso_total" name="empresa_departamento.acesso_total" class="check_total_empresa_departamento permissao_total_modulo" type="checkbox"/>
+                                                <label for="empresa_departamentoacesso_total">Acesso Total a Departamento</label>
+                                            </div>
+                                            <div class="posicao_unitaria">
+                                                <input id="empresa_departamentoindex" name="empresa_departamento.index" class="permissao_unitaria permissao_unitaria_empresa_departamento permissao_unitaria_global" type="checkbox" value="empresa_departamento.index"/>
+                                                <label for="empresa_departamentoindex">Menu e Lista de Departamento</label>
+                                            </div>
+                                            <div class="posicao_unitaria">
+                                                <input id="empresa_departamentocriar" name="empresa_departamento.criar" class="permissao_unitaria permissao_unitaria_empresa_departamento permissao_unitaria_global" type="checkbox" value="empresa_departamento.criar"/>
+                                                <label for="empresa_departamentocriar">Criar Departamento</label>
+                                            </div>
+                                            <div class="posicao_unitaria">
+                                                <input id="empresa_departamentoeditar" name="empresa_departamento.editar" class="permissao_unitaria permissao_unitaria_empresa_departamento permissao_unitaria_global" type="checkbox" value="empresa_departamento.editar"/>
+                                                <label for="empresa_departamentoeditar">Editar Departamento</label>
+                                            </div>
+                                            <div class="posicao_unitaria">
+                                                <input id="empresa_departamentoativar" name="empresa_departamento.ativar" class="permissao_unitaria permissao_unitaria_empresa_departamento permissao_unitaria_global" type="checkbox" value="empresa_departamento.ativar"/>
+                                                <label for="empresa_departamentoativar">Ativar Departamento</label>
+                                            </div>
+                                            <div class="posicao_unitaria">
+                                                <input id="empresa_departamentoinativar" name="empresa_departamento.inativar" class="permissao_unitaria permissao_unitaria_empresa_departamento permissao_unitaria_global" type="checkbox" value="empresa_departamento.inativar"/>
+                                                <label for="empresa_departamentoinativar">Inativar Departamento</label>
+                                            </div>
+                                            <div class="posicao_unitaria">
+                                                <input id="empresa_departamentoexcluir" name="empresa_departamento.excluir" class="permissao_unitaria permissao_unitaria_empresa_departamento permissao_unitaria_global" type="checkbox" value="empresa_departamento.excluir"/>
+                                                <label for="empresa_departamentoexcluir">Deletar Departamento</label>
+                                            </div>
+                                            <div class="posicao_unitaria">
+                                                <input id="empresa_departamentovisualizar" name="empresa_departamento.visualizar" class="permissao_unitaria permissao_unitaria_empresa_departamento permissao_unitaria_global" type="checkbox" value="empresa_departamento.visualizar"/>
+                                                <label for="empresa_departamentovisualizar">Visualizar Departamento </label>
                                             </div>
                                         </div>
                                     </div>
@@ -495,7 +534,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade show active" id="tab_cidade_digital">
+                        <div class="tab-pane fade" id="tab_cidade_digital">
                             <div class="form-row">
                                 <div class="col-4">
                                     <h6>Módulo "Circuitos"</h6>
@@ -920,7 +959,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade show" id="tab_cliente">
+                        <div class="tab-pane fade" id="tab_cliente">
                             <div class="form-row">
                                 <div class="col-4">
                                     <h6>Módulo "Cadastro de Cliente"</h6>
@@ -1029,7 +1068,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade show" id="tab_dashboard">
+                        <div class="tab-pane fade" id="tab_dashboard">
                             <div class="form-row">
                                 <div class="col-4">
                                     <h6>Módulo "Dashboard"</h6>
