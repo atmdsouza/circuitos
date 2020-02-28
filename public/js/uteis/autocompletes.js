@@ -33,16 +33,77 @@ var listCodigoServico = [];
 var cs = 0;
 var listServico = [];
 var z = 0;
+var listPropostaComercial = [];
+var p = 0;
+var listContrato = [];
+var c1 = 0;
+var listContratoPrincipal = [];
+var c2 = 0;
+var listUsuario = [];
+var u1 = 0;
 var listDepartamento = [];
 var d = 0;
 
-/*
+/**
 * Sessão de Campos Autocomplete
 * */
+
+function autocompletarUsuario(id_label, id_valor)
+{
+    "use strict";
+    //Autocomplete
+    var ac_usuario = $("#"+id_label);
+    var vl_usuario = $("#"+id_valor);
+    var string = ac_usuario.val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'listaUsuariosAtivos', string: string},
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao) {
+                listUsuario = [];
+                $.each(data.dados, function (key, value) {
+                    listUsuario.push({value: value.nome, data: value.id});
+                });
+                if(u1 === 0) {
+                    //Autocomplete
+                    ac_usuario.autocomplete({
+                        lookup: listUsuario,
+                        onSelect: function (suggestion) {
+                            vl_usuario.val(suggestion.data);
+                        }
+                    });
+                    u1++;
+                } else {
+                    //Autocomplete
+                    ac_usuario.autocomplete().setOptions( {
+                        lookup: listUsuario
+                    });
+                }
+            } else {
+                vl_usuario.val("");
+                ac_usuario.val("");
+            }
+        }
+    });
+}
+
 function autocompletarCodigoServico(id_label, id_valor, id_grupo, id_subgrupo)
 {
     "use strict";
-    //Autocomplete de Fabricante
+    //Autocomplete
     var ac_codigo_servico = $("#"+id_label);
     var vl_codigo_servico = $("#"+id_valor);
     var vl_grupo = $("#"+id_grupo).val();
@@ -97,7 +158,7 @@ function autocompletarCodigoServico(id_label, id_valor, id_grupo, id_subgrupo)
 function autocompletarServico(id_label, id_valor, id_grupo, id_subgrupo)
 {
     "use strict";
-    //Autocomplete de Fabricante
+    //Autocomplete
     var ac_servico = $("#"+id_label);
     var vl_servico = $("#"+id_valor);
     var vl_grupo = $("#"+id_grupo).val();
@@ -148,9 +209,160 @@ function autocompletarServico(id_label, id_valor, id_grupo, id_subgrupo)
     });
 }
 
-function autocompletarContratoVinculado(id_label, id_valor)
+function autocompletarContrato(id_label, id_valor)
 {
+    "use strict";
+    //Autocomplete
+    var ac_contrato = $("#"+id_label);
+    var vl_contrato = $("#"+id_valor);
+    var string = ac_contrato.val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'contratosAtivos', string: string},
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao) {
+                listContrato = [];
+                $.each(data.dados, function (key, value) {
+                    listContrato.push({value: value.numero, data: value.id});
+                });
+                if(c1 === 0) {
+                    //Autocomplete
+                    ac_contrato.autocomplete({
+                        lookup: listContrato,
+                        onSelect: function (suggestion) {
+                            vl_contrato.val(suggestion.data);
+                        }
+                    });
+                    c1++;
+                } else {
+                    //Autocomplete
+                    ac_contrato.autocomplete().setOptions( {
+                        lookup: listContrato
+                    });
+                }
+            } else {
+                vl_contrato.val("");
+                ac_contrato.val("");
+            }
+        }
+    });
+}
 
+function autocompletarContratoPrincipal(id_label, id_valor)
+{
+    "use strict";
+    //Autocomplete
+    var ac_contrato_principal = $("#"+id_label);
+    var vl_contrato_principal = $("#"+id_valor);
+    var string = ac_contrato_principal.val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'contratosPrincipaisAtivos', string: string},
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao) {
+                listContratoPrincipal = [];
+                $.each(data.dados, function (key, value) {
+                    listContratoPrincipal.push({value: value.numero, data: value.id});
+                });
+                if(c2 === 0) {
+                    //Autocomplete
+                    ac_contrato_principal.autocomplete({
+                        lookup: listContratoPrincipal,
+                        onSelect: function (suggestion) {
+                            vl_contrato_principal.val(suggestion.data);
+                        }
+                    });
+                    c2++;
+                } else {
+                    //Autocomplete
+                    ac_contrato_principal.autocomplete().setOptions( {
+                        lookup: listContratoPrincipal
+                    });
+                }
+            } else {
+                vl_contrato_principal.val("");
+                ac_contrato_principal.val("");
+            }
+        }
+    });
+}
+
+function autocompletarPropostaComercial(id_label, id_valor)
+{
+    "use strict";
+    //Autocomplete
+    var ac_proposta = $("#"+id_label);
+    var vl_proposta = $("#"+id_valor);
+    var string = ac_proposta.val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'propostasComerciaisAtivas', string: string},
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao) {
+                listPropostaComercial = [];
+                $.each(data.dados, function (key, value) {
+                    listPropostaComercial.push({value: value.numero, data: value.id});
+                });
+                if(p === 0) {
+                    //Autocomplete
+                    ac_proposta.autocomplete({
+                        lookup: listPropostaComercial,
+                        onSelect: function (suggestion) {
+                            vl_proposta.val(suggestion.data);
+                        }
+                    });
+                    p++;
+                } else {
+                    //Autocomplete
+                    ac_proposta.autocomplete().setOptions( {
+                        lookup: listPropostaComercial
+                    });
+                }
+            } else {
+                vl_proposta.val("");
+                ac_proposta.val("");
+            }
+        }
+    });
 }
 
 function autocompletarDepartamentoPrincipal(id_label, id_valor)
@@ -208,7 +420,7 @@ function autocompletarDepartamentoPrincipal(id_label, id_valor)
 function autocompletarCliente(id_label, id_valor)
 {
     "use strict";
-    //Autocomplete de Fabricante
+    //Autocomplete
     var ac_cliente = $("#"+id_label);
     var vl_cliente = $("#"+id_valor);
     var string = ac_cliente.val();
@@ -257,9 +469,56 @@ function autocompletarCliente(id_label, id_valor)
     });
 }
 
-function autocompletarContrato(id_label, id_valor)
+function autocompletarClienteFornecedorParceiro(id_label, id_valor)
 {
-
+    "use strict";
+    //Autocomplete
+    var ac_cliente = $("#"+id_label);
+    var vl_cliente = $("#"+id_valor);
+    var string = ac_cliente.val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'listaClientesFornecedoresParceirosAtivos', string: string},
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao) {
+                listCliente = [];
+                $.each(data.dados, function (key, value) {
+                    listCliente.push({value: value.nome, data: value.id});
+                });
+                if(c === 0) {
+                    //Autocomplete
+                    ac_cliente.autocomplete({
+                        lookup: listCliente,
+                        onSelect: function (suggestion) {
+                            vl_cliente.val(suggestion.data);
+                        }
+                    });
+                    c++;
+                } else {
+                    //Autocomplete
+                    ac_cliente.autocomplete().setOptions( {
+                        lookup: listCliente
+                    });
+                }
+            } else {
+                vl_cliente.val("");
+                ac_cliente.val("");
+            }
+        }
+    });
 }
 
 function autocompletarGrupo(id_label, id_valor)
@@ -410,7 +669,7 @@ function autocompletarCidadeDigital(id_label, id_valor)
 function autocompletarCidade(id_chave, id_label, id_valor)
 {
     "use strict";
-    //Autocomplete de Fabricante
+    //Autocomplete
     var ac_cidade = $("#"+id_label);
     var vl_cidade = $("#"+id_valor);
     var id_estado = $("#"+id_chave).val();
@@ -746,7 +1005,7 @@ function autocompletarNumeroSeriePatrimonio()
 function autocompletarFabricante()
 {
     "use strict";
-    //Autocomplete de Fabricante
+    //Autocomplete
     var ac_fabricante = $("#i_lid_fabricante");
     var vl_fabricante = $("#i_id_fabricante");
     var ac_model = $("#i_lid_modelo");
@@ -814,7 +1073,7 @@ function autocompletarFabricante()
 function autocompletarModelo()
 {
     "use strict";
-    //Autocomplete de Fabricante
+    //Autocomplete
     var vl_fabricante = $("#i_id_fabricante");
     var ac_model = $("#i_lid_modelo");
     var vl_model = $("#i_id_modelo");
@@ -876,7 +1135,7 @@ function autocompletarModelo()
 function autocompletarEquipamento()
 {
     "use strict";
-    //Autocomplete de Fabricante
+    //Autocomplete
     var vl_model = $("#i_id_modelo");
     var ac_equip = $("#i_lid_equipamento");
     var vl_equip = $("#i_id_equipamento");
@@ -930,7 +1189,7 @@ function autocompletarEquipamento()
 function autocompletarFornecedor(id_label, id_valor)
 {
     "use strict";
-    //Autocomplete de Fabricante
+    //Autocomplete
     var ac_fornecedor = $("#"+id_label);
     var vl_fornecedor = $("#"+id_valor);
     var string = ac_fornecedor.val();
@@ -1031,7 +1290,7 @@ function autocompletarAgrupadora(id_label, id_valor)
     });
 }
 
-/*
+/**
 * Preenchimento automático de endereço
 * */
 function preencherEndereco(id_cep, id_endereco, id_numero, id_complemento, id_bairro, id_cidade, id_estado, id_sigla_estado, id_latitude, id_longitude)

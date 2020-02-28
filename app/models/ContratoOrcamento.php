@@ -23,7 +23,7 @@ class ContratoOrcamento extends \Phalcon\Mvc\Model
      *
      * @var string
      */
-    protected $unidade_orcamentaria;
+    protected $funcional_programatica;
 
     /**
      *
@@ -42,12 +42,6 @@ class ContratoOrcamento extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $elemento_despesa;
-
-    /**
-     *
-     * @var string
-     */
-    protected $pi;
 
     /**
      *
@@ -94,14 +88,14 @@ class ContratoOrcamento extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field unidade_orcamentaria
+     * Method to set the value of field funcional_programatica
      *
-     * @param string $unidade_orcamentaria
+     * @param string $funcional_programatica
      * @return $this
      */
-    public function setUnidadeOrcamentaria($unidade_orcamentaria)
+    public function setFuncionalProgramatica($funcional_programatica)
     {
-        $this->unidade_orcamentaria = $unidade_orcamentaria;
+        $this->funcional_programatica = $funcional_programatica;
 
         return $this;
     }
@@ -141,19 +135,6 @@ class ContratoOrcamento extends \Phalcon\Mvc\Model
     public function setElementoDespesa($elemento_despesa)
     {
         $this->elemento_despesa = $elemento_despesa;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field pi
-     *
-     * @param string $pi
-     * @return $this
-     */
-    public function setPi($pi)
-    {
-        $this->pi = $pi;
 
         return $this;
     }
@@ -218,13 +199,13 @@ class ContratoOrcamento extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field unidade_orcamentaria
+     * Returns the value of field funcional_programatica
      *
      * @return string
      */
-    public function getUnidadeOrcamentaria()
+    public function getFuncionalProgramatica()
     {
-        return $this->unidade_orcamentaria;
+        return $this->funcional_programatica;
     }
 
     /**
@@ -255,16 +236,6 @@ class ContratoOrcamento extends \Phalcon\Mvc\Model
     public function getElementoDespesa()
     {
         return $this->elemento_despesa;
-    }
-
-    /**
-     * Returns the value of field pi
-     *
-     * @return string
-     */
-    public function getPi()
-    {
-        return $this->pi;
     }
 
     /**
