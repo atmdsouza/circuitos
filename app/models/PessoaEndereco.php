@@ -4,6 +4,7 @@ namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Resultset;
+use Util\Infra;
 
 class PessoaEndereco extends \Phalcon\Mvc\Model
 {
@@ -390,7 +391,8 @@ class PessoaEndereco extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("pessoa_endereco");
         $this->belongsTo('id_tipoendereco', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
         $this->belongsTo('id_pessoa', 'Circuitos\Models\Pessoa', 'id', ['alias' => 'Pessoa']);

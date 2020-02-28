@@ -2,6 +2,8 @@
 
 namespace Circuitos\Models;
 
+use Util\Infra;
+
 class ContratoGarantia extends \Phalcon\Mvc\Model
 {
 
@@ -271,7 +273,8 @@ class ContratoGarantia extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("contrato_garantia");
         $this->hasMany('id', 'Circuitos\Models\ContratoHasContratoGarantia', 'id_contrato_garantia', ['alias' => 'ContratoHasContratoGarantia']);
         $this->belongsTo('id_modalidade', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);

@@ -3,6 +3,7 @@
 namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
+use Util\Infra;
 
 class PhalconRoles extends \Phalcon\Mvc\Model
 {
@@ -136,7 +137,8 @@ class PhalconRoles extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("phalcon_roles");
         $this->hasMany('name', 'Circuitos\Models\PhalconAccessList', 'roles_name', ['alias' => 'PhalconAccessList']);
         $this->hasMany('name', 'Circuitos\Models\PhalconRolesInherits', 'roles_name', ['alias' => 'PhalconRolesInherits']);

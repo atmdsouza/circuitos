@@ -3,6 +3,7 @@
 namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
+use Util\Infra;
 
 class Circuitos extends \Phalcon\Mvc\Model
 {
@@ -1130,7 +1131,8 @@ class Circuitos extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("circuitos");
         $this->hasMany("id", "Circuitos\Models\Movimentos", "id_circuitos", ["alias" => "Movimentos"]);
         $this->belongsTo("id_banda", "Circuitos\Models\Lov", "id", ["alias" => "Lov7"]);

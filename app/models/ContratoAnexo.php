@@ -2,6 +2,8 @@
 
 namespace Circuitos\Models;
 
+use Util\Infra;
+
 class ContratoAnexo extends \Phalcon\Mvc\Model
 {
 
@@ -271,7 +273,8 @@ class ContratoAnexo extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("contrato_anexo");
         $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
         $this->belongsTo('id_tipo_anexo', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);

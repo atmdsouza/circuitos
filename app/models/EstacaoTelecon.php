@@ -3,6 +3,7 @@
 namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
+use Util\Infra;
 
 class EstacaoTelecon extends \Phalcon\Mvc\Model
 {
@@ -564,7 +565,8 @@ class EstacaoTelecon extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("estacao_telecon");
         $this->belongsTo('id_cidade_digital', 'Circuitos\Models\CidadeDigital', 'id', ['alias' => 'CidadeDigital']);
         $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);

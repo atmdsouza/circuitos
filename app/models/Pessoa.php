@@ -2,6 +2,8 @@
 
 namespace Circuitos\Models;
 
+use Util\Infra;
+
 class Pessoa extends \Phalcon\Mvc\Model
 {
 
@@ -184,8 +186,8 @@ class Pessoa extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        // $usuario = new Usuario();
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("pessoa");
         $this->hasOne('id', 'Circuitos\Models\Cliente', 'id_pessoa', ['alias' => 'Cliente']);
         $this->hasOne('id', 'Circuitos\Models\ClienteUnidade', 'id_pessoa', ['alias' => 'ClienteUnidade']);

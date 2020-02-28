@@ -3,7 +3,7 @@
 namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Resultset;
+use Util\Infra;
 
 class Equipamento extends \Phalcon\Mvc\Model
 {
@@ -392,7 +392,8 @@ class Equipamento extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("equipamento");
         $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_equipamento', ['alias' => 'Circuitos']);
         $this->belongsTo('id_fabricante', 'Circuitos\Models\Fabricante', 'id', ['alias' => 'Fabricante']);

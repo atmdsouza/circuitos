@@ -3,7 +3,7 @@
 namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Resultset;
+use Util\Infra;
 
 class CidadeDigital extends \Phalcon\Mvc\Model
 {
@@ -190,7 +190,8 @@ class CidadeDigital extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("cidade_digital");
         $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_cidadedigital', ['alias' => 'Circuitos']);
         $this->hasMany('id', 'Circuitos\Models\Conectividade', 'id_cidade_digital', ['alias' => 'Conectividade']);

@@ -4,6 +4,7 @@ namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Resultset;
+use Util\Infra;
 
 class Conectividade extends \Phalcon\Mvc\Model
 {
@@ -258,7 +259,8 @@ class Conectividade extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("conectividade");
         $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_conectividade', ['alias' => 'Circuitos']);
         $this->belongsTo('id_cidade_digital', 'Circuitos\Models\CidadeDigital', 'id', ['alias' => 'CidadeDigital']);

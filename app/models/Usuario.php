@@ -3,9 +3,7 @@
 namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Resultset;
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
+use Util\Infra;
 
 class Usuario extends \Phalcon\Mvc\Model
 {
@@ -228,7 +226,8 @@ class Usuario extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("usuario");
         $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_usuario_criacao', ['alias' => 'Circuitos1']);
         $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_usuario_atualizacao', ['alias' => 'Circuitos2']);

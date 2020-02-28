@@ -35,6 +35,11 @@ class Infra
 
     }
 
+    public function getSchemaBanco()
+    {
+        return 'bd_circuitosnavega';
+    }
+
     public function getVersao()
     {
         return '2.01.04';//Correções solicitadas pelo Igor em 05/02/2020

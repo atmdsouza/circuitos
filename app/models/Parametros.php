@@ -2,6 +2,8 @@
 
 namespace Circuitos\Models;
 
+use Util\Infra;
+
 class Parametros extends \Phalcon\Mvc\Model
 {
 
@@ -300,7 +302,8 @@ class Parametros extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("parametros");
         $this->belongsTo('id_empresa', 'Circuitos\Models\Empresa', 'id', ['alias' => 'Empresa']);
     }

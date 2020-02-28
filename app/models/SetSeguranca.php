@@ -3,7 +3,7 @@
 namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Resultset;
+use Util\Infra;
 
 class SetSeguranca extends \Phalcon\Mvc\Model
 {
@@ -158,7 +158,8 @@ class SetSeguranca extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("set_seguranca");
         $this->hasMany('id', 'Circuitos\Models\EstacaoTelecon', 'id_set_seguranca', ['alias' => 'EstacaoTelecon']);
         $this->hasMany('id', 'Circuitos\Models\SetSegurancaComponentes', 'id_set_seguranca', ['alias' => 'SetSegurancaComponentes']);

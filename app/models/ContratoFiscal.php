@@ -2,6 +2,8 @@
 
 namespace Circuitos\Models;
 
+use Util\Infra;
+
 class ContratoFiscal extends \Phalcon\Mvc\Model
 {
 
@@ -242,7 +244,8 @@ class ContratoFiscal extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("contrato_fiscal");
         $this->hasMany('id', 'Circuitos\Models\ContratoFiscal', 'id_fiscal_suplente', ['alias' => 'ContratoFiscal']);
         $this->hasMany('id', 'Circuitos\Models\ContratoFiscalHasContrato', 'id_contrato_fiscal', ['alias' => 'ContratoFiscalHasContrato']);
