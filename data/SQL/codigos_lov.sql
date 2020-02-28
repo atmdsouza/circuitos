@@ -15,7 +15,7 @@ Códigos LOV para o diagrama
 13 - Tipo Contato (Cargo Empresa)
 14 - Cluster
 15 - Tipo Equipamento
-16 - Tipo Movimento
+16 - Tipo Movimento Circuitos
 17 - Tipo Banda
 18 - Tipo Conectividade
 19 - Tipo Link

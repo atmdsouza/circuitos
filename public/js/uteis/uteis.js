@@ -629,6 +629,7 @@ $(document).ready(function () {
     $(".valid_credito").mask("00/0000"); //Validade do Cartão de Crédito
     $(".cs_credito").mask("000"); //Código de Segurança do Cartão de Crédito
     $(".perc").mask("000,00 %"); //Limite do Percentual
+    $(".competencia_ano").mask("00/0000"); //Competência/Ano
     $(".ano").mask("0000"); //Ano
     $(".cnpj").mask("00.000.000/0000-00"); //CNPJ
     $(".cpf").mask("000.000.000-00"); //CPF
@@ -642,6 +643,7 @@ $(document).ready(function () {
     $(".valor_monetario_limpo").maskMoney({ allowNegative: true, thousands: '.', decimal: ',', affixesStay: false }); //Valor Monetário sem R$
     $(".valor_percentual").maskMoney({ allowNegative: true, thousands: '.', decimal: ',', affixesStay: false }); //Valor Decimal
     $(".valor_inteiro").maskMoney({ allowNegative: true, thousands: '.', decimal: '', affixesStay: false, precision: 0 }); //Valor Decimal
+    $(".mask_funcional").mask("00.000.0000"); //Funcional Programática
     $('.ip').mask('0ZZ.0ZZ.0ZZ.0ZZ', {
         translation: {
             'Z': {
@@ -668,3 +670,12 @@ $(document).ready(function () {
 jQuery.validator.addMethod("maiorQueZero", function(value, element) {
     return this.optional(element) || (parseFloat(value) > 0);
 }, "* O valor precisa ser maior que 0!");
+
+
+/**
+ * Função que controla o upload de arquivos para todas os módulos do sistema
+ * Funcionalidade Global
+ **/
+function carregarArquivo(id_vinculado) {
+
+}

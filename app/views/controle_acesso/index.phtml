@@ -127,27 +127,27 @@
                     <br>
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
-                            <a href="#tab_configuracoes" data-toggle="tab" aria-expanded="false" class="nav-link active">
+                            <a id="primeira_aba" href="#tab_configuracoes" data-toggle="tab" aria-expanded="true" class="nav-link active">
                                 Configurações
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#tab_comercial" data-toggle="tab" aria-expanded="true" class="nav-link">
+                            <a href="#tab_comercial" data-toggle="tab" aria-expanded="false" class="nav-link">
                                 Comercial
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#tab_cidade_digital" data-toggle="tab" aria-expanded="true" class="nav-link">
+                            <a href="#tab_cidade_digital" data-toggle="tab" aria-expanded="false" class="nav-link">
                                 Cidade Digital
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#tab_cliente" data-toggle="tab" aria-expanded="true" class="nav-link">
+                            <a href="#tab_cliente" data-toggle="tab" aria-expanded="false" class="nav-link">
                                 Clientes e Parceiros
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#tab_dashboard" data-toggle="tab" aria-expanded="true" class="nav-link">
+                            <a href="#tab_dashboard" data-toggle="tab" aria-expanded="false" class="nav-link">
                                 Análise e Relatórios
                             </a>
                         </li>
@@ -372,6 +372,26 @@
                                             <div class="posicao_unitaria">
                                                 <input id="contratovisualizar" name="contrato.visualizar" class="permissao_unitaria permissao_unitaria_contrato permissao_unitaria_global" type="checkbox" value="contrato.visualizar"/>
                                                 <label for="contratovisualizar">Visualizar Contrato </label>
+                                            </div>
+                                            <div class="posicao_unitaria">
+                                                <input id="contratomovimentar" name="contrato.movimentar" class="permissao_unitaria permissao_unitaria_contrato permissao_unitaria_global" type="checkbox" value="contrato.movimentar"/>
+                                                <label for="contratomovimentar">Movimentar Contrato </label>
+                                            </div>
+                                            <div class="posicao_unitaria">
+                                                <input id="contratoupload" name="contrato.upload" class="permissao_unitaria permissao_unitaria_contrato permissao_unitaria_global" type="checkbox" value="contrato.upload"/>
+                                                <label for="contratoupload">Anexar Arquivos </label>
+                                            </div>
+                                            <div class="posicao_unitaria">
+                                                <input id="contratoacompanhar" name="contrato.acompanhar" class="permissao_unitaria permissao_unitaria_contrato permissao_unitaria_global" type="checkbox" value="contrato.acompanhar"/>
+                                                <label for="contratoacompanhar">Acompanhar Financeiro </label>
+                                            </div>
+                                            <div class="posicao_unitaria">
+                                                <input id="contratoatribuir" name="contrato.atribuir" class="permissao_unitaria permissao_unitaria_contrato permissao_unitaria_global" type="checkbox" value="contrato.atribuir"/>
+                                                <label for="contratoatribuir">Atribuir Fiscais </label>
+                                            </div>
+                                            <div class="posicao_unitaria">
+                                                <input id="contratofiscalizar" name="contrato.fiscalizar" class="permissao_unitaria permissao_unitaria_contrato permissao_unitaria_global" type="checkbox" value="contrato.fiscalizar"/>
+                                                <label for="contratofiscalizar">Fiscalizar Contrato </label>
                                             </div>
                                         </div>
                                     </div>

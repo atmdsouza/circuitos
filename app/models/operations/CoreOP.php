@@ -5,6 +5,7 @@ namespace Circuitos\Models\Operations;
 use Circuitos\Models\CidadeDigital;
 use Circuitos\Models\Cliente;
 use Circuitos\Models\EmpresaDepartamento;
+use Circuitos\Models\Contrato;
 use Circuitos\Models\EndCidade;
 use Circuitos\Models\EndEndereco;
 use Circuitos\Models\Equipamento;
@@ -12,6 +13,7 @@ use Circuitos\Models\EstacaoTelecon;
 use Circuitos\Models\Fabricante;
 use Circuitos\Models\Lov;
 use Circuitos\Models\Modelo;
+use Circuitos\Models\PropostaComercial;
 use Circuitos\Models\PropostaComercialServico;
 use Circuitos\Models\PropostaComercialServicoGrupo;
 use Circuitos\Models\PropostaComercialServicoUnidade;
@@ -20,6 +22,7 @@ use Circuitos\Models\SetSeguranca;
 use Circuitos\Models\Terreno;
 use Circuitos\Models\Torre;
 use Circuitos\Models\UnidadeConsumidora;
+use Circuitos\Models\Usuario;
 use Phalcon\Http\Response as Response;
 
 /**
@@ -113,6 +116,19 @@ class CoreOP
         return $response;
     }
 
+    public function listaClientesFornecedoresParceirosAtivos()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $clientes = Cliente::pesquisarClientesFornecedoresParceirosAtivos($dados['string']);
+        $array_dados = array();
+        foreach ($clientes as $cliente){
+            array_push($array_dados, ['id' => $cliente->getId(), 'nome' => $cliente->getClienteNome()]);
+        }
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $array_dados)));
+        return $response;
+    }
+
     public function cidadesDigitaisAtivas()
     {
         $dados = filter_input_array(INPUT_GET);
@@ -195,7 +211,7 @@ class CoreOP
     public function unidadeConsumidorasAtivas()
     {
         $dados = filter_input_array(INPUT_GET);
-        $torre = UnidadeConsumidora::find("excluido=0 AND ativo=1 AND codigo_conta_contrato LIKE '%{$dados['string']}%'");
+        $torre = UnidadeConsumidora::find("excluido=0 AND ativo=1 AND id_conta_agrupadora IS NULL AND codigo_conta_contrato LIKE '%{$dados['string']}%'");
         $response = new Response();
         $response->setContent(json_encode(array("operacao" => True, "dados" => $torre)));
         return $response;
@@ -338,6 +354,46 @@ class CoreOP
     {
         $dados = filter_input_array(INPUT_GET);
         $array_dados = Equipamento::find("excluido=0 AND ativo=1 AND id_modelo = {$dados['id']} AND nome LIKE '%{$dados['string']}%'");
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $array_dados)));
+        return $response;
+    }
+
+    public function contratosAtivos()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $objeto = Contrato::find("excluido=0 AND ativo=1 AND numero LIKE '%{$dados['string']}%'");
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $objeto)));
+        return $response;
+    }
+
+    public function contratosPrincipaisAtivos()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $objeto = Contrato::find("excluido=0 AND ativo=1 AND id_contrato_principal IS NULL AND numero LIKE '%{$dados['string']}%'");
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $objeto)));
+        return $response;
+    }
+
+    public function propostasComerciaisAtivas()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $objeto = PropostaComercial::find("excluido=0 AND ativo=1 AND numero LIKE '%{$dados['string']}%'");
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $objeto)));
+        return $response;
+    }
+
+    public function listaUsuariosAtivos()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $usuarios = Usuario::pesquisarUsuariosAtivos($dados['string']);
+        $array_dados = array();
+        foreach ($usuarios as $usuario){
+            array_push($array_dados, ['id' => $usuario->getId(), 'nome' => $usuario->getNomePessoaUsuario()]);
+        }
         $response = new Response();
         $response->setContent(json_encode(array("operacao" => True, "dados" => $array_dados)));
         return $response;
