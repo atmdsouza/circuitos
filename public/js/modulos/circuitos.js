@@ -1294,6 +1294,7 @@ $(".bt_edit").on("click", function(){
             $("#id_funcao").val(data.dados.id_funcao).selected = "true";
             $("#id_tipoacesso").val(data.dados.id_tipoacesso).selected = "true";
             $("#banda").val(data.dados.id_banda).selected = "true";
+            $("#id_empresa_departamento").val(data.dados.id_empresa_departamento).selected = "true";
             $("#banda").attr("disabled", "true");
             $("#designacao").val(data.dados.designacao);
             $("#designacao_anterior").val(data.dados.designacao_anterior);
@@ -1306,6 +1307,7 @@ $(".bt_edit").on("click", function(){
             $("#ip_gerencia").val(data.dados.ip_gerencia);
             $("#ip_gerencia").attr("disabled", "true");
             $("#tag").val(data.dados.tag);
+            $("#data_desinstalacao").val(data.dados.data_desinstalacao);
             $("#observacao").val(data.dados.observacao);
             $("#modalcircuitos").modal();
         }
@@ -1359,6 +1361,7 @@ $(".bt_visual").on("click", function(){
             $("#id_funcaov").val(data.dados.id_funcao).selected = "true";
             $("#id_tipoacessov").val(data.dados.id_tipoacesso).selected = "true";
             $("#bandav").val(data.dados.id_banda).selected = "true";
+            $("#id_empresa_departamentov").val(data.dados.id_empresa_departamento).selected = "true";
             $("#designacaov").val(data.dados.designacao);
             $("#designacao_anteriorv").val(data.dados.designacao_anterior);
             $("#ufv").val(data.dados.uf);
@@ -1371,6 +1374,7 @@ $(".bt_visual").on("click", function(){
             $("#observacaov").val(data.dados.observacao);
             $("#dtativacaov").val(data.dados.data_ativacao);
             $("#dtatualizacaov").val(data.dados.data_atualizacao);
+            $("#data_desinstalacaov").val(data.dados.data_desinstalacao);
             $("#numpatserv").val(data.dados.numpatrimonio + " / " + data.dados.numserie);
             //Bloco de movimmentos
             var linhas;

@@ -2,13 +2,12 @@
 
 namespace Circuitos\Models\Operations;
 
-use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
-use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-use Phalcon\Http\Response as Response;
-
 use Circuitos\Models\CidadeDigital;
 use Circuitos\Models\Conectividade;
 use Circuitos\Models\EstacaoTelecon;
+use Phalcon\Http\Response as Response;
+use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
+use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 
 class CidadeDigitalOP extends CidadeDigital
 {
@@ -442,5 +441,13 @@ class CidadeDigitalOP extends CidadeDigital
             var_dump($e->getMessage());
             return false;
         }
+    }
+
+    public function getNomeCidadeCidadeDigital(CidadeDigital $objetoCidadeDigital)
+    {
+        $objeto = CidadeDigital::findFirst('id='.$objetoCidadeDigital->getId());
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True,"dados" => $objeto->getCidade())));
+        return $response;
     }
 }

@@ -3,19 +3,19 @@
 namespace Circuitos\Controllers;
 
 use Auth\Autentica;
-use Circuitos\Models\EstacaoTelecon;
-use Circuitos\Models\Lov;
-use Circuitos\Models\Operations\EstacaoTeleconOP;
+use Circuitos\Models\Empresa;
+use Circuitos\Models\EmpresaDepartamento;
+use Circuitos\Models\Operations\EmpresaDepartamentoOP;
 use Phalcon\Http\Response as Response;
 use Util\TokenManager;
 
-class EstacaoTeleconController extends ControllerBase
+class EmpresaDepartamentoController extends ControllerBase
 {
     public $tokenManager;
 
     public function initialize()
     {
-        $this->tag->setTitle("Estação Telecom");
+        $this->tag->setTitle("Departamentos");
         parent::initialize();
         //Voltando o usuário não autenticado para a página de login
         $auth = new Autentica();
@@ -35,14 +35,15 @@ class EstacaoTeleconController extends ControllerBase
     public function indexAction()
     {
         $dados = filter_input_array(INPUT_POST);
-        $estacaoteleconOP = new EstacaoTeleconOP();
-        $estacaotelecon = $estacaoteleconOP->listar($dados['pesquisa']);
-        $tipo_estacaotelecon = Lov::find(array(
-            "tipo = 32",
-            "order" => "descricao"
-        ));
-        $this->view->page = $estacaotelecon;
-        $this->view->tipo_estacaotelecon = $tipo_estacaotelecon;
+        $departamentoOP = new EmpresaDepartamentoOP();
+        $departamento = $departamentoOP->listar($dados['pesquisa']);
+        $empresas = Empresa::find();
+        foreach ($empresas as $key => $empresa)
+        {
+            $id_empresa = $empresa->getId();
+        }
+        $this->view->page = $departamento;
+        $this->view->id_empresa = $id_empresa;
     }
 
     public function criarAction()
@@ -53,15 +54,15 @@ class EstacaoTeleconController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-        $titulo = 'Cadastro de Estação Telecom';
-        $msg = 'Estação Telecom cadastrada com sucesso!';
-        $error_msg = 'Erro ao cadastrar uma Estação Telecom!';
+        $titulo = 'Cadastro de Departamento';
+        $msg = 'Departamento cadastrado com sucesso!';
+        $error_msg = 'Erro ao cadastrar uma Departamento!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
-            $estacaoteleconOP = new EstacaoTeleconOP();
-            $estacaotelecon = new EstacaoTelecon($params);
-            if($estacaoteleconOP->cadastrar($estacaotelecon)){//Cadastrou com sucesso
+            $departamentoOP = new EmpresaDepartamentoOP();
+            $departamento = new EmpresaDepartamento($params);
+            if($departamentoOP->cadastrar($departamento)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -80,15 +81,15 @@ class EstacaoTeleconController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-        $titulo = 'Alteração de Estação Telecom';
-        $msg = 'Estação Telecom alterada com sucesso!';
-        $error_msg = 'Erro ao alterar uma Estação Telecom!';
+        $titulo = 'Alteração de Departamento';
+        $msg = 'Departamento alterado com sucesso!';
+        $error_msg = 'Erro ao alterar uma Departamento!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
-            $estacaoteleconOP = new EstacaoTeleconOP();
-            $estacaotelecon = new EstacaoTelecon($params);
-            if($estacaoteleconOP->alterar($estacaotelecon)){//Altera com sucesso
+            $departamentoOP = new EmpresaDepartamentoOP();
+            $departamento = new EmpresaDepartamento($params);
+            if($departamentoOP->alterar($departamento)){//Altera com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -105,15 +106,15 @@ class EstacaoTeleconController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Reativação de Estação Telecom';
-        $msg = 'Estação Telecom reativada com sucesso!';
-        $error_msg = 'Erro ao reativar uma Estação Telecom!';
+        $titulo = 'Reativação de Departamento';
+        $msg = 'Departamento reativado com sucesso!';
+        $error_msg = 'Erro ao reativar uma Departamento!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
-            $estacaoteleconOP = new EstacaoTeleconOP();
-            $estacaotelecon = new EstacaoTelecon($dados['dados']);
-            if($estacaoteleconOP->ativar($estacaotelecon)){//Cadastrou com sucesso
+            $departamentoOP = new EmpresaDepartamentoOP();
+            $departamento = new EmpresaDepartamento($dados['dados']);
+            if($departamentoOP->ativar($departamento)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -130,15 +131,15 @@ class EstacaoTeleconController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Desativação de Estação Telecom';
-        $msg = 'Estação Telecom desativada com sucesso!';
-        $error_msg = 'Erro ao desativar uma Estação Telecom!';
+        $titulo = 'Desativação de Departamento';
+        $msg = 'Departamento desativado com sucesso!';
+        $error_msg = 'Erro ao desativar uma Departamento!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
-            $estacaoteleconOP = new EstacaoTeleconOP();
-            $estacaotelecon = new EstacaoTelecon($dados['dados']);
-            if($estacaoteleconOP->inativar($estacaotelecon)){//Cadastrou com sucesso
+            $departamentoOP = new EmpresaDepartamentoOP();
+            $departamento = new EmpresaDepartamento($dados['dados']);
+            if($departamentoOP->inativar($departamento)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -155,15 +156,15 @@ class EstacaoTeleconController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Exclusão de Estação Telecom';
-        $msg = 'Estação Telecom excluída com sucesso!';
-        $error_msg = 'Erro ao excluir a Estação Telecom!';
+        $titulo = 'Exclusão de Departamento';
+        $msg = 'Departamento excluído com sucesso!';
+        $error_msg = 'Erro ao excluir a Departamento!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
-            $estacaoteleconOP = new EstacaoTeleconOP();
-            $estacaotelecon = new EstacaoTelecon($dados['dados']);
-            if($estacaoteleconOP->excluir($estacaotelecon)){//Cadastrou com sucesso
+            $departamentoOP = new EmpresaDepartamentoOP();
+            $departamento = new EmpresaDepartamento($dados['dados']);
+            if($departamentoOP->excluir($departamento)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -174,3 +175,5 @@ class EstacaoTeleconController extends ControllerBase
         return $response;
     }
 }
+
+

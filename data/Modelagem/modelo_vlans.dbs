@@ -461,7 +461,7 @@
 			<column name="id_contrato" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="exercicio" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="competencia_inicial" type="char" length="8" jt="1" mandatory="y" >
-				<defo>01</defo>
+				<defo>&#039;1&#039;</defo>
 				<comment><![CDATA[Competência incial do exercício (01-12)]]></comment>
 			</column>
 			<column name="competencia_final" type="char" length="8" jt="1" mandatory="y" >
@@ -1012,6 +1012,7 @@ Externo]]></comment>
 			<column name="id_set_equipamento" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="id_set_seguranca" type="int" length="10" decimal="0" jt="4" />
 			<column name="id_unidade_consumidora" type="int" length="10" decimal="0" jt="4" />
+			<column name="id_tipo_estacao_telecon" type="int" jt="4" />
 			<column name="descricao" type="varchar" length="60" decimal="0" jt="12" mandatory="y" />
 			<column name="ativo" type="boolean" length="1" decimal="0" jt="-7" mandatory="y" >
 				<defo>1</defo>
@@ -1044,6 +1045,9 @@ Externo]]></comment>
 			<index name="fk_estacao_telecon_unidade_consumidora1_idx" unique="NORMAL" >
 				<column name="id_unidade_consumidora" />
 			</index>
+			<index name="idx_estacao_telecon_id_tipo_estacao_telecon" unique="NORMAL" >
+				<column name="id_tipo_estacao_telecon" />
+			</index>
 			<fk name="fk_estacao_telecon_cidade_digital1" to_schema="bd_circuitosnavega" to_table="cidade_digital" >
 				<fk_column name="id_cidade_digital" pk="id" />
 			</fk>
@@ -1064,6 +1068,9 @@ Externo]]></comment>
 			</fk>
 			<fk name="fk_estacao_telecon_unid_cons" to_schema="bd_circuitosnavega" to_table="unidade_consumidora" >
 				<fk_column name="id_unidade_consumidora" pk="id" />
+			</fk>
+			<fk name="fk_estacao_telecon_lov" to_schema="bd_circuitosnavega" to_table="lov" >
+				<fk_column name="id_tipo_estacao_telecon" pk="id" />
 			</fk>
 		</table>
 		<table name="fabricante" >
@@ -1701,6 +1708,9 @@ Externo]]></comment>
 			<index name="pk_proposta_comercial_servico_grupo" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
+			<index name="fk_proposta_comercial_servico_grupo" unique="NORMAL" >
+				<column name="id_grupo_pai" />
+			</index>
 			<fk name="fk_proposta_comercial_servico_grupo" to_schema="bd_circuitosnavega" to_table="proposta_comercial_servico_grupo" >
 				<fk_column name="id_grupo_pai" pk="id" />
 			</fk>
@@ -1973,6 +1983,8 @@ Externo]]></comment>
 			<column name="propriedade_prodepa" type="boolean" length="1" decimal="0" jt="-7" mandatory="y" >
 				<defo>1</defo>
 			</column>
+			<column name="latitude" type="varchar" length="60" jt="12" />
+			<column name="longitude" type="varchar" length="60" jt="12" />
 			<column name="ativo" type="boolean" length="1" decimal="0" jt="-7" mandatory="y" >
 				<defo>1</defo>
 			</column>
@@ -2055,78 +2067,78 @@ Externo]]></comment>
 			</fk>
 		</table>
 	</schema>
-	<connector name="Local" database="MySql" driver_class="com.mysql.jdbc.Driver" driver_jar="mysql-connector-java-8.0.14.jar" driver_desc="Standard" host="localhost" port="3306" instance="bd_circuitosnavega" user="root" passwd="I2RAdGFiYXNlJA==" />
+	<connector name="Circuitos" database="MySql" driver_class="com.mysql.jdbc.Driver" driver_jar="mysql-connector-java-8.0.14.jar" driver_desc="Standard" host="localhost" port="3306" instance="bd_circuitosnavega" user="root" passwd="I2RAdGFiYXNlJA==" />
 	<connector name="PRODEPA" database="MySql" driver_class="com.mysql.jdbc.Driver" driver_jar="mysql-connector-java-8.0.14.jar" driver_desc="Standard" host="10.1.13.48" port="3306" instance="bd_circuitosnavega" user="circuitosnavega_apl" passwd="QzFSY3VJdDAk" />
 	<layout name="Layout Geral" id="Layout_2abb989" show_relation="columns" >
 		<comment><![CDATA[MySql]]></comment>
-		<entity schema="bd_circuitosnavega" name="cidade_digital" color="BED3F4" x="3344" y="400" />
-		<entity schema="bd_circuitosnavega" name="conectividade" color="BED3F4" x="3584" y="400" />
+		<entity schema="bd_circuitosnavega" name="cidade_digital" color="BED3F4" x="3360" y="416" />
+		<entity schema="bd_circuitosnavega" name="conectividade" color="BED3F4" x="3600" y="416" />
 		<entity schema="bd_circuitosnavega" name="contrato_garantia_objeto" color="BEBEF4" x="1744" y="768" />
-		<entity schema="bd_circuitosnavega" name="contrato_indice_monetario" color="C7F4BE" x="1104" y="448" />
-		<entity schema="bd_circuitosnavega" name="contrato_movimento" color="C7F4BE" x="1424" y="1024" />
-		<entity schema="bd_circuitosnavega" name="contrato_orcamento" color="BEBEF4" x="1120" y="112" />
-		<entity schema="bd_circuitosnavega" name="empresa" color="F4DDBE" x="3936" y="2352" />
-		<entity schema="bd_circuitosnavega" name="end_bairro" color="BED3F4" x="4784" y="432" />
-		<entity schema="bd_circuitosnavega" name="end_cidade" color="BED3F4" x="4480" y="432" />
-		<entity schema="bd_circuitosnavega" name="end_endereco" color="BED3F4" x="4240" y="688" />
-		<entity schema="bd_circuitosnavega" name="end_faixa_cidades" color="BED3F4" x="4256" y="464" />
-		<entity schema="bd_circuitosnavega" name="fabricante" color="C7F4BE" x="4480" y="1696" />
+		<entity schema="bd_circuitosnavega" name="contrato_indice_monetario" color="C7F4BE" x="1120" y="464" />
+		<entity schema="bd_circuitosnavega" name="contrato_movimento" color="C7F4BE" x="1440" y="1024" />
+		<entity schema="bd_circuitosnavega" name="contrato_orcamento" color="BEBEF4" x="1136" y="112" />
+		<entity schema="bd_circuitosnavega" name="empresa" color="F4DDBE" x="3936" y="2368" />
+		<entity schema="bd_circuitosnavega" name="end_bairro" color="BED3F4" x="4800" y="448" />
+		<entity schema="bd_circuitosnavega" name="end_cidade" color="BED3F4" x="4496" y="448" />
+		<entity schema="bd_circuitosnavega" name="end_endereco" color="BED3F4" x="4256" y="704" />
+		<entity schema="bd_circuitosnavega" name="end_faixa_cidades" color="BED3F4" x="4272" y="480" />
+		<entity schema="bd_circuitosnavega" name="fabricante" color="C7F4BE" x="4496" y="1696" />
 		<entity schema="bd_circuitosnavega" name="modelo" color="C7F4BE" x="4176" y="1696" />
 		<entity schema="bd_circuitosnavega" name="pessoa" color="F4DDBE" x="3456" y="1744" />
 		<entity schema="bd_circuitosnavega" name="pessoa_contato" color="F4DDBE" x="3424" y="2032" />
-		<entity schema="bd_circuitosnavega" name="pessoa_email" color="F4DDBE" x="3456" y="1440" />
-		<entity schema="bd_circuitosnavega" name="pessoa_endereco" color="F4DDBE" x="3696" y="1328" />
-		<entity schema="bd_circuitosnavega" name="pessoa_fisica" color="F4DDBE" x="3232" y="1440" />
+		<entity schema="bd_circuitosnavega" name="pessoa_email" color="F4DDBE" x="3456" y="1456" />
+		<entity schema="bd_circuitosnavega" name="pessoa_endereco" color="F4DDBE" x="3696" y="1344" />
+		<entity schema="bd_circuitosnavega" name="pessoa_fisica" color="F4DDBE" x="3232" y="1456" />
 		<entity schema="bd_circuitosnavega" name="pessoa_juridica" color="F4DDBE" x="3680" y="1744" />
 		<entity schema="bd_circuitosnavega" name="pessoa_telefone" color="F4DDBE" x="3200" y="1712" />
-		<entity schema="bd_circuitosnavega" name="phalcon_access_list" color="BED3F4" x="1568" y="1328" />
-		<entity schema="bd_circuitosnavega" name="phalcon_resources" color="BED3F4" x="1808" y="1328" />
-		<entity schema="bd_circuitosnavega" name="phalcon_resources_accesses" color="BED3F4" x="2032" y="1328" />
-		<entity schema="bd_circuitosnavega" name="phalcon_roles_inherits" color="BED3F4" x="1568" y="1552" />
-		<entity schema="bd_circuitosnavega" name="proposta_comercial_valor_mensal" color="D1BEF4" x="48" y="1856" />
+		<entity schema="bd_circuitosnavega" name="phalcon_access_list" color="BED3F4" x="1584" y="1344" />
+		<entity schema="bd_circuitosnavega" name="phalcon_resources" color="BED3F4" x="1824" y="1344" />
+		<entity schema="bd_circuitosnavega" name="phalcon_resources_accesses" color="BED3F4" x="2032" y="1344" />
+		<entity schema="bd_circuitosnavega" name="phalcon_roles_inherits" color="BED3F4" x="1584" y="1552" />
+		<entity schema="bd_circuitosnavega" name="proposta_comercial_valor_mensal" color="D1BEF4" x="48" y="1872" />
 		<entity schema="bd_circuitosnavega" name="terreno" color="C7F4BE" x="2720" y="256" />
-		<entity schema="bd_circuitosnavega" name="usuario" color="F4DDBE" x="1104" y="1328" />
-		<entity schema="bd_circuitosnavega" name="cliente_unidade" color="D1BEF4" x="4192" y="2144" />
-		<entity schema="bd_circuitosnavega" name="lov" color="F4DDBE" x="2672" y="1328" />
-		<entity schema="bd_circuitosnavega" name="set_seguranca" color="C7F4BE" x="3344" y="768" />
-		<entity schema="bd_circuitosnavega" name="set_equipamento" color="C7F4BE" x="2768" y="768" />
+		<entity schema="bd_circuitosnavega" name="usuario" color="F4DDBE" x="1120" y="1344" />
+		<entity schema="bd_circuitosnavega" name="cliente_unidade" color="D1BEF4" x="4192" y="2160" />
+		<entity schema="bd_circuitosnavega" name="lov" color="F4DDBE" x="2672" y="1344" />
+		<entity schema="bd_circuitosnavega" name="set_seguranca" color="C7F4BE" x="3360" y="768" />
+		<entity schema="bd_circuitosnavega" name="set_equipamento" color="C7F4BE" x="2784" y="768" />
 		<entity schema="bd_circuitosnavega" name="equipamento" color="C7F4BE" x="4176" y="1312" />
-		<entity schema="bd_circuitosnavega" name="torre" color="C7F4BE" x="3024" y="768" />
-		<entity schema="bd_circuitosnavega" name="cliente" color="D1BEF4" x="3936" y="2144" />
-		<entity schema="bd_circuitosnavega" name="end_estado" color="BED3F4" x="4768" y="608" />
-		<entity schema="bd_circuitosnavega" name="end_faixa_bairros" color="BED3F4" x="4624" y="720" />
-		<entity schema="bd_circuitosnavega" name="end_geo" color="BED3F4" x="4448" y="672" />
+		<entity schema="bd_circuitosnavega" name="cliente" color="D1BEF4" x="3936" y="2160" />
+		<entity schema="bd_circuitosnavega" name="end_estado" color="BED3F4" x="4784" y="624" />
+		<entity schema="bd_circuitosnavega" name="end_faixa_bairros" color="BED3F4" x="4624" y="736" />
+		<entity schema="bd_circuitosnavega" name="end_geo" color="BED3F4" x="4464" y="688" />
 		<entity schema="bd_circuitosnavega" name="email_destinatarios" color="F4DDBE" x="2976" y="1312" />
 		<entity schema="bd_circuitosnavega" name="circuitos_anexo" color="F4DDBE" x="2960" y="1952" />
-		<entity schema="bd_circuitosnavega" name="proposta_comercial_servico_unidade" color="D1BEF4" x="528" y="1568" />
-		<entity schema="bd_circuitosnavega" name="proposta_comercial_anexo" color="C1D8EE" x="704" y="1760" />
-		<entity schema="bd_circuitosnavega" name="anexos" color="C1D8EE" x="2832" y="1328" />
-		<entity schema="bd_circuitosnavega" name="estacao_telecon" color="C7F4BE" x="3024" y="400" />
+		<entity schema="bd_circuitosnavega" name="proposta_comercial_servico_unidade" color="D1BEF4" x="528" y="1584" />
+		<entity schema="bd_circuitosnavega" name="proposta_comercial_anexo" color="C1D8EE" x="720" y="1760" />
+		<entity schema="bd_circuitosnavega" name="anexos" color="C1D8EE" x="2848" y="1344" />
 		<entity schema="bd_circuitosnavega" name="set_equipamento_componentes" color="C7F4BE" x="2672" y="1040" />
 		<entity schema="bd_circuitosnavega" name="set_seguranca_contato" color="C7F4BE" x="3920" y="768" />
-		<entity schema="bd_circuitosnavega" name="set_seguranca_componentes" color="C7F4BE" x="3584" y="768" />
-		<entity schema="bd_circuitosnavega" name="movimentos" color="F4DDBE" x="2944" y="1680" />
-		<entity schema="bd_circuitosnavega" name="empresa_parametros" color="F4DDBE" x="4096" y="2352" />
-		<entity schema="bd_circuitosnavega" name="circuitos" color="F4DDBE" x="2640" y="1680" />
+		<entity schema="bd_circuitosnavega" name="set_seguranca_componentes" color="C7F4BE" x="3600" y="768" />
+		<entity schema="bd_circuitosnavega" name="movimentos" color="F4DDBE" x="2944" y="1696" />
+		<entity schema="bd_circuitosnavega" name="empresa_parametros" color="F4DDBE" x="4096" y="2368" />
 		<entity schema="bd_circuitosnavega" name="empresa_departamento" color="F4DDBE" x="3872" y="2496" />
 		<entity schema="bd_circuitosnavega" name="parametros" color="3986C1" x="2464" y="1312" />
-		<entity schema="bd_circuitosnavega" name="proposta_comercial_servico" color="D1BEF4" x="368" y="1328" />
-		<entity schema="bd_circuitosnavega" name="proposta_comercial_servico_grupo" color="D1BEF4" x="752" y="1328" />
-		<entity schema="bd_circuitosnavega" name="proposta_comercial" color="D1BEF4" x="112" y="1328" />
-		<entity schema="bd_circuitosnavega" name="proposta_comercial_item" color="D1BEF4" x="368" y="1856" />
-		<entity schema="bd_circuitosnavega" name="contrato_arquivo_fisico" color="BEBEF4" x="1136" y="704" />
-		<entity schema="bd_circuitosnavega" name="contrato_garantia" color="BEBEF4" x="2048" y="752" />
-		<entity schema="bd_circuitosnavega" name="contrato_nao_conformidade_anexo" color="C1D8EE" x="2224" y="368" />
+		<entity schema="bd_circuitosnavega" name="proposta_comercial_servico" color="D1BEF4" x="384" y="1344" />
+		<entity schema="bd_circuitosnavega" name="proposta_comercial_servico_grupo" color="D1BEF4" x="752" y="1344" />
+		<entity schema="bd_circuitosnavega" name="proposta_comercial" color="D1BEF4" x="112" y="1344" />
+		<entity schema="bd_circuitosnavega" name="proposta_comercial_item" color="D1BEF4" x="384" y="1872" />
+		<entity schema="bd_circuitosnavega" name="contrato_arquivo_fisico" color="BEBEF4" x="1152" y="720" />
+		<entity schema="bd_circuitosnavega" name="contrato_garantia" color="BEBEF4" x="2064" y="752" />
+		<entity schema="bd_circuitosnavega" name="contrato_nao_conformidade_anexo" color="C1D8EE" x="2224" y="384" />
 		<entity schema="bd_circuitosnavega" name="contrato_acompanhamento_financeiro_nota_anexo" color="C1D8EE" x="2224" y="496" />
-		<entity schema="bd_circuitosnavega" name="contrato_anexo" color="BEBEF4" x="2224" y="624" />
-		<entity schema="bd_circuitosnavega" name="contrato_acompanhamento_financeiro" color="C1D8EE" x="1680" y="96" />
-		<entity schema="bd_circuitosnavega" name="contrato_acompanhamento_financeiro_nota" color="C1D8EE" x="2048" y="80" />
+		<entity schema="bd_circuitosnavega" name="contrato_anexo" color="BEBEF4" x="2224" y="640" />
+		<entity schema="bd_circuitosnavega" name="contrato_acompanhamento_financeiro" color="C1D8EE" x="1696" y="96" />
+		<entity schema="bd_circuitosnavega" name="contrato_acompanhamento_financeiro_nota" color="C1D8EE" x="2064" y="80" />
 		<entity schema="bd_circuitosnavega" name="contrato_nao_conformidade" color="C1D8EE" x="1776" y="288" />
-		<entity schema="bd_circuitosnavega" name="unidade_consumidora" color="C7F4BE" x="3024" y="112" />
-		<entity schema="bd_circuitosnavega" name="contrato_exercicio" color="C7F4BE" x="1456" y="192" />
-		<entity schema="bd_circuitosnavega" name="contrato" color="C7F4BE" x="1424" y="448" />
-		<entity schema="bd_circuitosnavega" name="contrato_fiscal" color="BEBEF4" x="1776" y="480" />
-		<entity schema="bd_circuitosnavega" name="phalcon_roles" color="BED3F4" x="1360" y="1328" />
+		<entity schema="bd_circuitosnavega" name="unidade_consumidora" color="C7F4BE" x="3040" y="112" />
+		<entity schema="bd_circuitosnavega" name="contrato_exercicio" color="C7F4BE" x="1456" y="208" />
+		<entity schema="bd_circuitosnavega" name="contrato" color="C7F4BE" x="1440" y="464" />
+		<entity schema="bd_circuitosnavega" name="contrato_fiscal" color="BEBEF4" x="1776" y="496" />
+		<entity schema="bd_circuitosnavega" name="phalcon_roles" color="BED3F4" x="1376" y="1344" />
+		<entity schema="bd_circuitosnavega" name="circuitos" color="F4DDBE" x="2656" y="1696" />
+		<entity schema="bd_circuitosnavega" name="torre" color="C7F4BE" x="3040" y="768" />
+		<entity schema="bd_circuitosnavega" name="estacao_telecon" color="C7F4BE" x="3040" y="416" />
 		<group name="Empresa" color="C4E0F9" >
 			<entity schema="bd_circuitosnavega" name="empresa" />
 			<entity schema="bd_circuitosnavega" name="empresa_parametros" />

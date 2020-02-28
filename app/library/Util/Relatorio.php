@@ -3,9 +3,8 @@
 namespace Util;
 
 use Circuitos\Models\Circuitos;
-use Circuitos\Models\Movimentos;
 use Circuitos\Models\Empresa;
-
+use Circuitos\Models\Movimentos;
 use Spipu\Html2Pdf\Html2Pdf;
 
 require APP_PATH . '/library/HTML2PDF/autoload.php';
@@ -208,6 +207,23 @@ class Relatorio extends Infra
         $corpo_html .= "<strong>IP de Gerência</strong> <br/>{$circuito->getIpGerencia()}";
         $corpo_html .= "</td>";
         $corpo_html .= "</tr>";
+
+        $corpo_html .= "<tr>";
+        $corpo_html .= "<td style='text-align: left; width: 25%;'>";
+        $data_desativacao = (!empty($circuito->getDataDesinstalacao())) ? $util->converterDataParaBr($circuito->getDataDesinstalacao()) : null;
+        $corpo_html .= "<strong>Data de Desativação</strong> <br/>{$data_desativacao}";
+        $corpo_html .= "</td>";
+        $corpo_html .= "<td style='text-align: left; width: 25%;'>";
+        $corpo_html .= "<strong>Departamento</strong> <br/>{$circuito->getNomeDepartamento()}";
+        $corpo_html .= "</td>";
+        $corpo_html .= "<td style='text-align: left; width: 25%;'>";
+        $corpo_html .= "<strong></strong> <br/>";
+        $corpo_html .= "</td>";
+        $corpo_html .= "<td style='text-align: left; width: 25%;'>";
+        $corpo_html .= "<strong></strong> <br/>";
+        $corpo_html .= "</td>";
+        $corpo_html .= "</tr>";
+
         $corpo_html .= "<tr>";
         $corpo_html .= "<td colspan='4' style='text-align: left; width: 100%;'>";
         $corpo_html .= "<strong>Observação</strong> <br/>{$circuito->getObservacao()}";

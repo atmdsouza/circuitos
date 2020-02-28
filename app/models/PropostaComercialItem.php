@@ -2,6 +2,8 @@
 
 namespace Circuitos\Models;
 
+use Util\Infra;
+
 class PropostaComercialItem extends \Phalcon\Mvc\Model
 {
 
@@ -504,7 +506,8 @@ class PropostaComercialItem extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("proposta_comercial_item");
         $this->belongsTo('id_proposta_comercial', 'Circuitos\Models\PropostaComercial', 'id', ['alias' => 'PropostaComercial']);
         $this->belongsTo('id_proposta_comercial_servicos', 'Circuitos\Models\PropostaComercialServico', 'id', ['alias' => 'PropostaComercialServico']);

@@ -4,6 +4,7 @@ namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
 use Phalcon\Mvc\Model\Resultset;
+use Util\Infra;
 
 class ClienteUnidade extends \Phalcon\Mvc\Model
 {
@@ -110,7 +111,8 @@ class ClienteUnidade extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("cliente_unidade");
         $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_cliente_unidade', ['alias' => 'Circuitos']);
         $this->belongsTo('id_cliente', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Cliente']);

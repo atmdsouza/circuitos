@@ -4,7 +4,6 @@
  */
 
 use Auth\Autentica;
-use Phalcon\Tag;
 use Util\Infra;
 
 $infra = new Infra();
@@ -195,8 +194,8 @@ $module = $this->router->getControllerName();
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-12 botoes_forms_alinhamento">
-                                        <label for="i_endereco_chave">Endereço da Chave </label>
-                                        <?= $this->tag->textField(["i_endereco_chave", "size" => 200, "class" => "form-control", "id" => "i_endereco_chave", "placeholder" => "Endereço da Chave"]) ?>
+                                        <label for="i_endereco_chave">Endereço da Chave da Estação Telecom </label>
+                                        <?= $this->tag->textField(["i_endereco_chave", "size" => 200, "class" => "form-control", "id" => "i_endereco_chave", "placeholder" => "Endereço da Chave da Estação Telecom"]) ?>
                                     </div>
                                 </div>
                                 <div class="form-row">

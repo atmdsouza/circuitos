@@ -1,4 +1,7 @@
-<?php use Util\Infra; $infra = new Infra(); ?>
+<?php use Auth\Autentica;
+use Util\Infra;
+
+$infra = new Infra(); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -127,7 +130,6 @@
         <div class="slimscroll-menu" id="remove-scroll">
 
             <?php
-            use Auth\Autentica;
             $auth = new Autentica();
             $security_plugin = new SecurityPlugin();
             $acl = $security_plugin->getAcl();
@@ -148,6 +150,12 @@
                             <a href="javascript: void(0);"><i class="fi-layers"></i> <span> Cadastros </span> <span class="menu-arrow"></span></a>
                             <ul class="nav-second-level" aria-expanded="false">
                                 <?php
+                                if ($acl->isAllowed($role, 'empresa_departamento', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["empresa_departamento", "Departamentos"]) ?></li>
+                                    <?php
+                                }
                                 if ($acl->isAllowed($role, 'cliente', 'index'))
                                 {
                                     ?>
@@ -220,7 +228,7 @@
                                 if ($acl->isAllowed($role, 'estacao_telecon', 'index'))
                                 {
                                     ?>
-                                    <li><?php echo $this->tag->linkTo(["estacao_telecon", "Estação Telecon"]) ?></li>
+                                    <li><?php echo $this->tag->linkTo(["estacao_telecon", "Estação Telecom"]) ?></li>
                                     <?php
                                 }
                                 if ($acl->isAllowed($role, 'torre', 'index'))
@@ -524,6 +532,9 @@ case "index":?>
 <?php break;
 case "cliente":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/cliente.js?<?= filemtime(BASE_PATH.'/public/js/modulos/cliente.js'); ?>" type="text/javascript"></script>
+<?php break;
+case "empresa_departamento":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/empresadepartamento.js?<?= filemtime(BASE_PATH.'/public/js/modulos/empresadepartamento.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "cidade_digital":?>
     <?php if($action == 'index'){ ?>

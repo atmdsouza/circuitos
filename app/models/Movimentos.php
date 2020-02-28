@@ -2,6 +2,8 @@
 
 namespace Circuitos\Models;
 
+use Util\Infra;
+
 class Movimentos extends \Phalcon\Mvc\Model
 {
 
@@ -357,7 +359,8 @@ class Movimentos extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("movimentos");
         $this->belongsTo('id_circuitos', 'Circuitos\Models\Circuitos', 'id', ['alias' => 'Circuitos']);
         $this->belongsTo('id_tipomovimento', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);

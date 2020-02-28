@@ -3,7 +3,6 @@
  * @var \Phalcon\Mvc\View\Engine\Php $this
  */
 
-use Phalcon\Tag;
 use Util\Util;
 
 ?>
@@ -281,6 +280,19 @@ use Util\Util;
                                     <label for="chamado">Chamado <span class="required">*</span></label>
                                     <?php echo $this->tag->textField(["chamado", "size" => 120, "class" => "form-control", "id" => "chamado", "placeholder" => "Chamado"]) ?>
                                 </div>
+                                <div class="form-group col-md-3 botoes_forms_alinhamento">
+                                    <label for="data_desinstalacao">Data de Desinstalação </label>
+                                    <?php echo $this->tag->textField(["data_desinstalacao", "size" => 120, "class" => "form-control data", "id" => "data_desinstalacao", "placeholder" => "Data de Desinstalação"]) ?>
+                                </div>
+                                <div class="form-group col-md-3 botoes_forms_alinhamento">
+                                    <label for="id_empresa_departamento">Departamento </label>
+                                    <?php echo $this->tag->select(["id_empresa_departamento", $departamentos, "class" => "form-control", "id" => "id_empresa_departamento",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione o Departamento",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
@@ -506,6 +518,19 @@ use Util\Util;
                                 <div class="form-group col-md-3">
                                     <label for="chamadov">Chamado</label>
                                     <?php echo $this->tag->textField(["chamadov", "size" => 120, "readonly" => "true", "class" => "form-control", "id" => "chamadov", "placeholder" => "Chamado"]) ?>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="data_desinstalacaov">Data de Desinstalação </label>
+                                    <?php echo $this->tag->textField(["data_desinstalacaov", "size" => 120, "readonly" => "true", "class" => "form-control data", "id" => "data_desinstalacaov", "placeholder" => "Data de Desinstalação"]) ?>
+                                </div>
+                                <div class="form-group col-md-3 botoes_forms_alinhamento">
+                                    <label for="id_empresa_departamentov">Departamento </label>
+                                    <?php echo $this->tag->select(["id_empresa_departamentov", $departamentos, "disabled" => "true", "class" => "form-control", "id" => "id_empresa_departamentov",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione o Departamento",
+                                        "emptyValue" => ""])
+                                    ?>
                                 </div>
                             </div>
                             <div class="form-row">

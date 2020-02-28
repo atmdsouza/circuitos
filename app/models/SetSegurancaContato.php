@@ -2,8 +2,7 @@
 
 namespace Circuitos\Models;
 
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\Email as EmailValidator;
+use Util\Infra;
 
 class SetSegurancaContato extends \Phalcon\Mvc\Model
 {
@@ -267,7 +266,8 @@ class SetSegurancaContato extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("set_seguranca_contato");
         $this->belongsTo('id_set_seguranca_componente', 'Circuitos\Models\SetSegurancaComponente', 'id', ['alias' => 'SetSegurancaComponente']);
     }

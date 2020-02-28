@@ -2,6 +2,8 @@
 
 namespace Circuitos\Models;
 
+use Util\Infra;
+
 class EndCidade extends \Phalcon\Mvc\Model
 {
 
@@ -213,7 +215,8 @@ class EndCidade extends \Phalcon\Mvc\Model
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("end_cidade");
         $this->hasMany('id_cidade', 'Circuitos\Models\EndBairro', 'id_cidade', ['alias' => 'EndBairro']);
         $this->hasMany('id_cidade', 'Circuitos\Models\EndEndereco', 'id_cidade', ['alias' => 'EndEndereco']);

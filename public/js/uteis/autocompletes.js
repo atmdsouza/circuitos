@@ -41,6 +41,8 @@ var listContratoPrincipal = [];
 var c2 = 0;
 var listUsuario = [];
 var u1 = 0;
+var listDepartamento = [];
+var d = 0;
 
 /**
 * Sessão de Campos Autocomplete
@@ -358,6 +360,58 @@ function autocompletarPropostaComercial(id_label, id_valor)
             } else {
                 vl_proposta.val("");
                 ac_proposta.val("");
+            }
+        }
+    });
+}
+
+function autocompletarDepartamentoPrincipal(id_label, id_valor)
+{
+    "use strict";
+    //Autocomplete de Fabricante
+    var ac_departamento = $("#"+id_label);
+    var vl_departamento = $("#"+id_valor);
+    var string = ac_departamento.val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'departamentosAtivos', string: string},
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao) {
+                listDepartamento = [];
+                $.each(data.dados, function (key, value) {
+                    listDepartamento.push({value: value.nome, data: value.id});
+                });
+                if(d === 0) {
+                    //Autocomplete
+                    ac_departamento.autocomplete({
+                        lookup: listDepartamento,
+                        onSelect: function (suggestion) {
+                            vl_departamento.val(suggestion.data);
+                        }
+                    });
+                    d++;
+                } else {
+                    //Autocomplete
+                    ac_departamento.autocomplete().setOptions( {
+                        lookup: listDepartamento
+                    });
+                }
+            } else {
+                vl_departamento.val("");
+                ac_departamento.val("");
             }
         }
     });

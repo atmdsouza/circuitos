@@ -31,7 +31,7 @@ Códigos LOV para o diagrama
 29 - Tipo Modalidade de Contratação de Garantia
 30 - Status Contrato (Vigente, Bloqueado, Suspenso, Encerrado)
 31 - Tipo Fiscal de Contrato
-32 -
+32 - Tipo de Estação Telecom
 33 -
 34 -
 35 -

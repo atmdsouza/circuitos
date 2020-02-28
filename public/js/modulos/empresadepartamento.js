@@ -15,14 +15,9 @@ function inicializar()
         language: {
             select: false
         },
-        order: [[5, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
+        order: [[3, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
     });
-    if ($('#propriedade_prodepa').val() === '-1'){
-        $('#lid_fornecedor').val('PRODEPA');
-        $('#id_fornecedor').val(-1);
-    }
-    autocompletarFornecedor('lid_fornecedor','id_fornecedor');
-    autocompletarContrato('lid_contrato','id_contrato');
+    autocompletarDepartamentoPrincipal('lid_departamento_pai','id_departamento_pai');
 }
 
 function verificarAlteracao()
@@ -64,58 +59,12 @@ function confirmaCancelar(modal)
 function criar()
 {
     'use strict';
-    if ($('#propriedade_prodepa').val() === '-1'){
-        $('#lid_fornecedor').val('PRODEPA');
-        $('#id_fornecedor').val(-1);
-    }
     $("#formCadastro input").removeAttr('readonly', 'readonly');
     $("#formCadastro select").removeAttr('readonly', 'readonly');
     $("#formCadastro textarea").removeAttr('readonly', 'readonly');
     $("#salvarCadastro").val('criar');
     $("#salvarCadastro").show();
     $("#modalCadastro").modal();
-}
-
-function editar(id)
-{
-    'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: {metodo: 'visualizarTorre', id: id},
-        complete: function () {
-            $("#formCadastro input").removeAttr('readonly', 'readonly');
-            $("#formCadastro select").removeAttr('readonly', 'readonly');
-            $("#formCadastro textarea").removeAttr('readonly', 'readonly');
-            $("#salvarCadastro").val('editar');
-            $("#salvarCadastro").show();
-            $("#modalCadastro").modal();
-        },
-        error: function (data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function (data) {
-            $('#id').val(data.dados.id);
-            $('#id_tipo').val(data.dados.id_tipo).selected = "true";
-            $('#lid_contrato').val(data.dados.desc_contrato);
-            $('#id_contrato').val(data.dados.id_contrato);
-            $('#lid_fornecedor').val(data.dados.desc_fornecedor);
-            $('#id_fornecedor').val(data.dados.id_fornecedor);
-            $('#descricao').val(data.dados.descricao);
-            $('#altura').val(data.dados.altura);
-            $('#latitude').val(data.dados.latitude);
-            $('#longitude').val(data.dados.longitude);
-            $('#propriedade_prodepa').val(data.dados.propriedade_prodepa).selected = "true";
-        }
-    });
 }
 
 function salvar()
@@ -130,12 +79,12 @@ function salvar()
         },
         messages:{
             descricao:{
-                required:"É necessário informar uma Descrição"
+                required:"É necessário informar uma descrição"
             }
         },
         submitHandler: function(form) {
             var dados = $("#formCadastro").serialize();
-            var action = actionCorreta(window.location.href.toString(), "torre/" + acao);
+            var action = actionCorreta(window.location.href.toString(), "empresa_departamento/" + acao);
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
@@ -193,7 +142,7 @@ function ativar(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, ativar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "torre/ativar");
+        var action = actionCorreta(window.location.href.toString(), "empresa_departamento/ativar");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -250,7 +199,7 @@ function inativar(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, inativar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "torre/inativar");
+        var action = actionCorreta(window.location.href.toString(), "empresa_departamento/inativar");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -307,7 +256,7 @@ function excluir(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, excluir!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "torre/excluir");
+        var action = actionCorreta(window.location.href.toString(), "empresa_departamento/excluir");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -352,7 +301,7 @@ function excluir(id, descr)
     });
 }
 
-function visualizar(id)
+function visualizar(id, ocultar)
 {
     'use strict';
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
@@ -360,12 +309,21 @@ function visualizar(id)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarTorre', id: id},
+        data: {metodo: 'visualizarEmpresaDepartamento', id: id},
         complete: function () {
-            $("#formCadastro input").attr('readonly', 'readonly');
-            $("#formCadastro select").attr('readonly', 'readonly');
-            $("#formCadastro textarea").attr('readonly', 'readonly');
-            $("#salvarCadastro").hide();
+            if (ocultar) {
+                $("#formCadastro input").attr('readonly', 'readonly');
+                $("#formCadastro select").attr('readonly', 'readonly');
+                $("#formCadastro textarea").attr('readonly', 'readonly');
+                $("#salvarCadastro").hide();
+            } else {
+                $("#formCadastro input").removeAttr('readonly', 'readonly');
+                $("#formCadastro select").removeAttr('readonly', 'readonly');
+                $("#formCadastro textarea").removeAttr('readonly', 'readonly');
+                $("#salvarCadastro").val('editar');
+                $("#salvarCadastro").show();
+                $('.hide_buttons').show();
+            }
             $("#modalCadastro").modal();
         },
         error: function (data) {
@@ -379,16 +337,9 @@ function visualizar(id)
         },
         success: function (data) {
             $('#id').val(data.dados.id);
-            $('#id_tipo').val(data.dados.id_tipo).selected = "true";
-            $('#lid_contrato').val(data.dados.desc_contrato);
-            $('#id_contrato').val(data.dados.id_contrato);
-            $('#lid_fornecedor').val(data.dados.desc_fornecedor);
-            $('#id_fornecedor').val(data.dados.id_fornecedor);
+            $('#lid_departamento_pai').val(data.dados.ds_departamento_pai);
+            $('#id_departamento_pai').val(data.dados.id_departamento_pai);
             $('#descricao').val(data.dados.descricao);
-            $('#altura').val(data.dados.altura);
-            $('#latitude').val(data.dados.latitude);
-            $('#longitude').val(data.dados.longitude);
-            $('#propriedade_prodepa').val(data.dados.propriedade_prodepa).selected = "true";
         }
     });
 }

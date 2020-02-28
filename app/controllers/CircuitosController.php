@@ -2,29 +2,27 @@
 
 namespace Circuitos\Controllers;
 
-use Phalcon\Mvc\Model\Criteria;
-use Phalcon\Paginator\Adapter\Model as Paginator;
-use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
-use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-use Phalcon\Http\Response as Response;
-
-use Circuitos\Models\Circuitos;
+use Auth\Autentica;
 use Circuitos\Models\CidadeDigital;
-use Circuitos\Models\Conectividade;
-use Circuitos\Models\Movimentos;
+use Circuitos\Models\Circuitos;
 use Circuitos\Models\Cliente;
 use Circuitos\Models\ClienteUnidade;
-use Circuitos\Models\Fabricante;
-use Circuitos\Models\Modelo;
+use Circuitos\Models\Conectividade;
+use Circuitos\Models\EmpresaDepartamento;
 use Circuitos\Models\Equipamento;
+use Circuitos\Models\Fabricante;
 use Circuitos\Models\Lov;
-use Circuitos\Models\PessoaEndereco;
+use Circuitos\Models\Modelo;
+use Circuitos\Models\Movimentos;
 use Circuitos\Models\PessoaContato;
-
-use Auth\Autentica;
-use Util\Util;
-use Util\TokenManager;
+use Circuitos\Models\PessoaEndereco;
+use Phalcon\Http\Response as Response;
+use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
+use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
+use Phalcon\Paginator\Adapter\Model as Paginator;
 use Util\Relatorio;
+use Util\TokenManager;
+use Util\Util;
 
 class CircuitosController extends ControllerBase
 {
@@ -61,27 +59,36 @@ class CircuitosController extends ControllerBase
 
         $circuitos = Circuitos::pesquisarCircuitos($dados["pesquisa"]);
 
-        $statuscircuito = Lov::find(array(
-            "tipo=6",
+        $departamentos = EmpresaDepartamento::find(array(
+            "excluido = 0 AND ativo = 1",
             "order" => "descricao"
         ));
-        $usacontrato = Lov::find("tipo=2");
+        $statuscircuito = Lov::find(array(
+            "tipo=6 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
+        ));
+        $usacontrato = Lov::find(array(
+            "tipo = 2 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
+        ));
         $funcao = Lov::find(array(
-            "tipo = 3",
+            "tipo = 3 AND excluido = 0 AND ativo = 1",
             "order" => "descricao"
         ));
         $tipoacesso = Lov::find(array(
-            "tipo = 7",
+            "tipo = 7 AND excluido = 0 AND ativo = 1",
             "order" => "descricao"
         ));
         $banda = Lov::find(array(
-            "tipo = 17"
+            "tipo = 17 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
         ));
         $tipolink = Lov::find(array(
-            "tipo = 19"
+            "tipo = 19 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
         ));
         $tipomovimento = Lov::find(array(
-            "tipo = 16 AND valor >= 4",
+            "tipo = 16 AND valor >= 4 AND excluido = 0 AND ativo = 1",
             "order" => "descricao"
         ));
         $cidadedigital = CidadeDigital::find(array(
@@ -112,12 +119,14 @@ class CircuitosController extends ControllerBase
         $this->view->tipolink = $tipolink;
         $this->view->unidades = $unidades;
         $this->view->cidadedigital = $cidadedigital;
+        $this->view->departamentos = $departamentos;
     }
 
     public function formCircuitosAction()
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
+        $util = new Util();
         $response = new Response();
         $dados = filter_input_array(INPUT_GET);
         $circuitos = Circuitos::findFirst("id={$dados["id_circuitos"]}");
@@ -143,6 +152,7 @@ class CircuitosController extends ControllerBase
             "id_tipolink" => $circuitos->getIdTipolink(),
             "id_cidadedigital" => $circuitos->getIdCidadedigital(),
             "id_conectividade" => $circuitos->getIdConectividade(),
+            "id_empresa_departamento" => $circuitos->getIdEmpresaDepartamento(),
             "lid_cidadedigital" => $circuitos->getCidadeDigitalNome(),
             "lid_conectividade" => $circuitos->getConectividadeNome(),
             "designacao" => $circuitos->getDesignacao(),
@@ -157,6 +167,7 @@ class CircuitosController extends ControllerBase
             "id_banda" => $circuitos->getIdBanda(),
             "observacao" => $circuitos->getObservacao(),
             "data_ativacao" => $circuitos->getDataAtivacao(),
+            "data_desinstalacao" => $util->converterDataParaBr($circuitos->getDataDesinstalacao()),
         );
         $banda = Lov::find(array(
             "tipo = 17"
@@ -218,6 +229,7 @@ class CircuitosController extends ControllerBase
             "id_tipolink" => $circuitos->getIdTipolink(),
             "id_cidadedigital" => $circuitos->getIdCidadedigital(),
             "id_conectividade" => $circuitos->getIdConectividade(),
+            "id_empresa_departamento" => $circuitos->getIdEmpresaDepartamento(),
             "lid_cidadedigital" => $circuitos->getCidadeDigitalNome(),
             "lid_conectividade" => $circuitos->getConectividadeNome(),
             "designacao" => $circuitos->getDesignacao(),
@@ -233,6 +245,7 @@ class CircuitosController extends ControllerBase
             "observacao" => $circuitos->getObservacao(),
             "data_ativacao" => $util->converterDataHoraParaBr($circuitos->getDataAtivacao()),
             "data_atualizacao" => $util->converterDataHoraParaBr($circuitos->getDataAtualizacao()),
+            "data_desinstalacao" => $util->converterDataParaBr($circuitos->getDataDesinstalacao()),
             "numserie" => $circuitos->getEquipamentoSerie(),
             "numpatrimonio" => $circuitos->getEquipamentoPatrimonio()
         );
@@ -302,6 +315,7 @@ class CircuitosController extends ControllerBase
         //Desabilita o layout para o ajax
         $this->view->disable();
         //Instanciando classes
+        $util = new Util();
         $auth = new Autentica();
         $response = new Response();
         $manager = new TxManager();
@@ -334,6 +348,7 @@ class CircuitosController extends ControllerBase
                 $circuitos->setIdTipolink($params["id_tipolink"]);
                 $circuitos->setIdCidadedigital($params["id_cidadedigital"]);
                 $circuitos->setIdConectividade($params["id_conectividade"]);
+                $circuitos->setIdEmpresaDepartamento((!empty($params["id_empresa_departamento"])) ? $params["id_empresa_departamento"] : null);
                 $circuitos->setDesignacao($vl_designacao);
                 $circuitos->setDesignacaoAnterior(mb_strtoupper($params["designacao_anterior"], $this->encode));
                 $circuitos->setUf(mb_strtoupper($cidade_estado[0]["uf"], $this->encode));
@@ -346,6 +361,7 @@ class CircuitosController extends ControllerBase
                 $circuitos->setIdBanda($params["banda"]);
                 $circuitos->setObservacao(mb_strtoupper($params["observacao"], $this->encode));
                 $circuitos->setDataAtivacao(date("Y-m-d H:i:s"));
+                $circuitos->setDataDesinstalacao($util->converterDataUSA($params["data_desinstalacao"]));
                 if ($circuitos->save() == false) {
                     $messages = $circuitos->getMessages();
                     $errors = "";
@@ -414,12 +430,14 @@ class CircuitosController extends ControllerBase
                 $circuitos->setIdFuncao($params["id_funcao"]);
                 $circuitos->setIdTipoacesso($params["id_tipoacesso"]);
                 $circuitos->setIdTipolink($params["id_tipolink"]);
+                $circuitos->setIdEmpresaDepartamento((!empty($params["id_empresa_departamento"])) ? $params["id_empresa_departamento"] : null);
                 $circuitos->setDesignacaoAnterior(mb_strtoupper($params["designacao_anterior"], $this->encode));
                 $circuitos->setSsid($params["ssid"]);
                 $circuitos->setChamado($params["chamado"]);
                 $circuitos->setTag($params["tag"]);
                 $circuitos->setObservacao(mb_strtoupper($params["observacao"], $this->encode));
                 $circuitos->setDataAtualizacao(date("Y-m-d H:i:s"));
+                $circuitos->setDataDesinstalacao($util->converterDataUSA($params["data_desinstalacao"]));
                 if ($circuitos->save() == false) {
                     $messages = $circuitos->getMessages();
                     $errors = "";

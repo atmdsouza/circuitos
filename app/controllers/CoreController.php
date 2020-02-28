@@ -2,6 +2,7 @@
 
 namespace Circuitos\Controllers;
 
+use Circuitos\Models\CidadeDigital;
 use Circuitos\Models\Conectividade;
 use Circuitos\Models\ContratoExercicio;
 use Circuitos\Models\ContratoGarantia;
@@ -15,6 +16,7 @@ use Circuitos\Models\Operations\CidadeDigitalOP;
 use Circuitos\Models\Operations\ConectividadeOP;
 use Circuitos\Models\Operations\ContratoOP;
 use Circuitos\Models\Operations\CoreOP;
+use Circuitos\Models\Operations\EmpresaDepartamentoOP;
 use Circuitos\Models\Operations\EstacaoTeleconOP;
 use Circuitos\Models\Operations\PropostaComercialOP;
 use Circuitos\Models\Operations\PropostaComercialServicoGrupoOP;
@@ -422,26 +424,19 @@ class CoreController extends ControllerBase
     {
         $logger = new FileAdapter(BASE_PATH . "/logs/systemlog.log");
         $empresa = Empresa::findFirst("id={$id_empresa}");
-        $host=$empresa->getHostEmpresa();
-        $user=$empresa->getMailUserEmpresa();
-        $pass=$empresa->getMailPswEmpresa();
-        $smtlssl=$empresa->getMailSmtpEmpresa();
-        $port=$empresa->getMailPortEmpresa();
-        $from=$empresa->getEMailEmpresa();
-        $from_name=$empresa->getNomeEmpresa();
 
         $mail = new PHPMailer(true);
         try {
             //Server settings
             $mail->isSMTP();
-            $mail->Host = $host;
+            $mail->Host = $empresa->getHostEmpresa();
             $mail->SMTPAuth = true;
-            $mail->Username = $user;
-            $mail->Password = $pass;
-            $mail->SMTPSecure = $smtlssl;
-            $mail->Port = $port;
+            $mail->Username = $empresa->getMailUserEmpresa();
+            $mail->Password = $empresa->getMailPswEmpresa();
+            $mail->SMTPSecure = $empresa->getMailSmtpEmpresa();
+            $mail->Port = $empresa->getMailPortEmpresa();
             //Recipients
-            $mail->setFrom($from,  $from_name);
+            $mail->setFrom($empresa->getEMailEmpresa(),  $empresa->getNomeEmpresa());
             $mail->addAddress($address, $address_name);
             //Attachments
             if($attach){
@@ -521,6 +516,10 @@ class CoreController extends ControllerBase
             case 'clientesAtivos':
                 $objeto = new CoreOP();
                 return $objeto->clientesAtivos();
+                break;
+            case 'departamentosAtivos':
+                $objeto = new CoreOP();
+                return $objeto->departamentosAtivos();
                 break;
             case 'listaClientesFornecedoresParceirosAtivos':
                 $objeto = new CoreOP();
@@ -708,6 +707,10 @@ class CoreController extends ControllerBase
                 $objeto = new PropostaComercialOP();
                 return $objeto->visualizarPropostaItem($dados['id']);
                 break;
+            case 'visualizarEmpresaDepartamento':
+                $objeto = new EmpresaDepartamentoOP();
+                return $objeto->visualizarEmpresaDepartamento($dados['id']);
+                break;
         }
     }
 
@@ -886,17 +889,17 @@ class CoreController extends ControllerBase
                 $objeto = new PropostaComercialServicoGrupoOP();
                 return $objeto->selectSubGrupo($dados['id']);
                 break;
-        }
-        //Desabilita o layout para o ajax
-        $this->view->disable();
-        $dados = filter_input_array(INPUT_GET);
-        switch ($dados['metodo']) {
             case 'selectIdServico':
                 $objeto = new PropostaComercialServicoOP();
                 return $objeto->selectIdServico($dados['id']);
                 break;
+            case 'getNomeCidadeCidadeDigital':
+                $obj = new CidadeDigital();
+                $obj->setId($dados['id']);
+                $objeto = new CidadeDigitalOP();
+                return $objeto->getNomeCidadeCidadeDigital($obj);
+                break;
         }
-
     }
 
 }

@@ -3,7 +3,7 @@
 namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
-use Phalcon\Mvc\Model\Resultset;
+use Util\Infra;
 
 class Torre extends \Phalcon\Mvc\Model
 {
@@ -67,6 +67,18 @@ class Torre extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $data_update;
+
+    /**
+     *
+     * @var string
+     */
+    protected $latitude;
+
+    /**
+     *
+     * @var string
+     */
+    protected $longitude;
 
     /**
      * Method to set the value of field id
@@ -322,11 +334,48 @@ class Torre extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return string
+     */
+    public function getLatitude()
+    {
+        return $this->latitude;
+    }
+
+    /**
+     * @param string $latitude
+     */
+    public function setLatitude( $latitude)
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLongitude()
+    {
+        return $this->longitude;
+    }
+
+    /**
+     * @param string $longitude
+     */
+    public function setLongitude($longitude)
+    {
+        $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
     {
-        $this->setSchema("bd_circuitosnavega");
+        $schema = new Infra();
+        $this->setSchema($schema->getSchemaBanco());
         $this->setSource("torre");
         $this->hasMany('id', 'Circuitos\Models\EstacaoTelecon', 'id_torre', ['alias' => 'EstacaoTelecon']);
         $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
