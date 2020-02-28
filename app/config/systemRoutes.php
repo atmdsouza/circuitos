@@ -6,6 +6,11 @@ $router->add("/", [
     "action" => "index"
 ]);
 
+$router->add("/empresa_departamento", [
+    "controller" => "empresa_departamento",
+    "action" => "index"
+]);
+
 $router->add("/cidade_digital", [
     "controller" => "cidade_digital",
     "action" => "index"

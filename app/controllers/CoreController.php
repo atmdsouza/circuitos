@@ -13,6 +13,7 @@ use Circuitos\Models\Operations\CidadeDigitalOP;
 use Circuitos\Models\Operations\ConectividadeOP;
 use Circuitos\Models\Operations\ContratoOP;
 use Circuitos\Models\Operations\CoreOP;
+use Circuitos\Models\Operations\EmpresaDepartamentoOP;
 use Circuitos\Models\Operations\EstacaoTeleconOP;
 use Circuitos\Models\Operations\PropostaComercialOP;
 use Circuitos\Models\Operations\PropostaComercialServicoGrupoOP;
@@ -501,6 +502,10 @@ class CoreController extends ControllerBase
                 $objeto = new CoreOP();
                 return $objeto->clientesAtivos();
                 break;
+            case 'departamentosAtivos':
+                $objeto = new CoreOP();
+                return $objeto->departamentosAtivos();
+                break;
             case 'modelosAtivos':
                 $objeto = new CoreOP();
                 return $objeto->modelosAtivos();
@@ -654,6 +659,10 @@ class CoreController extends ControllerBase
             case 'visualizarPropostaItem':
                 $objeto = new PropostaComercialOP();
                 return $objeto->visualizarPropostaItem($dados['id']);
+                break;
+            case 'visualizarEmpresaDepartamento':
+                $objeto = new EmpresaDepartamentoOP();
+                return $objeto->visualizarEmpresaDepartamento($dados['id']);
                 break;
         }
     }

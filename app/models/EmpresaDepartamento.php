@@ -2,6 +2,7 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
 use Util\Infra;
 
 class EmpresaDepartamento extends \Phalcon\Mvc\Model
@@ -211,6 +212,26 @@ class EmpresaDepartamento extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field nome empresa
+     *
+     * @return string
+     */
+    public function getNomeEmpresa()
+    {
+        return (isset($this->Empresa->Pessoa->nome)) ? $this->Empresa->Pessoa->nome : null;
+    }
+
+    /**
+     * Returns the value of field departamento pai
+     *
+     * @return string
+     */
+    public function getNomeDepartamentoPai()
+    {
+        return (isset($this->EmpresaDepartamentoPai->descricao)) ? $this->EmpresaDepartamentoPai->descricao : null;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -221,7 +242,7 @@ class EmpresaDepartamento extends \Phalcon\Mvc\Model
         $this->hasMany('id', 'Circuitos\Models\Circuitos', 'id_empresa_departamento', ['alias' => 'Circuitos']);
         $this->hasMany('id', 'Circuitos\Models\EmpresaDepartamento', 'id_departamento_pai', ['alias' => 'EmpresaDepartamento']);
         $this->hasMany('id', 'Circuitos\Models\PropostaComercial', 'id_localizacao', ['alias' => 'PropostaComercial']);
-        $this->belongsTo('id_departamento_pai', 'Circuitos\Models\EmpresaDepartamento', 'id', ['alias' => 'EmpresaDepartamento']);
+        $this->belongsTo('id_departamento_pai', 'Circuitos\Models\EmpresaDepartamento', 'id', ['alias' => 'EmpresaDepartamentoPai']);
         $this->belongsTo('id_empresa', 'Circuitos\Models\Empresa', 'id', ['alias' => 'Empresa']);
     }
 
@@ -255,6 +276,51 @@ class EmpresaDepartamento extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de EmpresaDepartamento, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return EmpresaDepartamento|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarEmpresaDepartamento($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("EmpresaDepartamento" => "Circuitos\Models\EmpresaDepartamento"));
+        $query->columns("EmpresaDepartamento.*");
+        $query->leftJoin("Circuitos\Models\Empresa", "Empresa.id = EmpresaDepartamento.id_empresa", "Empresa");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa.id = Empresa.id", "Pessoa");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Empresa.id", "PessoaJuridica");
+        $query->where("EmpresaDepartamento.excluido = 0 AND (CONVERT(EmpresaDepartamento.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(EmpresaDepartamento.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica.razaosocial USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("EmpresaDepartamento.id");
+        $query->orderBy("EmpresaDepartamento.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
+    }
+
+    /**
+     * Consulta completa de departamentos, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return EmpresaDepartamento|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarDepartamentosAtivos($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("EmpresaDepartamento" => "Circuitos\Models\EmpresaDepartamento"));
+        $query->columns("EmpresaDepartamento.*");
+        $query->leftJoin("Circuitos\Models\Empresa", "Empresa.id = EmpresaDepartamento.id_empresa", "Empresa");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa.id = Empresa.id", "Pessoa");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Empresa.id", "PessoaJuridica");
+        $query->where("EmpresaDepartamento.excluido=0 AND EmpresaDepartamento.ativo=1 AND (CONVERT(EmpresaDepartamento.descricao USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("EmpresaDepartamento.id");
+        $query->orderBy("EmpresaDepartamento.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
 }
