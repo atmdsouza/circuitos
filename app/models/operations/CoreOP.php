@@ -41,26 +41,29 @@ class CoreOP
     public function servicoUpload($request, $modulo, $action, $id, $rules)
     {
         $uploader = new Uploader();
-        $diretorio = BASE_PATH . "/data/" . $modulo . "/" . $action . "/" . $id . "/";
+        $diretorio = BASE_PATH . "/public/anexos/" . $modulo . "/" . $action . "/" . $id . "/";
         if(!file_exists($diretorio) && !is_dir($diretorio)){
-            mkdir($diretorio, 0755, true);
+            mkdir($diretorio, 0777, true);
         }
+        chmod($diretorio, 0777);
         if (empty($rules))
         {
             $rules = [
                 "directory"   =>  $diretorio,
-                "mimes"     =>  [//Permitidos
-                    'text/plain',
-                    'image/gif', 'image/png', 'image/jpeg', 'image/bmp', 'image/webp', 'image/svg+xml', 'image/x-icon',
-                    'audio/midi', 'audio/mpeg', 'audio/webm', 'audio/ogg', 'audio/wav',
-                    'video/webm', 'video/ogg', 'video/avi','video/mpeg','video/mp4',
-                    'application/x-rar-compressed', 'application/octet-stream', 'application/pkcs12', 'application/vnd.mspowerpoint', 'application/xhtml+xml',
-                    'application/xml',  'application/pdf'
-                ],
-                "extensions"     =>  [//Permitidos
-                    "gif", "jpeg", "jpg", "png", "pdf", 'txt', 'bpm', 'webp', 'svg', 'icon', 'mpeg', 'webm', 'ogg', 'wav', 'mp3', 'midi',
-                    'avi', 'mp4', 'rar', 'pptx', 'docx', 'xlsx', 'ppt', 'doc', 'xls', 'xml'
-                ],
+//                "minsize"   =>  1000,   // bytes
+//                "maxsize"   =>  1000000,// bytes
+//                "mimes"     =>  [//Permitidos
+//                    "text/plain",
+//                    "image/gif", "image/png", "image/jpeg", "image/bmp", "image/webp", "image/svg+xml", "image/x-icon",
+//                    "audio/midi", "audio/mpeg", "audio/webm", "audio/ogg", "audio/wav",
+//                    "video/webm", "video/ogg", "video/avi","video/mpeg","video/mp4",
+//                    "application/x-rar-compressed", "application/octet-stream", "application/pkcs12", "application/vnd.mspowerpoint", "application/xhtml+xml",
+//                    "application/xml",  "application/pdf"
+//                ],
+//                "extensions"     =>  [//Permitidos
+//                    "gif", "jpeg", "jpg", "png", "pdf", "txt", "bpm", "webp", "svg", "icon", "mpeg", "webm", "ogg", "wav", "mp3", "midi",
+//                    "avi", "mp4", "rar", "pptx", "docx", "xlsx", "ppt", "doc", "xls", "xml"
+//                ],
                 "sanitize" => true,
                 "hash"     => "md5"
             ];

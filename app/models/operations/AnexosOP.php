@@ -53,4 +53,25 @@ class AnexosOP extends Anexos
             return false;
         }
     }
+
+    public function excluirPropostaComercialAnexo (PropostaComercialAnexo $objPrincipal)
+    {
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $id_proposta = $objPrincipal->getIdPropostaComercial();
+        try {
+            $objPrincipal->setTransaction($transaction);
+            $objPrincipal->delete();
+            $objAnexo = Anexos::findFirst('id='.$objPrincipal->getIdAnexo());
+            unlink($objAnexo->getUrl());
+            if ($objAnexo->delete() == false) {
+                $transaction->rollback("Não foi possível deletar o vinculo da proposta com o anexo!");
+            }
+            $transaction->commit();
+            return $id_proposta;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
+    }
 }

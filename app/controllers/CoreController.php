@@ -12,6 +12,7 @@ use Circuitos\Models\EndCidade;
 use Circuitos\Models\EndEndereco;
 use Circuitos\Models\EndEstado;
 use Circuitos\Models\EstacaoTelecon;
+use Circuitos\Models\Operations\AnexosOP;
 use Circuitos\Models\Operations\CidadeDigitalOP;
 use Circuitos\Models\Operations\ConectividadeOP;
 use Circuitos\Models\Operations\ContratoOP;
@@ -34,6 +35,7 @@ use Circuitos\Models\PessoaEndereco;
 use Circuitos\Models\PessoaFisica;
 use Circuitos\Models\PessoaJuridica;
 use Circuitos\Models\PessoaTelefone;
+use Circuitos\Models\PropostaComercialAnexo;
 use Circuitos\Models\PropostaComercialItem;
 use Circuitos\Models\SetEquipamentoComponentes;
 use Circuitos\Models\SetSegurancaComponentes;
@@ -824,6 +826,11 @@ class CoreController extends ControllerBase
                 $objComponente = new ContratoGarantia();
                 $objComponente->setId($dados['id']);
                 return $objeto->deletarContratoGarantia($objComponente);
+                break;
+            case 'excluirAnexo':
+                $objeto = new AnexosOP();
+                $objPrincipal = PropostaComercialAnexo::findFirst('id_anexo='.$dados['id']);
+                return $objeto->excluirPropostaComercialAnexo($objPrincipal);
                 break;
         }
     }

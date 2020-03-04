@@ -444,6 +444,7 @@ class PropostaComercialOP extends PropostaComercial
             $objetosComponentes = PropostaComercialAnexo::find('id_proposta_comercial = ' . $id_proposta_comercial);
             $arrTransporte = [];
             foreach ($objetosComponentes as $objetoComponente){
+                chmod($objetoComponente->getUrlAnexo(), 0777);
                 $url_base = explode("/", $objetoComponente->getUrlAnexo());
                 $url = $url_base[count($url_base)-5].'/'.$url_base[count($url_base)-4].'/'.$url_base[count($url_base)-3].'/'.$url_base[count($url_base)-2].'/'.$url_base[count($url_base)-1];
                 $objTransporte = new \stdClass();

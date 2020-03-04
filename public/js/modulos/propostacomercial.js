@@ -1000,13 +1000,16 @@ function montarTabelaAnexos(id_proposta, visualizar)
                     linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
                     linhas += '<td>'+ value.descricao +'</td>';
                     linhas += '<td>'+ value.data_criacao +'</td>';
-                    linhas += '<td><a href="'+ value.url +'" class="botoes_acao"><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a>' +
+                    linhas += '<td><a href="'+ value.url +'" class="botoes_acao nova-aba" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a>' +
                         '<a href="javascript:void(0)" onclick="excluirAnexo(' + value.id_anexo + ');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
                     linhas += '</tr>';
                 });
                 $("#tabela_lista_anexos").append(linhas);
                 $('#tabela_lista_anexos').removeAttr('style', 'display: none;');
                 $('#tabela_lista_anexos').attr('style', 'display: table;');
+            } else {
+                $('#tabela_lista_anexos').removeAttr('style', 'display: table;');
+                $('#tabela_lista_anexos').attr('style', 'display: none;');
             }
         }
     });
@@ -1100,5 +1103,42 @@ function limparModalAnexos()
 function excluirAnexo(id_anexo)
 {
     'use strict';
+    swal({
+        title: "Tem certeza que deseja excluir o anexo?",
+        text: "O sistema irá excluir o anexo selecionado com essa ação.",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, excluir!"
+    }).then((result) => {
+        var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: action,
+            data: {metodo: 'excluirAnexo', id: id_anexo},
+            error: function (data) {
+                if (data.status && data.status === 401) {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            },
+            success: function (data) {
+                console.log(data);
+                $('.tr_remove_anexo').remove();
+                montarTabelaAnexos(data, false);
+                swal({
+                    title: "Exclusão de Anexo",
+                    text: 'Anexo excluído com sucesso!',
+                    type: "success"
+                });
+            }
+        });
+        return true;
+    });
 
 }
