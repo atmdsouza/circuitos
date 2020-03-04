@@ -25,19 +25,8 @@ $loader->registerNamespaces(
         'Util'                              => $config->application->libraryDir . 'Util/Util.php',
         'TemplatesEmails'                   => $config->application->libraryDir . 'Util/TemplatesEmails.php',
         'TokenManager'                      => $config->application->libraryDir . 'Util/TokenManager.php',
-        'Infra'                             => $config->application->libraryDir . 'Util/Infra.php'
+        'Infra'                             => $config->application->libraryDir . 'Util/Infra.php',
+        'Uploader'                          => $config->application->libraryDir . 'Uploader/Uploader.php'
     ]);
-
-// $loader->registerClasses(
-//     [
-//         'Auth'                  => $config->application->libraryDir . 'Auth/Auth.php',
-//         'Acl'                   => $config->application->libraryDir . 'Acl/Acl.php',
-//         'Util'                  => $config->application->libraryDir . 'Util/Util.php',
-//         'TemplatesEmails'       => $config->application->libraryDir . 'Util/TemplatesEmails.php',
-//         'TokenManager'          => $config->application->libraryDir . 'Util/TokenManager.php'
-//     ]
-// );
     
 $loader->register();
-// var_dump(is_file($loader));
-// exit;

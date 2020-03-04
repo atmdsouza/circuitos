@@ -156,7 +156,12 @@ class UsuarioController extends ControllerBase
                     "senha" => $senha
                 );
                 $html = $template->novoUsuario($infos);
-                $core->enviarEmailAction(1,$params["email"],$params["nome_pessoa"],null,"E-mail de Segurança",$html);
+                $empresas = Empresa::find();
+                foreach ($empresas as $key => $empresa)
+                {
+                    $id_empresa = $empresa->getId();
+                }
+                $core->enviarEmailAction($id_empresa,$params["email"],$params["nome_pessoa"],null,"E-mail de Segurança",$html);
                 $response->setContent(json_encode(array(
                     "operacao" => True
                 )));
@@ -301,7 +306,12 @@ class UsuarioController extends ControllerBase
                 //Commita a transação
                 $transaction->commit();
                 $html = $template->recuperaSenha($senha);
-                $core->enviarEmailAction(1,$pessoaemail->getEmail(),$pessoa->getNome(),null,"E-mail de Segurança",$html);
+                $empresas = Empresa::find();
+                foreach ($empresas as $key => $empresa)
+                {
+                    $id_empresa = $empresa->getId();
+                }
+                $core->enviarEmailAction($id_empresa,$pessoaemail->getEmail(),$pessoa->getNome(),null,"E-mail de Segurança",$html);
                 $response->setContent(json_encode(array(
                     "operacao" => True
                 )));
@@ -548,8 +558,12 @@ class UsuarioController extends ControllerBase
             //Commita a transação
             $transaction->commit();
             $html = $template->recuperaSenha($senha);
-            $empresa = Empresa::find();
-            $email = $core->enviarEmailAction((int)$empresa[0]->getId(),$pessoaemail->getEmail(),$pessoa->getNome(),null,"E-mail de Segurança",$html);
+            $empresas = Empresa::find();
+            foreach ($empresas as $key => $empresa)
+            {
+                $id_empresa = $empresa->getId();
+            }
+            $email = $core->enviarEmailAction($id_empresa,$pessoaemail->getEmail(),$pessoa->getNome(),null,"E-mail de Segurança",$html);
             if ($email) {
                 return True;
             } else {

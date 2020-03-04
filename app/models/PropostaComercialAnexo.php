@@ -4,7 +4,7 @@ namespace Circuitos\Models;
 
 use Util\Infra;
 
-class ContratoNaoConformidadeAnexo extends \Phalcon\Mvc\Model
+class PropostaComercialAnexo extends \Phalcon\Mvc\Model
 {
 
     /**
@@ -17,7 +17,7 @@ class ContratoNaoConformidadeAnexo extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $id_contrato_nao_conformidade;
+    protected $id_proposta_comercial;
 
     /**
      *
@@ -39,14 +39,14 @@ class ContratoNaoConformidadeAnexo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field id_contrato_nao_conformidade
+     * Method to set the value of field id_proposta_comercial
      *
-     * @param integer $id_contrato_nao_conformidade
+     * @param integer $id_proposta_comercial
      * @return $this
      */
-    public function setIdContratoNaoConformidade($id_contrato_nao_conformidade)
+    public function setIdPropostaComercial($id_proposta_comercial)
     {
-        $this->id_contrato_nao_conformidade = $id_contrato_nao_conformidade;
+        $this->id_proposta_comercial = $id_proposta_comercial;
 
         return $this;
     }
@@ -75,13 +75,13 @@ class ContratoNaoConformidadeAnexo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id_contrato_nao_conformidade
+     * Returns the value of field id_proposta_comercial
      *
      * @return integer
      */
-    public function getIdContratoNaoConformidade()
+    public function getIdPropostaComercial()
     {
-        return $this->id_contrato_nao_conformidade;
+        return $this->id_proposta_comercial;
     }
 
     /**
@@ -95,15 +95,65 @@ class ContratoNaoConformidadeAnexo extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field url
+     *
+     * @return string
+     */
+    public function getUrlAnexo()
+    {
+        return $this->Anexos->url;
+    }
+
+    /**
+     * Returns the value of field descricao
+     *
+     * @return string
+     */
+    public function getDescricaoAnexo()
+    {
+        return $this->Anexos->descricao;
+    }
+
+    /**
+     * Returns the value of field data criação
+     *
+     * @return string
+     */
+    public function getDataCriacaoAnexo()
+    {
+        return $this->Anexos->data_criacao;
+    }
+
+    /**
+     * Returns the value of field descricao tipo anexo
+     *
+     * @return string
+     */
+    public function getDescricaoTipoAnexo()
+    {
+        return $this->Anexos->Lov->descricao;
+    }
+
+    /**
+     * Returns the value of field id_tipo_anexo
+     *
+     * @return integer
+     */
+    public function getIdTipoAnexo()
+    {
+        return $this->Anexos->id_tipo_anexo;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
     {
         $schema = new Infra();
         $this->setSchema($schema->getSchemaBanco());
-        $this->setSource("contrato_nao_conformidade_anexo");
+        $this->setSource("proposta_comercial_anexo");
         $this->belongsTo('id_anexo', 'Circuitos\Models\Anexos', 'id', ['alias' => 'Anexos']);
-        $this->belongsTo('id_contrato_nao_conformidade', 'Circuitos\Models\ContratoNaoConformidade', 'id', ['alias' => 'ContratoNaoConformidade']);
+        $this->belongsTo('id_proposta_comercial', 'Circuitos\Models\PropostaComercial', 'id', ['alias' => 'PropostaComercial']);
     }
 
     /**
@@ -113,14 +163,14 @@ class ContratoNaoConformidadeAnexo extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'contrato_nao_conformidade_anexo';
+        return 'proposta_comercial_anexo';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return ContratoNaoConformidadeAnexo[]|ContratoNaoConformidadeAnexo|\Phalcon\Mvc\Model\ResultSetInterface
+     * @return PropostaComercialAnexo[]|PropostaComercialAnexo|\Phalcon\Mvc\Model\ResultSetInterface
      */
     public static function find($parameters = null)
     {
@@ -131,7 +181,7 @@ class ContratoNaoConformidadeAnexo extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return ContratoNaoConformidadeAnexo|\Phalcon\Mvc\Model\ResultInterface
+     * @return PropostaComercialAnexo|\Phalcon\Mvc\Model\ResultInterface
      */
     public static function findFirst($parameters = null)
     {

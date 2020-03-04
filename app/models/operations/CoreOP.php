@@ -4,8 +4,8 @@ namespace Circuitos\Models\Operations;
 
 use Circuitos\Models\CidadeDigital;
 use Circuitos\Models\Cliente;
-use Circuitos\Models\EmpresaDepartamento;
 use Circuitos\Models\Contrato;
+use Circuitos\Models\EmpresaDepartamento;
 use Circuitos\Models\EndCidade;
 use Circuitos\Models\EndEndereco;
 use Circuitos\Models\Equipamento;
@@ -23,7 +23,9 @@ use Circuitos\Models\Terreno;
 use Circuitos\Models\Torre;
 use Circuitos\Models\UnidadeConsumidora;
 use Circuitos\Models\Usuario;
+use Phalcon\Exception;
 use Phalcon\Http\Response as Response;
+use Uploader\Uploader;
 
 /**
  * Class CoreOP
@@ -36,6 +38,50 @@ use Phalcon\Http\Response as Response;
  */
 class CoreOP
 {
+    public function servicoUpload($request, $modulo, $action, $id, $rules)
+    {
+        $uploader = new Uploader();
+        $diretorio = BASE_PATH . "/public/anexos/" . $modulo . "/" . $action . "/" . $id . "/";
+        if(!file_exists($diretorio) && !is_dir($diretorio)){
+            mkdir($diretorio, 0777, true);
+        }
+        chmod($diretorio, 0777);
+        if (empty($rules))
+        {
+            $rules = [
+                "directory"   =>  $diretorio,
+//                "minsize"   =>  1000,   // bytes
+//                "maxsize"   =>  1000000,// bytes
+//                "mimes"     =>  [//Permitidos
+//                    "text/plain",
+//                    "image/gif", "image/png", "image/jpeg", "image/bmp", "image/webp", "image/svg+xml", "image/x-icon",
+//                    "audio/midi", "audio/mpeg", "audio/webm", "audio/ogg", "audio/wav",
+//                    "video/webm", "video/ogg", "video/avi","video/mpeg","video/mp4",
+//                    "application/x-rar-compressed", "application/octet-stream", "application/pkcs12", "application/vnd.mspowerpoint", "application/xhtml+xml",
+//                    "application/xml",  "application/pdf"
+//                ],
+//                "extensions"     =>  [//Permitidos
+//                    "gif", "jpeg", "jpg", "png", "pdf", "txt", "bpm", "webp", "svg", "icon", "mpeg", "webm", "ogg", "wav", "mp3", "midi",
+//                    "avi", "mp4", "rar", "pptx", "docx", "xlsx", "ppt", "doc", "xls", "xml"
+//                ],
+                "sanitize" => true,
+                "hash"     => "md5"
+            ];
+        }
+        //Processo de Upload
+        try {
+            if($request->hasFiles() !== false) {
+                $uploader->setRules($rules);
+                if($uploader->isValid() === true) {
+                    $uploader->move();
+                }
+            }
+            return $uploader->getInfo();
+        } catch (Exception $e) {
+            return '['.$e->getMessage().'] ['.$uploader->getErrors().']';
+        }
+    }
+
     public function completarEndereco()
     {
         $response = new Response();
@@ -396,6 +442,14 @@ class CoreOP
         }
         $response = new Response();
         $response->setContent(json_encode(array("operacao" => True, "dados" => $array_dados)));
+        return $response;
+    }
+
+    public function selectTiposAnexos()
+    {
+        $objeto = Lov::find("tipo=20 AND excluido=0 AND ativo=1");
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True,"dados" => $objeto)));
         return $response;
     }
 }

@@ -1,3 +1,8 @@
+/* CSS geral do sistema */
+table th {text-align: center;}
+
+.nova-aba {target-new: tab ! important}
+
 .error {color:red}
 
 .modal-xl {max-width: 80% !important;}
@@ -7,6 +12,8 @@
 .modal-65 {max-width: 65% !important;}
 
 .modal-75 {max-width: 75% !important;}
+
+.fonte-15 {font-size: 15px;}
 
 .td_acoes {width: 20%; text-align: center;}
 

@@ -1,18 +1,15 @@
 <?php
 
-use Phalcon\Mvc\View;
-use Phalcon\Mvc\Dispatcher;
-use Phalcon\Mvc\View\Engine\Php as PhpEngine;
-use Phalcon\Mvc\Url as UrlResolver;
-use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
-use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
-use Phalcon\Session\Adapter\Files as SessionAdapter;
-use Phalcon\Flash\Direct as Flash;
-use Phalcon\Security;
-
 use Auth\Auth;
-
-require APP_PATH . "/library/PhalconUpload/autoload.php";
+use Phalcon\Flash\Direct as Flash;
+use Phalcon\Mvc\Dispatcher;
+use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
+use Phalcon\Mvc\Url as UrlResolver;
+use Phalcon\Mvc\View;
+use Phalcon\Mvc\View\Engine\Php as PhpEngine;
+use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
+use Phalcon\Security;
+use Phalcon\Session\Adapter\Files as SessionAdapter;
 
 /**
  * Shared configuration service
@@ -174,8 +171,3 @@ $di->set(
 $di->set("Auth", function () {
     return new Auth();
 });
-
-/**
- * Phalcon File Uploader
-**/
-$di->set("uploader", "\Uploader\Uploader");

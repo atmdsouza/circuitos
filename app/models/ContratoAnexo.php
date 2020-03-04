@@ -23,43 +23,7 @@ class ContratoAnexo extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $id_tipo_anexo;
-
-    /**
-     *
-     * @var string
-     */
-    protected $data_criacao;
-
-    /**
-     *
-     * @var string
-     */
-    protected $descricao;
-
-    /**
-     *
-     * @var string
-     */
-    protected $url;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $ativo;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $excluido;
-
-    /**
-     *
-     * @var string
-     */
-    protected $data_update;
+    protected $id_anexo;
 
     /**
      * Method to set the value of field id
@@ -88,92 +52,14 @@ class ContratoAnexo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field id_tipo_anexo
+     * Method to set the value of field id_anexo
      *
-     * @param integer $id_tipo_anexo
+     * @param integer $id_anexo
      * @return $this
      */
-    public function setIdTipoAnexo($id_tipo_anexo)
+    public function setIdAnexo($id_anexo)
     {
-        $this->id_tipo_anexo = $id_tipo_anexo;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field data_criacao
-     *
-     * @param string $data_criacao
-     * @return $this
-     */
-    public function setDataCriacao($data_criacao)
-    {
-        $this->data_criacao = $data_criacao;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field descricao
-     *
-     * @param string $descricao
-     * @return $this
-     */
-    public function setDescricao($descricao)
-    {
-        $this->descricao = $descricao;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field url
-     *
-     * @param string $url
-     * @return $this
-     */
-    public function setUrl($url)
-    {
-        $this->url = $url;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field ativo
-     *
-     * @param integer $ativo
-     * @return $this
-     */
-    public function setAtivo($ativo)
-    {
-        $this->ativo = $ativo;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field excluido
-     *
-     * @param integer $excluido
-     * @return $this
-     */
-    public function setExcluido($excluido)
-    {
-        $this->excluido = $excluido;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field data_update
-     *
-     * @param string $data_update
-     * @return $this
-     */
-    public function setDataUpdate($data_update)
-    {
-        $this->data_update = $data_update;
+        $this->id_anexo = $id_anexo;
 
         return $this;
     }
@@ -199,33 +85,13 @@ class ContratoAnexo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id_tipo_anexo
+     * Returns the value of field id_anexo
      *
      * @return integer
      */
-    public function getIdTipoAnexo()
+    public function getIdAnexo()
     {
-        return $this->id_tipo_anexo;
-    }
-
-    /**
-     * Returns the value of field data_criacao
-     *
-     * @return string
-     */
-    public function getDataCriacao()
-    {
-        return $this->data_criacao;
-    }
-
-    /**
-     * Returns the value of field descricao
-     *
-     * @return string
-     */
-    public function getDescricao()
-    {
-        return $this->descricao;
+        return $this->id_anexo;
     }
 
     /**
@@ -233,39 +99,49 @@ class ContratoAnexo extends \Phalcon\Mvc\Model
      *
      * @return string
      */
-    public function getUrl()
+    public function getUrlAnexo()
     {
-        return $this->url;
+        return $this->Anexos->url;
     }
 
     /**
-     * Returns the value of field ativo
-     *
-     * @return integer
-     */
-    public function getAtivo()
-    {
-        return $this->ativo;
-    }
-
-    /**
-     * Returns the value of field excluido
-     *
-     * @return integer
-     */
-    public function getExcluido()
-    {
-        return $this->excluido;
-    }
-
-    /**
-     * Returns the value of field data_update
+     * Returns the value of field descricao
      *
      * @return string
      */
-    public function getDataUpdate()
+    public function getDescricaoAnexo()
     {
-        return $this->data_update;
+        return $this->Anexos->descricao;
+    }
+
+    /**
+     * Returns the value of field data criação
+     *
+     * @return string
+     */
+    public function getDataCriacaoAnexo()
+    {
+        return $this->Anexos->data_criacao;
+    }
+
+    /**
+     * Returns the value of field descricao tipo anexo
+     *
+     * @return string
+     */
+    public function getDescricaoTipoAnexo()
+    {
+        return $this->Anexos->Lov->descricao;
+    }
+
+    /**
+     * Returns the value of field id_tipo_anexo
+     *
+     * @return integer
+     */
+    public function getIdTipoAnexo()
+    {
+        return $this->Anexos->id_tipo_anexo;
     }
 
     /**
@@ -277,17 +153,7 @@ class ContratoAnexo extends \Phalcon\Mvc\Model
         $this->setSchema($schema->getSchemaBanco());
         $this->setSource("contrato_anexo");
         $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
-        $this->belongsTo('id_tipo_anexo', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
-    }
-
-    /**
-     * Returns table name mapped in the model.
-     *
-     * @return string
-     */
-    public function getSource()
-    {
-        return 'contrato_anexo';
+        $this->belongsTo('id_anexo', 'Circuitos\Models\Anexos', 'id', ['alias' => 'Anexos']);
     }
 
     /**
@@ -310,6 +176,16 @@ class ContratoAnexo extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Returns table name mapped in the model.
+     *
+     * @return string
+     */
+    public function getSource()
+    {
+        return 'contrato_anexo';
     }
 
 }
