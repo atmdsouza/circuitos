@@ -1463,10 +1463,61 @@ $(".bt_visual").on("click", function(){
                 linhas_cont += "</tr>";
                 $("#tb_contatos").append(linhas_cont);
             }
+            montarTabelaAnexosv(data.dados.id, false);
             $("#modalvisualizar").modal();
         }
     });
 });
+
+function montarTabelaAnexosv(id_circuitos, visualizar)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'visualizarCircuitosAnexos', id: id_circuitos },
+        complete: function() {
+            if (visualizar) {
+                $('.hide_buttons').hide();
+            }
+        },
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            var linhas =null;
+            if (data.dados != ''){
+                $('.tr_remove_anexo').remove();
+                $.each(data.dados, function(key, value) {
+                    linhas += '<tr class="tr_remove_anexo">';
+                    linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
+                    linhas += '<td>'+ value.descricao +'</td>';
+                    linhas += '<td>'+ value.data_criacao +'</td>';
+                    linhas += '<td><a href="'+ value.url +'" class="botoes_acao nova-aba" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
+                    linhas += '</tr>';
+                });
+                $("#tabela_lista_anexosv").append(linhas);
+                $('#tabela_lista_anexosv').removeAttr('style', 'display: none;');
+                $('#tabela_lista_anexosv').attr('style', 'display: table;');
+            } else {
+                linhas += "<tr class='tr_remove_anexo'>";
+                linhas += "<td colspan='5' style='text-align: center;'>Não existem anexos para serem exibidos! Favor Cadastrar!</td>";
+                linhas += "</tr>";
+                $("#tabela_lista_anexosv").append(linhas);
+                $('#tabela_lista_anexosv').removeAttr('style', 'display: none;');
+                $('#tabela_lista_anexosv').attr('style', 'display: table;');
+            }
+        }
+    });
+}
 
 $(document).on("click", ".editar_circuitos", function(){
     "use strict";
