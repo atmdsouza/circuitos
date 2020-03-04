@@ -444,4 +444,12 @@ class CoreOP
         $response->setContent(json_encode(array("operacao" => True, "dados" => $array_dados)));
         return $response;
     }
+
+    public function selectTiposAnexos()
+    {
+        $objeto = Lov::find("tipo=20 AND excluido=0 AND ativo=1");
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True,"dados" => $objeto)));
+        return $response;
+    }
 }

@@ -961,11 +961,35 @@ function criarAnexo(id_proposta)
 {
     'use strict';
     $('#id_proposta').val(id_proposta);
+    getIdentificador(id_proposta);
     montarTabelaAnexos(id_proposta, false);
     $('#tabela_lista_anexos').removeAttr('style', 'display: table;');
     $('#tabela_lista_anexos').attr('style', 'display: none;');
     $('#modalAnexoArquivo').modal();
 
+}
+function getIdentificador(id)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'visualizarPropostaComercialNumero', id: id},
+        error: function (data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            $('#identificador-anexado').html(data.dados);
+        }
+    });
 }
 
 function montarTabelaAnexos(id_proposta, visualizar)
@@ -1117,7 +1141,7 @@ function excluirAnexo(id_anexo)
             type: "POST",
             dataType: "JSON",
             url: action,
-            data: {metodo: 'excluirAnexo', id: id_anexo},
+            data: {metodo: 'excluirPropostaComercialAnexo', id: id_anexo},
             error: function (data) {
                 if (data.status && data.status === 401) {
                     swal({
@@ -1140,5 +1164,4 @@ function excluirAnexo(id_anexo)
         });
         return true;
     });
-
 }

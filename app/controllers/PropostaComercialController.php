@@ -45,9 +45,18 @@ class PropostaComercialController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $propostacomercialOP = new PropostaComercialOP();
         $propostacomercial = $propostacomercialOP->listar($dados['pesquisa']);
-        $tipos = Lov::find("tipo=23 AND excluido=0 AND ativo=1");
-        $status = Lov::find("tipo=25 AND excluido=0 AND ativo=1");
-        $tipos_anexos = Lov::find("tipo=20 AND excluido=0 AND ativo=1");
+        $tipos = Lov::find(array(
+            "tipo = 23 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
+        ));
+        $status = Lov::find(array(
+            "tipo = 25 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
+        ));
+        $tipos_anexos = Lov::find(array(
+            "tipo = 20 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
+        ));
         $grupos = PropostaComercialServicoGrupo::find("id_grupo_pai IS NULL AND excluido=0 AND ativo=1");
         $departamentos = EmpresaDepartamento::find('excluido=0 AND ativo=1');
         $this->view->tipos = $tipos;

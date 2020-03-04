@@ -2,31 +2,31 @@
 
 namespace Circuitos\Models\Operations;
 
-use Circuitos\Models\PropostaComercial;
-use Circuitos\Models\PropostaComercialAnexo;
-use Circuitos\Models\PropostaComercialItem;
-use Circuitos\Models\PropostaComercialValorMensal;
+use Circuitos\Models\Circuitos;
+use Circuitos\Models\CircuitosAnexo;
+use Circuitos\Models\CircuitosItem;
+use Circuitos\Models\CircuitosValorMensal;
 use Phalcon\Http\Response as Response;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Util\Util;
 
-class PropostaComercialOP extends PropostaComercial
+class CircuitosOP extends Circuitos
 {
     private $encode = "UTF-8";
 
     public function listar($dados)
     {
-        return PropostaComercial::pesquisarPropostaComercial($dados);
+        return Circuitos::pesquisarCircuitos($dados);
     }
 
-    public function cadastrar(PropostaComercial $objArray, PropostaComercialValorMensal $objArrayValorMensal, $arrObjItensProposta)
+    public function cadastrar(Circuitos $objArray, CircuitosValorMensal $objArrayValorMensal, $arrObjItensProposta)
     {
         $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = new PropostaComercial();
+            $objeto = new Circuitos();
             $objeto->setTransaction($transaction);
             $objeto->setIdCliente($objArray->getIdCliente());
             $objeto->setIdTipoProposta($objArray->getIdTipoProposta());
@@ -56,9 +56,9 @@ class PropostaComercialOP extends PropostaComercial
                 }
                 $transaction->rollback("Erro ao criar a proposta: " . $errors);
             }
-            $objetoValorMensal = new PropostaComercialValorMensal();
+            $objetoValorMensal = new CircuitosValorMensal();
             $objetoValorMensal->setTransaction($transaction);
-            $objetoValorMensal->setIdPropostaComercial($objeto->getId());
+            $objetoValorMensal->setIdCircuitos($objeto->getId());
             $objetoValorMensal->setJan((!empty($objArrayValorMensal->getJan())) ? $util->formataNumero($objArrayValorMensal->getJan()) : 0);
             $objetoValorMensal->setFev((!empty($objArrayValorMensal->getFev())) ? $util->formataNumero($objArrayValorMensal->getFev()) : 0);
             $objetoValorMensal->setMar((!empty($objArrayValorMensal->getMar())) ? $util->formataNumero($objArrayValorMensal->getMar()) : 0);
@@ -82,10 +82,10 @@ class PropostaComercialOP extends PropostaComercial
             }
             if (count($arrObjItensProposta) > 0){
                 foreach($arrObjItensProposta as $objItensProposta){
-                    $objetoItemProposta = new PropostaComercialItem();
+                    $objetoItemProposta = new CircuitosItem();
                     $objetoItemProposta->setTransaction($transaction);
-                    $objetoItemProposta->setIdPropostaComercial($objeto->getId());
-                    $objetoItemProposta->setIdPropostaComercialServicos($objItensProposta->getIdPropostaComercialServicos());
+                    $objetoItemProposta->setIdCircuitos($objeto->getId());
+                    $objetoItemProposta->setIdCircuitosServicos($objItensProposta->getIdCircuitosServicos());
                     $objetoItemProposta->setImposto($objItensProposta->getImposto());
                     $objetoItemProposta->setReajuste($objItensProposta->getReajuste());
                     $objetoItemProposta->setQuantidade($objItensProposta->getQuantidade());
@@ -115,13 +115,13 @@ class PropostaComercialOP extends PropostaComercial
         }
     }
 
-    public function alterar(PropostaComercial $objArray, PropostaComercialValorMensal $objArrayValorMensal, $arrObjItensProposta)
+    public function alterar(Circuitos $objArray, CircuitosValorMensal $objArrayValorMensal, $arrObjItensProposta)
     {
         $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = PropostaComercial::findFirst($objArray->getId());
+            $objeto = Circuitos::findFirst($objArray->getId());
             $objeto->setTransaction($transaction);
             $objeto->setIdCliente($objArray->getIdCliente());
             $objeto->setIdTipoProposta($objArray->getIdTipoProposta());
@@ -151,7 +151,7 @@ class PropostaComercialOP extends PropostaComercial
                 }
                 $transaction->rollback("Erro ao criar a proposta: " . $errors);
             }
-            $objetoValorMensal = PropostaComercialValorMensal::findFirst('id_proposta_comercial='.$objArray->getId());
+            $objetoValorMensal = CircuitosValorMensal::findFirst('id_proposta_comercial='.$objArray->getId());
             $objetoValorMensal->setTransaction($transaction);
             $objetoValorMensal->setJan((!empty($objArrayValorMensal->getJan())) ? $util->formataNumeroMoeda($objArrayValorMensal->getJan()) : 0);
             $objetoValorMensal->setFev((!empty($objArrayValorMensal->getFev())) ? $util->formataNumeroMoeda($objArrayValorMensal->getFev()) : 0);
@@ -176,10 +176,10 @@ class PropostaComercialOP extends PropostaComercial
             }
             if (count($arrObjItensProposta) > 0){
                 foreach($arrObjItensProposta as $objItensProposta){
-                    $objetoItemProposta = new PropostaComercialItem();
+                    $objetoItemProposta = new CircuitosItem();
                     $objetoItemProposta->setTransaction($transaction);
-                    $objetoItemProposta->setIdPropostaComercial($objeto->getId());
-                    $objetoItemProposta->setIdPropostaComercialServicos($objItensProposta->getIdPropostaComercialServicos());
+                    $objetoItemProposta->setIdCircuitos($objeto->getId());
+                    $objetoItemProposta->setIdCircuitosServicos($objItensProposta->getIdCircuitosServicos());
                     $objetoItemProposta->setImposto($objItensProposta->getImposto());
                     $objetoItemProposta->setReajuste($objItensProposta->getReajuste());
                     $objetoItemProposta->setQuantidade($objItensProposta->getQuantidade());
@@ -209,12 +209,12 @@ class PropostaComercialOP extends PropostaComercial
         }
     }
 
-    public function ativar(PropostaComercial $objArray)
+    public function ativar(Circuitos $objArray)
     {
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = PropostaComercial::findFirst($objArray->getId());
+            $objeto = Circuitos::findFirst($objArray->getId());
             $objeto->setTransaction($transaction);
             $objeto->setAtivo(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
@@ -229,12 +229,12 @@ class PropostaComercialOP extends PropostaComercial
         }
     }
 
-    public function inativar(PropostaComercial $objArray)
+    public function inativar(Circuitos $objArray)
     {
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = PropostaComercial::findFirst($objArray->getId());
+            $objeto = Circuitos::findFirst($objArray->getId());
             $objeto->setTransaction($transaction);
             $objeto->setAtivo(0);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
@@ -249,12 +249,12 @@ class PropostaComercialOP extends PropostaComercial
         }
     }
 
-    public function excluir(PropostaComercial $objArray)
+    public function excluir(Circuitos $objArray)
     {
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = PropostaComercial::findFirst($objArray->getId());
+            $objeto = Circuitos::findFirst($objArray->getId());
             $objeto->setTransaction($transaction);
             $objeto->setExcluido(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
@@ -269,11 +269,11 @@ class PropostaComercialOP extends PropostaComercial
         }
     }
 
-    public function visualizarPropostaComercial($id)
+    public function visualizarCircuitos($id)
     {
         $util = new Util();
         try {
-            $objeto = PropostaComercial::findFirst("id={$id}");
+            $objeto = Circuitos::findFirst("id={$id}");
             $objetoArray = array(
                 'id' => $objeto->getId(),
                 'id_cliente' => $objeto->getIdCliente(),
@@ -306,23 +306,15 @@ class PropostaComercialOP extends PropostaComercial
         }
     }
 
-    public function visualizarPropostaComercialNumero($id)
-    {
-        $objeto = PropostaComercial::findFirst("id={$id}");
-        $response = new Response();
-        $response->setContent(json_encode(array("operacao" => True,"dados" => $objeto->getNumero())));
-        return $response;
-    }
-
     public function visualizarPropostaItens($id_proposta_comercial)
     {
         try {
-            $objetosComponentes = PropostaComercialItem::find('id_proposta_comercial = ' . $id_proposta_comercial);
+            $objetosComponentes = CircuitosItem::find('id_proposta_comercial = ' . $id_proposta_comercial);
             $arrTransporte = [];
             foreach ($objetosComponentes as $objetoComponente){
                 $objTransporte = new \stdClass();
                 $objTransporte->id_proposta_comercial_item = $objetoComponente->getId();
-                $objTransporte->id_proposta_comercial_servicos = $objetoComponente->getIdPropostaComercialServicos();
+                $objTransporte->id_proposta_comercial_servicos = $objetoComponente->getIdCircuitosServicos();
                 $objTransporte->ds_codigo_servico = $objetoComponente->getCodigoServico();
                 $objTransporte->ds_proposta_comercial_servicos = $objetoComponente->getServico();
                 $objTransporte->ds_proposta_comercial_servicos_unidade = $objetoComponente->getServicoUnidade();
@@ -350,10 +342,10 @@ class PropostaComercialOP extends PropostaComercial
     public function visualizarPropostaItem($id_proposta_comercial_item)
     {
         try {
-            $objetoComponente = PropostaComercialItem::findFirst('id=' . $id_proposta_comercial_item);
+            $objetoComponente = CircuitosItem::findFirst('id=' . $id_proposta_comercial_item);
             $objTransporte = new \stdClass();
             $objTransporte->id_proposta_comercial_item = $objetoComponente->getId();
-            $objTransporte->id_proposta_comercial_servicos = $objetoComponente->getIdPropostaComercialServicos();
+            $objTransporte->id_proposta_comercial_servicos = $objetoComponente->getIdCircuitosServicos();
             $objTransporte->ds_codigo_servico = $objetoComponente->getCodigoServico();
             $objTransporte->ds_proposta_comercial_servicos = $objetoComponente->getServico();
             $objTransporte->ds_proposta_comercial_servicos_unidade = $objetoComponente->getServicoUnidade();
@@ -372,25 +364,25 @@ class PropostaComercialOP extends PropostaComercial
         }
     }
 
-    public function alterarPropostaItem(PropostaComercialItem $objPropostaComercialItem)
+    public function alterarPropostaItem(CircuitosItem $objCircuitosItem)
     {
         $util = new Util();
         try {
             $manager = new TxManager();
             $transaction = $manager->get();
-            $objetoComponente = PropostaComercialItem::findFirst('id='.$objPropostaComercialItem->getId());
+            $objetoComponente = CircuitosItem::findFirst('id='.$objCircuitosItem->getId());
             $objetoComponente->setTransaction($transaction);
-            $objetoComponente->setIdPropostaComercialServicos($objPropostaComercialItem->getIdPropostaComercialServicos());
-            $objetoComponente->setImposto($objPropostaComercialItem->getImposto());
-            $objetoComponente->setReajuste($objPropostaComercialItem->getReajuste());
-            $objetoComponente->setQuantidade($objPropostaComercialItem->getQuantidade());
-            $objetoComponente->setMesInicial($objPropostaComercialItem->getMesInicial());
-            $objetoComponente->setVigencia($objPropostaComercialItem->getVigencia());
-            $objetoComponente->setValorUnitario((!empty($objPropostaComercialItem->getValorUnitario())) ? $util->formataNumero($objPropostaComercialItem->getValorUnitario()) : 0);
-            $objetoComponente->setValorTotal((!empty($objPropostaComercialItem->getValorTotal())) ? $util->formataNumero($objPropostaComercialItem->getValorTotal()) : 0);
-            $objetoComponente->setValorTotalReajuste((!empty($objPropostaComercialItem->getValorTotalReajuste())) ? $util->formataNumero($objPropostaComercialItem->getValorTotalReajuste()) : 0);
-            $objetoComponente->setValorImpostos((!empty($objPropostaComercialItem->getValorImpostos())) ? $util->formataNumero($objPropostaComercialItem->getValorImpostos()) : 0);
-            $objetoComponente->setValorTotalImpostos((!empty($objPropostaComercialItem->getValorTotalImpostos())) ? $util->formataNumero($objPropostaComercialItem->getValorTotalImpostos()) : 0);
+            $objetoComponente->setIdCircuitosServicos($objCircuitosItem->getIdCircuitosServicos());
+            $objetoComponente->setImposto($objCircuitosItem->getImposto());
+            $objetoComponente->setReajuste($objCircuitosItem->getReajuste());
+            $objetoComponente->setQuantidade($objCircuitosItem->getQuantidade());
+            $objetoComponente->setMesInicial($objCircuitosItem->getMesInicial());
+            $objetoComponente->setVigencia($objCircuitosItem->getVigencia());
+            $objetoComponente->setValorUnitario((!empty($objCircuitosItem->getValorUnitario())) ? $util->formataNumero($objCircuitosItem->getValorUnitario()) : 0);
+            $objetoComponente->setValorTotal((!empty($objCircuitosItem->getValorTotal())) ? $util->formataNumero($objCircuitosItem->getValorTotal()) : 0);
+            $objetoComponente->setValorTotalReajuste((!empty($objCircuitosItem->getValorTotalReajuste())) ? $util->formataNumero($objCircuitosItem->getValorTotalReajuste()) : 0);
+            $objetoComponente->setValorImpostos((!empty($objCircuitosItem->getValorImpostos())) ? $util->formataNumero($objCircuitosItem->getValorImpostos()) : 0);
+            $objetoComponente->setValorTotalImpostos((!empty($objCircuitosItem->getValorTotalImpostos())) ? $util->formataNumero($objCircuitosItem->getValorTotalImpostos()) : 0);
             $objetoComponente->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objetoComponente->save() == false) {
                 $messages = $objetoComponente->getMessages();
@@ -410,13 +402,13 @@ class PropostaComercialOP extends PropostaComercial
         }
     }
 
-    public function deletarPropostaItem(PropostaComercialItem $objPropostaComercialItem)
+    public function deletarPropostaItem(CircuitosItem $objCircuitosItem)
     {
         try {
             $manager = new TxManager();
             $transaction = $manager->get();
-            $objetoComponente = PropostaComercialItem::findFirst('id='.$objPropostaComercialItem->getId());
-            $id_proposta_comercial = $objetoComponente->getIdPropostaComercial();
+            $objetoComponente = CircuitosItem::findFirst('id='.$objCircuitosItem->getId());
+            $id_proposta_comercial = $objetoComponente->getIdCircuitos();
             $objetoComponente->setTransaction($transaction);
             if ($objetoComponente->delete() == false) {
                 $transaction->rollback("Não foi possível deletar o item da proposta!");
@@ -431,11 +423,19 @@ class PropostaComercialOP extends PropostaComercial
         }
     }
 
-    public function visualizarPropostaComercialAnexos($id_proposta_comercial)
+    public function visualizarCircuitosDesignacao($id)
+    {
+        $objeto = Circuitos::findFirst("id={$id}");
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True,"dados" => $objeto->getDesignacao())));
+        return $response;
+    }
+
+    public function visualizarCircuitosAnexos($id_circuito)
     {
         $util = new Util();
         try {
-            $objetosComponentes = PropostaComercialAnexo::find('id_proposta_comercial = ' . $id_proposta_comercial);
+            $objetosComponentes = CircuitosAnexo::find('id_circuitos= ' . $id_circuito);
             $arrTransporte = [];
             foreach ($objetosComponentes as $objetoComponente){
                 chmod($objetoComponente->getUrlAnexo(), 0777);
@@ -443,7 +443,7 @@ class PropostaComercialOP extends PropostaComercial
                 $url = $url_base[count($url_base)-5].'/'.$url_base[count($url_base)-4].'/'.$url_base[count($url_base)-3].'/'.$url_base[count($url_base)-2].'/'.$url_base[count($url_base)-1];
                 $objTransporte = new \stdClass();
                 $objTransporte->id_proposta_comercial_anexo = $objetoComponente->getId();
-                $objTransporte->id_proposta_comercial = $objetoComponente->getIdPropostaComercial();
+                $objTransporte->id_proposta_comercial = $objetoComponente->getIdCircuitos();
                 $objTransporte->id_anexo = $objetoComponente->getIdAnexo();
                 $objTransporte->id_tipo_anexo = $objetoComponente->getIdTipoAnexo();
                 $objTransporte->ds_tipo_anexo = $objetoComponente->getDescricaoTipoAnexo();

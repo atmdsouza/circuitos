@@ -3,8 +3,10 @@
 namespace Circuitos\Controllers;
 
 use Auth\Autentica;
+use Circuitos\Models\Anexos;
 use Circuitos\Models\CidadeDigital;
 use Circuitos\Models\Circuitos;
+use Circuitos\Models\CircuitosAnexo;
 use Circuitos\Models\Cliente;
 use Circuitos\Models\ClienteUnidade;
 use Circuitos\Models\Conectividade;
@@ -14,6 +16,8 @@ use Circuitos\Models\Fabricante;
 use Circuitos\Models\Lov;
 use Circuitos\Models\Modelo;
 use Circuitos\Models\Movimentos;
+use Circuitos\Models\Operations\AnexosOP;
+use Circuitos\Models\Operations\CoreOP;
 use Circuitos\Models\PessoaContato;
 use Circuitos\Models\PessoaEndereco;
 use Phalcon\Http\Response as Response;
@@ -95,6 +99,10 @@ class CircuitosController extends ControllerBase
             "excluido = 0 AND ativo = 1",
             "order" => "descricao"
         ));
+        $tipos_anexos = Lov::find(array(
+            "tipo = 20 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
+        ));
         $clientes = Cliente::buscaClienteAtivo();
         $unidades = ClienteUnidade::buscaUnidadeAtiva();
         $fabricantes = Fabricante::buscaFabricanteAtivo();
@@ -119,6 +127,7 @@ class CircuitosController extends ControllerBase
         $this->view->tipolink = $tipolink;
         $this->view->unidades = $unidades;
         $this->view->cidadedigital = $cidadedigital;
+        $this->view->tipos_anexos = $tipos_anexos;
         $this->view->departamentos = $departamentos;
     }
 
@@ -1194,5 +1203,33 @@ class CircuitosController extends ControllerBase
             "url" => $url
         )));
         return $response;
+    }
+
+    public function subirAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $anexosOP = new AnexosOP();
+        $modulo = $this->router->getControllerName();
+        $action = $this->router->getActionName();
+        $request = $this->request;
+        $id_circuitos = $request->get('id_circuitos');
+        $id_tipo_anexo = $request->get('id_tipo_anexo');
+        $descricao = $request->get('descricao');
+        $coreOP = new CoreOP();
+        $files = $coreOP->servicoUpload($request, $modulo, $action, $id_circuitos, null);
+        foreach ($files as $key => $file)
+        {
+            $anexos = new Anexos();
+            $anexos->setDescricao($descricao[$key]);
+            $anexos->setIdTipoAnexo($id_tipo_anexo[$key]);
+            $anexos->setUrl($file['path']);
+            $anexo_cadastrado = $anexosOP->cadastrar($anexos);
+            $circuitoanexos = new CircuitosAnexo();
+            $circuitoanexos->setIdAnexo($anexo_cadastrado->getId());
+            $circuitoanexos->setIdCircuitos($id_circuitos);
+            $anexosOP->cadastrarCircuitosAnexo($circuitoanexos);
+        }
+        $this->response->redirect('circuitos');
     }
 }

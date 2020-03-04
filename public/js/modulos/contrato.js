@@ -1321,3 +1321,213 @@ function salvarMovimentoContrato()
 {
 
 }
+
+//Sessão de Anexos
+function criarAnexo(id_contrato)
+{
+    'use strict';
+    $('#id_contrato').val(id_contrato);
+    getIdentificador(id_contrato);
+    montarTabelaAnexos(id_contrato, false);
+    $('#tabela_lista_anexos').removeAttr('style', 'display: table;');
+    $('#tabela_lista_anexos').attr('style', 'display: none;');
+    $('#modalAnexoArquivo').modal();
+
+}
+function getIdentificador(id)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'visualizarContratoNumero', id: id},
+        error: function (data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            $('#identificador-anexado').html(data.dados);
+        }
+    });
+}
+
+function montarTabelaAnexos(id_contrato, visualizar)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'visualizarContratoAnexos', id: id_contrato },
+        complete: function() {
+            if (visualizar) {
+                $('.hide_buttons').hide();
+            }
+        },
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            if (data.dados != ''){
+                $('.tr_remove_anexo').remove();
+                var linhas =null;
+                $.each(data.dados, function(key, value) {
+                    linhas += '<tr class="tr_remove_anexo">';
+                    linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
+                    linhas += '<td>'+ value.descricao +'</td>';
+                    linhas += '<td>'+ value.data_criacao +'</td>';
+                    linhas += '<td><a href="'+ value.url +'" class="botoes_acao nova-aba" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a>' +
+                        '<a href="javascript:void(0)" onclick="excluirAnexo(' + value.id_anexo + ');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+                    linhas += '</tr>';
+                });
+                $("#tabela_lista_anexos").append(linhas);
+                $('#tabela_lista_anexos').removeAttr('style', 'display: none;');
+                $('#tabela_lista_anexos').attr('style', 'display: table;');
+            } else {
+                $('#tabela_lista_anexos').removeAttr('style', 'display: table;');
+                $('#tabela_lista_anexos').attr('style', 'display: none;');
+            }
+        }
+    });
+}
+
+var tipos_anexos;
+function getTiposAnexo()
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxSelect");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'selectTiposAnexos'},
+        error: function (data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            tipos_anexos = data.dados;
+        }
+    });
+    return tipos_anexos;
+}
+
+var contador = 0;
+function inserirAnexo()
+{
+    'use strict';
+    tipos_anexos = getTiposAnexo();
+    contador++;
+    var elemento = '<div id="div-anexo-'+ contador +'" class="form-row anexos-complementares">';
+    elemento += '<div class="form-group col-md-3">';
+    elemento += '<label for="id_tipo_anexo-'+ contador +'">Tipo de Anexo <span class="required">*</span></label>';
+    elemento += '<select id="id_tipo_anexo-'+ contador +'" name="id_tipo_anexo[]" class="form-control selectpicker" data-live-search="true" data-style="btn-light">';
+    elemento += '<option value="">Selecione o Tipo de Anexo</option>';
+    $.each(tipos_anexos, function(key, value) {
+        elemento += '<option value="'+value.id+'">'+value.descricao+'</option>';
+    });
+    elemento += '</select>';
+    elemento += '</div>';
+    elemento += '<div class="form-group col-md-3 botoes_forms_alinhamento">';
+    elemento += '<label for="descricao-'+ contador +'">Descrição </label>';
+    elemento += '<input type="text" id="descricao-'+ contador +'" name="descricao[]" class="form-control" size="200" placeholder="Descrição">';
+    elemento += '</div>';
+    elemento += '<div class="form-group col-md-5">';
+    elemento += '<label for="anexo-'+ contador +'">Anexo <span class="required">*</span></label>';
+    elemento += '<input type="file" id="anexo-'+ contador +'" name="anexo-'+ contador +'" class="filestyle">';
+    elemento += '</div>';
+    elemento += '<div class="form-group col-md-1 botoes_forms_alinhamento">';
+    elemento += '<a href="javascript:void(0)" onclick="removerAnexo('+ contador +');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Remover" alt="Remover" height="25" width="25" style="margin: 35px 0px 0px 10px;"></a>';
+    elemento += '</div>';
+    elemento += '</div>';
+    $('#agrupamento-anexos').append(elemento);
+    $('.selectpicker').selectpicker();
+    $(':file').last().filestyle({
+        dragdrop: true,
+        input: true,
+        htmlIcon: '<span class="fi-paper-clip"></span>',
+        text: 'Localize o Arquivo',
+        btnClass: 'btn-primary',
+        disabled: false,
+        buttonBefore: true,
+        badge: true,
+        badgeName: 'badge-danger',
+        placeholder: 'Sem arquivo',
+
+    });
+}
+
+function removerAnexo(contador)
+{
+    'use strict';
+    $('#div-anexo-'+ contador).remove();
+}
+
+function limparModalAnexos()
+{
+    'use strict';
+    contador = 0;
+    $('.anexos-complementares').remove();
+    $('#modalAnexoArquivo').find('form')[0].reset();
+}
+
+function excluirAnexo(id_anexo)
+{
+    'use strict';
+    swal({
+        title: "Tem certeza que deseja excluir o anexo?",
+        text: "O sistema irá excluir o anexo selecionado com essa ação.",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, excluir!"
+    }).then((result) => {
+        var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: action,
+            data: {metodo: 'excluirContratoAnexo', id: id_anexo},
+            error: function (data) {
+                if (data.status && data.status === 401) {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            },
+            success: function (data) {
+                console.log(data);
+                $('.tr_remove_anexo').remove();
+                montarTabelaAnexos(data, false);
+                swal({
+                    title: "Exclusão de Anexo",
+                    text: 'Anexo excluído com sucesso!',
+                    type: "success"
+                });
+            }
+        });
+        return true;
+    });
+}

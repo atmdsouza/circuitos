@@ -3,7 +3,9 @@
 namespace Circuitos\Controllers;
 
 use Circuitos\Models\CidadeDigital;
+use Circuitos\Models\CircuitosAnexo;
 use Circuitos\Models\Conectividade;
+use Circuitos\Models\ContratoAnexo;
 use Circuitos\Models\ContratoExercicio;
 use Circuitos\Models\ContratoGarantia;
 use Circuitos\Models\ContratoOrcamento;
@@ -14,6 +16,7 @@ use Circuitos\Models\EndEstado;
 use Circuitos\Models\EstacaoTelecon;
 use Circuitos\Models\Operations\AnexosOP;
 use Circuitos\Models\Operations\CidadeDigitalOP;
+use Circuitos\Models\Operations\CircuitosOP;
 use Circuitos\Models\Operations\ConectividadeOP;
 use Circuitos\Models\Operations\ContratoOP;
 use Circuitos\Models\Operations\CoreOP;
@@ -658,9 +661,29 @@ class CoreController extends ControllerBase
                 $objeto = new PropostaComercialOP();
                 return $objeto->visualizarPropostaComercialAnexos($dados['id']);
                 break;
+            case 'visualizarCircuitosAnexos':
+                $objeto = new CircuitosOP();
+                return $objeto->visualizarCircuitosAnexos($dados['id']);
+                break;
+            case 'visualizarContratoAnexos':
+                $objeto = new ContratoOP();
+                return $objeto->visualizarContratoAnexos($dados['id']);
+                break;
             case 'visualizarEmpresaDepartamento':
                 $objeto = new EmpresaDepartamentoOP();
                 return $objeto->visualizarEmpresaDepartamento($dados['id']);
+                break;
+            case 'visualizarPropostaComercialNumero':
+                $objeto = new PropostaComercialOP();
+                return $objeto->visualizarPropostaComercialNumero($dados['id']);
+                break;
+            case 'visualizarContratoNumero':
+                $objeto = new ContratoOP();
+                return $objeto->visualizarContratoNumero($dados['id']);
+                break;
+            case 'visualizarCircuitosDesignacao':
+                $objeto = new CircuitosOP();
+                return $objeto->visualizarCircuitosDesignacao($dados['id']);
                 break;
         }
     }
@@ -827,10 +850,20 @@ class CoreController extends ControllerBase
                 $objComponente->setId($dados['id']);
                 return $objeto->deletarContratoGarantia($objComponente);
                 break;
-            case 'excluirAnexo':
+            case 'excluirPropostaComercialAnexo':
                 $objeto = new AnexosOP();
                 $objPrincipal = PropostaComercialAnexo::findFirst('id_anexo='.$dados['id']);
                 return $objeto->excluirPropostaComercialAnexo($objPrincipal);
+                break;
+            case 'excluirContratoAnexo':
+                $objeto = new AnexosOP();
+                $objPrincipal = ContratoAnexo::findFirst('id_anexo='.$dados['id']);
+                return $objeto->excluirContratoAnexo($objPrincipal);
+                break;
+            case 'excluirCircuitosAnexo':
+                $objeto = new AnexosOP();
+                $objPrincipal = CircuitosAnexo::findFirst('id_anexo='.$dados['id']);
+                return $objeto->excluirCircuitosAnexo($objPrincipal);
                 break;
         }
     }
@@ -842,7 +875,7 @@ class CoreController extends ControllerBase
         $dados = filter_input_array(INPUT_GET);
         switch ($dados['metodo']) {
             case 'selectTiposAnexos':
-                $objeto = new PropostaComercialOP();
+                $objeto = new CoreOP();
                 return $objeto->selectTiposAnexos();
                 break;
             case 'selectSubGrupo':

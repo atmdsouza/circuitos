@@ -3,12 +3,16 @@
 namespace Circuitos\Controllers;
 
 use Auth\Autentica;
+use Circuitos\Models\Anexos;
 use Circuitos\Models\Contrato;
+use Circuitos\Models\ContratoAnexo;
 use Circuitos\Models\ContratoExercicio;
 use Circuitos\Models\ContratoGarantia;
 use Circuitos\Models\ContratoOrcamento;
 use Circuitos\Models\Lov;
+use Circuitos\Models\Operations\AnexosOP;
 use Circuitos\Models\Operations\ContratoOP;
+use Circuitos\Models\Operations\CoreOP;
 use Phalcon\Http\Response as Response;
 use Util\TokenManager;
 
@@ -40,18 +44,41 @@ class ContratoController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $contratoOP = new ContratoOP();
         $contrato = $contratoOP->listar($dados['pesquisa']);
-        $tipos = Lov::find("tipo=26 AND excluido=0 AND ativo=1");
-        $tipos_processos = Lov::find("tipo=27 AND excluido=0 AND ativo=1");
-        $tipos_movimentos = Lov::find("tipo=28 AND excluido=0 AND ativo=1");
-        $tipos_modalidades = Lov::find("tipo=29 AND excluido=0 AND ativo=1");
-        $status_contrato = Lov::find("tipo=30 AND excluido=0 AND ativo=1");
-        $tipos_fiscais = Lov::find("tipo=31 AND excluido=0 AND ativo=1");
+        $tipos = Lov::find(array(
+            "tipo = 26 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
+        ));
+        $tipos_processos = Lov::find(array(
+            "tipo = 27 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
+        ));
+        $tipos_movimentos = Lov::find(array(
+            "tipo = 28 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
+        ));
+        $tipos_modalidades = Lov::find(array(
+            "tipo = 29 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
+        ));
+        $status_contrato = Lov::find(array(
+            "tipo = 30 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
+        ));
+        $tipos_fiscais = Lov::find(array(
+            "tipo = 31 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
+        ));
+        $tipos_anexos = Lov::find(array(
+            "tipo = 20 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
+        ));
         $this->view->tipos = $tipos;
         $this->view->tipos_processos = $tipos_processos;
         $this->view->tipos_movimentos = $tipos_movimentos;
         $this->view->tipos_modalidades = $tipos_modalidades;
         $this->view->status_contrato = $status_contrato;
         $this->view->tipos_fiscais = $tipos_fiscais;
+        $this->view->tipos_anexos = $tipos_anexos;
         $this->view->page = $contrato;
     }
 
@@ -321,14 +348,32 @@ class ContratoController extends ControllerBase
      * Time: 19:00
      * Responsável por vincular arquivos a um contrato
      */
-    public function uploadAction()
+    public function subirAction()
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
-        $response = new Response();
-        $dados = filter_input_array(INPUT_POST);
-
-        return $response;
+        $anexosOP = new AnexosOP();
+        $modulo = $this->router->getControllerName();
+        $action = $this->router->getActionName();
+        $request = $this->request;
+        $id_contrato = $request->get('id_contrato');
+        $id_tipo_anexo = $request->get('id_tipo_anexo');
+        $descricao = $request->get('descricao');
+        $coreOP = new CoreOP();
+        $files = $coreOP->servicoUpload($request, $modulo, $action, $id_contrato, null);
+        foreach ($files as $key => $file)
+        {
+            $anexos = new Anexos();
+            $anexos->setDescricao($descricao[$key]);
+            $anexos->setIdTipoAnexo($id_tipo_anexo[$key]);
+            $anexos->setUrl($file['path']);
+            $anexo_cadastrado = $anexosOP->cadastrar($anexos);
+            $contratoanexos = new ContratoAnexo();
+            $contratoanexos->setIdAnexo($anexo_cadastrado->getId());
+            $contratoanexos->setIdContrato($id_contrato);
+            $anexosOP->cadastrarContratoAnexo($contratoanexos);
+        }
+        $this->response->redirect('contrato');
     }
 
 }

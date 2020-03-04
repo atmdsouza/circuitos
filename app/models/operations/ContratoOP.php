@@ -3,6 +3,7 @@
 namespace Circuitos\Models\Operations;
 
 use Circuitos\Models\Contrato;
+use Circuitos\Models\ContratoAnexo;
 use Circuitos\Models\ContratoExercicio;
 use Circuitos\Models\ContratoGarantia;
 use Circuitos\Models\ContratoOrcamento;
@@ -34,7 +35,7 @@ class ContratoOP extends Contrato
             $objeto->setIdTipoContrato($objArray->getIdTipoContrato());
             $objeto->setIdTipoProcesso($objArray->getIdTipoProcesso());
             $objeto->setNumeroProcesso($objArray->getNumeroProcesso());
-            $objeto->setIdPropostaComercial(($objArray->getIdPropostaComercial()) ? $objArray->getIdPropostaComercial() : null);
+            $objeto->setIdContrato(($objArray->getIdContrato()) ? $objArray->getIdContrato() : null);
             $objeto->setIdCliente($objArray->getIdCliente());
             $objeto->setIdStatus($objArray->getIdStatus());
             $objeto->setDataCriacao(date('Y-m-d H:i:s'));
@@ -142,7 +143,7 @@ class ContratoOP extends Contrato
             $objeto->setIdTipoContrato($objArray->getIdTipoContrato());
             $objeto->setIdTipoProcesso($objArray->getIdTipoProcesso());
             $objeto->setNumeroProcesso($objArray->getNumeroProcesso());
-            $objeto->setIdPropostaComercial(($objArray->getIdPropostaComercial()) ? $objArray->getIdPropostaComercial() : null);
+            $objeto->setIdContrato(($objArray->getIdContrato()) ? $objArray->getIdContrato() : null);
             $objeto->setIdCliente($objArray->getIdCliente());
             $objeto->setIdStatus($objArray->getIdStatus());
             $objeto->setDataCriacao(date('Y-m-d H:i:s'));
@@ -304,7 +305,7 @@ class ContratoOP extends Contrato
             $objDescricao = new \stdClass();
             $objDescricao->ds_cliente = $objeto->getCliente();
             $objDescricao->ds_contrato_principal = $objeto->getContratoPrincipal();
-            $objDescricao->ds_proposta_comercial = $objeto->getPropostaComercial();
+            $objDescricao->ds_contrato = $objeto->getContrato();
             $objDescricao->ds_status = $objeto->getStatus();
             $objDescricao->ds_tipo_contrato = $objeto->getTipoContrato();
             $objDescricao->ds_tipo_processo = $objeto->getTipoProcesso();
@@ -315,6 +316,14 @@ class ContratoOP extends Contrato
             var_dump($e->getMessage());
             return false;
         }
+    }
+
+    public function visualizarContratoNumero($id)
+    {
+        $objeto = Contrato::findFirst("id={$id}");
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True,"dados" => $objeto->getNumero().'/'.$objeto->getAno())));
+        return $response;
     }
 
     public function visualizarContratoOrcamentos($id_contrato)
@@ -617,5 +626,35 @@ class ContratoOP extends Contrato
 //            $num_ordem = 1;
 //        }
         return $num_ordem;
+    }
+
+    public function visualizarContratoAnexos($id_contrato)
+    {
+        $util = new Util();
+        try {
+            $objetosComponentes = ContratoAnexo::find('id_contrato = ' . $id_contrato);
+            $arrTransporte = [];
+            foreach ($objetosComponentes as $objetoComponente){
+                chmod($objetoComponente->getUrlAnexo(), 0777);
+                $url_base = explode("/", $objetoComponente->getUrlAnexo());
+                $url = $url_base[count($url_base)-5].'/'.$url_base[count($url_base)-4].'/'.$url_base[count($url_base)-3].'/'.$url_base[count($url_base)-2].'/'.$url_base[count($url_base)-1];
+                $objTransporte = new \stdClass();
+                $objTransporte->id_contrato_anexo = $objetoComponente->getId();
+                $objTransporte->id_contrato = $objetoComponente->getIdContrato();
+                $objTransporte->id_anexo = $objetoComponente->getIdAnexo();
+                $objTransporte->id_tipo_anexo = $objetoComponente->getIdTipoAnexo();
+                $objTransporte->ds_tipo_anexo = $objetoComponente->getDescricaoTipoAnexo();
+                $objTransporte->descricao = $objetoComponente->getDescricaoAnexo();
+                $objTransporte->url = $url;
+                $objTransporte->data_criacao = $util->converterDataHoraParaBr($objetoComponente->getDataCriacaoAnexo());
+                array_push($arrTransporte, $objTransporte);
+            }
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
+            return $response;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
     }
 }
