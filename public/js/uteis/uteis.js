@@ -59,12 +59,27 @@ var RemoveTableRow;
     };
 })(jQuery);
 
-// Select2
+// Select2 Configuração Padrão
 $(".select2").select2({
     language: "pt-BR"
 });
 
-//Date range picker
+//Bootstrap Filestyle Configuração Padrão
+$(':file').filestyle({
+    dragdrop: true,
+    input: true,
+    htmlIcon: '<span class="fi-paper-clip"></span>',
+    text: 'Localize o Arquivo',
+    btnClass: 'btn-primary',
+    disabled: false,
+    buttonBefore: true,
+    badge: true,
+    badgeName: 'badge-danger',
+    placeholder: 'Sem arquivo',
+
+});
+
+//Date range picker Configuração Padrão
 $(".input-daterange-datepicker").daterangepicker({
     autoApply: true,
     autoUpdateInput: false,
@@ -670,12 +685,3 @@ $(document).ready(function () {
 jQuery.validator.addMethod("maiorQueZero", function(value, element) {
     return this.optional(element) || (parseFloat(value) > 0);
 }, "* O valor precisa ser maior que 0!");
-
-
-/**
- * Função que controla o upload de arquivos para todas os módulos do sistema
- * Funcionalidade Global
- **/
-function carregarArquivo(id_vinculado) {
-
-}

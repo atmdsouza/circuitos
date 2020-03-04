@@ -2,18 +2,19 @@
 
 namespace Circuitos\Controllers;
 
-use Phalcon\Http\Response as Response;
-
+use Auth\Autentica;
+use Circuitos\Models\Anexos;
 use Circuitos\Models\EmpresaDepartamento;
 use Circuitos\Models\Lov;
-use Circuitos\Models\PropostaComercial;
-use Circuitos\Models\PropostaComercialItem;
-use Circuitos\Models\PropostaComercialValorMensal;
-use Circuitos\Models\PropostaComercialServicoGrupo;
-
+use Circuitos\Models\Operations\AnexosOP;
+use Circuitos\Models\Operations\CoreOP;
 use Circuitos\Models\Operations\PropostaComercialOP;
-
-use Auth\Autentica;
+use Circuitos\Models\PropostaComercial;
+use Circuitos\Models\PropostaComercialAnexo;
+use Circuitos\Models\PropostaComercialItem;
+use Circuitos\Models\PropostaComercialServicoGrupo;
+use Circuitos\Models\PropostaComercialValorMensal;
+use Phalcon\Http\Response as Response;
 use Util\TokenManager;
 
 class PropostaComercialController extends ControllerBase
@@ -46,11 +47,13 @@ class PropostaComercialController extends ControllerBase
         $propostacomercial = $propostacomercialOP->listar($dados['pesquisa']);
         $tipos = Lov::find("tipo=23 AND excluido=0 AND ativo=1");
         $status = Lov::find("tipo=25 AND excluido=0 AND ativo=1");
+        $tipos_anexos = Lov::find("tipo=20 AND excluido=0 AND ativo=1");
         $grupos = PropostaComercialServicoGrupo::find("id_grupo_pai IS NULL AND excluido=0 AND ativo=1");
         $departamentos = EmpresaDepartamento::find('excluido=0 AND ativo=1');
         $this->view->tipos = $tipos;
         $this->view->status = $status;
         $this->view->grupos = $grupos;
+        $this->view->tipos_anexos = $tipos_anexos;
         $this->view->departamentos = $departamentos;
         $this->view->page = $propostacomercial;
     }
@@ -242,5 +245,33 @@ class PropostaComercialController extends ControllerBase
             $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo, 'mensagem' => $error_chk)));
         }
         return $response;
+    }
+
+    public function subirAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $anexosOP = new AnexosOP();
+        $modulo = $this->router->getControllerName();
+        $action = $this->router->getActionName();
+        $request = $this->request;
+        $id_proposta = $request->get('id_proposta');
+        $id_tipo_anexo = $request->get('id_tipo_anexo');
+        $descricao = $request->get('descricao');
+        $coreOP = new CoreOP();
+        $files = $coreOP->servicoUpload($request, $modulo, $action, $id_proposta, null);
+        foreach ($files as $key => $file)
+        {
+            $anexos = new Anexos();
+            $anexos->setDescricao($descricao[$key]);
+            $anexos->setIdTipoAnexo($id_tipo_anexo[$key]);
+            $anexos->setUrl($file['path']);
+            $anexo_cadastrado = $anexosOP->cadastrar($anexos);
+            $propostaanexos = new PropostaComercialAnexo();
+            $propostaanexos->setIdAnexo($anexo_cadastrado->getId());
+            $propostaanexos->setIdPropostaComercial($id_proposta);
+            $anexosOP->cadastrarPropostaComercialAnexo($propostaanexos);
+        }
+        $this->response->redirect('proposta_comercial/index');
     }
 }

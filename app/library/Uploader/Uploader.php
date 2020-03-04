@@ -1,7 +1,9 @@
 <?php
+
 namespace Uploader;
-use Uploader\Helpers\Format;
+
 use Phalcon\Http\Request;
+use Uploader\Helpers\Format;
 
 /**
  * Uploader executable class

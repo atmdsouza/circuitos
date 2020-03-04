@@ -23,7 +23,7 @@ $infra = new Infra(); ?>
     <link href="<?= DIR_STATICS ?>public/css/icons.css" rel="stylesheet" type="text/css" />
     <link href="<?= DIR_STATICS ?>public/css/metismenu.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= DIR_STATICS ?>public/css/style.css" rel="stylesheet" type="text/css" />
-    <link href="<?= DIR_STATICS ?>public/css/custom.css?<?= filemtime(BASE_PATH.'/public/css/custom.css'); ?>"" rel="stylesheet" type="text/css" />
+    <link href="<?= DIR_STATICS ?>public/css/custom.css?<?= filemtime(BASE_PATH.'/public/css/custom.css'); ?>" rel="stylesheet" type="text/css" />
 
     <link href="<?= DIR_STATICS ?>public/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css" />
 
@@ -41,13 +41,6 @@ $infra = new Infra(); ?>
     <link href="<?= DIR_STATICS ?>public/plugins/datatables/select/css/select.bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="<?= DIR_STATICS ?>public/plugins/datatables/select/css/select.dataTables.min.css" rel="stylesheet" type="text/css" />
 
-    <!-- jQuery File Upload css -->
-    <!-- blueimp Gallery styles -->
-    <link href="https://blueimp.github.io/Gallery/css/blueimp-gallery.min.css" rel="stylesheet" type="text/css">
-    <!-- Arquivos jQuery File Upload-->
-    <link href="<?= DIR_STATICS ?>public/plugins/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet" type="text/css" />
-    <link href="<?= DIR_STATICS ?>public/plugins/jquery-file-upload/css/jquery.fileupload-ui.css" rel="stylesheet" type="text/css" />
-
     <!-- Custom File Input -->
     <link href="<?= DIR_STATICS ?>public/plugins/customfileinputs/css/component.css" rel="stylesheet" type="text/css" />
     <link href="<?= DIR_STATICS ?>public/plugins/customfileinputs/css/normalize.css" rel="stylesheet" type="text/css" />
@@ -59,8 +52,12 @@ $infra = new Infra(); ?>
     <link href="<?= DIR_STATICS ?>public/plugins/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" type="text/css">
     <link href="<?= DIR_STATICS ?>public/plugins/switchery/switchery.min.css" rel="stylesheet" rel="stylesheet" type="text/css"/>
 
-    <!-- Bootstrap fileupload css -->
+    <!-- Bootstrap plugins css -->
     <link href="<?= DIR_STATICS ?>public/plugins/bootstrap-fileupload/bootstrap-fileupload.css" rel="stylesheet" type="text/css" />
+    <link href="<?= DIR_STATICS ?>public/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css" rel="stylesheet" />
+    <link href="<?= DIR_STATICS ?>public/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+    <link href="<?= DIR_STATICS ?>public/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?= DIR_STATICS ?>public/plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
 
 </head>
 
@@ -469,31 +466,15 @@ $infra = new Infra(); ?>
 <!-- jQuery UI -->
 <!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-ui/jquery-ui.min.js?<?= filemtime(BASE_PATH.'/public/js/modulos/propostacomercial.js'); ?>" type="text/javascript"></script>-->
 
-<!-- jQuery File Upload -->
-<!-- jQuery UI Width -->
-<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jqeury-ui-width.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jqeury-ui-width.js'); ?><!--" type="text/javascript"></script>-->
-<!-- The Templates plugin is included to render the upload/download listings -->
-<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/tmpl.min.js" type="text/javascript"></script>-->
-<!-- The Load Image plugin is included for the preview images and image resizing functionality-->
-<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/load-image.all.min.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/load-image.all.min.js'); ?><!--" type="text/javascript"></script>-->
-<!-- The Canvas to Blob plugin is included for image resizing functionality -->
-<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/canvas-to-blob.min.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/canvas-to-blob.min.js'); ?><!--" type="text/javascript"></script>-->
-<!--Arquivos do File Upload-->
-<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.iframe-transport.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jquery.iframe-transport.js'); ?><!--" type="text/javascript"></script>-->
-<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.fileupload.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jqueryfileupload.js'); ?><!--" type="text/javascript"></script>-->
-<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.fileupload-process.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jquery.iframe-transport.js'); ?><!--" type="text/javascript"></script>-->
-<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.fileupload-image.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jquery.fileupload-process.js'); ?><!--" type="text/javascript"></script>-->
-<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.fileupload-audio.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jquery.fileupload-audio.js'); ?><!--" type="text/javascript"></script>-->
-<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.fileupload-video.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jquery.fileupload-video.js'); ?><!--" type="text/javascript"></script>-->
-<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.fileupload-validate.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jquery.fileupload-validate.js'); ?><!--" type="text/javascript"></script>-->
-<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.fileupload-jquery-ui.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jquery.fileupload-jquery-ui.js'); ?><!--" type="text/javascript"></script>-->
-<!--<script src="--><?//= DIR_STATICS ?><!--public/plugins/jquery-file-upload/js/jquery.fileupload-ui.js?--><?//= filemtime(BASE_PATH.'/public/plugins/jquery-file-upload/js/jquery.fileupload-ui.js'); ?><!--" type="text/javascript"></script>-->
-
 <!--Custom File Input-->
 <script src="<?= DIR_STATICS ?>public/plugins/customfileinputs/js/custom-file-input.js?<?= filemtime(BASE_PATH.'/public/plugins/customfileinputs/js/custom-file-input.js'); ?>" type="text/javascript"></script>
 
-<!--Bootstrap File Upload-->
-<script src="<?= DIR_STATICS ?>public/plugins/bootstrap-fileupload/bootstrap-fileupload.js" type="text/javascript"></script>
+<!--Bootstrap Plugins-->
+<script src="<?= DIR_STATICS ?>public/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js?<?= filemtime(BASE_PATH.'/public/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/bootstrap-select/js/bootstrap-select.js?<?= filemtime(BASE_PATH.'/public/plugins/bootstrap-select/js/bootstrap-select.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js?<?= filemtime(BASE_PATH.'/public/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/bootstrap-maxlength/bootstrap-maxlength.js?<?= filemtime(BASE_PATH.'/public/plugins/bootstrap-maxlength/bootstrap-maxlength.js'); ?>" type="text/javascript"></script>
+<script src="<?= DIR_STATICS ?>public/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js?<?= filemtime(BASE_PATH.'/public/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js'); ?>"></script>
 
 <!-- Sweet Alert Js  -->
 <script src="<?= DIR_STATICS ?>public/plugins/sweet-alert/sweetalert2.min.js?<?= filemtime(BASE_PATH.'/public/plugins/sweet-alert/sweetalert2.min.js'); ?>" type="text/javascript"></script>
@@ -518,6 +499,9 @@ $infra = new Infra(); ?>
 <script src="<?= DIR_STATICS ?>public/js/uteis/uteis.js?<?= filemtime(BASE_PATH.'/public/js/uteis/uteis.js'); ?>" type="text/javascript"></script>
 <script src="<?= DIR_STATICS ?>public/js/uteis/autocompletes.js?<?= filemtime(BASE_PATH.'/public/js/uteis/autocompletes.js'); ?>" type="text/javascript"></script>
 <script src="<?= DIR_STATICS ?>public/js/uteis/jquery-blockui.js?<?= filemtime(BASE_PATH.'/public/js/uteis/jquery-blockui.js'); ?>" type="text/javascript"></script>
+
+<!-- Init Js file -->
+<script src="<?= DIR_STATICS ?>public/js/jquery.form-advanced.init.js?<?= filemtime(BASE_PATH.'/public/js/jquery.form-advanced.init.js'); ?>" type="text/javascript"></script>
 
 <!-- App js -->
 <script src="<?= DIR_STATICS ?>public/js/jquery.core.js?<?= filemtime(BASE_PATH.'/public/js/jquery.core.js'); ?>" type="text/javascript"></script>

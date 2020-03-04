@@ -7,3 +7,4 @@ cache/
 
 *.log
 !/logs/systemlog.log
+/data/proposta_comercial/

@@ -2,7 +2,9 @@
 
 namespace Circuitos\Models\Operations;
 
+use Circuitos\Models\Lov;
 use Circuitos\Models\PropostaComercial;
+use Circuitos\Models\PropostaComercialAnexo;
 use Circuitos\Models\PropostaComercialItem;
 use Circuitos\Models\PropostaComercialValorMensal;
 use Phalcon\Http\Response as Response;
@@ -415,6 +417,48 @@ class PropostaComercialOP extends PropostaComercial
             $transaction->commit();
             $response = new Response();
             $response->setContent(json_encode(array("operacao" => True,"dados" => $id_proposta_comercial)));
+            return $response;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
+    }
+
+    public function selectTiposAnexos()
+    {
+        try {
+            $objeto = Lov::find("tipo=20 AND excluido=0 AND ativo=1");
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $objeto)));
+            return $response;
+        } catch (TxFailed $e) {
+            var_dump($e->getMessage());
+            return false;
+        }
+    }
+
+    public function visualizarPropostaComercialAnexos($id_proposta_comercial)
+    {
+        $util = new Util();
+        try {
+            $objetosComponentes = PropostaComercialAnexo::find('id_proposta_comercial = ' . $id_proposta_comercial);
+            $arrTransporte = [];
+            foreach ($objetosComponentes as $objetoComponente){
+                $url_base = explode("/", $objetoComponente->getUrlAnexo());
+                $url = $url_base[count($url_base)-5].'/'.$url_base[count($url_base)-4].'/'.$url_base[count($url_base)-3].'/'.$url_base[count($url_base)-2].'/'.$url_base[count($url_base)-1];
+                $objTransporte = new \stdClass();
+                $objTransporte->id_proposta_comercial_anexo = $objetoComponente->getId();
+                $objTransporte->id_proposta_comercial = $objetoComponente->getIdPropostaComercial();
+                $objTransporte->id_anexo = $objetoComponente->getIdAnexo();
+                $objTransporte->id_tipo_anexo = $objetoComponente->getIdTipoAnexo();
+                $objTransporte->ds_tipo_anexo = $objetoComponente->getDescricaoTipoAnexo();
+                $objTransporte->descricao = $objetoComponente->getDescricaoAnexo();
+                $objTransporte->url = $url;
+                $objTransporte->data_criacao = $util->converterDataParaBr($objetoComponente->getDataCriacaoAnexo());
+                array_push($arrTransporte, $objTransporte);
+            }
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
             return $response;
         } catch (TxFailed $e) {
             var_dump($e->getMessage());

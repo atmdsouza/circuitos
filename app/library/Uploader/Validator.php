@@ -1,8 +1,9 @@
 <?php
+
 namespace Uploader;
 
-use Uploader\Helpers\Message;
 use Uploader\Helpers\Format;
+use Uploader\Helpers\Message;
 
 /**
  * Validator class

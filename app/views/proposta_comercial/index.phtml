@@ -89,22 +89,25 @@ $module = $this->router->getControllerName();
                     <td><?= $util->converterDataParaBr($proposta_comercial->getDataProposta()) ?></td>
                     <td><?= $ativo ?></td>
                     <td class="td_acoes">
-                        <?php if($acl->isAllowed($role,$module, 'visualizar')): ?>
+                        <?php if($acl->isAllowed($role,$module, 'visualizar')): ?> <!-- Visualizar -->
                             <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $proposta_comercial->getId() ?>, true);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a>
                         <?php endif; ?>
                         <?php if($proposta_comercial->getAtivo() == '0'): ?>
-                            <?php if($acl->isAllowed($role, $module, 'ativar')): ?>
+                            <?php if($acl->isAllowed($role, $module, 'ativar')): ?> <!-- Ativar -->
                                 <a href="javascript:void(0)" class="botoes_acao" onclick="ativar(<?= $proposta_comercial->getId() ?>, '<?= $proposta_comercial->getNumero() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/reativar.png" title="Ativar" alt="Ativar" height="25" width="25"></a>
                             <?php endif; ?>
                         <?php else: ?>
-                            <?php if($acl->isAllowed($role, $module, 'editar')): ?>
+                            <?php if($acl->isAllowed($role, $module, 'subir')): ?> <!-- Anexo de Arquivos -->
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="criarAnexo(<?= $proposta_comercial->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/upload.png" title="Anexar Arquivo" alt="Anexar Arquivo" height="25" width="25"></a>
+                            <?php endif; ?>
+                            <?php if($acl->isAllowed($role, $module, 'editar')): ?> <!-- Editar -->
                                 <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $proposta_comercial->getId() ?>, false);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
                             <?php endif; ?>
-                            <?php if($acl->isAllowed($role, $module, 'inativar')): ?>
+                            <?php if($acl->isAllowed($role, $module, 'inativar')): ?> <!-- Inativar -->
                                 <a href="javascript:void(0)" class="botoes_acao" onclick="inativar(<?= $proposta_comercial->getId() ?>, '<?= $proposta_comercial->getNumero() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/desativar.png" title="Desativar" alt="Desativar" height="25" width="25"></a>
                             <?php endif; ?>
                         <?php endif; ?>
-                        <?php if($acl->isAllowed($role, $module, 'excluir')): ?>
+                        <?php if($acl->isAllowed($role, $module, 'excluir')): ?> <!-- Excluir -->
                             <a href="javascript:void(0)" class="botoes_acao" onclick="excluir(<?= $proposta_comercial->getId() ?>, '<?= $proposta_comercial->getNumero() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a>
                         <?php endif; ?>
                     </td>
@@ -450,6 +453,69 @@ $module = $this->router->getControllerName();
                         <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
                         <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="confirmaCancelar('modalCadastro');">Fechar</button>
                         <button id="salvarCadastro" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light" onclick="salvar();" value="">Salvar</button>
+                    </div>
+                </div><!-- /.modal-footer -->
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!--  Modal Upload de Anexos -->
+<div id="modalAnexoArquivo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalAnexoArquivo" aria-hidden="true"
+     style="display: none;" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-65">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h5 class="modal-title" id="modalAnexoArquivo">Anexar arquivos a Proposta.: <span id="identificador_anexado"></span></h5>
+            </div>
+            <form id="formAnexoArquivo" action="proposta_comercial/subir" enctype="multipart/form-data" method="POST">
+                <input type="hidden" id="id_proposta" name="id_proposta" value=""><!-- Manter como hidden -->
+                <div class="modal-body">
+                    <table id="tabela_lista_anexos" class="table table-striped table-responsive" cellspacing="0" width="100%" style="display: none;">
+                        <thead>
+                        <tr>
+                            <th>Tipo Anexo</th>
+                            <th>Descrição</th>
+                            <th>Data de Inclusão</th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="form-row">
+                        <button type="button" name="bt_inserir_anexo" id="bt_inserir_anexo" class="btn btn-info btn-rounded waves-light w-md" onclick="inserirAnexo();">Novo Anexo</button>
+                    </div>
+                    <div id="agrupamento-anexos">
+                        <div class="form-row" style="margin-top: 20px;">
+                            <div class="form-group col-md-3">
+                                <label for="id_tipo_anexo">Tipo de Anexo <span class="required">*</span></label>
+                                <?= $this->tag->select(["id_tipo_anexo[]", $tipos_anexos, "class" => "form-control selectpicker", "id" => "id_tipo_anexo", "data-live-search" => "true", "data-style" => "btn-light",
+                                    "using" => ["id", "descricao",],
+                                    "useEmpty" => true,
+                                    "emptyText" => "Selecione o Tipo de Anexo",
+                                    "emptyValue" => ""])
+                                ?>
+                            </div>
+                            <div class="form-group col-md-3 botoes_forms_alinhamento">
+                                <label for="descricao">Descrição </label>
+                                <?= $this->tag->textField(["descricao[]", "size" => 200, "class" => "form-control", "id" => "descricao", "placeholder" => "Descrição"]) ?>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="anexo">Anexo <span class="required">*</span></label>
+                                <?= $this->tag->fileField(["anexo", "class" => "filestyle", "id" => "anexo"]) ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group col-md-6">
+                        <p class="texto_rodape">Os campos com <span class="required">*</span> são obrigatórios!</p>
+                    </div>
+                    <div class="form-group col-md-6 botoes_rodape">
+                        <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="limparModalAnexos();" data-dismiss="modal">Fechar</button>
+                        <button id="salvarAnexoArquivo" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
                     </div>
                 </div><!-- /.modal-footer -->
             </form>

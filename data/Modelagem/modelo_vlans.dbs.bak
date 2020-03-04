@@ -2117,7 +2117,6 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="terreno" color="C7F4BE" x="2720" y="224" />
 		<entity schema="bd_circuitosnavega" name="usuario" color="F4DDBE" x="1120" y="1312" />
 		<entity schema="bd_circuitosnavega" name="cliente_unidade" color="D1BEF4" x="4192" y="2128" />
-		<entity schema="bd_circuitosnavega" name="lov" color="F4DDBE" x="2672" y="1312" />
 		<entity schema="bd_circuitosnavega" name="set_seguranca" color="C7F4BE" x="3360" y="736" />
 		<entity schema="bd_circuitosnavega" name="set_equipamento" color="C7F4BE" x="2784" y="736" />
 		<entity schema="bd_circuitosnavega" name="equipamento" color="C7F4BE" x="4176" y="1280" />
@@ -2129,7 +2128,6 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="circuitos_anexo" color="F4DDBE" x="2960" y="1920" />
 		<entity schema="bd_circuitosnavega" name="proposta_comercial_servico_unidade" color="D1BEF4" x="528" y="1552" />
 		<entity schema="bd_circuitosnavega" name="proposta_comercial_anexo" color="C1D8EE" x="720" y="1728" />
-		<entity schema="bd_circuitosnavega" name="anexos" color="C1D8EE" x="2848" y="1312" />
 		<entity schema="bd_circuitosnavega" name="set_equipamento_componentes" color="C7F4BE" x="2672" y="1008" />
 		<entity schema="bd_circuitosnavega" name="set_seguranca_contato" color="C7F4BE" x="3920" y="736" />
 		<entity schema="bd_circuitosnavega" name="set_seguranca_componentes" color="C7F4BE" x="3600" y="736" />
@@ -2163,6 +2161,8 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="contrato_fiscal" color="BEBEF4" x="1312" y="640" />
 		<entity schema="bd_circuitosnavega" name="contrato_fiscal_has_contrato" color="C1D8EE" x="976" y="672" />
 		<entity schema="bd_circuitosnavega" name="contrato_processo" color="C1D8EE" x="1648" y="96" />
+		<entity schema="bd_circuitosnavega" name="lov" color="F4DDBE" x="2624" y="1296" />
+		<entity schema="bd_circuitosnavega" name="anexos" color="C1D8EE" x="2816" y="1312" />
 		<group name="Empresa" color="C4E0F9" >
 			<entity schema="bd_circuitosnavega" name="empresa" />
 			<entity schema="bd_circuitosnavega" name="empresa_parametros" />

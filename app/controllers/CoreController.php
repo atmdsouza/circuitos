@@ -365,61 +365,6 @@ class CoreController extends ControllerBase
         }
     }
 
-    public function uploadAction()
-    {
-        //Desabilita o layout para o ajax
-        $this->view->disable();
-        $response = new Response();
-
-        $modulo = $this->router->getControllerName();
-        $action = $this->router->getActionName();
-
-        $diretorio = BASE_PATH . "/data/" . $modulo . "/" . $action;
-
-        if($this->request->hasFiles() !== false) {
-
-            // get uploader service or \Uploader\Uploader
-            $uploader = $this->di->get("uploader");
-
-            // setting up uloader rules
-            $uploader->setRules([
-                "dynamic"   =>  $diretorio,
-                "mimes"     =>  [       // any allowed mime types
-                    "image/gif",
-                    "image/jpeg",
-                    "image/png",
-                ],
-                "extensions"     =>  [  // any allowed extensions
-                    "gif",
-                    "jpeg",
-                    "jpg",
-                    "png",
-                ],
-                "sanitize" => true,
-                "hash"     => "md5"
-            ]);
-
-            if($uploader->isValid() === true) {
-
-                $uploader->move(); // upload files array result
-
-                $uploader->getInfo(); // var dump to see upload files
-
-            }
-            else {
-                $uploader->getErrors(); // var_dump errors
-            }
-        }
-
-        var_dump($diretorio);
-        exit;
-
-        $response->setContent(json_encode(array(
-            "operacao" => False
-        )));
-        return $response;
-    }
-
     public function enviarEmailAction($id_empresa=null, $address=null, $address_name=null, $attach=null, $subject=null, $content=null)
     {
         $logger = new FileAdapter(BASE_PATH . "/logs/systemlog.log");
@@ -707,6 +652,10 @@ class CoreController extends ControllerBase
                 $objeto = new PropostaComercialOP();
                 return $objeto->visualizarPropostaItem($dados['id']);
                 break;
+            case 'visualizarPropostaComercialAnexos':
+                $objeto = new PropostaComercialOP();
+                return $objeto->visualizarPropostaComercialAnexos($dados['id']);
+                break;
             case 'visualizarEmpresaDepartamento':
                 $objeto = new EmpresaDepartamentoOP();
                 return $objeto->visualizarEmpresaDepartamento($dados['id']);
@@ -885,6 +834,10 @@ class CoreController extends ControllerBase
         $this->view->disable();
         $dados = filter_input_array(INPUT_GET);
         switch ($dados['metodo']) {
+            case 'selectTiposAnexos':
+                $objeto = new PropostaComercialOP();
+                return $objeto->selectTiposAnexos();
+                break;
             case 'selectSubGrupo':
                 $objeto = new PropostaComercialServicoGrupoOP();
                 return $objeto->selectSubGrupo($dados['id']);
