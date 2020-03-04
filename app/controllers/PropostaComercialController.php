@@ -272,6 +272,6 @@ class PropostaComercialController extends ControllerBase
             $propostaanexos->setIdPropostaComercial($id_proposta);
             $anexosOP->cadastrarPropostaComercialAnexo($propostaanexos);
         }
-        $this->response->redirect('proposta_comercial/index');
+        $this->response->redirect('proposta_comercial');
     }
 }

@@ -454,7 +454,7 @@ class PropostaComercialOP extends PropostaComercial
                 $objTransporte->ds_tipo_anexo = $objetoComponente->getDescricaoTipoAnexo();
                 $objTransporte->descricao = $objetoComponente->getDescricaoAnexo();
                 $objTransporte->url = $url;
-                $objTransporte->data_criacao = $util->converterDataParaBr($objetoComponente->getDataCriacaoAnexo());
+                $objTransporte->data_criacao = $util->converterDataHoraParaBr($objetoComponente->getDataCriacaoAnexo());
                 array_push($arrTransporte, $objTransporte);
             }
             $response = new Response();
