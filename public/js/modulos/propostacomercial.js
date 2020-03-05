@@ -4,6 +4,8 @@ var URLImagensSistema = "public/images";
 
 //Variáveis Globais
 var mudou = false;
+var contador = 0;
+var tipos_anexos;
 
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos)
 function inicializar()
@@ -73,6 +75,7 @@ function criar()
 {
     'use strict';
     $('#primeira_aba').trigger('click');
+    $('#tab-anexos').addClass('disabled');
     $('.hide_buttons').show();
     $('#bt_inserir_servico').text("Inserir");
     $('#bt_inserir_servico').removeAttr('onclick');
@@ -424,6 +427,62 @@ function visualizar(id, ocultar)
             $('#prazo_execucao').val(data.dados.prazo_execucao);
             $('#consideracoes').val(data.dados.consideracoes);
             montarTabelaComponente(data.dados.id, ocultar);
+            montarTabelaAnexosv(data.dados.id, ocultar)
+        }
+    });
+}
+
+function limpar()
+{
+    'use strict';
+    $('#fieldPesquisa').val('');
+    $('#formPesquisa').submit();
+}
+
+function montarTabelaAnexosv(id_proposta, visualizar)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'visualizarPropostaComercialAnexos', id: id_proposta },
+        complete: function() {
+            if (visualizar) {
+                console.log('aqui');
+                $('#tab-anexos').removeClass('disabled');
+                $('.hide_buttons').hide();
+            }
+        },
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('.tr_remove_anexov').remove();
+            var linhas =null;
+            if (data.dados != ''){
+                $.each(data.dados, function(key, value) {
+                    linhas += '<tr class="tr_remove_anexov">';
+                    linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
+                    linhas += '<td>'+ value.descricao +'</td>';
+                    linhas += '<td>'+ value.data_criacao +'</td>';
+                    linhas += '<td><a href="'+ value.url +'" class="botoes_acao nova-aba" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
+                    linhas += '</tr>';
+                });
+                $("#tabela_lista_anexosv").append(linhas);
+            } else {
+                linhas += "<tr class='tr_remove_anexov'>";
+                linhas += "<td colspan='5' style='text-align: center;'>Não existem anexos para serem exibidos! Favor Cadastrar!</td>";
+                linhas += "</tr>";
+                $("#tabela_lista_anexosv").append(linhas);
+            }
         }
     });
 }
@@ -487,13 +546,6 @@ function montarTabelaComponente(id_proposta_comercial, visualizar)
             atualizaValorTotalMensal(valor_global, 0);
         }
     });
-}
-
-function limpar()
-{
-    'use strict';
-    $('#fieldPesquisa').val('');
-    $('#formPesquisa').submit();
 }
 
 function criarComponente()
@@ -579,7 +631,7 @@ function inserirComponente()
         linhas += '<td><a data-valor-total="'+ valor_total +'" href="javascript:void(0)" onclick="RemoveTableRow(this);removerValoresTotais(this)" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
         linhas += '</tr>';
         $("#tabela_componentes").append(linhas);
-        atualizaValorTotalMensal(valor_total, accounting.unformat($('#demonstrativo_valor_total').html(), ","));
+        atualizaValorTotalMensal(valor_total, accounting.unformat($('#demonstrativo_valor_total').html(), ","), mes_inicial, vigencia);
         $('#tabela_componentes').removeAttr('style','display: none;');
         $('#tabela_componentes').attr('style', 'display: table;');
         limparDadosFormComponente();
@@ -592,7 +644,7 @@ function inserirComponente()
     }
 }
 
-function atualizaValorTotalMensal(valor_total, valor_total_atual)
+function atualizaValorTotalMensal(valor_total, valor_total_atual, mes_inicial, vigencia)
 {
     'use strict';
     var novo_valor_total = valor_total_atual + valor_total;
@@ -715,103 +767,6 @@ function limparDadosFormComponente()
     $('#vigencia_servico').val('12').selected = 'true';
     resetSelecaoSubgrupo();
     $('#grupo').focus();
-}
-
-function resetSelecaoSubgrupo() {
-    'use strict';
-    $('.remover_subgrupo').remove();
-    $('#subgrupo').attr('disabled', 'disabled');
-}
-
-function mostrarSubgrupo()
-{
-    'use strict';
-    var id_servico = $('#grupo').val();
-    if (id_servico){//Fazer a busca e montar o outro select
-        var action = actionCorreta(window.location.href.toString(), "core/processarAjaxSelect");
-        $.ajax({
-            type: "GET",
-            dataType: "JSON",
-            url: action,
-            data: {metodo: 'selectSubGrupo', id: id_servico},
-            complete: function () {
-                $('#subgrupo').removeAttr('disabled');
-            },
-            error: function (data) {
-                if (data.status && data.status === 401) {
-                    swal({
-                        title: "Erro de Permissão",
-                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                        type: "warning"
-                    });
-                }
-            },
-            success: function (data) {
-                $('.remover_subgrupo').remove();
-                $.each(data.dados, function (key, value) {
-                    var opcao = '<option class="remover_subgrupo" value="' + value.id + '">' + value.descricao + '</option>';
-                    $('#subgrupo').append(opcao);
-                });
-            }
-        });
-    } else {//Mostrar a mensagem de elemento vazio para subgrupo
-        $('.remover_subgrupo').remove();
-        $('#subgrupo').attr('disabled', 'disabled');
-    }
-}
-
-function selecaoDescricaoServico()
-{
-    'use strict';
-    var id_servico = $('#id_codigo_servico').val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxSelect");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: {metodo: 'selectIdServico', id: id_servico},
-        error: function (data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function (data) {
-            $('#descricao_servico').val(data.dados.descricao);
-            $('#id_servico').val(data.dados.id);
-            $('#grandeza').val(data.dados.grandeza);
-        }
-    });
-}
-
-function selectCodigoServico()
-{
-    'use strict';
-    var id_servico = $('#id_servico').val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxSelect");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: {metodo: 'selectIdServico', id: id_servico},
-        error: function (data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function (data) {
-            $('#codigo_servico').val(data.dados.codigo_legado);
-            $('#id_codigo_servico').val(data.dados.id);
-            $('#grandeza').val(data.dados.grandeza);
-        }
-    });
 }
 
 function exibirDetalhesComponente(id, ocultar)
@@ -956,6 +911,103 @@ function excluirComponente(id)
     });
 }
 
+function resetSelecaoSubgrupo() {
+    'use strict';
+    $('.remover_subgrupo').remove();
+    $('#subgrupo').attr('disabled', 'disabled');
+}
+
+function mostrarSubgrupo()
+{
+    'use strict';
+    var id_servico = $('#grupo').val();
+    if (id_servico){//Fazer a busca e montar o outro select
+        var action = actionCorreta(window.location.href.toString(), "core/processarAjaxSelect");
+        $.ajax({
+            type: "GET",
+            dataType: "JSON",
+            url: action,
+            data: {metodo: 'selectSubGrupo', id: id_servico},
+            complete: function () {
+                $('#subgrupo').removeAttr('disabled');
+            },
+            error: function (data) {
+                if (data.status && data.status === 401) {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            },
+            success: function (data) {
+                $('.remover_subgrupo').remove();
+                $.each(data.dados, function (key, value) {
+                    var opcao = '<option class="remover_subgrupo" value="' + value.id + '">' + value.descricao + '</option>';
+                    $('#subgrupo').append(opcao);
+                });
+            }
+        });
+    } else {//Mostrar a mensagem de elemento vazio para subgrupo
+        $('.remover_subgrupo').remove();
+        $('#subgrupo').attr('disabled', 'disabled');
+    }
+}
+
+function selecaoDescricaoServico()
+{
+    'use strict';
+    var id_servico = $('#id_codigo_servico').val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxSelect");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'selectIdServico', id: id_servico},
+        error: function (data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            $('#descricao_servico').val(data.dados.descricao);
+            $('#id_servico').val(data.dados.id);
+            $('#grandeza').val(data.dados.grandeza);
+        }
+    });
+}
+
+function selectCodigoServico()
+{
+    'use strict';
+    var id_servico = $('#id_servico').val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxSelect");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'selectIdServico', id: id_servico},
+        error: function (data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            $('#codigo_servico').val(data.dados.codigo_legado);
+            $('#id_codigo_servico').val(data.dados.id);
+            $('#grandeza').val(data.dados.grandeza);
+        }
+    });
+}
+
 function criarAnexo(id_proposta)
 {
     'use strict';
@@ -967,6 +1019,7 @@ function criarAnexo(id_proposta)
     $('#modalAnexoArquivo').modal();
 
 }
+
 function getIdentificador(id)
 {
     'use strict';
@@ -1038,7 +1091,6 @@ function montarTabelaAnexos(id_proposta, visualizar)
     });
 }
 
-var tipos_anexos;
 function getTiposAnexo()
 {
     'use strict';
@@ -1064,7 +1116,6 @@ function getTiposAnexo()
     return tipos_anexos;
 }
 
-var contador = 0;
 function inserirAnexo()
 {
     'use strict';

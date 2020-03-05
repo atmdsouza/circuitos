@@ -21,6 +21,7 @@ function inicializar()
     autocompletarPropostaComercial('lid_proposta_comercial','id_proposta_comercial');
     autocompletarClienteFornecedorParceiro('lid_cliente','id_cliente');
     autocompletarUsuario('lid_usuario','v_id_usuario');
+    getTiposAnexo();
 }
 
 function verificarAlteracao()

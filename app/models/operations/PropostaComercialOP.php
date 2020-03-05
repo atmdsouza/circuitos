@@ -45,7 +45,7 @@ class PropostaComercialOP extends PropostaComercial
             $objeto->setImposto((!empty($objArray->getImposto())) ? $util->formataNumero($objArray->getImposto()) : 0);
             $objeto->setDesconto((!empty($objArray->getDesconto())) ? $util->formataNumero($objArray->getDesconto()) : 0);
             $objeto->setEncargos((!empty($objArray->getEncargos())) ? $util->formataNumero($objArray->getEncargos()) : 0);
-            $objeto->setValorGlobal($util->formataNumero($objArray->getValorGlobal()));
+            $objeto->setValorGlobal((!empty($objArray->getValorGlobal())) ? $util->formataNumero($objArray->getValorGlobal()) : 0);
             $objeto->setObjetivo(mb_strtoupper($objArray->getObjetivo(), $this->encode));
             $objeto->setObjetivoEspecifico(mb_strtoupper($objArray->getObjetivoEspecifico(), $this->encode));
             $objeto->setDescritivo(mb_strtoupper($objArray->getDescritivo(), $this->encode));
@@ -142,7 +142,7 @@ class PropostaComercialOP extends PropostaComercial
             $objeto->setImposto((!empty($objArray->getImposto())) ? $util->formataNumero($objArray->getImposto()) : 0);
             $objeto->setDesconto((!empty($objArray->getDesconto())) ? $util->formataNumero($objArray->getDesconto()) : 0);
             $objeto->setEncargos((!empty($objArray->getEncargos())) ? $util->formataNumero($objArray->getEncargos()) : 0);
-            $objeto->setValorGlobal($util->formataNumero($objArray->getValorGlobal()));
+            $objeto->setValorGlobal((!empty($objArray->getValorGlobal())) ? $util->formataNumero($objArray->getValorGlobal()) : 0);
             $objeto->setObjetivo(mb_strtoupper($objArray->getObjetivo(), $this->encode));
             $objeto->setObjetivoEspecifico(mb_strtoupper($objArray->getObjetivoEspecifico(), $this->encode));
             $objeto->setDescritivo(mb_strtoupper($objArray->getDescritivo(), $this->encode));

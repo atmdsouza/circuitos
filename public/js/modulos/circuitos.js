@@ -5,7 +5,7 @@ var URLImagensSistema = "public/images";
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos
 function inicializar()
 {
-
+    getTiposAnexo();
 }
 
 //Datatable
@@ -1493,11 +1493,11 @@ function montarTabelaAnexosv(id_circuitos, visualizar)
             }
         },
         success: function(data) {
+            $('.tr_remove_anexov').remove();
             var linhas =null;
             if (data.dados != ''){
-                $('.tr_remove_anexo').remove();
                 $.each(data.dados, function(key, value) {
-                    linhas += '<tr class="tr_remove_anexo">';
+                    linhas += '<tr class="tr_remove_anexov">';
                     linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
                     linhas += '<td>'+ value.descricao +'</td>';
                     linhas += '<td>'+ value.data_criacao +'</td>';
@@ -1505,15 +1505,11 @@ function montarTabelaAnexosv(id_circuitos, visualizar)
                     linhas += '</tr>';
                 });
                 $("#tabela_lista_anexosv").append(linhas);
-                $('#tabela_lista_anexosv').removeAttr('style', 'display: none;');
-                $('#tabela_lista_anexosv').attr('style', 'display: table;');
             } else {
-                linhas += "<tr class='tr_remove_anexo'>";
+                linhas += "<tr class='tr_remove_anexov'>";
                 linhas += "<td colspan='5' style='text-align: center;'>Não existem anexos para serem exibidos! Favor Cadastrar!</td>";
                 linhas += "</tr>";
                 $("#tabela_lista_anexosv").append(linhas);
-                $('#tabela_lista_anexosv').removeAttr('style', 'display: none;');
-                $('#tabela_lista_anexosv').attr('style', 'display: table;');
             }
         }
     });
