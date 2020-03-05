@@ -6,65 +6,7 @@
 [Fri, 09 Nov 18 18:30:03 -0200][NOTICE] This is a notice message
 [Fri, 09 Nov 18 18:30:03 -0200][WARNING] This is a warning message
 [Fri, 09 Nov 18 18:30:03 -0200][ALERT] This is an alert message
-[Fri, 09 Nov 18 18:30:03 -0200][ERROR] This is another error message
-[Fri, 09 Nov 18 18:30:03 -0200][DEBUG] This is a message
-[Fri, 09 Nov 18 18:30:03 -0200][EMERGENCY] Array
-[Fri, 09 Nov 18 18:31:46 -0200][CRITICAL] This is a critical message
-[Fri, 09 Nov 18 18:31:46 -0200][EMERGENCY] This is an emergency message
-[Fri, 09 Nov 18 18:31:46 -0200][DEBUG] This is a debug message
-[Fri, 09 Nov 18 18:31:46 -0200][ERROR] This is an error message
-[Fri, 09 Nov 18 18:31:46 -0200][INFO] This is an info message
-[Fri, 09 Nov 18 18:31:46 -0200][NOTICE] This is a notice message
-[Fri, 09 Nov 18 18:31:46 -0200][WARNING] This is a warning message
-[Fri, 09 Nov 18 18:31:46 -0200][ALERT] This is an alert message
-[Fri, 09 Nov 18 18:31:46 -0200][ERROR] This is another error message
-[Fri, 09 Nov 18 18:31:46 -0200][DEBUG] This is a message
-[Fri, 09 Nov 18 18:31:46 -0200][EMERGENCY] Array
-[Fri, 09 Nov 18 18:31:59 -0200][CRITICAL] This is a critical message
-[Fri, 09 Nov 18 18:31:59 -0200][EMERGENCY] This is an emergency message
-[Fri, 09 Nov 18 18:31:59 -0200][DEBUG] This is a debug message
-[Fri, 09 Nov 18 18:31:59 -0200][ERROR] This is an error message
-[Fri, 09 Nov 18 18:31:59 -0200][INFO] This is an info message
-[Fri, 09 Nov 18 18:31:59 -0200][NOTICE] This is a notice message
-[Fri, 09 Nov 18 18:31:59 -0200][WARNING] This is a warning message
-[Fri, 09 Nov 18 18:31:59 -0200][ALERT] This is an alert message
-[Fri, 09 Nov 18 18:31:59 -0200][ERROR] This is another error message
-[Fri, 09 Nov 18 18:31:59 -0200][DEBUG] This is a message
-[Fri, 09 Nov 18 18:31:59 -0200][EMERGENCY] Array
-[Fri, 09 Nov 18 18:34:46 -0200][CRITICAL] This is a critical message
-[Fri, 09 Nov 18 18:34:46 -0200][EMERGENCY] This is an emergency message
-[Fri, 09 Nov 18 18:34:46 -0200][DEBUG] This is a debug message
-[Fri, 09 Nov 18 18:34:46 -0200][ERROR] This is an error message
-[Fri, 09 Nov 18 18:34:46 -0200][INFO] This is an info message
-[Fri, 09 Nov 18 18:34:46 -0200][NOTICE] This is a notice message
-[Fri, 09 Nov 18 18:34:46 -0200][WARNING] This is a warning message
-[Fri, 09 Nov 18 18:34:46 -0200][ALERT] This is an alert message
-[Fri, 09 Nov 18 18:34:46 -0200][ERROR] This is another error message
-[Fri, 09 Nov 18 18:34:46 -0200][DEBUG] This is a message
-[Fri, 09 Nov 18 18:34:46 -0200][EMERGENCY] Array
 [Fri, 09 Nov 18 18:35:20 -0200][ERROR] Mensagem não enviada. Mailer Error: SMTP connect() failed. https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting
-[Fri, 09 Nov 18 18:36:30 -0200][CRITICAL] This is a critical message
-[Fri, 09 Nov 18 18:36:30 -0200][EMERGENCY] This is an emergency message
-[Fri, 09 Nov 18 18:36:30 -0200][DEBUG] This is a debug message
-[Fri, 09 Nov 18 18:36:30 -0200][ERROR] This is an error message
-[Fri, 09 Nov 18 18:36:30 -0200][INFO] This is an info message
-[Fri, 09 Nov 18 18:36:30 -0200][NOTICE] This is a notice message
-[Fri, 09 Nov 18 18:36:30 -0200][WARNING] This is a warning message
-[Fri, 09 Nov 18 18:36:30 -0200][ALERT] This is an alert message
-[Fri, 09 Nov 18 18:36:30 -0200][ERROR] This is another error message
-[Fri, 09 Nov 18 18:36:30 -0200][DEBUG] This is a message
-[Fri, 09 Nov 18 18:36:30 -0200][EMERGENCY] Array
-[Fri, 09 Nov 18 18:36:34 -0200][CRITICAL] This is a critical message
-[Fri, 09 Nov 18 18:36:34 -0200][EMERGENCY] This is an emergency message
-[Fri, 09 Nov 18 18:36:34 -0200][DEBUG] This is a debug message
-[Fri, 09 Nov 18 18:36:34 -0200][ERROR] This is an error message
-[Fri, 09 Nov 18 18:36:34 -0200][INFO] This is an info message
-[Fri, 09 Nov 18 18:36:34 -0200][NOTICE] This is a notice message
-[Fri, 09 Nov 18 18:36:34 -0200][WARNING] This is a warning message
-[Fri, 09 Nov 18 18:36:34 -0200][ALERT] This is an alert message
-[Fri, 09 Nov 18 18:36:34 -0200][ERROR] This is another error message
-[Fri, 09 Nov 18 18:36:34 -0200][DEBUG] This is a message
-[Fri, 09 Nov 18 18:36:34 -0200][EMERGENCY] Array
 [Fri, 09 Nov 18 18:43:09 -0200][INFO] Saída do usuário admin do sistema.
 [Fri, 09 Nov 18 18:43:22 -0200][INFO] Acesso do usuário admin ao sistema.
 [Fri, 09 Nov 18 19:40:36 -0200][INFO] Acesso do usuário admin ao sistema.
@@ -486,3 +428,5 @@
 [Tue, 03 Mar 20 21:12:29 -0300][INFO] Acesso do usuário admin ao sistema.
 [Wed, 04 Mar 20 08:51:14 -0300][INFO] Acesso do usuário admin ao sistema.
 [Wed, 04 Mar 20 09:50:01 -0300][INFO] Acesso do usuário admin ao sistema.
+[Thu, 05 Mar 20 08:50:16 -0300][ERROR] Combinação de usuário e senha inválida! [Usuário: admin]
+[Thu, 05 Mar 20 08:50:21 -0300][INFO] Acesso do usuário admin ao sistema.

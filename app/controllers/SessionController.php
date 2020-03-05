@@ -2,22 +2,19 @@
 
 namespace Circuitos\Controllers;
 
-use Phalcon\Logger;
+use Auth\Autentica;
+use Circuitos\Controllers\UsuarioController as Usuario;
+use Circuitos\Models\PessoaEmail;
+use Circuitos\Models\Usuario as ModelUser;
 use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\View;
-use Phalcon\Mvc\Controller;
-
-use Auth\Autentica;
 use Util\TokenManager;
-
-use Circuitos\Controllers\ControllerBase;
-use Circuitos\Controllers\UsuarioController as Usuario;
-use Circuitos\Models\Usuario as ModelUser;
-use Circuitos\Models\PessoaEmail;
 
 class SessionController extends ControllerBase {
 
     public $tokenManager;
+
+    private $arqLog = BASE_PATH . "/logs/systemlog.log";
 
     public function initialize()
     {
@@ -34,7 +31,7 @@ class SessionController extends ControllerBase {
     public function loginAction()
     {
         $this->view->setRenderLevel(View::LEVEL_ACTION_VIEW);
-        $logger = new FileAdapter(BASE_PATH . "/logs/systemlog.log");
+        $logger = new FileAdapter($this->arqLog);
         try {
             if ($this->request->isPost()) {
                 if ($this->security->checkToken()) {
@@ -65,6 +62,7 @@ class SessionController extends ControllerBase {
                         ));
                         if(!$check) {
                             $this->flash->error("Combinação de usuário e senha inválida!");
+                            $logger->error("Combinação de usuário e senha inválida! [Usuário: {$this->request->getPost('login')}]");
                             $this->dispatcher->forward([
                                 "controller" => "session",
                                 "action" => "login"
@@ -91,7 +89,7 @@ class SessionController extends ControllerBase {
      */
     public function logoutAction()
     {
-        $logger = new FileAdapter(BASE_PATH . "/logs/systemlog.log");
+        $logger = new FileAdapter($this->arqLog);
         $auth = new Autentica();
         $identity = $auth->getIdentity();
         $auth->remove();
@@ -108,7 +106,7 @@ class SessionController extends ControllerBase {
     public function recuperarAction()
     {
         $this->view->setRenderLevel(View::LEVEL_ACTION_VIEW);
-        $logger = new FileAdapter(BASE_PATH . "/logs/systemlog.log");
+        $logger = new FileAdapter($this->arqLog);
         if ($this->request->isPost()) {
             if ($this->security->checkToken()) {
                 if (!$this->request->getPost('email')){

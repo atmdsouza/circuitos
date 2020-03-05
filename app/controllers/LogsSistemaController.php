@@ -11,6 +11,8 @@ class LogsSistemaController extends ControllerBase
 
     private $encode = "UTF-8";
 
+    private $arqLog = BASE_PATH . "/logs/systemlog.log";
+
     public function initialize()
     {
         $this->tag->setTitle("Logs de Sistema");
@@ -32,7 +34,7 @@ class LogsSistemaController extends ControllerBase
 
     public function indexAction()
     {
-        $logs = file(APP_PATH . "/../logs/systemlog.log");
+        $logs = file($this->arqLog);
         $linhas = [];
         foreach ($logs AS $log)
         {
