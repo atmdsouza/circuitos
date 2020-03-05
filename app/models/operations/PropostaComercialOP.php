@@ -7,6 +7,7 @@ use Circuitos\Models\PropostaComercialAnexo;
 use Circuitos\Models\PropostaComercialItem;
 use Circuitos\Models\PropostaComercialValorMensal;
 use Phalcon\Http\Response as Response;
+use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Util\Util;
@@ -15,6 +16,8 @@ class PropostaComercialOP extends PropostaComercial
 {
     private $encode = "UTF-8";
 
+    private $arqLog = BASE_PATH . "/logs/systemlog.log";
+
     public function listar($dados)
     {
         return PropostaComercial::pesquisarPropostaComercial($dados);
@@ -22,6 +25,7 @@ class PropostaComercialOP extends PropostaComercial
 
     public function cadastrar(PropostaComercial $objArray, PropostaComercialValorMensal $objArrayValorMensal, $arrObjItensProposta)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
@@ -54,6 +58,7 @@ class PropostaComercialOP extends PropostaComercial
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
+                $logger->error("Erro ao criar a proposta: " . $errors);
                 $transaction->rollback("Erro ao criar a proposta: " . $errors);
             }
             $objetoValorMensal = new PropostaComercialValorMensal();
@@ -78,6 +83,7 @@ class PropostaComercialOP extends PropostaComercial
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
+                $logger->error("Erro ao criar os valores mensais: " . $errors);
                 $transaction->rollback("Erro ao criar os valores mensais: " . $errors);
             }
             if (count($arrObjItensProposta) > 0){
@@ -103,6 +109,7 @@ class PropostaComercialOP extends PropostaComercial
                         for ($i = 0; $i < count($messages); $i++) {
                             $errors .= "[".$messages[$i]."] ";
                         }
+                        $logger->error("Erro ao criar o item da proposta: " . $errors);
                         $transaction->rollback("Erro ao criar o item da proposta: " . $errors);
                     }
                 }
@@ -110,13 +117,14 @@ class PropostaComercialOP extends PropostaComercial
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function alterar(PropostaComercial $objArray, PropostaComercialValorMensal $objArrayValorMensal, $arrObjItensProposta)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
@@ -149,6 +157,7 @@ class PropostaComercialOP extends PropostaComercial
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
+                $logger->error("Erro ao criar a proposta: " . $errors);
                 $transaction->rollback("Erro ao criar a proposta: " . $errors);
             }
             $objetoValorMensal = PropostaComercialValorMensal::findFirst('id_proposta_comercial='.$objArray->getId());
@@ -172,6 +181,7 @@ class PropostaComercialOP extends PropostaComercial
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
+                $logger->error("Erro ao criar os valores mensais: " . $errors);
                 $transaction->rollback("Erro ao criar os valores mensais: " . $errors);
             }
             if (count($arrObjItensProposta) > 0){
@@ -197,6 +207,7 @@ class PropostaComercialOP extends PropostaComercial
                         for ($i = 0; $i < count($messages); $i++) {
                             $errors .= "[".$messages[$i]."] ";
                         }
+                        $logger->error("Erro ao criar o item da proposta: " . $errors);
                         $transaction->rollback("Erro ao criar o item da proposta: " . $errors);
                     }
                 }
@@ -204,13 +215,14 @@ class PropostaComercialOP extends PropostaComercial
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function ativar(PropostaComercial $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -219,18 +231,20 @@ class PropostaComercialOP extends PropostaComercial
             $objeto->setAtivo(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $logger->error("Não foi possível alterar a proposta");
+                $transaction->rollback("Não foi possível alterar a proposta!");
             }
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function inativar(PropostaComercial $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -239,18 +253,20 @@ class PropostaComercialOP extends PropostaComercial
             $objeto->setAtivo(0);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível alterar a conectividade!");
+                $logger->error("Não foi possível alterar a proposta");
+                $transaction->rollback("Não foi possível alterar a proposta!");
             }
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function excluir(PropostaComercial $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -259,18 +275,20 @@ class PropostaComercialOP extends PropostaComercial
             $objeto->setExcluido(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível excluir a conectividade!");
+                $logger->error("Não foi possível excluir a proposta");
+                $transaction->rollback("Não foi possível excluir a proposta!");
             }
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarPropostaComercial($id)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         try {
             $objeto = PropostaComercial::findFirst("id={$id}");
@@ -301,7 +319,7 @@ class PropostaComercialOP extends PropostaComercial
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoArray)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
@@ -316,6 +334,7 @@ class PropostaComercialOP extends PropostaComercial
 
     public function visualizarPropostaItens($id_proposta_comercial)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objetosComponentes = PropostaComercialItem::find('id_proposta_comercial = ' . $id_proposta_comercial);
             $arrTransporte = [];
@@ -342,13 +361,14 @@ class PropostaComercialOP extends PropostaComercial
             $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarPropostaItem($id_proposta_comercial_item)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objetoComponente = PropostaComercialItem::findFirst('id=' . $id_proposta_comercial_item);
             $objTransporte = new \stdClass();
@@ -367,13 +387,14 @@ class PropostaComercialOP extends PropostaComercial
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function alterarPropostaItem(PropostaComercialItem $objPropostaComercialItem)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         try {
             $manager = new TxManager();
@@ -405,13 +426,14 @@ class PropostaComercialOP extends PropostaComercial
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoComponente)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function deletarPropostaItem(PropostaComercialItem $objPropostaComercialItem)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $manager = new TxManager();
             $transaction = $manager->get();
@@ -426,13 +448,14 @@ class PropostaComercialOP extends PropostaComercial
             $response->setContent(json_encode(array("operacao" => True,"dados" => $id_proposta_comercial)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarPropostaComercialAnexos($id_proposta_comercial)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         try {
             $objetosComponentes = PropostaComercialAnexo::find('id_proposta_comercial = ' . $id_proposta_comercial);
@@ -456,7 +479,7 @@ class PropostaComercialOP extends PropostaComercial
             $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }

@@ -25,6 +25,7 @@ use Circuitos\Models\UnidadeConsumidora;
 use Circuitos\Models\Usuario;
 use Phalcon\Exception;
 use Phalcon\Http\Response as Response;
+use Phalcon\Logger\Adapter\File as FileAdapter;
 use Uploader\Uploader;
 
 /**
@@ -38,8 +39,11 @@ use Uploader\Uploader;
  */
 class CoreOP
 {
+    private $arqLog = BASE_PATH . "/logs/systemlog.log";
+
     public function servicoUpload($request, $modulo, $action, $id, $rules)
     {
+        $logger = new FileAdapter($this->arqLog);
         $uploader = new Uploader();
         $diretorio = BASE_PATH . "/public/anexos/" . $modulo . "/" . $action . "/" . $id . "/";
         if(!file_exists($diretorio) && !is_dir($diretorio)){
@@ -78,6 +82,7 @@ class CoreOP
             }
             return $uploader->getInfo();
         } catch (Exception $e) {
+            $logger->error('['.$e->getMessage().'] ['.$uploader->getErrors().']');
             return '['.$e->getMessage().'] ['.$uploader->getErrors().']';
         }
     }

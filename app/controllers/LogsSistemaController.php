@@ -9,8 +9,6 @@ class LogsSistemaController extends ControllerBase
 {
     public $tokenManager;
 
-    private $encode = "UTF-8";
-
     private $arqLog = BASE_PATH . "/logs/systemlog.log";
 
     public function initialize()
