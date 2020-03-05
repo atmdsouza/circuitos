@@ -59,6 +59,17 @@ var RemoveTableRow;
     };
 })(jQuery);
 
+//Testar se objetos são vazios
+function isEmpty(obj) {
+    'use strict';
+    for(var prop in obj) {
+        if(obj.hasOwnProperty(prop)){
+            return false;
+        }
+    }
+    return true;
+}
+
 // Select2 Configuração Padrão
 $(".select2").select2({
     language: "pt-BR"

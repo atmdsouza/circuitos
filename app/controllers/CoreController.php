@@ -685,6 +685,10 @@ class CoreController extends ControllerBase
                 $objeto = new CircuitosOP();
                 return $objeto->visualizarCircuitosDesignacao($dados['id']);
                 break;
+            case 'visualizarContratosVinculados':
+                $objeto = new ContratoOP();
+                return $objeto->visualizarContratosVinculados($dados['id']);
+                break;
         }
     }
 

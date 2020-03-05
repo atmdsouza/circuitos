@@ -4,6 +4,8 @@ var URLImagensSistema = "public/images";
 
 //Variáveis Globais
 var mudou = false;
+var contador = 0;
+var tipos_anexos;
 
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos)
 function inicializar()
@@ -461,6 +463,7 @@ function visualizar(id, ocultar)
             montarTabelaGarantia(data.dados.id, ocultar);
             montarTabelaExercicio(data.dados.id, ocultar);
             montarTabelaAnexosv(data.dados.id, ocultar);
+            montarTabelaObjetosVinculados(data.dados.id, ocultar);
         }
     });
 }
@@ -505,6 +508,67 @@ function preencherDadosPropostaComercial()
     'use strict';
 }
 
+function montarTabelaObjetosVinculados(id_contrato, visualizar)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'visualizarContratosVinculados', id: id_contrato },
+        complete: function() {
+            if (visualizar) {
+                $('#tab-objeto-vinculado').removeClass('disabled');
+                $('.hide_buttons').hide();
+            }
+        },
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('.tr_remove_objeto_vinculado').remove();
+            var linhas =null;
+            if (!isEmpty(data.dados_pai)){
+                linhas += '<tr class="tr_remove_objeto_vinculado">';
+                linhas += '<td>'+ data.dados_pai.tipo_vinculo +'</td>';
+                linhas += '<td>'+ data.dados_pai.tipo_documento +'</td>';
+                linhas += '<td>'+ data.dados_pai.numero_ano +'</td>';
+                linhas += '<td>'+ data.dados_pai.data_assinatura +'</td>';
+                linhas += '<td>'+ data.dados_pai.data_encerramento +'</td>';
+                linhas += '<td>'+ data.dados_pai.data_publicacao +'</td>';
+                linhas += '<td>'+ data.dados_pai.numero_diario +'</td>';
+                linhas += '</tr>';
+                $("#tabela_lista_objeto_vinculado").append(linhas);
+            } else if (data.dados_filhos.length > 0){
+                $.each(data.dados_filhos, function(key, value) {
+                    linhas += '<tr class="tr_remove_objeto_vinculado">';
+                    linhas += '<td>'+ value.tipo_vinculo +'</td>';
+                    linhas += '<td>'+ value.tipo_documento +'</td>';
+                    linhas += '<td>'+ value.numero_ano +'</td>';
+                    linhas += '<td>'+ value.data_assinatura +'</td>';
+                    linhas += '<td>'+ value.data_encerramento +'</td>';
+                    linhas += '<td>'+ value.data_publicacao +'</td>';
+                    linhas += '<td>'+ value.numero_diario +'</td>';
+                    linhas += '</tr>';
+                });
+                $("#tabela_lista_objeto_vinculado").append(linhas);
+            } else {
+                linhas += "<tr class='tr_remove_objeto_vinculado'>";
+                linhas += "<td colspan='7' style='text-align: center;'>Não existem documentos vinculados a esse contrato para serem exibidos! Favor Cadastrar!</td>";
+                linhas += "</tr>";
+                $("#tabela_lista_objeto_vinculado").append(linhas);
+            }
+        }
+    });
+}
+
 function montarTabelaAnexosv(id_contrato, visualizar)
 {
     'use strict';
@@ -538,7 +602,7 @@ function montarTabelaAnexosv(id_contrato, visualizar)
                     linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
                     linhas += '<td>'+ value.descricao +'</td>';
                     linhas += '<td>'+ value.data_criacao +'</td>';
-                    linhas += '<td><a href="'+ value.url +'" class="botoes_acao nova-aba" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
+                    linhas += '<td><a href="'+ value.url +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
                     linhas += '</tr>';
                 });
                 $("#tabela_lista_anexosv").append(linhas);
@@ -553,8 +617,8 @@ function montarTabelaAnexosv(id_contrato, visualizar)
 }
 
 /**
-* Orçamento
-**/
+ * Orçamento
+ **/
 function montarTabelaOrcamento(id_contrato, visualizar)
 {
     'use strict';
@@ -792,8 +856,8 @@ function excluirOrcamento(id)
 }
 
 /**
-* Exercício
-**/
+ * Exercício
+ **/
 function montarTabelaExercicio(id_contrato, visualizar)
 {
     'use strict';
@@ -1031,8 +1095,8 @@ function excluirExercicio(id)
 }
 
 /**
-* Garantia
-**/
+ * Garantia
+ **/
 function montarTabelaGarantia(id_contrato, visualizar)
 {
     'use strict';
@@ -1366,6 +1430,7 @@ function criarAnexo(id_contrato)
     $('#modalAnexoArquivo').modal();
 
 }
+
 function getIdentificador(id)
 {
     'use strict';
@@ -1437,7 +1502,6 @@ function montarTabelaAnexos(id_contrato, visualizar)
     });
 }
 
-var tipos_anexos;
 function getTiposAnexo()
 {
     'use strict';
@@ -1463,7 +1527,6 @@ function getTiposAnexo()
     return tipos_anexos;
 }
 
-var contador = 0;
 function inserirAnexo()
 {
     'use strict';

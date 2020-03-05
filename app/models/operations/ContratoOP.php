@@ -715,4 +715,44 @@ class ContratoOP extends Contrato
             return false;
         }
     }
+
+    public function visualizarContratosVinculados($id_contrato)
+    {
+        $logger = new FileAdapter($this->arqLog);
+        $util = new Util();
+        try {
+            //Objetos Filhos
+            $objetosFilhos = Contrato::find('id_contrato_principal = ' . $id_contrato);
+            $arrTransporteFilhos = [];
+            foreach ($objetosFilhos as $objetoFilho){
+                $objTransporte = new \stdClass();
+                $objTransporte->tipo_vinculo = 'Filho';
+                $objTransporte->tipo_documento = $objetoFilho->getTipoContrato();
+                $objTransporte->numero_ano = $objetoFilho->getNumero() . '/' .$objetoFilho->getAno();
+                $objTransporte->data_assinatura = $util->converterDataParaBr($objetoFilho->getDataAssinatura());
+                $objTransporte->data_encerramento = $util->converterDataParaBr($objetoFilho->getDataEncerramento());
+                $objTransporte->data_publicacao = $util->converterDataParaBr($objetoFilho->getDataPublicacao());
+                $objTransporte->numero_diario = $objetoFilho->getNumDiarioOficial();
+                array_push($arrTransporteFilhos, $objTransporte);
+            }
+            $objFilho = Contrato::findFirst('id='.$id_contrato);
+            $objetoPai = new \stdClass();
+            if (!empty($objFilho->getIdContratoPrincipal())){
+                $objPai = Contrato::findFirst('id='.$objFilho->getIdContratoPrincipal());
+                $objetoPai->tipo_vinculo = 'Pai';
+                $objetoPai->tipo_documento = $objPai->getTipoContrato();
+                $objetoPai->numero_ano = $objPai->getNumero() . '/' .$objPai->getAno();
+                $objetoPai->data_assinatura = $util->converterDataParaBr($objPai->getDataAssinatura());
+                $objetoPai->data_encerramento = $util->converterDataParaBr($objPai->getDataEncerramento());
+                $objetoPai->data_publicacao = $util->converterDataParaBr($objPai->getDataPublicacao());
+                $objetoPai->numero_diario = $objPai->getNumDiarioOficial();
+            }
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados_filhos" => $arrTransporteFilhos, "dados_pai" => $objetoPai)));
+            return $response;
+        } catch (TxFailed $e) {
+            $logger->error($e->getMessage());
+            return false;
+        }
+    }
 }
