@@ -182,7 +182,7 @@ $module = $this->router->getControllerName();
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#tab_anexos" data-toggle="tab" aria-expanded="false" class="nav-link disabled">
+                            <a id="tab-anexos" href="#tab_anexos" data-toggle="tab" aria-expanded="false" class="nav-link disabled">
                                 Anexos
                             </a>
                         </li>
@@ -283,8 +283,8 @@ $module = $this->router->getControllerName();
                                     <label for="valor_global">Valor Global <span class="required">*</span></label>
                                     <?= $this->tag->textField(["valor_global", "size" => 200, "class" => "form-control valor_monetario_limpo", "id" => "valor_global", "placeholder" => "Valor Global do Contrato"]) ?>
                                 </div>
-                                <div class="form-group col-md-2 botoes_forms_alinhamento">
-                                    <label for="valor_mensal botoes_forms_alinhamento">Valor Mensal </label>
+                                <div class="form-group col-md-2">
+                                    <label for="valor_mensal">Valor Mensal <span class="required">*</span></label>
                                     <?= $this->tag->textField(["valor_mensal", "size" => 200, "class" => "form-control valor_monetario_limpo", "id" => "valor_mensal", "placeholder" => "Valor Mensal do Contrato"]) ?>
                                 </div>
                             </div>
@@ -481,13 +481,21 @@ $module = $this->router->getControllerName();
                             </div>
                         </div>
                         <div class="tab-pane fade" id="tab_anexos">
-                            <div class="form-row">
-                                <div class="col-12">
-                                    <div class="form-row">
-
-                                    </div>
-                                </div>
-                            </div>
+                            <table id="tabela_lista_anexosv" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+                                <thead>
+                                <tr>
+                                    <th colspan="4" class="fonte-15">Lista de Anexos</th>
+                                </tr>
+                                <tr>
+                                    <th width="25%">Tipo Anexo</th>
+                                    <th width="35%">Descrição</th>
+                                    <th width="25%">Data de Inclusão</th>
+                                    <th width="15%">Ações</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
