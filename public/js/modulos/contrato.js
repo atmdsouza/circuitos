@@ -80,7 +80,7 @@ function criar()
 {
     'use strict';
     $('#primeira_aba').trigger('click');
-    $('#tab-anexos').addClass('disabled');
+    bloquearAbas();
     $('.hide_buttons').show();
     $('#bt_inserir_garantia').text("Inserir");
     $('#bt_inserir_garantia').removeAttr('onclick');
@@ -110,6 +110,16 @@ function criar()
     $('#lid_contrato_principal').attr('disabled', 'disabled');
     $("#salvarCadastro").show();
     $("#modalCadastro").modal();
+}
+
+function bloquearAbas()
+{
+    'use strict';
+    $('#tab-fiscal').addClass('disabled');
+    $('#tab-historico').addClass('disabled');
+    $('#tab-financeiro').addClass('disabled');
+    $('#tab-objeto-vinculado').addClass('disabled');
+    $('#tab-anexos').addClass('disabled');
 }
 
 function salvar()
@@ -443,6 +453,10 @@ function visualizar(id, ocultar)
             $('#objetivo_especifico').val(data.dados.objetivo_especifico);
             $('#valor_global').val(accounting.formatMoney(data.dados.valor_global, '', 2, '.', ','));
             $('#valor_mensal').val(accounting.formatMoney(data.dados.valor_mensal, '', 2, '.', ','));
+            $('#corredor').val(data.descricao.corredor);
+            $('#armario').val(data.descricao.armario);
+            $('#prateleira').val(data.descricao.prateleira);
+            $('#codigo').val(data.descricao.codigo);
             montarTabelaOrcamento(data.dados.id, ocultar);
             montarTabelaGarantia(data.dados.id, ocultar);
             montarTabelaExercicio(data.dados.id, ocultar);

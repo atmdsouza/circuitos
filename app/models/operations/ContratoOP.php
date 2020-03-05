@@ -4,10 +4,12 @@ namespace Circuitos\Models\Operations;
 
 use Circuitos\Models\Contrato;
 use Circuitos\Models\ContratoAnexo;
+use Circuitos\Models\ContratoArquivoFisico;
 use Circuitos\Models\ContratoExercicio;
 use Circuitos\Models\ContratoGarantia;
 use Circuitos\Models\ContratoOrcamento;
 use Phalcon\Http\Response as Response;
+use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Util\Util;
@@ -16,13 +18,16 @@ class ContratoOP extends Contrato
 {
     private $encode = "UTF-8";
 
+    private $arqLog = BASE_PATH . "/logs/systemlog.log";
+
     public function listar($dados)
     {
         return Contrato::pesquisarContrato($dados);
     }
 
-    public function cadastrar(Contrato $objArray, $arrObjContratoOrcamento, $arrObjContratoExercicio, $arrObjContratoGarantia)
+    public function cadastrar(Contrato $objArray, ContratoArquivoFisico $objArquivo, $arrObjContratoOrcamento, $arrObjContratoExercicio, $arrObjContratoGarantia)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
@@ -35,7 +40,6 @@ class ContratoOP extends Contrato
             $objeto->setIdTipoContrato($objArray->getIdTipoContrato());
             $objeto->setIdTipoProcesso($objArray->getIdTipoProcesso());
             $objeto->setNumeroProcesso($objArray->getNumeroProcesso());
-            $objeto->setIdContrato(($objArray->getIdContrato()) ? $objArray->getIdContrato() : null);
             $objeto->setIdCliente($objArray->getIdCliente());
             $objeto->setIdStatus($objArray->getIdStatus());
             $objeto->setDataCriacao(date('Y-m-d H:i:s'));
@@ -59,6 +63,21 @@ class ContratoOP extends Contrato
                 }
                 $transaction->rollback("Erro ao criar o contrato: " . $errors);
             }
+            $objetoArquivo = new ContratoArquivoFisico();
+            $objetoArquivo->setTransaction($transaction);
+            $objetoArquivo->setId($objeto->getId());
+            $objetoArquivo->setCorredor(mb_strtoupper($objArquivo->getCorredor(), $this->encode));
+            $objetoArquivo->setArmario(mb_strtoupper($objArquivo->getArmario(), $this->encode));
+            $objetoArquivo->setPrateleira(mb_strtoupper($objArquivo->getPrateleira(), $this->encode));
+            $objetoArquivo->setCodigo(mb_strtoupper($objArquivo->getCodigo(), $this->encode));
+            if ($objetoArquivo->save() == false) {
+                $messages = $objetoArquivo->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao criar o contrato arquivo: " . $errors);
+            }
             //Contrato Orçamento
             if (count($arrObjContratoOrcamento) > 0){
                 foreach($arrObjContratoOrcamento as $objOrcamento){
@@ -125,25 +144,25 @@ class ContratoOP extends Contrato
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
-    public function alterar(Contrato $objArray, $arrObjContratoOrcamento, $arrObjContratoExercicio, $arrObjContratoGarantia)
+    public function alterar(Contrato $objArray, ContratoArquivoFisico $objArquivo, $arrObjContratoOrcamento, $arrObjContratoExercicio, $arrObjContratoGarantia)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = Contrato::findFirst($objArray->getId());
+            $objeto = Contrato::findFirst('id='.$objArray->getId());
             $objeto->setTransaction($transaction);
             $objeto->setIdContratoPrincipal(($objArray->getIdContratoPrincipal()) ? $objArray->getIdContratoPrincipal() : null);
             $objeto->setOrdem($this->getOrdemContrato($objArray->getIdContratoPrincipal()));
             $objeto->setIdTipoContrato($objArray->getIdTipoContrato());
             $objeto->setIdTipoProcesso($objArray->getIdTipoProcesso());
             $objeto->setNumeroProcesso($objArray->getNumeroProcesso());
-            $objeto->setIdContrato(($objArray->getIdContrato()) ? $objArray->getIdContrato() : null);
             $objeto->setIdCliente($objArray->getIdCliente());
             $objeto->setIdStatus($objArray->getIdStatus());
             $objeto->setDataCriacao(date('Y-m-d H:i:s'));
@@ -167,6 +186,24 @@ class ContratoOP extends Contrato
                 }
                 $transaction->rollback("Erro ao alterar o contrato: " . $errors);
             }
+            $objetoArquivo = ContratoArquivoFisico::findFirst('id='.$objArray->getId());
+            if (!$objetoArquivo){
+                $objetoArquivo = new ContratoArquivoFisico();
+            }
+            $objetoArquivo->setTransaction($transaction);
+            $objetoArquivo->setId($objeto->getId());
+            $objetoArquivo->setCorredor(mb_strtoupper($objArquivo->getCorredor(), $this->encode));
+            $objetoArquivo->setArmario(mb_strtoupper($objArquivo->getArmario(), $this->encode));
+            $objetoArquivo->setPrateleira(mb_strtoupper($objArquivo->getPrateleira(), $this->encode));
+            $objetoArquivo->setCodigo(mb_strtoupper($objArquivo->getCodigo(), $this->encode));
+            if ($objetoArquivo->save() == false) {
+                $messages = $objetoArquivo->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao criar o contrato arquivo: " . $errors);
+            }
             //Contrato Orçamento
             if (count($arrObjContratoOrcamento) > 0){
                 foreach($arrObjContratoOrcamento as $objOrcamento){
@@ -233,13 +270,14 @@ class ContratoOP extends Contrato
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function ativar(Contrato $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -253,13 +291,14 @@ class ContratoOP extends Contrato
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function inativar(Contrato $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -273,13 +312,14 @@ class ContratoOP extends Contrato
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function excluir(Contrato $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -293,13 +333,14 @@ class ContratoOP extends Contrato
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarContrato($id)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objeto = Contrato::findFirst("id={$id}");
             $objDescricao = new \stdClass();
@@ -309,11 +350,15 @@ class ContratoOP extends Contrato
             $objDescricao->ds_status = $objeto->getStatus();
             $objDescricao->ds_tipo_contrato = $objeto->getTipoContrato();
             $objDescricao->ds_tipo_processo = $objeto->getTipoProcesso();
+            $objDescricao->corredor = $objeto->getCorredor();
+            $objDescricao->armario = $objeto->getArmario();
+            $objDescricao->prateleira = $objeto->getPrateleira();
+            $objDescricao->codigo = $objeto->getCodigo();
             $response = new Response();
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objeto,"descricao" => $objDescricao)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
@@ -328,6 +373,7 @@ class ContratoOP extends Contrato
 
     public function visualizarContratoOrcamentos($id_contrato)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objetosComponentes = ContratoOrcamento::find('id_contrato = ' . $id_contrato);
             $arrTransporte = [];
@@ -345,13 +391,14 @@ class ContratoOP extends Contrato
             $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarContratoGarantias($id_contrato)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objetosComponentes = ContratoGarantia::find('id_contrato = ' . $id_contrato);
             $arrTransporte = [];
@@ -369,13 +416,14 @@ class ContratoOP extends Contrato
             $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarContratoExercicios($id_contrato)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objetosComponentes = ContratoExercicio::find('id_contrato = ' . $id_contrato);
             $arrTransporte = [];
@@ -392,13 +440,14 @@ class ContratoOP extends Contrato
             $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarContratoOrcamento($id)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objetoComponente = ContratoOrcamento::findFirst('id=' . $id);
             $objTransporte = new \stdClass();
@@ -412,13 +461,14 @@ class ContratoOP extends Contrato
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarContratoGarantia($id)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objetoComponente = ContratoGarantia::findFirst('id=' . $id);
             $objTransporte = new \stdClass();
@@ -432,13 +482,14 @@ class ContratoOP extends Contrato
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarContratoExercicio($id)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objetoComponente = ContratoExercicio::findFirst('id=' . $id);
             $objTransporte = new \stdClass();
@@ -451,13 +502,14 @@ class ContratoOP extends Contrato
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function alterarContratoOrcamento(ContratoOrcamento $objCom)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $manager = new TxManager();
             $transaction = $manager->get();
@@ -482,13 +534,14 @@ class ContratoOP extends Contrato
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoComponente)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function deletarContratoOrcamento(ContratoOrcamento $objCom)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $manager = new TxManager();
             $transaction = $manager->get();
@@ -503,13 +556,14 @@ class ContratoOP extends Contrato
             $response->setContent(json_encode(array("operacao" => True,"dados" => $id_contrato)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function alterarContratoExercicio(ContratoExercicio $objCom)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         try {
             $manager = new TxManager();
@@ -534,13 +588,14 @@ class ContratoOP extends Contrato
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoComponente)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function deletarContratoExercicio(ContratoExercicio $objCom)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $manager = new TxManager();
             $transaction = $manager->get();
@@ -555,13 +610,14 @@ class ContratoOP extends Contrato
             $response->setContent(json_encode(array("operacao" => True,"dados" => $id_contrato)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function alterarContratoGarantia(ContratoGarantia $objCom)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         try {
             $manager = new TxManager();
@@ -586,13 +642,14 @@ class ContratoOP extends Contrato
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoComponente)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function deletarContratoGarantia(ContratoGarantia $objCom)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $manager = new TxManager();
             $transaction = $manager->get();
@@ -607,7 +664,7 @@ class ContratoOP extends Contrato
             $response->setContent(json_encode(array("operacao" => True,"dados" => $id_contrato)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
@@ -630,6 +687,7 @@ class ContratoOP extends Contrato
 
     public function visualizarContratoAnexos($id_contrato)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         try {
             $objetosComponentes = ContratoAnexo::find('id_contrato = ' . $id_contrato);
@@ -653,7 +711,7 @@ class ContratoOP extends Contrato
             $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }

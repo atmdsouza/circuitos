@@ -15,12 +15,6 @@ class ContratoArquivoFisico extends \Phalcon\Mvc\Model
 
     /**
      *
-     * @var integer
-     */
-    protected $id_contrato;
-
-    /**
-     *
      * @var string
      */
     protected $corredor;
@@ -70,19 +64,6 @@ class ContratoArquivoFisico extends \Phalcon\Mvc\Model
     public function setId($id)
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field id_contrato
-     *
-     * @param integer $id_contrato
-     * @return $this
-     */
-    public function setIdContrato($id_contrato)
-    {
-        $this->id_contrato = $id_contrato;
 
         return $this;
     }
@@ -189,16 +170,6 @@ class ContratoArquivoFisico extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id_contrato
-     *
-     * @return integer
-     */
-    public function getIdContrato()
-    {
-        return $this->id_contrato;
-    }
-
-    /**
      * Returns the value of field corredor
      *
      * @return string
@@ -276,7 +247,7 @@ class ContratoArquivoFisico extends \Phalcon\Mvc\Model
         $schema = new Infra();
         $this->setSchema($schema->getSchemaBanco());
         $this->setSource("contrato_arquivo_fisico");
-        $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
+        $this->hasOne('id', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
     }
 
     /**

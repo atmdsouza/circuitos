@@ -765,6 +765,46 @@ class Contrato extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field Corredor
+     *
+     * @return string
+     */
+    public function getCorredor()
+    {
+        return $this->ContratoArquivoFisico->corredor;
+    }
+
+    /**
+     * Returns the value of field Armário
+     *
+     * @return string
+     */
+    public function getArmario()
+    {
+        return $this->ContratoArquivoFisico->armario;
+    }
+
+    /**
+     * Returns the value of field Prateleira
+     *
+     * @return string
+     */
+    public function getPrateleira()
+    {
+        return $this->ContratoArquivoFisico->prateleira;
+    }
+
+    /**
+     * Returns the value of field Código
+     *
+     * @return string
+     */
+    public function getCodigo()
+    {
+        return $this->ContratoArquivoFisico->codigo;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -772,9 +812,9 @@ class Contrato extends \Phalcon\Mvc\Model
         $schema = new Infra();
         $this->setSchema($schema->getSchemaBanco());
         $this->setSource("contrato");
+        $this->hasOne('id', 'Circuitos\Models\ContratoArquivoFisico', 'id', ['alias' => 'ContratoArquivoFisico']);
         $this->hasMany('id', 'Circuitos\Models\Contrato', 'id_contrato_principal', ['alias' => 'Contrato']);
         $this->hasMany('id', 'Circuitos\Models\ContratoAnexo', 'id_contrato', ['alias' => 'ContratoAnexo']);
-        $this->hasMany('id', 'Circuitos\Models\ContratoArquivoFisico', 'id_contrato', ['alias' => 'ContratoArquivoFisico']);
         $this->hasMany('id', 'Circuitos\Models\ContratoExercicio', 'id_contrato', ['alias' => 'ContratoExercicio']);
         $this->hasMany('id', 'Circuitos\Models\ContratoFiscal', 'id_contrato', ['alias' => 'ContratoFiscal']);
         $this->hasMany('id', 'Circuitos\Models\ContratoGarantia', 'id_contrato', ['alias' => 'ContratoGarantia']);
