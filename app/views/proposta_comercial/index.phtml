@@ -380,37 +380,11 @@ $module = $this->router->getControllerName();
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="mes_inicial_servico">Mês Inicial <span class="required">*</span></label>
-                                    <select name="mes_inicial_servico" id="mes_inicial_servico" class="form-control">
-                                        <option value="1" selected>1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
-                                        <option value="11">11</option>
-                                        <option value="12">12</option>
-                                    </select>
+                                    <?= $this->tag->textField(["mes_inicial_servico", "maxlength" => "2", "class" => "form-control minutos maxlength-alloptions", "id" => "mes_inicial_servico", "placeholder" => "Mês Inicial"]) ?>
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="vigencia_servico">Vigência <span class="required">*</span></label>
-                                    <select name="vigencia_servico" id="vigencia_servico" class="form-control">
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                        <option value="7">7</option>
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
-                                        <option value="11">11</option>
-                                        <option value="12" selected>12</option>
-                                    </select>
+                                    <?= $this->tag->textField(["vigencia_servico", "maxlength" => "2", "class" => "form-control minutos maxlength-alloptions", "id" => "vigencia_servico", "placeholder" => "Vigência"]) ?>
                                 </div>
                                 <div class="form-group col-md-2 botoes_forms_alinhamento">
                                     <button type="button" name="bt_inserir_servico" id="bt_inserir_servico" class="btn btn-info btn-rounded waves-light w-md bt_menu_tabela hide_buttons" onclick="inserirComponente();">Inserir</button>

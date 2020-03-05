@@ -57,8 +57,14 @@ class PropostaComercialController extends ControllerBase
             "tipo = 20 AND excluido = 0 AND ativo = 1",
             "order" => "descricao"
         ));
-        $grupos = PropostaComercialServicoGrupo::find("id_grupo_pai IS NULL AND excluido=0 AND ativo=1");
-        $departamentos = EmpresaDepartamento::find('excluido=0 AND ativo=1');
+        $grupos = PropostaComercialServicoGrupo::find(array(
+            "id_grupo_pai IS NULL AND excluido=0 AND ativo=1",
+            "order" => "descricao"
+        ));
+        $departamentos = EmpresaDepartamento::find(array(
+            "excluido=0 AND ativo=1",
+            "order" => "descricao"
+        ));
         $this->view->tipos = $tipos;
         $this->view->status = $status;
         $this->view->grupos = $grupos;

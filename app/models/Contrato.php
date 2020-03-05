@@ -721,7 +721,7 @@ class Contrato extends \Phalcon\Mvc\Model
      */
     public function getContratoPrincipal()
     {
-        return $this->ContratoPrincipal->numero . '/' . $this->ContratoPrincipal->ano;
+        return (isset($this->ContratoPrincipal->numero)) ? $this->ContratoPrincipal->numero . '/' . $this->ContratoPrincipal->ano : null;
     }
 
     /**

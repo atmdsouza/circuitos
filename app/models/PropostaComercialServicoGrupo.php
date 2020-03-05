@@ -240,7 +240,7 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
      */
     public function getGrupoPai()
     {
-        return $this->PropostaComercialServicoGrupo->descricao;
+        return (isset($this->PropostaComercialServicoGrupo->descricao)) ? $this->PropostaComercialServicoGrupo->descricao : null;
     }
 
     /**
@@ -252,7 +252,7 @@ class PropostaComercialServicoGrupo extends \Phalcon\Mvc\Model
         $this->setSchema($schema->getSchemaBanco());
         $this->setSource("proposta_comercial_servico_grupo");
         $this->hasMany('id', 'Circuitos\Models\PropostaComercialServico', 'id_proposta_comercial_servico_grupo', ['alias' => 'PropostaComercialServico']);
-        $this->hasMany('id', 'Circuitos\Models\PropostaComercialServicoGrupo', 'id_grupo_pai', ['alias' => 'PropostaComercialServicoGrupo']);
+        $this->hasMany('id', 'Circuitos\Models\PropostaComercialServicoGrupo', 'id_grupo_pai', ['alias' => 'PropostaComercialServicoGrupoPai']);
         $this->belongsTo('id_grupo_pai', 'Circuitos\Models\PropostaComercialServicoGrupo', 'id', ['alias' => 'PropostaComercialServicoGrupo']);
     }
 

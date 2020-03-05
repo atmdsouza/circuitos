@@ -33,11 +33,11 @@ $('input#thresholdconfig').maxlength({
     limitReachedClass: "badge badge-danger"
 });
 
-$('input#alloptions').maxlength({
+$('input.maxlength-alloptions').maxlength({
     alwaysShow: true,
-    separator: ' out of ',
-    preText: 'You typed ',
-    postText: ' chars available.',
+    separator: ' de ',
+    preText: 'Você digitou ',
+    postText: ' caractere(s) disponível(is).',
     validate: true,
     warningClass: "badge badge-success",
     limitReachedClass: "badge badge-danger"

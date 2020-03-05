@@ -133,53 +133,6 @@ function salvar()
                 required: true
             }
         },
-        messages:{
-            id_cliente:{
-                required:"É necessário informar um Cliente"
-            },
-            id_tipo_proposta:{
-                required: "É necessário informar um tipo de proposta"
-            },
-            id_localizacao:{
-                required: "É necessário informar um departamento"
-            },
-            id_status:{
-                required: "É necessário informar um status"
-            },
-            data_proposta:{
-                required: "É necessário informar a data da proposta"
-            },
-            numero:{
-                required: "É necessário informar o número da proposta"
-            },
-            vencimento:{
-                required: "É necessário informar a data de vencimento"
-            },
-            valor_global:{
-                required: "É necessário informar o valor global"
-            },
-            objetivo:{
-                required: "É necessário informar um objetivo"
-            },
-            objetivo_especifico:{
-                required: "É necessário informar um objetivo específico"
-            },
-            descritivo:{
-                required: "É necessário informar um descritivo"
-            },
-            responsabilidade:{
-                required: "É necessário informar a responsabilidade"
-            },
-            condicoes_pgto:{
-                required: "É necessário informar as condições de pagamento"
-            },
-            prazo_execucao:{
-                required: "É necessário informar um prazo de execução"
-            },
-            consideracoes:{
-                required: "É necessário informar as considerações"
-            }
-        },
         submitHandler: function(form) {
             var dados = $("#formCadastro").serialize();
             var action = actionCorreta(window.location.href.toString(), "proposta_comercial/" + acao);
@@ -540,6 +493,26 @@ function criarComponente()
     $('#grupo').focus();
 }
 
+function checkMesVigencia(mes)
+{
+    'use strict';
+    if (parseFloat(mes) >= 1 && parseFloat(mes) <= 12) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function checkAnoVigencia(ano)
+{
+    'use strict';
+    if (parseFloat(ano) >= 1 && parseFloat(ano) <= 60) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function inserirComponente()
 {
     'use strict';
@@ -561,7 +534,19 @@ function inserirComponente()
     var valor_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") * (accounting.unformat($('#reajuste').val(), ",") * 0.01) : 0;
     var valor_total_reajuste = (tem_reajuste === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_reajuste, ",") : 0;
     var valor_total_imposto = (tem_imposto === '1') ? accounting.unformat(valor_total, ",") + accounting.unformat(valor_impostos, ",") : 0;
-    if(id_servico !== '' && quantidade_unitaria > 0 && tem_imposto !== '' && tem_reajuste !== '' && mes_inicial !== '' && vigencia !== ''){//Campos Obrigatórios
+    if (!checkMesVigencia(mes_inicial)){
+        swal({
+            title: "Campos Obrigatórios!",
+            text: "Você precisa preencher o mês de vigência com valores entre 1 e 12!",
+            type: "warning"
+        });
+    } else if (!checkAnoVigencia(vigencia)){
+        swal({
+            title: "Campos Obrigatórios!",
+            text: "Você precisa preencher o ano de vigência com valores entre 1 e 60!",
+            type: "warning"
+        });
+    } else if (id_servico !== '' && quantidade_unitaria > 0 && tem_imposto !== '' && tem_reajuste !== '' && mes_inicial !== '' && vigencia !== ''){//Campos Obrigatórios
         var linhas = null;
         linhas += '<tr class="tr_remove">';
         linhas += '<td>'+ codigo_servico +'</td>';
