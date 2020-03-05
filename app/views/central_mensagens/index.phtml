@@ -3,8 +3,6 @@
  * @var \Phalcon\Mvc\View\Engine\Php $this
  */
 
-use Phalcon\Tag;
-
 ?>
 
 <?php echo $this->getContent(); ?>
@@ -13,7 +11,7 @@ use Phalcon\Tag;
     <?php
     echo $this->tag->form(
         [
-            "cidade_digital/index",
+            "cidade_digital",
             "autocomplete" => "off"
         ]
     );

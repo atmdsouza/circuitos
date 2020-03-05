@@ -54,6 +54,12 @@ class PropostaComercial extends \Phalcon\Mvc\Model
      *
      * @var string
      */
+    protected $data_contrato;
+
+    /**
+     *
+     * @var string
+     */
     protected $numero;
 
     /**
@@ -764,6 +770,24 @@ class PropostaComercial extends \Phalcon\Mvc\Model
     public function setDataCriacao($data_criacao)
     {
         $this->data_criacao = $data_criacao;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataContrato()
+    {
+        return $this->data_contrato;
+    }
+
+    /**
+     * @param string $data_contrato
+     */
+    public function setDataContrato($data_contrato)
+    {
+        $this->data_contrato = $data_contrato;
+
+        return $this;
     }
 
     /**

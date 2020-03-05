@@ -6,5 +6,5 @@ function inicializar()
 
 //Datatable
 var table = $("#tb_logs").DataTable({
-    order: [[ 1, "desc" ]]
+    order: [[ 0, "desc" ]]
 });

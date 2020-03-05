@@ -9,7 +9,7 @@ class LogsSistemaController extends ControllerBase
 {
     public $tokenManager;
 
-    private $encode = "UTF-8";
+    private $arqLog = BASE_PATH . "/logs/systemlog.log";
 
     public function initialize()
     {
@@ -32,7 +32,7 @@ class LogsSistemaController extends ControllerBase
 
     public function indexAction()
     {
-        $logs = file(APP_PATH . "/../logs/systemlog.log");
+        $logs = file($this->arqLog);
         $linhas = [];
         foreach ($logs AS $log)
         {

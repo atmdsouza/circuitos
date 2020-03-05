@@ -4,7 +4,6 @@
  */
 
 use Auth\Autentica;
-use Phalcon\Tag;
 use Util\Infra;
 
 $infra = new Infra();
@@ -21,7 +20,7 @@ $module = $this->router->getControllerName();
 <div class="col-12">
     <?= $this->tag->form(
         [
-            "proposta_comercial_servico_grupo/index",
+            "proposta_comercial_servico_grupo",
             "autocomplete" => "off",
             "id" => "formPesquisa"
         ]

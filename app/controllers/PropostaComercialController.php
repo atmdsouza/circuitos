@@ -57,8 +57,14 @@ class PropostaComercialController extends ControllerBase
             "tipo = 20 AND excluido = 0 AND ativo = 1",
             "order" => "descricao"
         ));
-        $grupos = PropostaComercialServicoGrupo::find("id_grupo_pai IS NULL AND excluido=0 AND ativo=1");
-        $departamentos = EmpresaDepartamento::find('excluido=0 AND ativo=1');
+        $grupos = PropostaComercialServicoGrupo::find(array(
+            "id_grupo_pai IS NULL AND excluido=0 AND ativo=1",
+            "order" => "descricao"
+        ));
+        $departamentos = EmpresaDepartamento::find(array(
+            "excluido=0 AND ativo=1",
+            "order" => "descricao"
+        ));
         $this->view->tipos = $tipos;
         $this->view->status = $status;
         $this->view->grupos = $grupos;
@@ -96,21 +102,23 @@ class PropostaComercialController extends ControllerBase
             $propostacomercialvalormensal->setNov($params['nov']);
             $propostacomercialvalormensal->setDez($params['dez']);
             $arrPropostacomercialitens = [];
-            foreach ($params['id_proposta_comercial_servicos_item'] as $key => $item)
-            {
-                $propostacomercialitens = new PropostaComercialItem();
-                $propostacomercialitens->setIdPropostaComercialServicos($item);
-                $propostacomercialitens->setImposto($params['imposto_item'][$key]);
-                $propostacomercialitens->setReajuste($params['reajuste_item'][$key]);
-                $propostacomercialitens->setQuantidade($params['quantidade_item'][$key]);
-                $propostacomercialitens->setMesInicial($params['mes_inicial_item'][$key]);
-                $propostacomercialitens->setVigencia($params['vigencia_item'][$key]);
-                $propostacomercialitens->setValorUnitario($params['valor_unitario_item'][$key]);
-                $propostacomercialitens->setValorTotal($params['valor_total_item'][$key]);
-                $propostacomercialitens->setValorTotalReajuste($params['valor_total_reajuste_item'][$key]);
-                $propostacomercialitens->setValorImpostos($params['valor_impostos_item'][$key]);
-                $propostacomercialitens->setValorTotalImpostos($params['valor_total_impostos_item'][$key]);
-                array_push($arrPropostacomercialitens, $propostacomercialitens);
+            if (isset($params['id_proposta_comercial_servicos_item']) && count($params['id_proposta_comercial_servicos_item']) > 0){
+                foreach ($params['id_proposta_comercial_servicos_item'] as $key => $item)
+                {
+                    $propostacomercialitens = new PropostaComercialItem();
+                    $propostacomercialitens->setIdPropostaComercialServicos($item);
+                    $propostacomercialitens->setImposto($params['imposto_item'][$key]);
+                    $propostacomercialitens->setReajuste($params['reajuste_item'][$key]);
+                    $propostacomercialitens->setQuantidade($params['quantidade_item'][$key]);
+                    $propostacomercialitens->setMesInicial($params['mes_inicial_item'][$key]);
+                    $propostacomercialitens->setVigencia($params['vigencia_item'][$key]);
+                    $propostacomercialitens->setValorUnitario($params['valor_unitario_item'][$key]);
+                    $propostacomercialitens->setValorTotal($params['valor_total_item'][$key]);
+                    $propostacomercialitens->setValorTotalReajuste($params['valor_total_reajuste_item'][$key]);
+                    $propostacomercialitens->setValorImpostos($params['valor_impostos_item'][$key]);
+                    $propostacomercialitens->setValorTotalImpostos($params['valor_total_impostos_item'][$key]);
+                    array_push($arrPropostacomercialitens, $propostacomercialitens);
+                }
             }
             $propostacomercialOP = new PropostaComercialOP();
             if($propostacomercialOP->cadastrar($propostacomercial, $propostacomercialvalormensal, $arrPropostacomercialitens)){//Cadastrou com sucesso
@@ -153,21 +161,23 @@ class PropostaComercialController extends ControllerBase
             $propostacomercialvalormensal->setNov($params['nov']);
             $propostacomercialvalormensal->setDez($params['dez']);
             $arrPropostacomercialitens = [];
-            foreach ($params['id_proposta_comercial_servicos_item'] as $key => $item)
-            {
-                $propostacomercialitens = new PropostaComercialItem();
-                $propostacomercialitens->setIdPropostaComercialServicos($item);
-                $propostacomercialitens->setImposto($params['imposto_item'][$key]);
-                $propostacomercialitens->setReajuste($params['reajuste_item'][$key]);
-                $propostacomercialitens->setQuantidade($params['quantidade_item'][$key]);
-                $propostacomercialitens->setMesInicial($params['mes_inicial_item'][$key]);
-                $propostacomercialitens->setVigencia($params['vigencia_item'][$key]);
-                $propostacomercialitens->setValorUnitario($params['valor_unitario_item'][$key]);
-                $propostacomercialitens->setValorTotal($params['valor_total_item'][$key]);
-                $propostacomercialitens->setValorTotalReajuste($params['valor_total_reajuste_item'][$key]);
-                $propostacomercialitens->setValorImpostos($params['valor_impostos_item'][$key]);
-                $propostacomercialitens->setValorTotalImpostos($params['valor_total_impostos_item'][$key]);
-                array_push($arrPropostacomercialitens, $propostacomercialitens);
+            if (isset($params['id_proposta_comercial_servicos_item']) && count($params['id_proposta_comercial_servicos_item']) > 0){
+                foreach ($params['id_proposta_comercial_servicos_item'] as $key => $item)
+                {
+                    $propostacomercialitens = new PropostaComercialItem();
+                    $propostacomercialitens->setIdPropostaComercialServicos($item);
+                    $propostacomercialitens->setImposto($params['imposto_item'][$key]);
+                    $propostacomercialitens->setReajuste($params['reajuste_item'][$key]);
+                    $propostacomercialitens->setQuantidade($params['quantidade_item'][$key]);
+                    $propostacomercialitens->setMesInicial($params['mes_inicial_item'][$key]);
+                    $propostacomercialitens->setVigencia($params['vigencia_item'][$key]);
+                    $propostacomercialitens->setValorUnitario($params['valor_unitario_item'][$key]);
+                    $propostacomercialitens->setValorTotal($params['valor_total_item'][$key]);
+                    $propostacomercialitens->setValorTotalReajuste($params['valor_total_reajuste_item'][$key]);
+                    $propostacomercialitens->setValorImpostos($params['valor_impostos_item'][$key]);
+                    $propostacomercialitens->setValorTotalImpostos($params['valor_total_impostos_item'][$key]);
+                    array_push($arrPropostacomercialitens, $propostacomercialitens);
+                }
             }
             $propostacomercialOP = new PropostaComercialOP();
             if($propostacomercialOP->alterar($propostacomercial, $propostacomercialvalormensal, $arrPropostacomercialitens)){//Altera com sucesso
