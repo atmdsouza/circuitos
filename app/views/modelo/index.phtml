@@ -3,8 +3,6 @@
  * @var \Phalcon\Mvc\View\Engine\Php $this
  */
 
-use Phalcon\Tag;
-
 ?>
 
 <?php echo $this->getContent(); ?>
@@ -13,8 +11,9 @@ use Phalcon\Tag;
     <?php
     echo $this->tag->form(
         [
-            "modelo/index",
-            "autocomplete" => "off"
+            "modelo",
+            "autocomplete" => "off",
+            "id" => "formPesquisa"
         ]
     );
     ?>

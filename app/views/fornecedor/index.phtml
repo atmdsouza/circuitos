@@ -3,7 +3,6 @@
  * @var \Phalcon\Mvc\View\Engine\Php $this
  */
 
-use Phalcon\Tag;
 use Util\Util;
 
 ?>
@@ -14,8 +13,9 @@ use Util\Util;
     <?php
     echo $this->tag->form(
         [
-            "fornecedor/index",
-            "autocomplete" => "off"
+            "fornecedor",
+            "autocomplete" => "off",
+            "id" => "formPesquisa"
         ]
     );
     ?>

@@ -36,7 +36,9 @@ class PropostaComercialOP extends PropostaComercial
             $objeto->setIdTipoProposta($objArray->getIdTipoProposta());
             $objeto->setIdLocalizacao($objArray->getIdLocalizacao());
             $objeto->setIdStatus($objArray->getIdStatus());
+            $objeto->setDataCriacao(date('Y-m-d H:i:s'));
             $objeto->setDataProposta($util->converterDataUSA($objArray->getDataProposta()));
+            $objeto->setDataContrato((!empty($objArray->getDataContrato())) ? $util->converterDataUSA($objArray->getDataContrato()) : null);
             $objeto->setNumero(mb_strtoupper($objArray->getNumero(), $this->encode));
             $objeto->setVencimento($util->converterDataUSA($objArray->getVencimento()));
             $objeto->setReajuste((!empty($objArray->getReajuste())) ? $util->formataNumero($objArray->getReajuste()) : 0);
@@ -58,7 +60,6 @@ class PropostaComercialOP extends PropostaComercial
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
-                $logger->error("Erro ao criar a proposta: " . $errors);
                 $transaction->rollback("Erro ao criar a proposta: " . $errors);
             }
             $objetoValorMensal = new PropostaComercialValorMensal();
@@ -83,7 +84,6 @@ class PropostaComercialOP extends PropostaComercial
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
-                $logger->error("Erro ao criar os valores mensais: " . $errors);
                 $transaction->rollback("Erro ao criar os valores mensais: " . $errors);
             }
             if (count($arrObjItensProposta) > 0){
@@ -109,7 +109,6 @@ class PropostaComercialOP extends PropostaComercial
                         for ($i = 0; $i < count($messages); $i++) {
                             $errors .= "[".$messages[$i]."] ";
                         }
-                        $logger->error("Erro ao criar o item da proposta: " . $errors);
                         $transaction->rollback("Erro ao criar o item da proposta: " . $errors);
                     }
                 }
@@ -136,6 +135,7 @@ class PropostaComercialOP extends PropostaComercial
             $objeto->setIdLocalizacao($objArray->getIdLocalizacao());
             $objeto->setIdStatus($objArray->getIdStatus());
             $objeto->setDataProposta($util->converterDataUSA($objArray->getDataProposta()));
+            $objeto->setDataContrato((!empty($objArray->getDataContrato())) ? $util->converterDataUSA($objArray->getDataContrato()) : null);
             $objeto->setNumero(mb_strtoupper($objArray->getNumero(), $this->encode));
             $objeto->setVencimento($util->converterDataUSA($objArray->getVencimento()));
             $objeto->setReajuste((!empty($objArray->getReajuste())) ? $util->formataNumero($objArray->getReajuste()) : 0);
@@ -157,7 +157,6 @@ class PropostaComercialOP extends PropostaComercial
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
-                $logger->error("Erro ao criar a proposta: " . $errors);
                 $transaction->rollback("Erro ao criar a proposta: " . $errors);
             }
             $objetoValorMensal = PropostaComercialValorMensal::findFirst('id_proposta_comercial='.$objArray->getId());
@@ -181,7 +180,6 @@ class PropostaComercialOP extends PropostaComercial
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
-                $logger->error("Erro ao criar os valores mensais: " . $errors);
                 $transaction->rollback("Erro ao criar os valores mensais: " . $errors);
             }
             if (count($arrObjItensProposta) > 0){
@@ -207,7 +205,6 @@ class PropostaComercialOP extends PropostaComercial
                         for ($i = 0; $i < count($messages); $i++) {
                             $errors .= "[".$messages[$i]."] ";
                         }
-                        $logger->error("Erro ao criar o item da proposta: " . $errors);
                         $transaction->rollback("Erro ao criar o item da proposta: " . $errors);
                     }
                 }
@@ -300,6 +297,7 @@ class PropostaComercialOP extends PropostaComercial
                 'id_tipo_proposta' => $objeto->getIdTipoProposta(),
                 'id_localizacao' => $objeto->getIdLocalizacao(),
                 'data_proposta' => $util->converterDataParaBr($objeto->getDataProposta()),
+                'data_contrato' => $util->converterDataParaBr($objeto->getDataContrato()),
                 'numero' => $objeto->getNumero(),
                 'vencimento' => $util->converterDataParaBr($objeto->getVencimento()),
                 'reajuste' => $util->formataMoedaReal($objeto->getReajuste()),

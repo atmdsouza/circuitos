@@ -430,3 +430,7 @@
 [Wed, 04 Mar 20 09:50:01 -0300][INFO] Acesso do usuário admin ao sistema.
 [Thu, 05 Mar 20 08:50:16 -0300][ERROR] Combinação de usuário e senha inválida! [Usuário: admin]
 [Thu, 05 Mar 20 08:50:21 -0300][INFO] Acesso do usuário admin ao sistema.
+[Thu, 05 Mar 20 11:39:29 -0300][ERROR] Erro ao criar o item da proposta: [id_proposta_comercial_servicos is required] 
+[Thu, 05 Mar 20 11:39:29 -0300][ERROR] Erro ao criar o item da proposta: [id_proposta_comercial_servicos is required] 
+[Thu, 05 Mar 20 11:41:40 -0300][ERROR] Erro ao criar o item da proposta: [id_proposta_comercial_servicos is required] 
+[Thu, 05 Mar 20 14:50:16 -0300][INFO] Acesso do usuário admin ao sistema.

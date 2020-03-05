@@ -682,6 +682,11 @@ $(document).ready(function () {
     });
 });
 
+//JQuery Validator para métodos customizados
 jQuery.validator.addMethod("maiorQueZero", function(value, element) {
     return this.optional(element) || (parseFloat(value) > 0);
-}, "* O valor precisa ser maior que 0!");
+}, "O valor precisa ser maior que 0!");
+
+jQuery.validator.addMethod("entre1e12", function(value, element) {
+    return this.optional(element) || (parseFloat(value) > 0 && parseFloat(value) <= 12);
+}, "O valor precisa ser entre 1 e 12!");

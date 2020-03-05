@@ -50,13 +50,23 @@ function confirmaCancelar(modal)
             $("#"+modal).modal('hide');
             limparModalBootstrap(modal);
             mudou = false;
+            limparValidacao();
         }).catch(swal.noop);
     }
     else
     {
         $("#"+modal).modal('hide');
         limparModalBootstrap(modal);
+        limparValidacao();
     }
+}
+
+function limparValidacao()
+{
+    'use strict';
+    var validator = $("#formCadastro").validate();
+    validator.resetForm();
+
 }
 
 function criar()
@@ -87,6 +97,9 @@ function salvar()
     $("#formCadastro").validate({
         rules : {
             id_cliente:{
+                required: true
+            },
+            lid_cliente:{
                 required: true
             },
             id_tipo_proposta:{
@@ -395,6 +408,7 @@ function visualizar(id, ocultar)
             $('#id_tipo_proposta').val(data.dados.id_tipo_proposta).selected = "true";
             $('#id_localizacao').val(data.dados.id_localizacao).selected = "true";
             $('#data_proposta').val(data.dados.data_proposta);
+            $('#data_contrato').val(data.dados.data_contrato);
             $('#numero').val(data.dados.numero);
             $('#vencimento').val(data.dados.vencimento);
             $('#reajuste').val(data.dados.reajuste);

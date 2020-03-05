@@ -22,7 +22,7 @@ $module = $this->router->getControllerName();
 <div class="col-12">
     <?= $this->tag->form(
         [
-            "proposta_comercial/index",
+            "proposta_comercial",
             "autocomplete" => "off",
             "id" => "formPesquisa"
         ]
@@ -145,7 +145,17 @@ $module = $this->router->getControllerName();
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#tab_itens_proposta_comercial" data-toggle="tab" aria-expanded="false" class="nav-link">
+                            <a href="#tab_itens_proposta_comercial_instalacao" data-toggle="tab" aria-expanded="false" class="nav-link">
+                                Instalações
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#tab_itens_proposta_comercial_execucao" data-toggle="tab" aria-expanded="false" class="nav-link">
+                                Serviços
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#tab_itens_proposta_comercial_previstos" data-toggle="tab" aria-expanded="false" class="nav-link">
                                 Serviços Previstos
                             </a>
                         </li>
@@ -191,6 +201,10 @@ $module = $this->router->getControllerName();
                                             <label for="data_proposta">Data da Proposta <span class="required">*</span></label>
                                             <?= $this->tag->textField(["data_proposta", "size" => 200, "class" => "form-control data", "id" => "data_proposta", "placeholder" => "Data da Proposta"]) ?>
                                         </div>
+                                        <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                            <label for="data_contrato">Data do Contrato </label>
+                                            <?= $this->tag->textField(["data_contrato", "size" => 200, "class" => "form-control data", "id" => "data_contrato", "placeholder" => "Data do Contrato"]) ?>
+                                        </div>
                                         <div class="form-group col-md-2">
                                             <label for="numero">Número <span class="required">*</span></label>
                                             <?= $this->tag->textField(["numero", "size" => 200, "class" => "form-control", "id" => "numero", "placeholder" => "Número da Proposta"]) ?>
@@ -223,7 +237,7 @@ $module = $this->router->getControllerName();
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade show" id="tab_objetivos_proposta_comercial">
+                        <div class="tab-pane fade" id="tab_objetivos_proposta_comercial">
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <label for="objetivo">Objetivo <span class="required">*</span></label>
@@ -243,7 +257,7 @@ $module = $this->router->getControllerName();
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade show" id="tab_condicoes_proposta_comercial">
+                        <div class="tab-pane fade" id="tab_condicoes_proposta_comercial">
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <label for="responsabilidade">Responsabilidade <span class="required">*</span></label>
@@ -269,7 +283,114 @@ $module = $this->router->getControllerName();
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade show" id="tab_itens_proposta_comercial">
+                        <div class="tab-pane fade" id="tab_itens_proposta_comercial_instalacao">
+                            <!-- Valor total de Serviços -->
+                            <div class="form-row">
+                                <table id="tabela_total_serviçosi" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="2">Tabela de Serviços</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td style="width: 10%;">Total:</td>
+                                        <td style="width: 90%;">R$ <span id="demonstrativo_valor_totali">0,00</span></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <br>
+                            <!-- Grid de Serviços -->
+                            <div class="form-row">
+                                <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                    <label for="grupo">Grupo </label>
+                                    <?= $this->tag->select(["grupo", $grupos, "class" => "form-control", "id" => "grupoi", "onchange" => "mostrarSubgrupo()",
+                                        "using" => ["id", "descricao",],
+                                        "useEmpty" => true,
+                                        "emptyText" => "Selecione o grupo",
+                                        "emptyValue" => ""])
+                                    ?>
+                                </div>
+                                <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                    <label for="subgrupoi">Subgrupo </label>
+                                    <select disabled name="subgrupo" id="subgrupoi" class="form-control">
+                                        <option value="">Selecione um subgrupo</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                    <label for="codigo_servico">Código Serviço </label>
+                                    <?= $this->tag->textField(["codigo_servico", "size" => 200, "class" => "form-control", "id" => "codigo_servicoi", "placeholder" => "Código do Serviço", "onkeyup" => "autocompletarCodigoServico('codigo_servico','id_codigo_servico','grupo','subgrupo');", "onblur" => "selecaoDescricaoServico();"]) ?>
+                                    <?= $this->tag->hiddenField(["id_codigo_servico", "size" => 120, "class" => "form-control", "id" => "id_codigo_servicoi"]) ?>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="descricao_servico">Descrição <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["descricao_servico", "size" => 200, "class" => "form-control", "id" => "descricao_servicoi", "placeholder" => "Descrição do Serviço", "onkeyup" => "autocompletarServico('descricao_servico','id_servico','grupo','subgrupo');", "onblur" => "selectCodigoServico();"]) ?>
+                                    <?= $this->tag->hiddenField(["id_servico", "size" => 120, "class" => "form-control", "id" => "id_servicoi"]) ?>
+                                    <?= $this->tag->hiddenField(["grandeza", "size" => 120, "class" => "form-control", "id" => "grandezai"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="tem_impostoi">Tem Imposto? <span class="required">*</span></label>
+                                    <select name="tem_imposto" id="tem_impostoi" class="form-control">
+                                        <option value="0">Não</option>
+                                        <option value="1">Sim</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="tem_reajustei">Tem Reajuste? <span class="required">*</span></label>
+                                    <select name="tem_reajuste" id="tem_reajustei" class="form-control">
+                                        <option value="0">Não</option>
+                                        <option value="1">Sim</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="quantidade_unitaria_servicoi">Quantidade Unitária <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["quantidade_unitaria_servico", "size" => 200, "class" => "form-control valor_inteiro", "id" => "quantidade_unitaria_servicoi", "placeholder" => "Quantidade Unitária"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="valor_unitario_servicoi">Valor Unitário <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["valor_unitario_servico", "size" => 200, "class" => "form-control valor_monetario_limpo", "id" => "valor_unitario_servicoi", "placeholder" => "Valor Unitário"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="mes_inicial_servicoi">Mês Inicial <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["mes_inicial_servico", "maxlength" => "2", "class" => "form-control minutos maxlength-alloptions", "id" => "mes_inicial_servicoi", "placeholder" => "Mês Inicial"]) ?>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="vigencia_servicoi">Vigência <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["vigencia_servico", "maxlength" => "2", "class" => "form-control minutos maxlength-alloptions", "id" => "vigencia_servicoi", "placeholder" => "Vigência"]) ?>
+                                </div>
+                                <div class="form-group col-md-2 botoes_forms_alinhamento">
+                                    <button type="button" name="bt_inserir_servico" id="bt_inserir_servicoi" class="btn btn-info btn-rounded waves-light w-md bt_menu_tabela hide_buttons" onclick="inserirComponente();">Inserir</button>
+                                    <button type="button" name="bt_limpar_servico" id="bt_limpar_servicoi" class="btn btn-danger btn-rounded waves-light w-md bt_menu_tabela hide_buttons" onclick="cancelarComponente();">Limpar</button>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-12" id="div_tabela_componentesi">
+                                    <table id="tabela_componentesi" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%"  style="display: none;">
+                                        <thead>
+                                        <tr style="text-align: center;">
+                                            <td>Código Serviço</td>
+                                            <td>Descrição do Serviço</td>
+                                            <td>Grandeza</td>
+                                            <td>Tem Imposto?</td>
+                                            <td>Tem Reajuste?</td>
+                                            <td>Quantidade</td>
+                                            <td>Mês Inicial</td>
+                                            <td>Vigência</td>
+                                            <td>Valor Unitário</td>
+                                            <td>Total</td>
+                                            <td>Total c/ Reajuste</td>
+                                            <td>Impostos</td>
+                                            <td>Total c/ Impostos</td>
+                                            <td>Ações</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab_itens_proposta_comercial_execucao">
                             <!-- Valor total de Serviços -->
                             <div class="form-row">
                                 <table id="tabela_total_serviços" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
@@ -415,6 +536,65 @@ $module = $this->router->getControllerName();
                                         <tbody></tbody>
                                     </table>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab_itens_proposta_comercial_previstos">
+                            <!-- Valor total de Serviços -->
+                            <div class="form-row">
+                                <table id="tabela_total_serviçosp" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="2">Tabela de Serviços Previstos</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td style="width: 10%;">Total:</td>
+                                        <td style="width: 90%;">R$ <span id="demonstrativo_valor_totalp">0,00</span></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <br>
+                            <!-- Demonstrativo mensal de valores -->
+                            <div class="form-row">
+                                <table id="tabela_mensal_serviçosp" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th colspan="12" style="text-align: center;">Valores Mensais de Serviços Previstos</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <th>1º Mês</th>
+                                        <td>R$ <span id="mes_1">0,00</span><input name="jan" id="janp" type="hidden" value=""/></td>
+                                        <th>2º Mês</th>
+                                        <td>R$ <span id="mes_2">0,00</span><input name="fev" id="fevp" type="hidden" value=""/></td>
+                                        <th>3º Mês</th>
+                                        <td>R$ <span id="mes_3">0,00</span><input name="mar" id="marp" type="hidden" value=""/></td>
+                                        <th>4º Mês</th>
+                                        <td>R$ <span id="mes_4">0,00</span><input name="abr" id="abrp" type="hidden" value=""/></td>
+                                        <th>5º Mês</th>
+                                        <td>R$ <span id="mes_5">0,00</span><input name="mai" id="maip" type="hidden" value=""/></td>
+                                        <th>6º Mês</th>
+                                        <td>R$ <span id="mes_6">0,00</span><input name="jun" id="junp" type="hidden" value=""/></td>
+                                    </tr>
+                                    <tr>
+                                        <th>7º Mês</th>
+                                        <td>R$ <span id="mes_7">0,00</span><input name="jul" id="julp" type="hidden" value=""/></td>
+                                        <th>8º Mês</th>
+                                        <td>R$ <span id="mes_8">0,00</span><input name="ago" id="agop" type="hidden" value=""/></td>
+                                        <th>9º Mês</th>
+                                        <td>R$ <span id="mes_9">0,00</span><input name="set" id="setp" type="hidden" value=""/></td>
+                                        <th>10º Mês</th>
+                                        <td>R$ <span id="mes_10">0,00</span><input name="out" id="outp" type="hidden" value=""/></td>
+                                        <th>11º Mês</th>
+                                        <td>R$ <span id="mes_11">0,00</span><input name="nov" id="novp" type="hidden" value=""/></td>
+                                        <th>12º Mês</th>
+                                        <td>R$ <span id="mes_12">0,00</span><input name="dez" id="dezp" type="hidden" value=""/></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
