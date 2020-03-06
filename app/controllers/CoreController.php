@@ -7,6 +7,7 @@ use Circuitos\Models\CircuitosAnexo;
 use Circuitos\Models\Conectividade;
 use Circuitos\Models\ContratoAnexo;
 use Circuitos\Models\ContratoExercicio;
+use Circuitos\Models\ContratoFiscalAnexo;
 use Circuitos\Models\ContratoGarantia;
 use Circuitos\Models\ContratoOrcamento;
 use Circuitos\Models\Empresa;
@@ -18,6 +19,7 @@ use Circuitos\Models\Operations\AnexosOP;
 use Circuitos\Models\Operations\CidadeDigitalOP;
 use Circuitos\Models\Operations\CircuitosOP;
 use Circuitos\Models\Operations\ConectividadeOP;
+use Circuitos\Models\Operations\ContratoFiscalOP;
 use Circuitos\Models\Operations\ContratoOP;
 use Circuitos\Models\Operations\CoreOP;
 use Circuitos\Models\Operations\EmpresaDepartamentoOP;
@@ -565,6 +567,10 @@ class CoreController extends ControllerBase
                 $objeto = new ContratoOP();
                 return $objeto->visualizarContrato($dados['id']);
                 break;
+            case 'visualizarContratoFiscal':
+                $objeto = new ContratoFiscalOP();
+                return $objeto->visualizarContratoFiscal($dados['id']);
+                break;
             case 'visualizarContratoOrcamentos':
                 $objeto = new ContratoOP();
                 return $objeto->visualizarContratoOrcamentos($dados['id']);
@@ -669,6 +675,10 @@ class CoreController extends ControllerBase
                 $objeto = new ContratoOP();
                 return $objeto->visualizarContratoAnexos($dados['id']);
                 break;
+            case 'visualizarContratoFiscalAnexos':
+                $objeto = new ContratoFiscalOP();
+                return $objeto->visualizarContratoFiscalAnexos($dados['id']);
+                break;
             case 'visualizarEmpresaDepartamento':
                 $objeto = new EmpresaDepartamentoOP();
                 return $objeto->visualizarEmpresaDepartamento($dados['id']);
@@ -680,6 +690,10 @@ class CoreController extends ControllerBase
             case 'visualizarContratoNumero':
                 $objeto = new ContratoOP();
                 return $objeto->visualizarContratoNumero($dados['id']);
+                break;
+            case 'visualizarContratoFiscalNome':
+                $objeto = new ContratoFiscalOP();
+                return $objeto->visualizarContratoFiscalNome($dados['id']);
                 break;
             case 'visualizarCircuitosDesignacao':
                 $objeto = new CircuitosOP();
@@ -868,6 +882,11 @@ class CoreController extends ControllerBase
                 $objeto = new AnexosOP();
                 $objPrincipal = CircuitosAnexo::findFirst('id_anexo='.$dados['id']);
                 return $objeto->excluirCircuitosAnexo($objPrincipal);
+                break;
+            case 'excluirContratoFiscalAnexo':
+                $objeto = new AnexosOP();
+                $objPrincipal = ContratoFiscalAnexo::findFirst('id_anexo='.$dados['id']);
+                return $objeto->excluirContratoFiscalAnexo($objPrincipal);
                 break;
         }
     }

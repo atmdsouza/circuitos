@@ -20,6 +20,8 @@ function inicializar()
         order: [[4, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
     });
     autocompletarContrato('lid_contrato','id_contrato');
+    autocompletarUsuario('lid_usuario', 'id_usuario');
+    autocompletarUsuarioSuplente('lid_fiscal_suplente','id_fiscal_suplente');
     getTiposAnexo();
 }
 
@@ -72,12 +74,28 @@ function limparValidacao()
 function criar()
 {
     'use strict';
+    $('#tabela_lista_anexosv').removeAttr('style', 'display: table;');
+    $('#tabela_lista_anexosv').attr('style', 'display: none;');
     $("#formCadastro input").removeAttr('readonly', 'readonly');
     $("#formCadastro select").removeAttr('readonly', 'readonly');
     $("#formCadastro textarea").removeAttr('readonly', 'readonly');
     $("#salvarCadastro").val('criar');
+    habilitaSuplente();
     $("#salvarCadastro").show();
     $("#modalCadastro").modal();
+}
+
+function habilitaSuplente()
+{
+    'use strict';
+    var tipo_fiscal = $('#tipo_fiscal').val();
+    if (tipo_fiscal === '1'){
+        $('#lid_fiscal_suplente').removeAttr('disabled');
+    } else {
+        $('#lid_fiscal_suplente').val('');
+        $('#id_fiscal_suplente').val('');
+        $('#lid_fiscal_suplente').attr('disabled', 'disabled');
+    }
 }
 
 function salvar()
@@ -86,7 +104,13 @@ function salvar()
     var acao = $('#salvarCadastro').val();
     $("#formCadastro").validate({
         rules : {
-            descricao:{
+            lid_contrato:{
+                required: true
+            },
+            lid_usuario:{
+                required: true
+            },
+            tipo_fiscal:{
                 required: true
             }
         },
@@ -318,7 +342,7 @@ function visualizar(id, ocultar)
         dataType: "JSON",
         url: action,
         data: {metodo: 'visualizarContratoFiscal', id: id},
-        complete: function () {
+        complete: function (data) {
             if (ocultar) {
                 $("#formCadastro input").attr('readonly', 'readonly');
                 $("#formCadastro select").attr('readonly', 'readonly');
@@ -329,6 +353,7 @@ function visualizar(id, ocultar)
                 $("#formCadastro select").removeAttr('readonly', 'readonly');
                 $("#formCadastro textarea").removeAttr('readonly', 'readonly');
                 $("#salvarCadastro").val('editar');
+                habilitaSuplente();
                 $("#salvarCadastro").show();
                 $('.hide_buttons').show();
             }
@@ -345,9 +370,66 @@ function visualizar(id, ocultar)
         },
         success: function (data) {
             $('#id').val(data.dados.id);
-            $('#lid_departamento_pai').val(data.dados.ds_departamento_pai);
-            $('#id_departamento_pai').val(data.dados.id_departamento_pai);
-            $('#descricao').val(data.dados.descricao);
+            $('#lid_contrato').val(data.descricoes.ds_contrato);
+            $('#id_contrato').val(data.descricoes.id_contrato);
+            $('#lid_usuario').val(data.descricoes.nome_fiscal);
+            $('#id_usuario').val(data.dados.id_usuario);
+            $('#lid_fiscal_suplente').val(data.descricoes.nome_fiscal_suplente);
+            $('#id_fiscal_suplente').val(data.dados.id_fiscal_suplente);
+            $('#tipo_fiscal').val(data.dados.tipo_fiscal).selected = "true";
+            $('#data_nomeacao').val(data.descricoes.ds_data_nomeacao);
+            $('#documento_nomeacao').val(data.dados.documento_nomeacao);
+            montarTabelaAnexosv(data.dados.id, ocultar);
+        }
+    });
+}
+
+function montarTabelaAnexosv(id_contrato_fiscal, visualizar)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'visualizarContratoFiscalAnexos', id: id_contrato_fiscal },
+        complete: function() {
+            if (visualizar) {
+                $('#tabela_lista_anexosv').removeAttr('style', 'display: none;');
+                $('#tabela_lista_anexosv').attr('style', 'display: table;');
+            } else {
+                $('.tr_remove_anexov').remove();
+                $('#tabela_lista_anexosv').removeAttr('style', 'display: table;');
+                $('#tabela_lista_anexosv').attr('style', 'display: none;');
+            }
+        },
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('.tr_remove_anexov').remove();
+            var linhas =null;
+            if (data.dados.length > 0){
+                $.each(data.dados, function(key, value) {
+                    linhas += '<tr class="tr_remove_anexov">';
+                    linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
+                    linhas += '<td>'+ value.descricao +'</td>';
+                    linhas += '<td>'+ value.data_criacao +'</td>';
+                    linhas += '<td><a href="'+ value.url +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
+                    linhas += '</tr>';
+                });
+            } else {
+                linhas += "<tr class='tr_remove_anexov'>";
+                linhas += "<td colspan='5' style='text-align: center;'>Não existem anexos para serem exibidos! Favor Cadastrar!</td>";
+                linhas += "</tr>";
+            }
+            $("#tabela_lista_anexosv").append(linhas);
         }
     });
 }
@@ -360,12 +442,12 @@ function limpar()
 }
 
 //Sessão de Anexos
-function criarAnexo(id_contrato)
+function criarAnexo(id_contrato_fiscal)
 {
     'use strict';
-    $('#id_contrato').val(id_contrato);
-    getIdentificador(id_contrato);
-    montarTabelaAnexos(id_contrato, false);
+    $('#id_contrato_fiscal').val(id_contrato_fiscal);
+    getIdentificador(id_contrato_fiscal);
+    montarTabelaAnexos(id_contrato_fiscal, false);
     $('#tabela_lista_anexos').removeAttr('style', 'display: table;');
     $('#tabela_lista_anexos').attr('style', 'display: none;');
     $('#modalAnexoArquivo').modal();
@@ -396,7 +478,7 @@ function getIdentificador(id)
     });
 }
 
-function montarTabelaAnexos(id_contrato, visualizar)
+function montarTabelaAnexos(id_contrato_fiscal, visualizar)
 {
     'use strict';
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
@@ -404,7 +486,7 @@ function montarTabelaAnexos(id_contrato, visualizar)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: { metodo: 'visualizarContratoFiscalAnexos', id: id_contrato },
+        data: { metodo: 'visualizarContratoFiscalAnexos', id: id_contrato_fiscal },
         complete: function() {
             if (visualizar) {
                 $('.hide_buttons').hide();
@@ -554,7 +636,6 @@ function excluirAnexo(id_anexo)
                 }
             },
             success: function (data) {
-                console.log(data);
                 $('.tr_remove_anexo').remove();
                 montarTabelaAnexos(data, false);
                 swal({

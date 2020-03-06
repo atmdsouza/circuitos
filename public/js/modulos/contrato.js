@@ -596,7 +596,7 @@ function montarTabelaAnexosv(id_contrato, visualizar)
         success: function(data) {
             $('.tr_remove_anexov').remove();
             var linhas =null;
-            if (data.dados != ''){
+            if (data.dados.length > 0){
                 $.each(data.dados, function(key, value) {
                     linhas += '<tr class="tr_remove_anexov">';
                     linhas += '<td>'+ value.ds_tipo_anexo +'</td>';

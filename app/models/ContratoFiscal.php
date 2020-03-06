@@ -297,6 +297,30 @@ class ContratoFiscal extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return string
+     */
+    public function getNomeFiscalSuplente()
+    {
+        return $this->UsuarioSuplente->Pessoa->nome;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getIdContrato()
+    {
+        return $this->ContratoFiscalHasContratoUnico->id_contrato;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNumeroContrato()
+    {
+        return $this->ContratoFiscalHasContratoUnico->Contrato->numero;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -307,6 +331,7 @@ class ContratoFiscal extends \Phalcon\Mvc\Model
         $this->hasMany('id', 'Circuitos\Models\ContratoFiscalHasContrato', 'id_contrato_fiscal', ['alias' => 'ContratoFiscalHasContrato']);
         $this->belongsTo('id_fiscal_suplente', 'Circuitos\Models\Usuario', 'id', ['alias' => 'UsuarioSuplente']);
         $this->belongsTo('id_usuario', 'Circuitos\Models\Usuario', 'id', ['alias' => 'Usuario']);
+        $this->belongsTo('id', 'Circuitos\Models\ContratoFiscalHasContrato', 'id_contrato_fiscal', ['alias' => 'ContratoFiscalHasContratoUnico']);
     }
 
     /**

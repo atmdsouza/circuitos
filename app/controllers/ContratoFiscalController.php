@@ -3,9 +3,14 @@
 namespace Circuitos\Controllers;
 
 use Auth\Autentica;
+use Circuitos\Models\Anexos;
 use Circuitos\Models\ContratoFiscal;
+use Circuitos\Models\ContratoFiscalAnexo;
+use Circuitos\Models\ContratoFiscalHasContrato;
 use Circuitos\Models\Lov;
+use Circuitos\Models\Operations\AnexosOP;
 use Circuitos\Models\Operations\ContratoFiscalOP;
+use Circuitos\Models\Operations\CoreOP;
 use Phalcon\Http\Response as Response;
 use Util\TokenManager;
 
@@ -61,7 +66,8 @@ class ContratoFiscalController extends ControllerBase
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             $contratofiscalOP = new ContratoFiscalOP();
             $contratofiscal = new ContratoFiscal($params);
-            if($contratofiscalOP->cadastrar($contratofiscal)){//Cadastrou com sucesso
+            $vinculocontrato = new ContratoFiscalHasContrato($params);
+            if($contratofiscalOP->cadastrar($contratofiscal, $vinculocontrato)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -88,7 +94,8 @@ class ContratoFiscalController extends ControllerBase
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             $contratofiscalOP = new ContratoFiscalOP();
             $contratofiscal = new ContratoFiscal($params);
-            if($contratofiscalOP->alterar($contratofiscal)){//Altera com sucesso
+            $vinculocontrato = new ContratoFiscalHasContrato($params);
+            if($contratofiscalOP->alterar($contratofiscal, $vinculocontrato)){//Altera com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -172,6 +179,40 @@ class ContratoFiscalController extends ControllerBase
             $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo, 'mensagem' => $error_chk)));
         }
         return $response;
+    }
+
+    /**
+     * Created by PhpStorm.
+     * User: André Souza
+     * Date: 06/02/2020
+     * Responsável por vincular arquivos a um fiscal
+     */
+    public function subirAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $anexosOP = new AnexosOP();
+        $modulo = $this->router->getControllerName();
+        $action = $this->router->getActionName();
+        $request = $this->request;
+        $id_contrato_fiscal = $request->get('id_contrato_fiscal');
+        $id_tipo_anexo = $request->get('id_tipo_anexo');
+        $descricao = $request->get('descricao');
+        $coreOP = new CoreOP();
+        $files = $coreOP->servicoUpload($request, $modulo, $action, $id_contrato_fiscal, null);
+        foreach ($files as $key => $file)
+        {
+            $anexos = new Anexos();
+            $anexos->setDescricao($descricao[$key]);
+            $anexos->setIdTipoAnexo($id_tipo_anexo[$key]);
+            $anexos->setUrl($file['path']);
+            $anexo_cadastrado = $anexosOP->cadastrar($anexos);
+            $vinculoanexos = new ContratoFiscalAnexo();
+            $vinculoanexos->setIdAnexo($anexo_cadastrado->getId());
+            $vinculoanexos->setIdContratoFiscal($id_contrato_fiscal);
+            $anexosOP->cadastrarContratoFiscalAnexo($vinculoanexos);
+        }
+        $this->response->redirect('contrato_fiscal');
     }
 }
 

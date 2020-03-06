@@ -5,6 +5,7 @@ namespace Circuitos\Models\Operations;
 use Circuitos\Models\Anexos;
 use Circuitos\Models\CircuitosAnexo;
 use Circuitos\Models\ContratoAnexo;
+use Circuitos\Models\ContratoFiscalAnexo;
 use Circuitos\Models\PropostaComercialAnexo;
 use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
@@ -30,7 +31,12 @@ class AnexosOP extends Anexos
             $objeto->setDataCriacao(date('Y-m-d H:i:s'));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível salvar o anexo!");
+                $messages = $objeto->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao salvar o anexo: " . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -51,7 +57,12 @@ class AnexosOP extends Anexos
             $objeto->setIdAnexo($objArray->getIdAnexo());
             $objeto->setIdPropostaComercial($objArray->getIdPropostaComercial());
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível salvar o vinculo da proposta com o anexo!");
+                $messages = $objeto->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao salvar o vinculo: " . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -72,7 +83,38 @@ class AnexosOP extends Anexos
             $objeto->setIdAnexo($objArray->getIdAnexo());
             $objeto->setIdContrato($objArray->getIdContrato());
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível salvar o vinculo da proposta com o anexo!");
+                $messages = $objeto->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao salvar o vinculo: " . $errors);
+            }
+            $transaction->commit();
+            return $objeto;
+        } catch (TxFailed $e) {
+            $logger->error($e->getMessage());
+            return false;
+        }
+    }
+
+    public function cadastrarContratoFiscalAnexo(ContratoFiscalAnexo $objArray)
+    {
+        $logger = new FileAdapter($this->arqLog);
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        try {
+            $objeto = new ContratoFiscalAnexo();
+            $objeto->setTransaction($transaction);
+            $objeto->setIdAnexo($objArray->getIdAnexo());
+            $objeto->setIdContratoFiscal($objArray->getIdContratoFiscal());
+            if ($objeto->save() == false) {
+                $messages = $objeto->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao salvar o vinculo: " . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -93,7 +135,12 @@ class AnexosOP extends Anexos
             $objeto->setIdAnexo($objArray->getIdAnexo());
             $objeto->setIdCircuitos($objArray->getIdCircuitos());
             if ($objeto->save() == false) {
-                $transaction->rollback("Não foi possível salvar o vinculo da proposta com o anexo!");
+                $messages = $objeto->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao salvar o vinculo: " . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -115,7 +162,12 @@ class AnexosOP extends Anexos
             $objAnexo = Anexos::findFirst('id='.$objPrincipal->getIdAnexo());
             unlink($objAnexo->getUrl());
             if ($objAnexo->delete() == false) {
-                $transaction->rollback("Não foi possível deletar o vinculo da proposta com o anexo!");
+                $messages = $objAnexo->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao excluir vinculo: " . $errors);
             }
             $transaction->commit();
             return $id_proposta;
@@ -137,7 +189,39 @@ class AnexosOP extends Anexos
             $objAnexo = Anexos::findFirst('id='.$objPrincipal->getIdAnexo());
             unlink($objAnexo->getUrl());
             if ($objAnexo->delete() == false) {
-                $transaction->rollback("Não foi possível deletar o vinculo da proposta com o anexo!");
+                $messages = $objAnexo->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao excluir vinculo: " . $errors);
+            }
+            $transaction->commit();
+            return $id;
+        } catch (TxFailed $e) {
+            $logger->error($e->getMessage());
+            return false;
+        }
+    }
+
+    public function excluirContratoFiscalAnexo (ContratoFiscalAnexo $objPrincipal)
+    {
+        $logger = new FileAdapter($this->arqLog);
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $id = $objPrincipal->getIdContratoFiscal();
+        try {
+            $objPrincipal->setTransaction($transaction);
+            $objPrincipal->delete();
+            $objAnexo = Anexos::findFirst('id='.$objPrincipal->getIdAnexo());
+            unlink($objAnexo->getUrl());
+            if ($objAnexo->delete() == false) {
+                $messages = $objAnexo->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao excluir vinculo: " . $errors);
             }
             $transaction->commit();
             return $id;
@@ -159,7 +243,12 @@ class AnexosOP extends Anexos
             $objAnexo = Anexos::findFirst('id='.$objPrincipal->getIdAnexo());
             unlink($objAnexo->getUrl());
             if ($objAnexo->delete() == false) {
-                $transaction->rollback("Não foi possível deletar o vinculo da proposta com o anexo!");
+                $messages = $objAnexo->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao excluir vinculo: " . $errors);
             }
             $transaction->commit();
             return $id;

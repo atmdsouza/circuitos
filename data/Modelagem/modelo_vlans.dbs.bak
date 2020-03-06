@@ -2213,8 +2213,8 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="contrato_financeiro_nota_anexo" color="C1D8EE" x="1248" y="144" />
 		<entity schema="bd_circuitosnavega" name="contrato_financeiro_nota" color="C1D8EE" x="960" y="256" />
 		<entity schema="bd_circuitosnavega" name="contrato_financeiro" color="C1D8EE" x="944" y="80" />
-		<entity schema="bd_circuitosnavega" name="contrato_fiscal" color="BEBEF4" x="1280" y="688" />
 		<entity schema="bd_circuitosnavega" name="contrato_fiscal_anexo" color="C1D8EE" x="1008" y="880" />
+		<entity schema="bd_circuitosnavega" name="contrato_fiscal" color="BEBEF4" x="1280" y="688" />
 		<group name="Empresa" color="C4E0F9" >
 			<entity schema="bd_circuitosnavega" name="empresa" />
 			<entity schema="bd_circuitosnavega" name="empresa_parametros" />
@@ -2306,6 +2306,7 @@ Externo]]></comment>
 			<entity schema="bd_circuitosnavega" name="contrato_nao_conformidade_anexo" />
 			<entity schema="bd_circuitosnavega" name="contrato_fiscal_has_contrato" />
 			<entity schema="bd_circuitosnavega" name="contrato_processo" />
+			<entity schema="bd_circuitosnavega" name="contrato_fiscal_anexo" />
 		</group>
 		<script name="SQL_Editor" id="Editor_1cdfc95" language="SQL" >
 			<string><![CDATA[select * from pessoa_juridica;

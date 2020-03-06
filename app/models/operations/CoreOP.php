@@ -80,6 +80,12 @@ class CoreOP
                     $uploader->move();
                 }
             }
+            if (count($uploader->getErrors()) > 0){
+                foreach ($uploader->getErrors() as $erros)
+                {
+                    $logger->error('['.$erros.']');
+                }
+            }
             return $uploader->getInfo();
         } catch (Exception $e) {
             $logger->error('['.$e->getMessage().'] ['.$uploader->getErrors().']');
