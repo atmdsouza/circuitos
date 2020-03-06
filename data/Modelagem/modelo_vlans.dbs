@@ -433,8 +433,7 @@
 			</fk>
 		</table>
 		<table name="contrato_arquivo_fisico" >
-			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
-			<column name="id_contrato" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="id" type="int" jt="4" mandatory="y" />
 			<column name="corredor" type="varchar" length="60" decimal="0" jt="12" />
 			<column name="armario" type="varchar" length="60" decimal="0" jt="12" />
 			<column name="prateleira" type="varchar" length="60" decimal="0" jt="12" />
@@ -449,11 +448,8 @@
 			<index name="pk_contrato_arquivo_fisico" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
-			<index name="fk_contrato_arquivo_fisico_contrato1_idx" unique="NORMAL" >
-				<column name="id_contrato" />
-			</index>
-			<fk name="fk_contrato_arquivo_fisico_contrato1" to_schema="bd_circuitosnavega" to_table="contrato" >
-				<fk_column name="id_contrato" pk="id" />
+			<fk name="fk_contrato_arquivo_fisico" to_schema="bd_circuitosnavega" to_table="contrato" delete_action="cascade" update_action="cascade" >
+				<fk_column name="id" pk="id" />
 			</fk>
 		</table>
 		<table name="contrato_exercicio" >
@@ -504,6 +500,12 @@
 			<index name="pk_contrato_fiscal" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
+			<index name="fk_contrato_fiscal_usuario" unique="NORMAL" >
+				<column name="id_usuario" />
+			</index>
+			<index name="fk_contrato_fiscal_usuario_suplente" unique="NORMAL" >
+				<column name="id_fiscal_suplente" />
+			</index>
 			<fk name="fk_contrato_fiscal_usuario" to_schema="bd_circuitosnavega" to_table="usuario" >
 				<fk_column name="id_usuario" pk="id" />
 			</fk>
@@ -514,6 +516,12 @@
 		<table name="contrato_fiscal_has_contrato" >
 			<column name="id_contrato" type="int" jt="4" mandatory="y" />
 			<column name="id_contrato_fiscal" type="int" jt="4" mandatory="y" />
+			<index name="fk_contrato_fiscal_has_contrato" unique="NORMAL" >
+				<column name="id_contrato" />
+			</index>
+			<index name="fk_contrato_fiscal_has_contrato_fiscal" unique="NORMAL" >
+				<column name="id_contrato_fiscal" />
+			</index>
 			<fk name="fk_contrato_fiscal_has_contrato" to_schema="bd_circuitosnavega" to_table="contrato" >
 				<fk_column name="id_contrato" pk="id" />
 			</fk>
@@ -712,6 +720,12 @@
 			<column name="data_update" type="datetime" jt="93" />
 			<index name="pk_contrato_processo_id" unique="PRIMARY_KEY" >
 				<column name="id" />
+			</index>
+			<index name="fk_contrato_processo" unique="NORMAL" >
+				<column name="id_proposta_comercial" />
+			</index>
+			<index name="fk_contrato_processo_contrato" unique="NORMAL" >
+				<column name="id_tipo_processo" />
 			</index>
 			<fk name="fk_contrato_processo_contrato" to_schema="bd_circuitosnavega" to_table="lov" >
 				<fk_column name="id_tipo_processo" pk="id" />
@@ -2109,7 +2123,6 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="pessoa_email" color="F4DDBE" x="3456" y="1424" />
 		<entity schema="bd_circuitosnavega" name="pessoa_endereco" color="F4DDBE" x="3696" y="1312" />
 		<entity schema="bd_circuitosnavega" name="pessoa_fisica" color="F4DDBE" x="3232" y="1424" />
-		<entity schema="bd_circuitosnavega" name="pessoa_juridica" color="F4DDBE" x="3680" y="1712" />
 		<entity schema="bd_circuitosnavega" name="pessoa_telefone" color="F4DDBE" x="3200" y="1680" />
 		<entity schema="bd_circuitosnavega" name="phalcon_access_list" color="BED3F4" x="1584" y="1312" />
 		<entity schema="bd_circuitosnavega" name="phalcon_resources" color="BED3F4" x="1824" y="1312" />
@@ -2145,11 +2158,9 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="circuitos" color="F4DDBE" x="2656" y="1664" />
 		<entity schema="bd_circuitosnavega" name="torre" color="C7F4BE" x="3040" y="736" />
 		<entity schema="bd_circuitosnavega" name="estacao_telecon" color="C7F4BE" x="3040" y="384" />
-		<entity schema="bd_circuitosnavega" name="contrato" color="C7F4BE" x="672" y="80" />
 		<entity schema="bd_circuitosnavega" name="contrato_acompanhamento_financeiro_nota" color="C1D8EE" x="928" y="208" />
 		<entity schema="bd_circuitosnavega" name="contrato_acompanhamento_financeiro_nota_anexo" color="C1D8EE" x="1248" y="80" />
 		<entity schema="bd_circuitosnavega" name="contrato_acompanhamento_financeiro" color="C1D8EE" x="960" y="80" />
-		<entity schema="bd_circuitosnavega" name="contrato_arquivo_fisico" color="BEBEF4" x="672" y="688" />
 		<entity schema="bd_circuitosnavega" name="contrato_exercicio" color="C7F4BE" x="960" y="400" />
 		<entity schema="bd_circuitosnavega" name="contrato_garantia" color="BEBEF4" x="1328" y="400" />
 		<entity schema="bd_circuitosnavega" name="contrato_garantia_objeto" color="BEBEF4" x="1328" y="224" />
@@ -2165,6 +2176,9 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="anexos" color="C1D8EE" x="2816" y="1312" />
 		<entity schema="bd_circuitosnavega" name="contrato_anexo" color="BEBEF4" x="672" y="560" />
 		<entity schema="bd_circuitosnavega" name="proposta_comercial" color="D1BEF4" x="112" y="1312" />
+		<entity schema="bd_circuitosnavega" name="pessoa_juridica" color="F4DDBE" x="3680" y="1712" />
+		<entity schema="bd_circuitosnavega" name="contrato_arquivo_fisico" color="BEBEF4" x="672" y="688" />
+		<entity schema="bd_circuitosnavega" name="contrato" color="C7F4BE" x="672" y="80" />
 		<group name="Empresa" color="C4E0F9" >
 			<entity schema="bd_circuitosnavega" name="empresa" />
 			<entity schema="bd_circuitosnavega" name="empresa_parametros" />

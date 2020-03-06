@@ -4,6 +4,8 @@ var URLImagensSistema = "public/images";
 
 //Variáveis Globais
 var mudou = false;
+var contador = 0;
+var tipos_anexos;
 
 //Função do que deve ser carregado no Onload (Obrigatória para todas os arquivos)
 function inicializar()
@@ -53,6 +55,7 @@ function confirmaCancelar(modal)
             limparDadosFormOrcamento();
             limparDadosFormExercicio();
             limparDadosFormGarantia();
+            limparValidacao();
             mudou = false;
         }).catch(swal.noop);
     }
@@ -63,13 +66,23 @@ function confirmaCancelar(modal)
         limparDadosFormOrcamento();
         limparDadosFormExercicio();
         limparDadosFormGarantia();
+        limparValidacao();
     }
+}
+
+function limparValidacao()
+{
+    'use strict';
+    var validator = $("#formCadastro").validate();
+    validator.resetForm();
+
 }
 
 function criar()
 {
     'use strict';
     $('#primeira_aba').trigger('click');
+    bloquearAbas();
     $('.hide_buttons').show();
     $('#bt_inserir_garantia').text("Inserir");
     $('#bt_inserir_garantia').removeAttr('onclick');
@@ -99,6 +112,16 @@ function criar()
     $('#lid_contrato_principal').attr('disabled', 'disabled');
     $("#salvarCadastro").show();
     $("#modalCadastro").modal();
+}
+
+function bloquearAbas()
+{
+    'use strict';
+    $('#tab-fiscal').addClass('disabled');
+    $('#tab-historico').addClass('disabled');
+    $('#tab-financeiro').addClass('disabled');
+    $('#tab-objeto-vinculado').addClass('disabled');
+    $('#tab-anexos').addClass('disabled');
 }
 
 function salvar()
@@ -132,8 +155,7 @@ function salvar()
                 required: true
             },
             vigencia_tipo:{
-                required: true,
-                maiorQueZero: true
+                required: true
             },
             vigencia_prazo:{
                 required: true
@@ -149,50 +171,9 @@ function salvar()
             },
             valor_mensal:{
                 required: true
-            }
-        },
-        messages:{
-            numero_processo:{
-                required: "É necessário informar o Número do Processo"
             },
-            id_tipo_processo:{
-                required: "É necessário informar o Tipo do Processo"
-            },
-            id_status:{
-                required: "É necessário informar o Status"
-            },
-            lid_cliente:{
-                required: "É necessário informar um Cliente, Fornecedor ou Parceiro"
-            },
-            id_tipo_contrato:{
-                required: "É necessário informar o Tipo do Contrato"
-            },
-            vincular_instrumento:{
-                required: "É necessário informar se existe instrumento principal"
-            },
-            data_assinatura:{
-                required: "É necessário informar a Data de Assinatura"
-            },
-            data_encerramento:{
-                required: "É necessário informar a Data de Encerramento"
-            },
-            vigencia_tipo:{
-                required: "É necessário informar o Tipo de Vigência"
-            },
-            vigencia_prazo:{
-                required: "É necessário informar o Prazo de Vigência"
-            },
-            numero:{
-                required: "É necessário informar o Número"
-            },
-            ano:{
-                required: "É necessário informar o Ano"
-            },
-            valor_global:{
-                required: "É necessário informar um Valor Global"
-            },
-            valor_mensal:{
-                required: "É necessário informar um Valor Mensal"
+            objeto:{
+                required: true
             }
         },
         submitHandler: function(form) {
@@ -474,9 +455,15 @@ function visualizar(id, ocultar)
             $('#objetivo_especifico').val(data.dados.objetivo_especifico);
             $('#valor_global').val(accounting.formatMoney(data.dados.valor_global, '', 2, '.', ','));
             $('#valor_mensal').val(accounting.formatMoney(data.dados.valor_mensal, '', 2, '.', ','));
+            $('#corredor').val(data.descricao.corredor);
+            $('#armario').val(data.descricao.armario);
+            $('#prateleira').val(data.descricao.prateleira);
+            $('#codigo').val(data.descricao.codigo);
             montarTabelaOrcamento(data.dados.id, ocultar);
             montarTabelaGarantia(data.dados.id, ocultar);
             montarTabelaExercicio(data.dados.id, ocultar);
+            montarTabelaAnexosv(data.dados.id, ocultar);
+            montarTabelaObjetosVinculados(data.dados.id, ocultar);
         }
     });
 }
@@ -521,9 +508,117 @@ function preencherDadosPropostaComercial()
     'use strict';
 }
 
+function montarTabelaObjetosVinculados(id_contrato, visualizar)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'visualizarContratosVinculados', id: id_contrato },
+        complete: function() {
+            if (visualizar) {
+                $('#tab-objeto-vinculado').removeClass('disabled');
+                $('.hide_buttons').hide();
+            }
+        },
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('.tr_remove_objeto_vinculado').remove();
+            var linhas =null;
+            if (!isEmpty(data.dados_pai)){
+                linhas += '<tr class="tr_remove_objeto_vinculado">';
+                linhas += '<td>'+ data.dados_pai.tipo_vinculo +'</td>';
+                linhas += '<td>'+ data.dados_pai.tipo_documento +'</td>';
+                linhas += '<td>'+ data.dados_pai.numero_ano +'</td>';
+                linhas += '<td>'+ data.dados_pai.data_assinatura +'</td>';
+                linhas += '<td>'+ data.dados_pai.data_encerramento +'</td>';
+                linhas += '<td>'+ data.dados_pai.data_publicacao +'</td>';
+                linhas += '<td>'+ data.dados_pai.numero_diario +'</td>';
+                linhas += '</tr>';
+                $("#tabela_lista_objeto_vinculado").append(linhas);
+            } else if (data.dados_filhos.length > 0){
+                $.each(data.dados_filhos, function(key, value) {
+                    linhas += '<tr class="tr_remove_objeto_vinculado">';
+                    linhas += '<td>'+ value.tipo_vinculo +'</td>';
+                    linhas += '<td>'+ value.tipo_documento +'</td>';
+                    linhas += '<td>'+ value.numero_ano +'</td>';
+                    linhas += '<td>'+ value.data_assinatura +'</td>';
+                    linhas += '<td>'+ value.data_encerramento +'</td>';
+                    linhas += '<td>'+ value.data_publicacao +'</td>';
+                    linhas += '<td>'+ value.numero_diario +'</td>';
+                    linhas += '</tr>';
+                });
+                $("#tabela_lista_objeto_vinculado").append(linhas);
+            } else {
+                linhas += "<tr class='tr_remove_objeto_vinculado'>";
+                linhas += "<td colspan='7' style='text-align: center;'>Não existem documentos vinculados a esse contrato para serem exibidos! Favor Cadastrar!</td>";
+                linhas += "</tr>";
+                $("#tabela_lista_objeto_vinculado").append(linhas);
+            }
+        }
+    });
+}
+
+function montarTabelaAnexosv(id_contrato, visualizar)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'visualizarContratoAnexos', id: id_contrato },
+        complete: function() {
+            if (visualizar) {
+                $('#tab-anexos').removeClass('disabled');
+                $('.hide_buttons').hide();
+            }
+        },
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('.tr_remove_anexov').remove();
+            var linhas =null;
+            if (data.dados != ''){
+                $.each(data.dados, function(key, value) {
+                    linhas += '<tr class="tr_remove_anexov">';
+                    linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
+                    linhas += '<td>'+ value.descricao +'</td>';
+                    linhas += '<td>'+ value.data_criacao +'</td>';
+                    linhas += '<td><a href="'+ value.url +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
+                    linhas += '</tr>';
+                });
+                $("#tabela_lista_anexosv").append(linhas);
+            } else {
+                linhas += "<tr class='tr_remove_anexov'>";
+                linhas += "<td colspan='5' style='text-align: center;'>Não existem anexos para serem exibidos! Favor Cadastrar!</td>";
+                linhas += "</tr>";
+                $("#tabela_lista_anexosv").append(linhas);
+            }
+        }
+    });
+}
+
 /**
-* Orçamento
-**/
+ * Orçamento
+ **/
 function montarTabelaOrcamento(id_contrato, visualizar)
 {
     'use strict';
@@ -761,8 +856,8 @@ function excluirOrcamento(id)
 }
 
 /**
-* Exercício
-**/
+ * Exercício
+ **/
 function montarTabelaExercicio(id_contrato, visualizar)
 {
     'use strict';
@@ -1000,8 +1095,8 @@ function excluirExercicio(id)
 }
 
 /**
-* Garantia
-**/
+ * Garantia
+ **/
 function montarTabelaGarantia(id_contrato, visualizar)
 {
     'use strict';
@@ -1335,6 +1430,7 @@ function criarAnexo(id_contrato)
     $('#modalAnexoArquivo').modal();
 
 }
+
 function getIdentificador(id)
 {
     'use strict';
@@ -1406,7 +1502,6 @@ function montarTabelaAnexos(id_contrato, visualizar)
     });
 }
 
-var tipos_anexos;
 function getTiposAnexo()
 {
     'use strict';
@@ -1432,7 +1527,6 @@ function getTiposAnexo()
     return tipos_anexos;
 }
 
-var contador = 0;
 function inserirAnexo()
 {
     'use strict';

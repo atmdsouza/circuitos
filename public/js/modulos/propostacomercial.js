@@ -427,7 +427,7 @@ function visualizar(id, ocultar)
             $('#prazo_execucao').val(data.dados.prazo_execucao);
             $('#consideracoes').val(data.dados.consideracoes);
             montarTabelaComponente(data.dados.id, ocultar);
-            montarTabelaAnexosv(data.dados.id, ocultar)
+            montarTabelaAnexosv(data.dados.id, ocultar);
         }
     });
 }
@@ -450,7 +450,6 @@ function montarTabelaAnexosv(id_proposta, visualizar)
         data: { metodo: 'visualizarPropostaComercialAnexos', id: id_proposta },
         complete: function() {
             if (visualizar) {
-                console.log('aqui');
                 $('#tab-anexos').removeClass('disabled');
                 $('.hide_buttons').hide();
             }

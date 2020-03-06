@@ -6,6 +6,7 @@ use Auth\Autentica;
 use Circuitos\Models\Anexos;
 use Circuitos\Models\Contrato;
 use Circuitos\Models\ContratoAnexo;
+use Circuitos\Models\ContratoArquivoFisico;
 use Circuitos\Models\ContratoExercicio;
 use Circuitos\Models\ContratoGarantia;
 use Circuitos\Models\ContratoOrcamento;
@@ -99,6 +100,7 @@ class ContratoController extends ControllerBase
             $contratoOP = new ContratoOP();
             //Contrato
             $contrato = new Contrato($params);
+            $contratoarquivo = new ContratoArquivoFisico($params);
             //Contrato Orçamento
             $arrayCtOrcamento = array();
             foreach ($params['funcional_programatica'] as $key => $funcional_programatica){
@@ -129,7 +131,7 @@ class ContratoController extends ControllerBase
                 $contrato_garantia->setValor($params['valor'][$key]);
                 array_push($arrayCtGarantia, $contrato_garantia);
             }
-            if($contratoOP->cadastrar($contrato, $arrayCtOrcamento, $arrayCtExercicio, $arrayCtGarantia)){//Cadastrou com sucesso
+            if($contratoOP->cadastrar($contrato, $contratoarquivo, $arrayCtOrcamento, $arrayCtExercicio, $arrayCtGarantia)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -157,37 +159,44 @@ class ContratoController extends ControllerBase
             $contratoOP = new ContratoOP();
             //Contrato
             $contrato = new Contrato($params);
+            $contratoarquivo = new ContratoArquivoFisico($params);
             //Contrato Orçamento
             $arrayCtOrcamento = array();
-            foreach ($params['funcional_programatica'] as $key => $funcional_programatica){
-                $contrato_orcamento = new ContratoOrcamento();
-                $contrato_orcamento->setFuncionalProgramatica($funcional_programatica);
-                $contrato_orcamento->setFonteOrcamentaria($params['fonte_orcamentaria'][$key]);
-                $contrato_orcamento->setProgramaTrabalho($params['programa_trabalho'][$key]);
-                $contrato_orcamento->setElementoDespesa($params['elemento_despesa'][$key]);
-                array_push($arrayCtOrcamento, $contrato_orcamento);
+            if (isset($params['funcional_programatica']) && count($params['funcional_programatica']) > 0){
+                foreach ($params['funcional_programatica'] as $key => $funcional_programatica){
+                    $contrato_orcamento = new ContratoOrcamento();
+                    $contrato_orcamento->setFuncionalProgramatica($funcional_programatica);
+                    $contrato_orcamento->setFonteOrcamentaria($params['fonte_orcamentaria'][$key]);
+                    $contrato_orcamento->setProgramaTrabalho($params['programa_trabalho'][$key]);
+                    $contrato_orcamento->setElementoDespesa($params['elemento_despesa'][$key]);
+                    array_push($arrayCtOrcamento, $contrato_orcamento);
+                }
             }
             //Contrato Exercicio
             $arrayCtExercicio = array();
-            foreach ($params['exercicio'] as $key => $exercicio){
-                $contrato_exercicio = new ContratoExercicio();
-                $contrato_exercicio->setExercicio($exercicio);
-                $contrato_exercicio->setCompetenciaInicial($params['competencia_inicial'][$key]);
-                $contrato_exercicio->setCompetenciaFinal($params['competencia_final'][$key]);
-                $contrato_exercicio->setValorPrevisto($params['valor_previsto'][$key]);
-                array_push($arrayCtExercicio, $contrato_exercicio);
+            if (isset($params['exercicio']) && count($params['exercicio']) > 0) {
+                foreach ($params['exercicio'] as $key => $exercicio) {
+                    $contrato_exercicio = new ContratoExercicio();
+                    $contrato_exercicio->setExercicio($exercicio);
+                    $contrato_exercicio->setCompetenciaInicial($params['competencia_inicial'][$key]);
+                    $contrato_exercicio->setCompetenciaFinal($params['competencia_final'][$key]);
+                    $contrato_exercicio->setValorPrevisto($params['valor_previsto'][$key]);
+                    array_push($arrayCtExercicio, $contrato_exercicio);
+                }
             }
             //Contrato Garantia
             $arrayCtGarantia = array();
-            foreach ($params['id_modalidade'] as $key => $id_modalidade){
-                $contrato_garantia = new ContratoGarantia();
-                $contrato_garantia->setIdModalidade($id_modalidade);
-                $contrato_garantia->setGarantiaConcretizada($params['garantia_concretizada'][$key]);
-                $contrato_garantia->setPercentual($params['percentual'][$key]);
-                $contrato_garantia->setValor($params['valor'][$key]);
-                array_push($arrayCtGarantia, $contrato_garantia);
+            if (isset($params['id_modalidade']) && count($params['id_modalidade']) > 0) {
+                foreach ($params['id_modalidade'] as $key => $id_modalidade){
+                    $contrato_garantia = new ContratoGarantia();
+                    $contrato_garantia->setIdModalidade($id_modalidade);
+                    $contrato_garantia->setGarantiaConcretizada($params['garantia_concretizada'][$key]);
+                    $contrato_garantia->setPercentual($params['percentual'][$key]);
+                    $contrato_garantia->setValor($params['valor'][$key]);
+                    array_push($arrayCtGarantia, $contrato_garantia);
+                }
             }
-            if($contratoOP->alterar($contrato, $arrayCtOrcamento, $arrayCtExercicio, $arrayCtGarantia)){//Altera com sucesso
+            if($contratoOP->alterar($contrato, $contratoarquivo, $arrayCtOrcamento, $arrayCtExercicio, $arrayCtGarantia)){//Altera com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
