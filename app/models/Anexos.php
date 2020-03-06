@@ -248,7 +248,7 @@ class Anexos extends \Phalcon\Mvc\Model
         $this->setSchema($schema->getSchemaBanco());
         $this->setSource("anexos");
         $this->hasMany('id', 'Circuitos\Models\CircuitosAnexo', 'id_anexo', ['alias' => 'CircuitosAnexo']);
-        $this->hasMany('id', 'Circuitos\Models\ContratoAcompanhamentoFinanceiroNotaAnexo', 'id_anexo', ['alias' => 'ContratoAcompanhamentoFinanceiroNotaAnexo']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoFinanceiroNotaAnexo', 'id_anexo', ['alias' => 'ContratoAcompanhamentoFinanceiroNotaAnexo']);
         $this->hasMany('id', 'Circuitos\Models\ContratoAnexo', 'id_anexo', ['alias' => 'ContratoAnexo']);
         $this->hasMany('id', 'Circuitos\Models\ContratoNaoConformidadeAnexo', 'id_anexo', ['alias' => 'ContratoNaoConformidadeAnexo']);
         $this->hasMany('id', 'Circuitos\Models\PropostaComercialAnexo', 'id_anexo', ['alias' => 'PropostaComercialAnexo']);

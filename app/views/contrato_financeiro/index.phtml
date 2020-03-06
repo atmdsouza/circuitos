@@ -22,7 +22,7 @@ $module = $this->router->getControllerName();
 <div class="col-12">
     <?= $this->tag->form(
         [
-            "empresa_departamento",
+            "contrato_financeiro",
             "autocomplete" => "off",
             "id" => "formPesquisa"
         ]
@@ -61,9 +61,9 @@ $module = $this->router->getControllerName();
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($page as $departamento): ?>
+            <?php foreach ($page as $contratofinanceiro): ?>
                 <?php
-                switch($departamento->getAtivo())
+                switch($contratofinanceiro->getAtivo())
                 {
                     case '0'://Inativo (False)
                         $ativo = "Inativo";
@@ -76,28 +76,28 @@ $module = $this->router->getControllerName();
                 }
                 ?>
                 <tr <?= $class_tr; ?>>
-                    <td><?= $departamento->getId() ?></td>
-                    <td><?= $departamento->getNomeDepartamentoPai() ?></td>
-                    <td><?= $departamento->getDescricao() ?></td>
+                    <td><?= $contratofinanceiro->getId() ?></td>
+                    <td><?= $contratofinanceiro->getNomeDepartamentoPai() ?></td>
+                    <td><?= $contratofinanceiro->getDescricao() ?></td>
                     <td><?= $ativo ?></td>
                     <td class="td_acoes">
                         <?php if($acl->isAllowed($role,$module, 'visualizar')): ?>
-                            <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $departamento->getId() ?>, true);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a>
+                            <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $contratofinanceiro->getId() ?>, true);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a>
                         <?php endif; ?>
-                        <?php if($departamento->getAtivo() == '0'): ?>
+                        <?php if($contratofinanceiro->getAtivo() == '0'): ?>
                             <?php if($acl->isAllowed($role, $module, 'ativar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="ativar(<?= $departamento->getId() ?>, '<?= $departamento->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/reativar.png" title="Ativar" alt="Ativar" height="25" width="25"></a>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="ativar(<?= $contratofinanceiro->getId() ?>, '<?= $contratofinanceiro->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/reativar.png" title="Ativar" alt="Ativar" height="25" width="25"></a>
                             <?php endif; ?>
                         <?php else: ?>
                             <?php if($acl->isAllowed($role, $module, 'editar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $departamento->getId() ?>, false);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $contratofinanceiro->getId() ?>, false);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
                             <?php endif; ?>
                             <?php if($acl->isAllowed($role, $module, 'inativar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="inativar(<?= $departamento->getId() ?>, '<?= $departamento->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/desativar.png" title="Desativar" alt="Desativar" height="25" width="25"></a>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="inativar(<?= $contratofinanceiro->getId() ?>, '<?= $contratofinanceiro->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/desativar.png" title="Desativar" alt="Desativar" height="25" width="25"></a>
                             <?php endif; ?>
                         <?php endif; ?>
                         <?php if($acl->isAllowed($role, $module, 'excluir')): ?>
-                            <a href="javascript:void(0)" class="botoes_acao" onclick="excluir(<?= $departamento->getId() ?>, '<?= $departamento->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a>
+                            <a href="javascript:void(0)" class="botoes_acao" onclick="excluir(<?= $contratofinanceiro->getId() ?>, '<?= $contratofinanceiro->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -112,7 +112,7 @@ $module = $this->router->getControllerName();
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" aria-hidden="true" onclick="confirmaCancelar('modalCadastro');">×</button>
-                <h5 class="modal-title" id="modalCadastro">Dados do Departamento</h5>
+                <h5 class="modal-title" id="modalCadastro">Dados do Fiscal do Contrato</h5>
             </div>
             <form id="formCadastro">
                 <input type="hidden" id="token" name="<?= $token['tokenKey'] ?>" value="<?= $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
@@ -120,11 +120,10 @@ $module = $this->router->getControllerName();
                     <div class="form-row">
                         <div class="col-12">
                             <div class="form-row">
-                                <?php echo $this->tag->hiddenField(["id_empresa", "class" => "form-control", "id" => "id_empresa", "value" => $id_empresa]) ?>
                                 <div class="form-group col-md-6 botoes_forms_alinhamento">
-                                    <label for="lid_departamento_pai">Departamento Principal </label>
-                                    <?php echo $this->tag->textField(["lid_departamento_pai", "size" => 120, "class" => "form-control", "id" => "lid_departamento_pai", "placeholder" => "Departamento Principal", "onkeyup" => "autocompletarDepartamentoPrincipal('lid_departamento_pai','id_departamento_pai');"]) ?>
-                                    <?php echo $this->tag->hiddenField(["id_departamento_pai", "size" => 120, "class" => "form-control", "id" => "id_departamento_pai"]) ?>
+                                    <label for="lid_contrato_financeiro_pai">Departamento Principal </label>
+                                    <?php echo $this->tag->textField(["lid_contrato_financeiro_pai", "size" => 120, "class" => "form-control", "id" => "lid_contrato_financeiro_pai", "placeholder" => "Departamento Principal", "onkeyup" => "autocompletarDepartamentoPrincipal('lid_contrato_financeiro_pai','id_contrato_financeiro_pai');"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_contrato_financeiro_pai", "size" => 120, "class" => "form-control", "id" => "id_contrato_financeiro_pai"]) ?>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="descricao">Descrição <span class="required">*</span></label>

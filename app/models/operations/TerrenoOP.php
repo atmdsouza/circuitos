@@ -2,17 +2,18 @@
 
 namespace Circuitos\Models\Operations;
 
+use Circuitos\Models\Terreno;
+use Phalcon\Http\Response as Response;
+use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-use Phalcon\Http\Response as Response;
-
-use Circuitos\Models\Terreno;
-
 use Util\Util;
 
 class TerrenoOP extends Terreno
 {
     private $encode = "UTF-8";
+
+    private $arqLog = BASE_PATH . "/logs/systemlog.log";
 
     public function listar($dados)
     {
@@ -21,6 +22,7 @@ class TerrenoOP extends Terreno
 
     public function cadastrar(Terreno $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
@@ -53,13 +55,14 @@ class TerrenoOP extends Terreno
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function alterar(Terreno $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
@@ -92,13 +95,14 @@ class TerrenoOP extends Terreno
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function ativar(Terreno $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -112,13 +116,14 @@ class TerrenoOP extends Terreno
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function inativar(Terreno $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -132,13 +137,14 @@ class TerrenoOP extends Terreno
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function excluir(Terreno $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -152,13 +158,14 @@ class TerrenoOP extends Terreno
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarTerreno($id)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         try {
             $objeto = Terreno::findFirst("id={$id}");
@@ -188,7 +195,7 @@ class TerrenoOP extends Terreno
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoArray)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }

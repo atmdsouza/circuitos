@@ -53,13 +53,23 @@ function confirmaCancelar(modal)
             $("#"+modal).modal('hide');
             limparModalBootstrap(modal);
             mudou = false;
+            limparValidacao();
         }).catch(swal.noop);
     }
     else
     {
         $("#"+modal).modal('hide');
         limparModalBootstrap(modal);
+        limparValidacao();
     }
+}
+
+function limparValidacao()
+{
+    'use strict';
+    var validator = $("#formCadastro").validate();
+    validator.resetForm();
+
 }
 
 function criar()
@@ -144,26 +154,6 @@ function salvar()
             },
             lid_set_equipamento:{
                 required: true
-            }
-        },
-        messages:{
-            descricao:{
-                required:"É necessário informar uma descrição"
-            },
-            lid_cidade_digital:{
-                required: "É necessário informar uma cidade digital"
-            },
-            id_tipo_estacao_telecon:{
-                required: "É necessário informar um tipo de estação telecom"
-            },
-            lid_terreno:{
-                required: "É necessário informar um terreno"
-            },
-            lid_torre:{
-                required: "É necessário informar uma torre"
-            },
-            lid_set_equipamento:{
-                required: "É necessário informar um set de equipamentos"
             }
         },
         submitHandler: function(form) {

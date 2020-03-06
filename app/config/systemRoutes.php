@@ -51,6 +51,16 @@ $router->add("/contrato", [
     "action" => "index"
 ]);
 
+$router->add("/contrato_fiscal", [
+    "controller" => "contrato_fiscal",
+    "action" => "index"
+]);
+
+$router->add("/contrato_financeiro", [
+    "controller" => "contrato_financeiro",
+    "action" => "index"
+]);
+
 $router->add("/empresa", [
     "controller" => "empresa",
     "action" => "index"

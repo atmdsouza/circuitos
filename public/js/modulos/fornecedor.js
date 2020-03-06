@@ -46,13 +46,23 @@ function confirmaCancelar(modal)
             $("#"+modal).modal('hide');
             limparModalBootstrap(modal);
             mudou = false;
+            limparValidacao();
         }).catch(swal.noop);
     }
     else
     {
         $("#"+modal).modal('hide');
         limparModalBootstrap(modal);
+        limparValidacao();
     }
+}
+
+function limparValidacao()
+{
+    'use strict';
+    var validator = $("#formCadastro").validate();
+    validator.resetForm();
+
 }
 
 function criar()
@@ -112,11 +122,6 @@ function salvar()
         rules : {
             descricao:{
                 required: true
-            }
-        },
-        messages:{
-            descricao:{
-                required:"É necessário informar uma Descrição"
             }
         },
         submitHandler: function(form) {

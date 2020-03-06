@@ -2,9 +2,10 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
 use Util\Infra;
 
-class ContratoAcompanhamentoFinanceiro extends \Phalcon\Mvc\Model
+class ContratoFinanceiro extends \Phalcon\Mvc\Model
 {
 
     /**
@@ -130,8 +131,8 @@ class ContratoAcompanhamentoFinanceiro extends \Phalcon\Mvc\Model
     {
         $schema = new Infra();
         $this->setSchema($schema->getSchemaBanco());
-        $this->setSource("contrato_acompanhamento_financeiro");
-        $this->hasMany('id', 'Circuitos\Models\ContratoAcompanhamentoFinanceiroNota', 'id_contrato_acompanhamento_financeiro', ['alias' => 'ContratoAcompanhamentoFinanceiroNota']);
+        $this->setSource("contrato_financeiro");
+        $this->hasMany('id', 'Circuitos\Models\ContratoFinanceiroNota', 'id_contrato_financeiro', ['alias' => 'ContratoFinanceiroNota']);
         $this->belongsTo('id_exercicio', 'Circuitos\Models\ContratoExercicio', 'id', ['alias' => 'ContratoExercicio']);
     }
 
@@ -149,7 +150,7 @@ class ContratoAcompanhamentoFinanceiro extends \Phalcon\Mvc\Model
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return ContratoAcompanhamentoFinanceiro[]|ContratoAcompanhamentoFinanceiro|\Phalcon\Mvc\Model\ResultSetInterface
+     * @return ContratoFinanceiro[]|ContratoFinanceiro|\Phalcon\Mvc\Model\ResultSetInterface
      */
     public static function find($parameters = null)
     {
@@ -160,11 +161,35 @@ class ContratoAcompanhamentoFinanceiro extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return ContratoAcompanhamentoFinanceiro|\Phalcon\Mvc\Model\ResultInterface
+     * @return ContratoFinanceiro|\Phalcon\Mvc\Model\ResultInterface
      */
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de ContratoFinanceiro, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return ContratoFinanceiro|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarContratoFinanceiro($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("ContratoFinanceiro" => "Circuitos\Models\ContratoFinanceiro"));
+        $query->columns("ContratoFinanceiro.*");
+        $query->leftJoin("Circuitos\Models\Empresa", "Empresa.id = ContratoFinanceiro.id_empresa", "Empresa");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa.id = Empresa.id", "Pessoa");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Empresa.id", "PessoaJuridica");
+        $query->where("ContratoFinanceiro.excluido = 0 AND (CONVERT(ContratoFinanceiro.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(ContratoFinanceiro.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica.razaosocial USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("ContratoFinanceiro.id");
+        $query->orderBy("ContratoFinanceiro.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
 }

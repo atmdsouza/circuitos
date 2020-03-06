@@ -302,7 +302,31 @@ $infra = new Infra(); ?>
                     if ($acl->isAllowed($role, 'contrato', 'index'))
                     {
                         ?>
-                        <li><?php echo $this->tag->linkTo(["contrato", "<i class='mdi mdi-book-plus'></i> <span> Gestão de Contratos </span>"]) ?></li>
+                        <li>
+                            <a href="javascript: void(0);"><i class="mdi mdi-book-plus"></i> <span> Gestão de Contratos </span> <span class="menu-arrow"></span></a>
+                            <ul class="nav-second-level" aria-expanded="false">
+                                <?php
+                                if ($acl->isAllowed($role, 'contrato', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["contrato", "Contratos"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'contrato_fiscal', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["contrato_fiscal", "Fiscais de Contrato"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'contrato_financeiro', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["contrato_financeiro", "Lançamentos Financeiros"]) ?></li>
+                                    <?php
+                                }
+                                ?>
+                            </ul>
+                        </li>
                         <?php
                     }
                     ?>
@@ -548,6 +572,12 @@ case "torre":?>
 <?php break;
 case "contrato":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/contrato.js?<?= filemtime(BASE_PATH.'/public/js/modulos/contrato.js'); ?>" type="text/javascript"></script>
+<?php break;
+case "contrato_fiscal":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/contratofiscal.js?<?= filemtime(BASE_PATH.'/public/js/modulos/contratofiscal.js'); ?>" type="text/javascript"></script>
+<?php break;
+case "contrato_financeiro":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/contratofinanceiro.js?<?= filemtime(BASE_PATH.'/public/js/modulos/contratofinanceiro.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "estacao_telecon":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/estacaotelecon.js?<?= filemtime(BASE_PATH.'/public/js/modulos/estacaotelecon.js'); ?>" type="text/javascript"></script>

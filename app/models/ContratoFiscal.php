@@ -2,6 +2,7 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
 use Util\Infra;
 
 class ContratoFiscal extends \Phalcon\Mvc\Model
@@ -24,6 +25,12 @@ class ContratoFiscal extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $id_fiscal_suplente;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $tipo_fiscal;
 
     /**
      *
@@ -240,6 +247,24 @@ class ContratoFiscal extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return int
+     */
+    public function getTipoFiscal()
+    {
+        return $this->tipo_fiscal;
+    }
+
+    /**
+     * @param int $tipo_fiscal
+     */
+    public function setTipoFiscal($tipo_fiscal)
+    {
+        $this->tipo_fiscal = $tipo_fiscal;
+
+        return $this;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -282,6 +307,30 @@ class ContratoFiscal extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de ContratoFiscal, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return ContratoFiscal|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarContratoFiscal($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("ContratoFiscal" => "Circuitos\Models\ContratoFiscal"));
+        $query->columns("ContratoFiscal.*");
+        $query->leftJoin("Circuitos\Models\Empresa", "Empresa.id = ContratoFiscal.id_empresa", "Empresa");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa.id = Empresa.id", "Pessoa");
+        $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Empresa.id", "PessoaJuridica");
+        $query->where("ContratoFiscal.excluido = 0 AND (CONVERT(ContratoFiscal.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(ContratoFiscal.descricao USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa.nome USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(PessoaJuridica.razaosocial USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("ContratoFiscal.id");
+        $query->orderBy("ContratoFiscal.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
 }

@@ -2,15 +2,17 @@
 
 namespace Circuitos\Models\Operations;
 
+use Circuitos\Models\PropostaComercialServico;
+use Phalcon\Http\Response as Response;
+use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-use Phalcon\Http\Response as Response;
-
-use Circuitos\Models\PropostaComercialServico;
 
 class PropostaComercialServicoOP extends PropostaComercialServico
 {
     private $encode = "UTF-8";
+
+    private $arqLog = BASE_PATH . "/logs/systemlog.log";
 
     public function listar($dados)
     {
@@ -19,6 +21,7 @@ class PropostaComercialServicoOP extends PropostaComercialServico
 
     public function cadastrar(PropostaComercialServico $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -36,13 +39,14 @@ class PropostaComercialServicoOP extends PropostaComercialServico
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function alterar(PropostaComercialServico $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -60,13 +64,14 @@ class PropostaComercialServicoOP extends PropostaComercialServico
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function ativar(PropostaComercialServico $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -80,13 +85,14 @@ class PropostaComercialServicoOP extends PropostaComercialServico
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function inativar(PropostaComercialServico $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -100,13 +106,14 @@ class PropostaComercialServicoOP extends PropostaComercialServico
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function excluir(PropostaComercialServico $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -120,13 +127,14 @@ class PropostaComercialServicoOP extends PropostaComercialServico
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarPropostaComercialServico($id)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objeto = PropostaComercialServico::findFirst("id={$id}");
             $objetoArray = array(
@@ -143,13 +151,14 @@ class PropostaComercialServicoOP extends PropostaComercialServico
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoArray)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function selectIdServico($id)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objeto = PropostaComercialServico::findFirst("id={$id}");
             $objetoArray = array(
@@ -162,7 +171,7 @@ class PropostaComercialServicoOP extends PropostaComercialServico
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoArray)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }

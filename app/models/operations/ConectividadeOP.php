@@ -2,15 +2,17 @@
 
 namespace Circuitos\Models\Operations;
 
+use Circuitos\Models\Conectividade;
+use Phalcon\Http\Response as Response;
+use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-use Phalcon\Http\Response as Response;
-
-use Circuitos\Models\Conectividade;
 
 class ConectividadeOP extends Conectividade
 {
     private $encode = "UTF-8";
+
+    private $arqLog = BASE_PATH . "/logs/systemlog.log";
 
     public function listar($dados)
     {
@@ -19,6 +21,7 @@ class ConectividadeOP extends Conectividade
 
     public function cadastrar(Conectividade $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -35,13 +38,14 @@ class ConectividadeOP extends Conectividade
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function alterar(Conectividade $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -58,13 +62,14 @@ class ConectividadeOP extends Conectividade
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function ativar(Conectividade $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -78,13 +83,14 @@ class ConectividadeOP extends Conectividade
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function inativar(Conectividade $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -98,13 +104,14 @@ class ConectividadeOP extends Conectividade
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function excluir(Conectividade $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -118,13 +125,14 @@ class ConectividadeOP extends Conectividade
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarConectividade($id)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objeto = Conectividade::findFirst("id={$id}");
             $objetoArray = array(
@@ -139,7 +147,7 @@ class ConectividadeOP extends Conectividade
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoArray)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }

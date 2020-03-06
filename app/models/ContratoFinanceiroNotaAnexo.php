@@ -4,7 +4,7 @@ namespace Circuitos\Models;
 
 use Util\Infra;
 
-class ContratoAcompanhamentoFinanceiroNotaAnexo extends \Phalcon\Mvc\Model
+class ContratoFinanceiroNotaAnexo extends \Phalcon\Mvc\Model
 {
 
     /**
@@ -17,7 +17,7 @@ class ContratoAcompanhamentoFinanceiroNotaAnexo extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $id_contrato_acompanhamento_financeiro_nota;
+    protected $id_contrato_financeiro_nota;
 
     /**
      *
@@ -39,14 +39,14 @@ class ContratoAcompanhamentoFinanceiroNotaAnexo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field id_contrato_acompanhamento_financeiro_nota
+     * Method to set the value of field id_contrato_financeiro_nota
      *
-     * @param integer $id_contrato_acompanhamento_financeiro_nota
+     * @param integer $id_contrato_financeiro_nota
      * @return $this
      */
-    public function setIdContratoAcompanhamentoFinanceiroNota($id_contrato_acompanhamento_financeiro_nota)
+    public function setIdContratoFinanceiroNota($id_contrato_financeiro_nota)
     {
-        $this->id_contrato_acompanhamento_financeiro_nota = $id_contrato_acompanhamento_financeiro_nota;
+        $this->id_contrato_financeiro_nota = $id_contrato_financeiro_nota;
 
         return $this;
     }
@@ -75,13 +75,13 @@ class ContratoAcompanhamentoFinanceiroNotaAnexo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id_contrato_acompanhamento_financeiro_nota
+     * Returns the value of field id_contrato_financeiro_nota
      *
      * @return integer
      */
-    public function getIdContratoAcompanhamentoFinanceiroNota()
+    public function getIdContratoFinanceiroNota()
     {
-        return $this->id_contrato_acompanhamento_financeiro_nota;
+        return $this->id_contrato_financeiro_nota;
     }
 
     /**
@@ -101,9 +101,9 @@ class ContratoAcompanhamentoFinanceiroNotaAnexo extends \Phalcon\Mvc\Model
     {
         $schema = new Infra();
         $this->setSchema($schema->getSchemaBanco());
-        $this->setSource("contrato_acompanhamento_financeiro_nota_anexo");
+        $this->setSource("contrato_financeiro_nota_anexo");
         $this->belongsTo('id_anexo', 'Circuitos\Models\Anexos', 'id', ['alias' => 'Anexos']);
-        $this->belongsTo('id_contrato_acompanhamento_financeiro_nota', 'Circuitos\Models\ContratoAcompanhamentoFinanceiroNota', 'id', ['alias' => 'ContratoAcompanhamentoFinanceiroNota']);
+        $this->belongsTo('id_contrato_financeiro_nota', 'Circuitos\Models\ContratoFinanceiroNota', 'id', ['alias' => 'ContratoFinanceiroNota']);
     }
 
     /**
@@ -113,14 +113,14 @@ class ContratoAcompanhamentoFinanceiroNotaAnexo extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'contrato_acompanhamento_financeiro_nota_anexo';
+        return 'contrato_financeiro_nota_anexo';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return ContratoAcompanhamentoFinanceiroNotaAnexo[]|ContratoAcompanhamentoFinanceiroNotaAnexo|\Phalcon\Mvc\Model\ResultSetInterface
+     * @return ContratoFinanceiroNotaAnexo[]|ContratoFinanceiroNotaAnexo|\Phalcon\Mvc\Model\ResultSetInterface
      */
     public static function find($parameters = null)
     {
@@ -131,7 +131,7 @@ class ContratoAcompanhamentoFinanceiroNotaAnexo extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return ContratoAcompanhamentoFinanceiroNotaAnexo|\Phalcon\Mvc\Model\ResultInterface
+     * @return ContratoFinanceiroNotaAnexo|\Phalcon\Mvc\Model\ResultInterface
      */
     public static function findFirst($parameters = null)
     {

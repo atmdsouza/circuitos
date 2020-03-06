@@ -6,12 +6,15 @@ use Circuitos\Models\CidadeDigital;
 use Circuitos\Models\Conectividade;
 use Circuitos\Models\EstacaoTelecon;
 use Phalcon\Http\Response as Response;
+use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 
 class CidadeDigitalOP extends CidadeDigital
 {
     private $encode = "UTF-8";
+
+    private $arqLog = BASE_PATH . "/logs/systemlog.log";
 
     public function listar($dados)
     {
@@ -20,6 +23,7 @@ class CidadeDigitalOP extends CidadeDigital
 
     public function cadastrar(CidadeDigital $objArray, $arrayObjConectividade, $arrayObjETelecon)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -84,13 +88,14 @@ class CidadeDigitalOP extends CidadeDigital
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function alterar(CidadeDigital $objArray, $arrayObjConectividade, $arrayObjETelecon)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -155,13 +160,14 @@ class CidadeDigitalOP extends CidadeDigital
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function ativar(CidadeDigital $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -175,13 +181,14 @@ class CidadeDigitalOP extends CidadeDigital
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function inativar(CidadeDigital $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -195,13 +202,14 @@ class CidadeDigitalOP extends CidadeDigital
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function excluir(CidadeDigital $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -215,13 +223,14 @@ class CidadeDigitalOP extends CidadeDigital
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarCidadeDigital($id)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objeto = CidadeDigital::findFirst("id={$id}");
             $objTransporte = new \stdClass();
@@ -233,13 +242,14 @@ class CidadeDigitalOP extends CidadeDigital
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarCdConectividades($id_cidade_digital)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objetosComponente = Conectividade::find('id_cidade_digital = ' . $id_cidade_digital);
             $arrTransporte = [];
@@ -256,13 +266,14 @@ class CidadeDigitalOP extends CidadeDigital
             $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarCdConectividade($id)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objetoComponente = Conectividade::findFirst('id= ' . $id);
             $objTransporte = new \stdClass();
@@ -274,13 +285,14 @@ class CidadeDigitalOP extends CidadeDigital
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function alterarCdConectividade(Conectividade $objConectividade)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $manager = new TxManager();
             $transaction = $manager->get();
@@ -303,13 +315,14 @@ class CidadeDigitalOP extends CidadeDigital
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoComponente)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function deletarCdConectividade(Conectividade $objConectividade)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $manager = new TxManager();
             $transaction = $manager->get();
@@ -324,13 +337,14 @@ class CidadeDigitalOP extends CidadeDigital
             $response->setContent(json_encode(array("operacao" => True,"dados" => $id_cidade_digital)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarCdETelecons($id_cidade_digital)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objetosComponente = EstacaoTelecon::find('id_cidade_digital = ' . $id_cidade_digital);
             $arrTransporte = [];
@@ -356,13 +370,14 @@ class CidadeDigitalOP extends CidadeDigital
             $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarCdETelecon($id)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objetoComponente = EstacaoTelecon::findFirst('id= ' . $id);
             $objTransporte = new \stdClass();
@@ -384,13 +399,14 @@ class CidadeDigitalOP extends CidadeDigital
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function alterarCdETelecon(EstacaoTelecon $objETelecon)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $manager = new TxManager();
             $transaction = $manager->get();
@@ -417,13 +433,14 @@ class CidadeDigitalOP extends CidadeDigital
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoComponente)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function deletarCdETelecon(EstacaoTelecon $objETelecon)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $manager = new TxManager();
             $transaction = $manager->get();
@@ -438,7 +455,7 @@ class CidadeDigitalOP extends CidadeDigital
             $response->setContent(json_encode(array("operacao" => True,"dados" => $id_cidade_digital)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }

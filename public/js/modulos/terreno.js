@@ -52,13 +52,23 @@ function confirmaCancelar(modal)
             $("#"+modal).modal('hide');
             limparModalBootstrap(modal);
             mudou = false;
+            limparValidacao();
         }).catch(swal.noop);
     }
     else
     {
         $("#"+modal).modal('hide');
         limparModalBootstrap(modal);
+        limparValidacao();
     }
+}
+
+function limparValidacao()
+{
+    'use strict';
+    var validator = $("#formCadastro").validate();
+    validator.resetForm();
+
 }
 
 function criar()
@@ -149,29 +159,6 @@ function salvar()
             },
             estado:{
                 required: true
-            }
-        },
-        messages:{
-            descricao:{
-                required: "É necessário informar uma descrição"
-            },
-            cep:{
-                required: "É necessário informar um cep"
-            },
-            endereco:{
-                required: "É necessário informar um endereço"
-            },
-            numero:{
-                required: "É necessário informar um número"
-            },
-            bairro:{
-                required: "É necessário informar um bairro"
-            },
-            cidade:{
-                required: "É necessário informar uma cidade"
-            },
-            estado:{
-                required: "É necessário informar um estado"
             }
         },
         submitHandler: function(form) {
