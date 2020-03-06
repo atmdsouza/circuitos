@@ -290,7 +290,7 @@ function autocompletarContrato(id_label, id_valor)
             if (data.operacao) {
                 listContrato = [];
                 $.each(data.dados, function (key, value) {
-                    listContrato.push({value: value.numero, data: value.id});
+                    listContrato.push({value: value.numero +'/'+ value.ano, data: value.id});
                 });
                 if(c1 === 0) {
                     //Autocomplete

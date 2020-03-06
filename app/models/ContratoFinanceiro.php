@@ -197,6 +197,22 @@ class ContratoFinanceiro extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return string
+     */
+    public function getExercicio()
+    {
+        return $this->ContratoExercicio->exercicio;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNumeroAnoContrato()
+    {
+        return $this->ContratoExercicio->Contrato->numero .'/'.$this->ContratoExercicio->Contrato->ano;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()

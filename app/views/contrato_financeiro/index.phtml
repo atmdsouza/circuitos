@@ -54,50 +54,56 @@ $module = $this->router->getControllerName();
             <thead>
             <tr>
                 <th>Código</th>
-                <th>Departamento Principal</th>
-                <th>Descrição</th>
-                <th>Ativo</th>
+                <th>Contrato</th>
+                <th>Exercício</th>
+                <th>Competência</th>
+                <th>Status</th>
                 <th>Ações</th>
             </tr>
             </thead>
             <tbody>
             <?php foreach ($page as $contratofinanceiro): ?>
                 <?php
-                switch($contratofinanceiro->getAtivo())
+                switch($contratofinanceiro->getStatusPagamento())
                 {
                     case '0'://Inativo (False)
-                        $ativo = "Inativo";
-                        $class_tr = 'class="table-danger"';
+                        $status = "Sem Pagamento";
+                        $class_tr = null;
                         break;
                     case '1'://Ativo (True)
-                        $ativo = "Ativo";
-                        $class_tr = null;
+                        $status = "Pagamento em Aberto";
+                        $class_tr = 'class="table-danger"';
+                        break;
+                    case '2'://Ativo (True)
+                        $status = "Pagamento Efetuado";
+                        $class_tr = 'class="table-success"';
                         break;
                 }
                 ?>
                 <tr <?= $class_tr; ?>>
                     <td><?= $contratofinanceiro->getId() ?></td>
-                    <td><?= $contratofinanceiro->getNomeDepartamentoPai() ?></td>
-                    <td><?= $contratofinanceiro->getDescricao() ?></td>
-                    <td><?= $ativo ?></td>
+                    <td><?= $contratofinanceiro->getNumeroAnoContrato() ?></td>
+                    <td><?= $contratofinanceiro->getExercicio() ?></td>
+                    <td><?= $contratofinanceiro->getMesCompetencia() ?></td>
+                    <td><?= $status ?></td>
                     <td class="td_acoes">
                         <?php if($acl->isAllowed($role,$module, 'visualizar')): ?>
                             <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $contratofinanceiro->getId() ?>, true);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a>
                         <?php endif; ?>
                         <?php if($contratofinanceiro->getAtivo() == '0'): ?>
                             <?php if($acl->isAllowed($role, $module, 'ativar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="ativar(<?= $contratofinanceiro->getId() ?>, '<?= $contratofinanceiro->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/reativar.png" title="Ativar" alt="Ativar" height="25" width="25"></a>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="ativar(<?= $contratofinanceiro->getId() ?>, '<?= $contratofinanceiro->getNumeroAnoContrato().'/'.$contratofinanceiro->getExercicio().'/'.$contratofinanceiro->getMesCompetencia() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/reativar.png" title="Ativar" alt="Ativar" height="25" width="25"></a>
                             <?php endif; ?>
                         <?php else: ?>
                             <?php if($acl->isAllowed($role, $module, 'editar')): ?>
                                 <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $contratofinanceiro->getId() ?>, false);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
                             <?php endif; ?>
                             <?php if($acl->isAllowed($role, $module, 'inativar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="inativar(<?= $contratofinanceiro->getId() ?>, '<?= $contratofinanceiro->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/desativar.png" title="Desativar" alt="Desativar" height="25" width="25"></a>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="inativar(<?= $contratofinanceiro->getId() ?>, '<?= $contratofinanceiro->getNumeroAnoContrato().'/'.$contratofinanceiro->getExercicio().'/'.$contratofinanceiro->getMesCompetencia() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/desativar.png" title="Desativar" alt="Desativar" height="25" width="25"></a>
                             <?php endif; ?>
                         <?php endif; ?>
                         <?php if($acl->isAllowed($role, $module, 'excluir')): ?>
-                            <a href="javascript:void(0)" class="botoes_acao" onclick="excluir(<?= $contratofinanceiro->getId() ?>, '<?= $contratofinanceiro->getDescricao() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a>
+                            <a href="javascript:void(0)" class="botoes_acao" onclick="excluir(<?= $contratofinanceiro->getId() ?>, '<?= $contratofinanceiro->getNumeroAnoContrato().'/'.$contratofinanceiro->getExercicio().'/'.$contratofinanceiro->getMesCompetencia() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a>
                         <?php endif; ?>
                     </td>
                 </tr>
