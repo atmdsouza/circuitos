@@ -33,6 +33,24 @@ class ContratoFinanceiro extends \Phalcon\Mvc\Model
     protected $status_pagamento;
 
     /**
+     *
+     * @var integer
+     */
+    protected $ativo;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $excluido;
+
+    /**
+     *
+     * @var string
+     */
+    protected $data_update;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -125,6 +143,60 @@ class ContratoFinanceiro extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return int
+     */
+    public function getAtivo()
+    {
+        return $this->ativo;
+    }
+
+    /**
+     * @param int $ativo
+     */
+    public function setAtivo($ativo)
+    {
+        $this->ativo = $ativo;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExcluido()
+    {
+        return $this->excluido;
+    }
+
+    /**
+     * @param int $excluido
+     */
+    public function setExcluido($excluido)
+    {
+        $this->excluido = $excluido;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataUpdate()
+    {
+        return $this->data_update;
+    }
+
+    /**
+     * @param string $data_update
+     */
+    public function setDataUpdate($data_update)
+    {
+        $this->data_update = $data_update;
+
+        return $this;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -143,7 +215,7 @@ class ContratoFinanceiro extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'contrato_acompanhamento_financeiro';
+        return 'contrato_financeiro';
     }
 
     /**
@@ -179,13 +251,11 @@ class ContratoFinanceiro extends \Phalcon\Mvc\Model
         $query = new Builder();
         $query->from(array("ContratoFinanceiro" => "Circuitos\Models\ContratoFinanceiro"));
         $query->columns("ContratoFinanceiro.*");
-        $query->leftJoin("Circuitos\Models\Empresa", "Empresa.id = ContratoFinanceiro.id_empresa", "Empresa");
-        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa.id = Empresa.id", "Pessoa");
-        $query->leftJoin("Circuitos\Models\PessoaJuridica", "PessoaJuridica.id = Empresa.id", "PessoaJuridica");
+        $query->leftJoin("Circuitos\Models\ContratoExercicio", "ContratoExercicio.id = ContratoFinanceiro.id_exercicio", "ContratoExercicio");
         $query->where("ContratoFinanceiro.excluido = 0 AND (CONVERT(ContratoFinanceiro.id USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(ContratoFinanceiro.descricao USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(Pessoa.nome USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(PessoaJuridica.razaosocial USING utf8) LIKE '%{$parameters}%')");
+                        OR CONVERT(ContratoExercicio.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(ContratoExercicio.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(ContratoExercicio.id USING utf8) LIKE '%{$parameters}%')");
         $query->groupBy("ContratoFinanceiro.id");
         $query->orderBy("ContratoFinanceiro.id DESC");
         $resultado = $query->getQuery()->execute();

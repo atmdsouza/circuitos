@@ -4,6 +4,7 @@ namespace Circuitos\Controllers;
 
 use Auth\Autentica;
 use Circuitos\Models\ContratoFiscal;
+use Circuitos\Models\Lov;
 use Circuitos\Models\Operations\ContratoFiscalOP;
 use Phalcon\Http\Response as Response;
 use Util\TokenManager;
@@ -36,7 +37,12 @@ class ContratoFiscalController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $contratofiscalOP = new ContratoFiscalOP();
         $contratofiscal = $contratofiscalOP->listar($dados['pesquisa']);
+        $tipos_anexos = Lov::find(array(
+            "tipo = 20 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
+        ));
         $this->view->page = $contratofiscal;
+        $this->view->tipos_anexos = $tipos_anexos;
     }
 
     public function criarAction()

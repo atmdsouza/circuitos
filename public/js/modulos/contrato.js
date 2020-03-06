@@ -1479,7 +1479,7 @@ function montarTabelaAnexos(id_contrato, visualizar)
             }
         },
         success: function(data) {
-            if (data.dados != ''){
+            if (data.dados.length > 0){
                 $('.tr_remove_anexo').remove();
                 var linhas =null;
                 $.each(data.dados, function(key, value) {
@@ -1613,7 +1613,6 @@ function excluirAnexo(id_anexo)
                 }
             },
             success: function (data) {
-                console.log(data);
                 $('.tr_remove_anexo').remove();
                 montarTabelaAnexos(data, false);
                 swal({
