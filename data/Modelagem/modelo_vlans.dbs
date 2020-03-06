@@ -2158,7 +2158,6 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="circuitos" color="F4DDBE" x="2656" y="1664" />
 		<entity schema="bd_circuitosnavega" name="torre" color="C7F4BE" x="3040" y="736" />
 		<entity schema="bd_circuitosnavega" name="estacao_telecon" color="C7F4BE" x="3040" y="384" />
-		<entity schema="bd_circuitosnavega" name="contrato" color="C7F4BE" x="672" y="80" />
 		<entity schema="bd_circuitosnavega" name="contrato_acompanhamento_financeiro_nota" color="C1D8EE" x="928" y="208" />
 		<entity schema="bd_circuitosnavega" name="contrato_acompanhamento_financeiro_nota_anexo" color="C1D8EE" x="1248" y="80" />
 		<entity schema="bd_circuitosnavega" name="contrato_acompanhamento_financeiro" color="C1D8EE" x="960" y="80" />
@@ -2179,6 +2178,7 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="proposta_comercial" color="D1BEF4" x="112" y="1312" />
 		<entity schema="bd_circuitosnavega" name="pessoa_juridica" color="F4DDBE" x="3680" y="1712" />
 		<entity schema="bd_circuitosnavega" name="contrato_arquivo_fisico" color="BEBEF4" x="672" y="688" />
+		<entity schema="bd_circuitosnavega" name="contrato" color="C7F4BE" x="672" y="80" />
 		<group name="Empresa" color="C4E0F9" >
 			<entity schema="bd_circuitosnavega" name="empresa" />
 			<entity schema="bd_circuitosnavega" name="empresa_parametros" />
