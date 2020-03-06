@@ -4,7 +4,7 @@ namespace Circuitos\Models;
 
 use Util\Infra;
 
-class ContratoAcompanhamentoFinanceiroNotaAnexo extends \Phalcon\Mvc\Model
+class ContratoFiscalAnexo extends \Phalcon\Mvc\Model
 {
 
     /**
@@ -17,7 +17,7 @@ class ContratoAcompanhamentoFinanceiroNotaAnexo extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $id_contrato_acompanhamento_financeiro_nota;
+    protected $id_contrato_fiscal;
 
     /**
      *
@@ -39,14 +39,14 @@ class ContratoAcompanhamentoFinanceiroNotaAnexo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field id_contrato_acompanhamento_financeiro_nota
+     * Method to set the value of field id_contrato_fiscal
      *
-     * @param integer $id_contrato_acompanhamento_financeiro_nota
+     * @param integer $id_contrato_fiscal
      * @return $this
      */
-    public function setIdContratoAcompanhamentoFinanceiroNota($id_contrato_acompanhamento_financeiro_nota)
+    public function setIdContratoFiscal($id_contrato_fiscal)
     {
-        $this->id_contrato_acompanhamento_financeiro_nota = $id_contrato_acompanhamento_financeiro_nota;
+        $this->id_contrato_fiscal = $id_contrato_fiscal;
 
         return $this;
     }
@@ -75,13 +75,13 @@ class ContratoAcompanhamentoFinanceiroNotaAnexo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id_contrato_acompanhamento_financeiro_nota
+     * Returns the value of field id_contrato_fiscal
      *
      * @return integer
      */
-    public function getIdContratoAcompanhamentoFinanceiroNota()
+    public function getIdContratoFiscal()
     {
-        return $this->id_contrato_acompanhamento_financeiro_nota;
+        return $this->id_contrato_fiscal;
     }
 
     /**
@@ -95,15 +95,65 @@ class ContratoAcompanhamentoFinanceiroNotaAnexo extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field url
+     *
+     * @return string
+     */
+    public function getUrlAnexo()
+    {
+        return $this->Anexos->url;
+    }
+
+    /**
+     * Returns the value of field descricao
+     *
+     * @return string
+     */
+    public function getDescricaoAnexo()
+    {
+        return $this->Anexos->descricao;
+    }
+
+    /**
+     * Returns the value of field data criação
+     *
+     * @return string
+     */
+    public function getDataCriacaoAnexo()
+    {
+        return $this->Anexos->data_criacao;
+    }
+
+    /**
+     * Returns the value of field descricao tipo anexo
+     *
+     * @return string
+     */
+    public function getDescricaoTipoAnexo()
+    {
+        return $this->Anexos->Lov->descricao;
+    }
+
+    /**
+     * Returns the value of field id_tipo_anexo
+     *
+     * @return integer
+     */
+    public function getIdTipoAnexo()
+    {
+        return $this->Anexos->id_tipo_anexo;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
     {
         $schema = new Infra();
         $this->setSchema($schema->getSchemaBanco());
-        $this->setSource("contrato_acompanhamento_financeiro_nota_anexo");
+        $this->setSource("contrato_fiscal_anexo");
         $this->belongsTo('id_anexo', 'Circuitos\Models\Anexos', 'id', ['alias' => 'Anexos']);
-        $this->belongsTo('id_contrato_acompanhamento_financeiro_nota', 'Circuitos\Models\ContratoAcompanhamentoFinanceiroNota', 'id', ['alias' => 'ContratoAcompanhamentoFinanceiroNota']);
+        $this->belongsTo('id_contrato_fiscal', 'Circuitos\Models\ContratoFiscal', 'id', ['alias' => 'ContratoFiscal']);
     }
 
     /**
@@ -113,14 +163,14 @@ class ContratoAcompanhamentoFinanceiroNotaAnexo extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'contrato_acompanhamento_financeiro_nota_anexo';
+        return 'contrato_fiscal_anexo';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return ContratoAcompanhamentoFinanceiroNotaAnexo[]|ContratoAcompanhamentoFinanceiroNotaAnexo|\Phalcon\Mvc\Model\ResultSetInterface
+     * @return ContratoFiscalAnexo[]|ContratoFiscalAnexo|\Phalcon\Mvc\Model\ResultSetInterface
      */
     public static function find($parameters = null)
     {
@@ -131,7 +181,7 @@ class ContratoAcompanhamentoFinanceiroNotaAnexo extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return ContratoAcompanhamentoFinanceiroNotaAnexo|\Phalcon\Mvc\Model\ResultInterface
+     * @return ContratoFiscalAnexo|\Phalcon\Mvc\Model\ResultInterface
      */
     public static function findFirst($parameters = null)
     {

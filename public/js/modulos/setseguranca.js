@@ -36,7 +36,8 @@ function confirmaCancelar(modal)
 {
     'use strict';
     verificarAlteracao();
-    if (mudou) {
+    if (mudou)
+    {
         swal({
             title: "Sair sem Salvar",
             text: "Deseja realmente sair sem salvar?",
@@ -47,14 +48,26 @@ function confirmaCancelar(modal)
             confirmButtonText: "Sim",
             cancelButtonText: "Não"
         }).then(() => {
-            $("#" + modal).modal('hide');
+            $("#"+modal).modal('hide');
             limparModalBootstrap(modal);
             mudou = false;
+            limparValidacao();
         }).catch(swal.noop);
-    } else {
-        $("#" + modal).modal('hide');
-        limparModalBootstrap(modal);
     }
+    else
+    {
+        $("#"+modal).modal('hide');
+        limparModalBootstrap(modal);
+        limparValidacao();
+    }
+}
+
+function limparValidacao()
+{
+    'use strict';
+    var validator = $("#formCadastro").validate();
+    validator.resetForm();
+
 }
 
 function criar()
@@ -82,12 +95,7 @@ function salvar()
             descricao: {
                 required: true
             }
-        },
-        messages: {
-            descricao: {
-                required: "É necessário informar uma Descrição"
-            }
-        },
+        }
         submitHandler: function(form) {
             var dados = $("#formCadastro").serialize();
             var action = actionCorreta(window.location.href.toString(), "set_seguranca/" + acao);

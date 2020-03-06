@@ -7,6 +7,7 @@ use Circuitos\Models\CircuitosAnexo;
 use Circuitos\Models\CircuitosItem;
 use Circuitos\Models\CircuitosValorMensal;
 use Phalcon\Http\Response as Response;
+use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Util\Util;
@@ -15,6 +16,8 @@ class CircuitosOP extends Circuitos
 {
     private $encode = "UTF-8";
 
+    private $arqLog = BASE_PATH . "/logs/systemlog.log";
+
     public function listar($dados)
     {
         return Circuitos::pesquisarCircuitos($dados);
@@ -22,6 +25,7 @@ class CircuitosOP extends Circuitos
 
     public function cadastrar(Circuitos $objArray, CircuitosValorMensal $objArrayValorMensal, $arrObjItensProposta)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
@@ -110,13 +114,14 @@ class CircuitosOP extends Circuitos
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function alterar(Circuitos $objArray, CircuitosValorMensal $objArrayValorMensal, $arrObjItensProposta)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
@@ -204,13 +209,14 @@ class CircuitosOP extends Circuitos
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function ativar(Circuitos $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -224,13 +230,14 @@ class CircuitosOP extends Circuitos
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function inativar(Circuitos $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -244,13 +251,14 @@ class CircuitosOP extends Circuitos
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function excluir(Circuitos $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -264,13 +272,14 @@ class CircuitosOP extends Circuitos
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarCircuitos($id)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         try {
             $objeto = Circuitos::findFirst("id={$id}");
@@ -301,13 +310,14 @@ class CircuitosOP extends Circuitos
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoArray)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarPropostaItens($id_proposta_comercial)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objetosComponentes = CircuitosItem::find('id_proposta_comercial = ' . $id_proposta_comercial);
             $arrTransporte = [];
@@ -334,13 +344,14 @@ class CircuitosOP extends Circuitos
             $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarPropostaItem($id_proposta_comercial_item)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objetoComponente = CircuitosItem::findFirst('id=' . $id_proposta_comercial_item);
             $objTransporte = new \stdClass();
@@ -359,13 +370,14 @@ class CircuitosOP extends Circuitos
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function alterarPropostaItem(CircuitosItem $objCircuitosItem)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         try {
             $manager = new TxManager();
@@ -397,13 +409,14 @@ class CircuitosOP extends Circuitos
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoComponente)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function deletarPropostaItem(CircuitosItem $objCircuitosItem)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $manager = new TxManager();
             $transaction = $manager->get();
@@ -418,7 +431,7 @@ class CircuitosOP extends Circuitos
             $response->setContent(json_encode(array("operacao" => True,"dados" => $id_proposta_comercial)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
@@ -433,6 +446,7 @@ class CircuitosOP extends Circuitos
 
     public function visualizarCircuitosAnexos($id_circuito)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         try {
             $objetosComponentes = CircuitosAnexo::find('id_circuitos= ' . $id_circuito);
@@ -456,7 +470,7 @@ class CircuitosOP extends Circuitos
             $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }

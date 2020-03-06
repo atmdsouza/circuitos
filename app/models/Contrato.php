@@ -828,6 +828,8 @@ class Contrato extends \Phalcon\Mvc\Model
         $this->hasMany('id', 'Circuitos\Models\SetSegurancaComponentes', 'id_contrato', ['alias' => 'SetSegurancaComponentes']);
         $this->hasMany('id', 'Circuitos\Models\Terreno', 'id_contrato', ['alias' => 'Terreno']);
         $this->hasMany('id', 'Circuitos\Models\Torre', 'id_contrato', ['alias' => 'Torre']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoFiscalHasContrato', 'id_contrato', ['alias' => 'ContratoFiscalHasContrato']);
+        $this->belongsTo('id', 'Circuitos\Models\ContratoFiscalHasContrato', 'id_contrato', ['alias' => 'ContratoFiscalHasContratoUnico']);
         $this->belongsTo('id_cliente', 'Circuitos\Models\Cliente', 'id', ['alias' => 'Cliente']);
         $this->belongsTo('id_contrato_principal', 'Circuitos\Models\Contrato', 'id', ['alias' => 'ContratoPrincipal']);
         $this->belongsTo('id_tipo_contrato', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov1']);

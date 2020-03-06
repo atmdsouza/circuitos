@@ -2,15 +2,17 @@
 
 namespace Circuitos\Models\Operations;
 
+use Circuitos\Models\UnidadeConsumidora;
+use Phalcon\Http\Response as Response;
+use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-use Phalcon\Http\Response as Response;
-
-use Circuitos\Models\UnidadeConsumidora;
 
 class UnidadeConsumidoraOP extends UnidadeConsumidora
 {
     private $encode = "UTF-8";
+
+    private $arqLog = BASE_PATH . "/logs/systemlog.log";
 
     public function listar($dados)
     {
@@ -19,6 +21,7 @@ class UnidadeConsumidoraOP extends UnidadeConsumidora
 
     public function cadastrar(UnidadeConsumidora $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -41,13 +44,14 @@ class UnidadeConsumidoraOP extends UnidadeConsumidora
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function alterar(UnidadeConsumidora $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -65,13 +69,14 @@ class UnidadeConsumidoraOP extends UnidadeConsumidora
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function ativar(UnidadeConsumidora $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -85,13 +90,14 @@ class UnidadeConsumidoraOP extends UnidadeConsumidora
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function inativar(UnidadeConsumidora $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -105,13 +111,14 @@ class UnidadeConsumidoraOP extends UnidadeConsumidora
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function excluir(UnidadeConsumidora $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -125,13 +132,14 @@ class UnidadeConsumidoraOP extends UnidadeConsumidora
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarUnidadeConsumidora($id)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objeto = UnidadeConsumidora::findFirst("id={$id}");
             $objetoArray = array(
@@ -146,7 +154,7 @@ class UnidadeConsumidoraOP extends UnidadeConsumidora
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoArray)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }

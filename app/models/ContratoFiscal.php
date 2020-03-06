@@ -2,6 +2,7 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
 use Util\Infra;
 
 class ContratoFiscal extends \Phalcon\Mvc\Model
@@ -27,9 +28,21 @@ class ContratoFiscal extends \Phalcon\Mvc\Model
 
     /**
      *
+     * @var integer
+     */
+    protected $tipo_fiscal;
+
+    /**
+     *
      * @var string
      */
     protected $data_criacao;
+
+    /**
+     *
+     * @var string
+     */
+    protected $data_nomeacao;
 
     /**
      *
@@ -240,6 +253,74 @@ class ContratoFiscal extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return int
+     */
+    public function getTipoFiscal()
+    {
+        return $this->tipo_fiscal;
+    }
+
+    /**
+     * @param int $tipo_fiscal
+     */
+    public function setTipoFiscal($tipo_fiscal)
+    {
+        $this->tipo_fiscal = $tipo_fiscal;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataNomeacao()
+    {
+        return $this->data_nomeacao;
+    }
+
+    /**
+     * @param string $data_nomeacao
+     */
+    public function setDataNomeacao($data_nomeacao)
+    {
+        $this->data_nomeacao = $data_nomeacao;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNomeFiscal()
+    {
+        return $this->Usuario->Pessoa->nome;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNomeFiscalSuplente()
+    {
+        return $this->UsuarioSuplente->Pessoa->nome;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getIdContrato()
+    {
+        return $this->ContratoFiscalHasContratoUnico->id_contrato;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNumeroContrato()
+    {
+        return $this->ContratoFiscalHasContratoUnico->Contrato->numero;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -250,6 +331,7 @@ class ContratoFiscal extends \Phalcon\Mvc\Model
         $this->hasMany('id', 'Circuitos\Models\ContratoFiscalHasContrato', 'id_contrato_fiscal', ['alias' => 'ContratoFiscalHasContrato']);
         $this->belongsTo('id_fiscal_suplente', 'Circuitos\Models\Usuario', 'id', ['alias' => 'UsuarioSuplente']);
         $this->belongsTo('id_usuario', 'Circuitos\Models\Usuario', 'id', ['alias' => 'Usuario']);
+        $this->belongsTo('id', 'Circuitos\Models\ContratoFiscalHasContrato', 'id_contrato_fiscal', ['alias' => 'ContratoFiscalHasContratoUnico']);
     }
 
     /**
@@ -282,6 +364,29 @@ class ContratoFiscal extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de ContratoFiscal, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return ContratoFiscal|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarContratoFiscal($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("ContratoFiscal" => "Circuitos\Models\ContratoFiscal"));
+        $query->columns("ContratoFiscal.*");
+        $query->leftJoin("Circuitos\Models\ContratoFiscalHasContrato", "ContratoFiscalHasContrato.id_contrato_fiscal = ContratoFiscal.id", "ContratoFiscalHasContrato");
+        $query->leftJoin("Circuitos\Models\Contrato", "Contrato.id = ContratoFiscalHasContrato.id_contrato", "Contrato");
+        $query->leftJoin("Circuitos\Models\Usuario", "Usuario.id = ContratoFiscal.id_usuario", "Usuario");
+        $query->leftJoin("Circuitos\Models\Pessoa", "Pessoa.id = Usuario.id_pessoa", "Pessoa");
+        $query->where("ContratoFiscal.excluido = 0 AND (CONVERT(ContratoFiscal.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Pessoa.nome USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("ContratoFiscal.id");
+        $query->orderBy("ContratoFiscal.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
 }

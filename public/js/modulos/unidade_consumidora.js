@@ -47,13 +47,23 @@ function confirmaCancelar(modal)
             $("#"+modal).modal('hide');
             limparModalBootstrap(modal);
             mudou = false;
+            limparValidacao();
         }).catch(swal.noop);
     }
     else
     {
         $("#"+modal).modal('hide');
         limparModalBootstrap(modal);
+        limparValidacao();
     }
+}
+
+function limparValidacao()
+{
+    'use strict';
+    var validator = $("#formCadastro").validate();
+    validator.resetForm();
+
 }
 
 function criar()
@@ -115,14 +125,6 @@ function salvar()
             },
             codigo_conta_contrato:{
                 required: true
-            }
-        },
-        messages:{
-            descricao:{
-                required:"É necessário informar uma Descrição"
-            },
-            codigo_conta_contrato:{
-                required:"É necessário informar um Código de Conta Contrato"
             }
         },
         submitHandler: function(form) {

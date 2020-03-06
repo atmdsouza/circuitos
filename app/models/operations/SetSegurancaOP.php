@@ -2,19 +2,20 @@
 
 namespace Circuitos\Models\Operations;
 
-use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
-use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-use Phalcon\Http\Response as Response;
-
 use Circuitos\Models\SetSeguranca;
 use Circuitos\Models\SetSegurancaComponentes;
 use Circuitos\Models\SetSegurancaContato;
-
+use Phalcon\Http\Response as Response;
+use Phalcon\Logger\Adapter\File as FileAdapter;
+use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
+use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 use Util\Util;
 
 class SetSegurancaOP extends SetSeguranca
 {
     private $encode = "UTF-8";
+
+    private $arqLog = BASE_PATH . "/logs/systemlog.log";
 
     public function listar($dados)
     {
@@ -23,6 +24,7 @@ class SetSegurancaOP extends SetSeguranca
 
     public function cadastrar(SetSeguranca $objArray, $arrayObjComponente, $arrayObjContato)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
@@ -72,7 +74,7 @@ class SetSegurancaOP extends SetSeguranca
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             exit;
             return false;
         }
@@ -80,6 +82,7 @@ class SetSegurancaOP extends SetSeguranca
 
     public function alterar(SetSeguranca $objArray, $arrayObjComponente, $arrayObjContato)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
@@ -129,13 +132,14 @@ class SetSegurancaOP extends SetSeguranca
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function ativar(SetSeguranca $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -149,13 +153,14 @@ class SetSegurancaOP extends SetSeguranca
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function inativar(SetSeguranca $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -169,13 +174,14 @@ class SetSegurancaOP extends SetSeguranca
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function excluir(SetSeguranca $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -189,26 +195,28 @@ class SetSegurancaOP extends SetSeguranca
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarSetSeguranca($id)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objeto = SetSeguranca::findFirst("id={$id}");
             $response = new Response();
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objeto)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarComponentesSetSeguranca($id_set_seguranca)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         try {
             $objetosComponente = SetSegurancaComponentes::find('id_set_seguranca = ' . $id_set_seguranca);
@@ -236,13 +244,14 @@ class SetSegurancaOP extends SetSeguranca
             $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarComponenteSetSeguranca($id)
     {
+        $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         try {
             $objetoComponente = SetSegurancaComponentes::findFirst('id= ' . $id);
@@ -266,13 +275,14 @@ class SetSegurancaOP extends SetSeguranca
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function alterarComponenteSeguranca(SetSegurancaComponentes $objComponente, SetSegurancaContato $objContato)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $util = new Util();
             $manager = new TxManager();
@@ -315,13 +325,14 @@ class SetSegurancaOP extends SetSeguranca
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoComponente)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function deletarComponenteSeguranca(SetSegurancaComponentes $objComponente)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $manager = new TxManager();
             $transaction = $manager->get();
@@ -336,7 +347,7 @@ class SetSegurancaOP extends SetSeguranca
             $response->setContent(json_encode(array("operacao" => True,"dados" => $id_set_seguranca)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }

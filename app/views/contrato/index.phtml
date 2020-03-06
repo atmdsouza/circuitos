@@ -103,12 +103,6 @@ $module = $this->router->getControllerName();
                             <?php if($acl->isAllowed($role, $module, 'subir')): ?> <!-- Anexo de Arquivos -->
                                 <a href="javascript:void(0)" class="botoes_acao" onclick="criarAnexo(<?= $contrato->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/upload.png" title="Anexar Arquivo" alt="Anexar Arquivo" height="25" width="25"></a>
                             <?php endif; ?>
-                            <?php if($acl->isAllowed($role, $module, 'gerir')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="gerirFinanceiro(<?= $contrato->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/acompanhar_financeiro.png" title="Gestão Financeira" alt="Gestão Financeira" height="25" width="25"></a>
-                            <?php endif; ?>
-                            <?php if($acl->isAllowed($role, $module, 'atribuir')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="atribuir(<?= $contrato->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/fiscal.png" title="Fiscais do Contrato" alt="Fiscais do Contrato" height="25" width="25"></a>
-                            <?php endif; ?>
                             <?php if($acl->isAllowed($role, $module, 'fiscalizar')): ?>
                                 <a href="javascript:void(0)" class="botoes_acao" onclick="fiscalizar(<?= $contrato->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/fiscalizar.png" title="Fiscalizar Contrato" alt="Fiscalizar Contrato" height="25" width="25"></a>
                             <?php endif; ?>

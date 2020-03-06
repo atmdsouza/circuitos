@@ -276,7 +276,7 @@ class ContratoExercicio extends \Phalcon\Mvc\Model
         $schema = new Infra();
         $this->setSchema($schema->getSchemaBanco());
         $this->setSource("contrato_exercicio");
-        $this->hasMany('id', 'Circuitos\Models\ContratoAcompanhamentoFinanceiro', 'id_exercicio', ['alias' => 'ContratoAcompanhamentoFinanceiro']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoFinanceiro', 'id_exercicio', ['alias' => 'ContratoFinanceiro']);
         $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
     }
 

@@ -2,18 +2,18 @@
 
 namespace Circuitos\Models\Operations;
 
-use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
-use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-use Phalcon\Http\Response as Response;
-
 use Circuitos\Models\SetEquipamento;
 use Circuitos\Models\SetEquipamentoComponentes;
-
-use Util\Util;
+use Phalcon\Http\Response as Response;
+use Phalcon\Logger\Adapter\File as FileAdapter;
+use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
+use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
 
 class SetEquipamentoOP extends SetEquipamento
 {
     private $encode = "UTF-8";
+
+    private $arqLog = BASE_PATH . "/logs/systemlog.log";
 
     public function listar($dados)
     {
@@ -22,6 +22,7 @@ class SetEquipamentoOP extends SetEquipamento
 
     public function cadastrar(SetEquipamento $objArray, $arrayObjComponente)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -49,13 +50,14 @@ class SetEquipamentoOP extends SetEquipamento
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function alterar(SetEquipamento $objArray, $arrayObjComponente)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -83,13 +85,14 @@ class SetEquipamentoOP extends SetEquipamento
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function ativar(SetEquipamento $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -103,13 +106,14 @@ class SetEquipamentoOP extends SetEquipamento
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function inativar(SetEquipamento $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -123,13 +127,14 @@ class SetEquipamentoOP extends SetEquipamento
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function excluir(SetEquipamento $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -143,26 +148,28 @@ class SetEquipamentoOP extends SetEquipamento
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarSetEquipamento($id)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objeto = SetEquipamento::findFirst("id={$id}");
             $response = new Response();
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objeto)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarComponentesSetEquipamento($id_set_equipamento)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objetosComponente = SetEquipamentoComponentes::find('id_set_equipamento = ' . $id_set_equipamento);
             $arrTransporte = [];
@@ -186,13 +193,14 @@ class SetEquipamentoOP extends SetEquipamento
             $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarComponenteSetEquipamento($id)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objetoComponente = SetEquipamentoComponentes::findFirst('id= ' . $id);
             $objTransporte = new \stdClass();
@@ -212,13 +220,14 @@ class SetEquipamentoOP extends SetEquipamento
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objTransporte)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function alterarComponenteEquipamento(SetEquipamentoComponentes $objComponente)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $manager = new TxManager();
             $transaction = $manager->get();
@@ -241,13 +250,14 @@ class SetEquipamentoOP extends SetEquipamento
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoComponente)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function deletarComponenteEquipamento(SetEquipamentoComponentes $objComponente)
     {
+        $logger = new FileAdapter($this->arqLog);
         try {
             $manager = new TxManager();
             $transaction = $manager->get();
@@ -262,7 +272,7 @@ class SetEquipamentoOP extends SetEquipamento
             $response->setContent(json_encode(array("operacao" => True,"dados" => $id_set_equipamento)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }

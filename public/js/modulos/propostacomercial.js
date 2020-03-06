@@ -466,7 +466,7 @@ function montarTabelaAnexosv(id_proposta, visualizar)
         success: function(data) {
             $('.tr_remove_anexov').remove();
             var linhas =null;
-            if (data.dados != ''){
+            if (data.dados.length > 0){
                 $.each(data.dados, function(key, value) {
                     linhas += '<tr class="tr_remove_anexov">';
                     linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
@@ -1067,7 +1067,7 @@ function montarTabelaAnexos(id_proposta, visualizar)
             }
         },
         success: function(data) {
-            if (data.dados != ''){
+            if (data.dados.length > 0){
                 $('.tr_remove_anexo').remove();
                 var linhas =null;
                 $.each(data.dados, function(key, value) {

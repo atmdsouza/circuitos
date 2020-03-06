@@ -2,9 +2,10 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
 use Util\Infra;
 
-class ContratoAcompanhamentoFinanceiro extends \Phalcon\Mvc\Model
+class ContratoFinanceiro extends \Phalcon\Mvc\Model
 {
 
     /**
@@ -30,6 +31,24 @@ class ContratoAcompanhamentoFinanceiro extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $status_pagamento;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $ativo;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $excluido;
+
+    /**
+     *
+     * @var string
+     */
+    protected $data_update;
 
     /**
      * Method to set the value of field id
@@ -124,14 +143,68 @@ class ContratoAcompanhamentoFinanceiro extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return int
+     */
+    public function getAtivo()
+    {
+        return $this->ativo;
+    }
+
+    /**
+     * @param int $ativo
+     */
+    public function setAtivo($ativo)
+    {
+        $this->ativo = $ativo;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExcluido()
+    {
+        return $this->excluido;
+    }
+
+    /**
+     * @param int $excluido
+     */
+    public function setExcluido($excluido)
+    {
+        $this->excluido = $excluido;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataUpdate()
+    {
+        return $this->data_update;
+    }
+
+    /**
+     * @param string $data_update
+     */
+    public function setDataUpdate($data_update)
+    {
+        $this->data_update = $data_update;
+
+        return $this;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
     {
         $schema = new Infra();
         $this->setSchema($schema->getSchemaBanco());
-        $this->setSource("contrato_acompanhamento_financeiro");
-        $this->hasMany('id', 'Circuitos\Models\ContratoAcompanhamentoFinanceiroNota', 'id_contrato_acompanhamento_financeiro', ['alias' => 'ContratoAcompanhamentoFinanceiroNota']);
+        $this->setSource("contrato_financeiro");
+        $this->hasMany('id', 'Circuitos\Models\ContratoFinanceiroNota', 'id_contrato_financeiro', ['alias' => 'ContratoFinanceiroNota']);
         $this->belongsTo('id_exercicio', 'Circuitos\Models\ContratoExercicio', 'id', ['alias' => 'ContratoExercicio']);
     }
 
@@ -142,14 +215,14 @@ class ContratoAcompanhamentoFinanceiro extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'contrato_acompanhamento_financeiro';
+        return 'contrato_financeiro';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return ContratoAcompanhamentoFinanceiro[]|ContratoAcompanhamentoFinanceiro|\Phalcon\Mvc\Model\ResultSetInterface
+     * @return ContratoFinanceiro[]|ContratoFinanceiro|\Phalcon\Mvc\Model\ResultSetInterface
      */
     public static function find($parameters = null)
     {
@@ -160,11 +233,33 @@ class ContratoAcompanhamentoFinanceiro extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return ContratoAcompanhamentoFinanceiro|\Phalcon\Mvc\Model\ResultInterface
+     * @return ContratoFinanceiro|\Phalcon\Mvc\Model\ResultInterface
      */
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de ContratoFinanceiro, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return ContratoFinanceiro|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarContratoFinanceiro($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array("ContratoFinanceiro" => "Circuitos\Models\ContratoFinanceiro"));
+        $query->columns("ContratoFinanceiro.*");
+        $query->leftJoin("Circuitos\Models\ContratoExercicio", "ContratoExercicio.id = ContratoFinanceiro.id_exercicio", "ContratoExercicio");
+        $query->where("ContratoFinanceiro.excluido = 0 AND (CONVERT(ContratoFinanceiro.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(ContratoExercicio.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(ContratoExercicio.id USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(ContratoExercicio.id USING utf8) LIKE '%{$parameters}%')");
+        $query->groupBy("ContratoFinanceiro.id");
+        $query->orderBy("ContratoFinanceiro.id DESC");
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
 }

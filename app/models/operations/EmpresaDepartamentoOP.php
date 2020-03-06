@@ -4,13 +4,15 @@ namespace Circuitos\Models\Operations;
 
 use Circuitos\Models\EmpresaDepartamento;
 use Phalcon\Http\Response as Response;
+use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
-use Util\Util;
 
 class EmpresaDepartamentoOP extends EmpresaDepartamento
 {
     private $encode = "UTF-8";
+
+    private $arqLog = BASE_PATH . "/logs/systemlog.log";
 
     public function listar($dados)
     {
@@ -19,7 +21,7 @@ class EmpresaDepartamentoOP extends EmpresaDepartamento
 
     public function cadastrar(EmpresaDepartamento $objArray)
     {
-        $util = new Util();
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -33,14 +35,14 @@ class EmpresaDepartamentoOP extends EmpresaDepartamento
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function alterar(EmpresaDepartamento $objArray)
     {
-        $util = new Util();
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -54,13 +56,14 @@ class EmpresaDepartamentoOP extends EmpresaDepartamento
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function ativar(EmpresaDepartamento $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -74,13 +77,14 @@ class EmpresaDepartamentoOP extends EmpresaDepartamento
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function inativar(EmpresaDepartamento $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -94,13 +98,14 @@ class EmpresaDepartamentoOP extends EmpresaDepartamento
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function excluir(EmpresaDepartamento $objArray)
     {
+        $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -114,14 +119,14 @@ class EmpresaDepartamentoOP extends EmpresaDepartamento
             $transaction->commit();
             return $objeto;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }
 
     public function visualizarEmpresaDepartamento($id)
     {
-        $util = new Util();
+        $logger = new FileAdapter($this->arqLog);
         try {
             $objeto = EmpresaDepartamento::findFirst("id={$id}");
             $objetoArray = array(
@@ -134,7 +139,7 @@ class EmpresaDepartamentoOP extends EmpresaDepartamento
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoArray)));
             return $response;
         } catch (TxFailed $e) {
-            var_dump($e->getMessage());
+            $logger->error($e->getMessage());
             return false;
         }
     }

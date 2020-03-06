@@ -41,6 +41,8 @@ var listContratoPrincipal = [];
 var c2 = 0;
 var listUsuario = [];
 var u1 = 0;
+var listUsuarioSuplente = [];
+var u2 = 0;
 var listDepartamento = [];
 var d = 0;
 
@@ -90,6 +92,58 @@ function autocompletarUsuario(id_label, id_valor)
                     //Autocomplete
                     ac_usuario.autocomplete().setOptions( {
                         lookup: listUsuario
+                    });
+                }
+            } else {
+                vl_usuario.val("");
+                ac_usuario.val("");
+            }
+        }
+    });
+}
+
+function autocompletarUsuarioSuplente(id_label, id_valor)
+{
+    "use strict";
+    //Autocomplete
+    var ac_usuario = $("#"+id_label);
+    var vl_usuario = $("#"+id_valor);
+    var string = ac_usuario.val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'listaUsuariosAtivos', string: string},
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao) {
+                listUsuarioSuplente = [];
+                $.each(data.dados, function (key, value) {
+                    listUsuarioSuplente.push({value: value.nome, data: value.id});
+                });
+                if(u2 === 0) {
+                    //Autocomplete
+                    ac_usuario.autocomplete({
+                        lookup: listUsuarioSuplente,
+                        onSelect: function (suggestion) {
+                            vl_usuario.val(suggestion.data);
+                        }
+                    });
+                    u2++;
+                } else {
+                    //Autocomplete
+                    ac_usuario.autocomplete().setOptions( {
+                        lookup: listUsuarioSuplente
                     });
                 }
             } else {
