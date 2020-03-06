@@ -17,7 +17,7 @@ function inicializar()
         language: {
             select: false
         },
-        order: [[4, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
+        order: [[5, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
     });
     autocompletarContrato('lid_contrato','id_contrato');
     autocompletarUsuario('lid_usuario', 'id_usuario');
@@ -89,6 +89,7 @@ function habilitaSuplente()
 {
     'use strict';
     var tipo_fiscal = $('#tipo_fiscal').val();
+    $('#tipo_fiscal').removeAttr('disabled');
     if (tipo_fiscal === '1'){
         $('#lid_fiscal_suplente').removeAttr('disabled');
     } else {
@@ -96,6 +97,55 @@ function habilitaSuplente()
         $('#id_fiscal_suplente').val('');
         $('#lid_fiscal_suplente').attr('disabled', 'disabled');
     }
+}
+
+function validacaoFiscalTitular()
+{
+    'use strict';
+    var id = $('#id_contrato').val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'validacaoFiscalTitular', id: id},
+        error: function (data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.temTitular){
+                swal({
+                    title: 'Verificação de Fiscal Titular',
+                    text: 'Este contrato já possui um fiscal cadastrado como titular. Você só pode cadastrar fiscais suplentes agora ou então, alterar a titularidade.',
+                    type: "info",
+                    showCancelButton: false,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Ok"
+                }).then((result) => {
+                    $('#tipo_fiscal').val(0).selected='true';
+                    $('#tipo_fiscal').attr('disabled', 'disabled');
+                    $('#lid_fiscal_suplente').val('');
+                    $('#id_fiscal_suplente').val('');
+                    $('#lid_fiscal_suplente').attr('disabled', 'disabled');
+                    // $('#lid_usuario').val(data.id_usuario);
+                    // $('#id_usuario').val(data.nome_usuario);
+                });
+            } else {
+                $('#tipo_fiscal').removeAttr('disabled');
+                $('#lid_fiscal_suplente').removeAttr('disabled');
+                // $('#lid_usuario').val('');
+                // $('#id_usuario').val('');
+            }
+        }
+    });
+
 }
 
 function salvar()

@@ -321,6 +321,14 @@ class ContratoFiscal extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return string
+     */
+    public function getNumeroAnoContrato()
+    {
+        return $this->ContratoFiscalHasContratoUnico->Contrato->numero .'/'.$this->ContratoFiscalHasContratoUnico->Contrato->ano;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()

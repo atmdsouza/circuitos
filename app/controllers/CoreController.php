@@ -703,6 +703,10 @@ class CoreController extends ControllerBase
                 $objeto = new ContratoOP();
                 return $objeto->visualizarContratosVinculados($dados['id']);
                 break;
+            case 'validacaoFiscalTitular':
+                $objeto = new ContratoFiscalOP();
+                return $objeto->validacaoFiscalTitular($dados['id']);
+                break;
         }
     }
 

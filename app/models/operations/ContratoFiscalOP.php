@@ -245,4 +245,28 @@ class ContratoFiscalOP extends ContratoFiscal
             return false;
         }
     }
+
+    public function validacaoFiscalTitular($id_contrato)
+    {
+        $logger = new FileAdapter($this->arqLog);
+        try {
+            $objetosFiscais = ContratoFiscalHasContrato::find('id_contrato= ' . $id_contrato);
+            $temTitular = false;
+            foreach ($objetosFiscais as $objetoFiscal)
+            {
+                $fiscal = ContratoFiscal::findFirst('id='.$objetoFiscal->getIdContratoFiscal());
+                if ($fiscal->getTipoFiscal() == 1){
+                    $temTitular = true;
+                    $id_usuario = $fiscal->getIdUsuario();
+                    $nome_usuario = $fiscal->getNomeFiscal();
+                }
+            }
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"temTitular" => $temTitular, "id_usuario" => $id_usuario, "nome_usuario" => $nome_usuario)));
+            return $response;
+        } catch (TxFailed $e) {
+            $logger->error($e->getMessage());
+            return false;
+        }
+    }
 }

@@ -54,6 +54,7 @@ $module = $this->router->getControllerName();
             <thead>
             <tr>
                 <th>Código</th>
+                <th>Contrato</th>
                 <th>Tipo</th>
                 <th>Nome</th>
                 <th>Data Nomeação</th>
@@ -87,6 +88,7 @@ $module = $this->router->getControllerName();
                 ?>
                 <tr <?= $class_tr; ?>>
                     <td><?= $contratofiscal->getId() ?></td>
+                    <td><?= $contratofiscal->getNumeroAnoContrato() ?></td>
                     <td><?= $tipo_fiscal ?></td>
                     <td><?= $contratofiscal->getNomeFiscal() ?></td>
                     <td><?= $util->converterDataParaBr($contratofiscal->getDataNomeacao()) ?></td>
@@ -136,7 +138,7 @@ $module = $this->router->getControllerName();
                             <div class="form-row">
                                 <div class="form-group col-md-4">
                                     <label for="lid_contrato">Contrato <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["lid_contrato", "class" => "form-control", "id" => "lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato('lid_contrato','id_contrato');"]) ?>
+                                    <?php echo $this->tag->textField(["lid_contrato", "class" => "form-control", "id" => "lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato('lid_contrato','id_contrato');", "onchange" => "validacaoFiscalTitular();"]) ?>
                                     <?php echo $this->tag->hiddenField(["id_contrato", "class" => "form-control", "id" => "id_contrato"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">
