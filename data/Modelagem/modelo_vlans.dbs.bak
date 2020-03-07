@@ -429,13 +429,18 @@
 			<comment><![CDATA[Armazena as informações sobre o desembolso do contrato.]]></comment>
 			<column name="id" type="int" jt="4" mandatory="y" autoincrement="y" />
 			<column name="id_exercicio" type="int" jt="4" mandatory="y" />
-			<column name="mes_competencia" type="int" jt="4" />
-			<column name="status_pagamento" type="int" jt="4" mandatory="y" >
+			<column name="mes_competencia" type="int" jt="4" mandatory="y" />
+			<column name="status_pagamento" type="tinyint" jt="-6" mandatory="y" >
 				<defo>1</defo>
 				<comment><![CDATA[Status do pagamento a ser realizado.
 0 = Sem pagamento
-1 = Pagamento em Aberto
-2 = Pagamento Efetuado]]></comment>
+1 = Pagamento Pendente
+2 = Pagamento Efetuado
+3 = Pagamento Parcial]]></comment>
+			</column>
+			<column name="valor_pagamento" type="decimal" length="19" decimal="2" jt="3" mandatory="y" >
+				<defo>0</defo>
+				<comment><![CDATA[Valor do pagamento a ser executado para a competência]]></comment>
 			</column>
 			<column name="ativo" type="tinyint" jt="-6" mandatory="y" >
 				<defo>1</defo>
@@ -443,6 +448,7 @@
 			<column name="excluido" type="tinyint" jt="-6" mandatory="y" >
 				<defo>0</defo>
 			</column>
+			<column name="data_criacao" type="timestamp" jt="93" />
 			<column name="data_update" type="timestamp" jt="93" />
 			<index name="pk_contrato_acompanhamento_financeiro_id" unique="PRIMARY_KEY" >
 				<column name="id" />

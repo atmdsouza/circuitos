@@ -34,6 +34,12 @@ class ContratoFinanceiro extends \Phalcon\Mvc\Model
 
     /**
      *
+     * @var double
+     */
+    protected $valor_pagamento;
+
+    /**
+     *
      * @var integer
      */
     protected $ativo;
@@ -43,6 +49,12 @@ class ContratoFinanceiro extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $excluido;
+
+    /**
+     *
+     * @var string
+     */
+    protected $data_criacao;
 
     /**
      *
@@ -213,6 +225,72 @@ class ContratoFinanceiro extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return string
+     */
+    public function getStatusDescricao()
+    {
+        $status = "Pagamento Pendente";
+        switch($this->status_pagamento)
+        {
+            case '0':
+                $status = "Sem Pagamento";
+                break;
+            case '2':
+                $status = "Pagamento Efetuado";
+                break;
+            case '3':
+                $status = "Pagamento Parcial";
+                break;
+        }
+        return $status;
+    }
+
+    /**
+     * @return float
+     */
+    public function getValorPagamento()
+    {
+        return $this->valor_pagamento;
+    }
+
+    /**
+     * @param float $valor_pagamento
+     */
+    public function setValorPagamento($valor_pagamento)
+    {
+        $this->valor_pagamento = $valor_pagamento;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataCriacao()
+    {
+        return $this->data_criacao;
+    }
+
+    /**
+     * @param string $data_criacao
+     */
+    public function setDataCriacao($data_criacao)
+    {
+        $this->data_criacao = $data_criacao;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAtivoDescricao()
+    {
+        $status = ($this->ativo == 1) ? 'Ativo' : 'Inativo';
+        return $status;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -268,10 +346,12 @@ class ContratoFinanceiro extends \Phalcon\Mvc\Model
         $query->from(array("ContratoFinanceiro" => "Circuitos\Models\ContratoFinanceiro"));
         $query->columns("ContratoFinanceiro.*");
         $query->leftJoin("Circuitos\Models\ContratoExercicio", "ContratoExercicio.id = ContratoFinanceiro.id_exercicio", "ContratoExercicio");
+        $query->leftJoin("Circuitos\Models\Contrato", "Contrato.id = ContratoExercicio.id_contrato", "Contrato");
         $query->where("ContratoFinanceiro.excluido = 0 AND (CONVERT(ContratoFinanceiro.id USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(ContratoExercicio.id USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(ContratoExercicio.id USING utf8) LIKE '%{$parameters}%'
-                        OR CONVERT(ContratoExercicio.id USING utf8) LIKE '%{$parameters}%')");
+                        OR CONVERT(ContratoExercicio.exercicio USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(ContratoExercicio.valor_previsto USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Contrato.ano USING utf8) LIKE '%{$parameters}%'
+                        OR CONVERT(Contrato.numero USING utf8) LIKE '%{$parameters}%')");
         $query->groupBy("ContratoFinanceiro.id");
         $query->orderBy("ContratoFinanceiro.id DESC");
         $resultado = $query->getQuery()->execute();

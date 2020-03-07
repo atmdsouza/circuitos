@@ -4,6 +4,7 @@ namespace Circuitos\Controllers;
 
 use Auth\Autentica;
 use Circuitos\Models\ContratoFinanceiro;
+use Circuitos\Models\Lov;
 use Circuitos\Models\Operations\ContratoFinanceiroOP;
 use Phalcon\Http\Response as Response;
 use Util\TokenManager;
@@ -36,7 +37,12 @@ class ContratoFinanceiroController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $contratofinanceiroOP = new ContratoFinanceiroOP();
         $contratofinanceiro = $contratofinanceiroOP->listar($dados['pesquisa']);
+        $tipos_anexos = Lov::find(array(
+            "tipo = 20 AND excluido = 0 AND ativo = 1",
+            "order" => "descricao"
+        ));
         $this->view->page = $contratofinanceiro;
+        $this->view->tipos_anexos = $tipos_anexos;
     }
 
     public function criarAction()

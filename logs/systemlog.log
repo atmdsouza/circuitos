@@ -446,3 +446,6 @@
 [Fri, 06 Mar 20 13:36:18 -0300][ERROR] Não foi possível salvar o vinculo com o anexo!
 [Fri, 06 Mar 20 13:41:21 -0300][ERROR] Erro ao salvar o vinculo: [id_contrato_fiscal is required] 
 [Fri, 06 Mar 20 13:43:25 -0300][ERROR] Erro ao salvar o vinculo: [id_contrato_fiscal is required] 
+[Sat, 07 Mar 20 07:30:49 -0300][INFO] Acesso do usuário admin ao sistema.
+[Sat, 07 Mar 20 18:01:23 -0300][ERROR] Combinação de usuário e senha inválida! [Usuário: admin]
+[Sat, 07 Mar 20 18:01:28 -0300][INFO] Acesso do usuário admin ao sistema.

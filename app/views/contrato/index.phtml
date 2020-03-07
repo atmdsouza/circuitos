@@ -426,11 +426,11 @@ $module = $this->router->getControllerName();
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="v_competencia_inicial">Competência Inicial <span class="required">*</span></label>
-                                        <?php echo $this->tag->textField(["v_competencia_inicial", "size" => 120, "class" => "form-control competencia_ano", "id" => "v_competencia_inicial", "placeholder" => "Competência Inicial"]) ?>
+                                        <?php echo $this->tag->textField(["v_competencia_inicial", "maxlength" => "2", "class" => "form-control minutos maxlength-alloptions", "id" => "v_competencia_inicial", "placeholder" => "Competência Inicial"]) ?>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="v_competencia_final">Competência Final <span class="required">*</span></label>
-                                        <?php echo $this->tag->textField(["v_competencia_final", "size" => 120, "class" => "form-control competencia_ano", "id" => "v_competencia_final", "placeholder" => "Competência Final"]) ?>
+                                        <?php echo $this->tag->textField(["v_competencia_final", "maxlength" => "2", "class" => "form-control minutos maxlength-alloptions", "id" => "v_competencia_final", "placeholder" => "Competência Final"]) ?>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="v_valor_previsto">Valor Previsto <span class="required">*</span></label>

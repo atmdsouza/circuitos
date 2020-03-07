@@ -39,6 +39,8 @@ var listContrato = [];
 var c1 = 0;
 var listContratoPrincipal = [];
 var c2 = 0;
+var listContratoExercicio = [];
+var c3 = 0;
 var listUsuario = [];
 var u1 = 0;
 var listUsuarioSuplente = [];
@@ -362,6 +364,59 @@ function autocompletarContratoPrincipal(id_label, id_valor)
             } else {
                 vl_contrato_principal.val("");
                 ac_contrato_principal.val("");
+            }
+        }
+    });
+}
+
+function autocompletarContratoExercicio(id_label, id_valor, id_contrato_selecionado)
+{
+    "use strict";
+    //Autocomplete
+    var ac_contrato_exercicio = $("#"+id_label);
+    var vl_contrato_exercicio = $("#"+id_valor);
+    var id_contrato = $("#"+id_contrato_selecionado).val();
+    var string = ac_contrato_exercicio.val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAutocomplete");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'contratoExercíciosAtivos', string: string, id_contrato: id_contrato},
+        error: function (data) {
+            if (data.status && data.status === 401)
+            {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (data.operacao) {
+                listContratoExercicio = [];
+                $.each(data.dados, function (key, value) {
+                    listContratoExercicio.push({value: value.exercicio, data: value.id});
+                });
+                if(c3 === 0) {
+                    //Autocomplete
+                    ac_contrato_exercicio.autocomplete({
+                        lookup: listContratoExercicio,
+                        onSelect: function (suggestion) {
+                            vl_contrato_exercicio.val(suggestion.data);
+                        }
+                    });
+                    c3++;
+                } else {
+                    //Autocomplete
+                    ac_contrato_exercicio.autocomplete().setOptions( {
+                        lookup: listContratoExercicio
+                    });
+                }
+            } else {
+                vl_contrato_exercicio.val("");
+                ac_contrato_exercicio.val("");
             }
         }
     });

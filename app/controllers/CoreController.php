@@ -437,6 +437,10 @@ class CoreController extends ControllerBase
                 $objeto = new CoreOP();
                 return $objeto->contratosPrincipaisAtivos();
                 break;
+            case 'contratoExercíciosAtivos':
+                $objeto = new CoreOP();
+                return $objeto->contratoExercíciosAtivos();
+                break;
             case 'propostasComerciaisAtivas':
                 $objeto = new CoreOP();
                 return $objeto->propostasComerciaisAtivas();
@@ -582,6 +586,10 @@ class CoreController extends ControllerBase
             case 'visualizarContratoExercicios':
                 $objeto = new ContratoOP();
                 return $objeto->visualizarContratoExercicios($dados['id']);
+                break;
+            case 'carregarValoresExercicio':
+                $objeto = new CoreOP();
+                return $objeto->carregarValoresExercicio();
                 break;
             case 'visualizarContratoOrcamento':
                 $objeto = new ContratoOP();
@@ -901,6 +909,10 @@ class CoreController extends ControllerBase
         $this->view->disable();
         $dados = filter_input_array(INPUT_GET);
         switch ($dados['metodo']) {
+            case 'carregarCompetenciasExercicio':
+                $objeto = new CoreOP();
+                return $objeto->carregarCompetenciasExercicio();
+                break;
             case 'selectTiposAnexos':
                 $objeto = new CoreOP();
                 return $objeto->selectTiposAnexos();

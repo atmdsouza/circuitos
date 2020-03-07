@@ -35,7 +35,7 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
      *
      * @var double
      */
-    protected $valor;
+    protected $valor_nota;
 
     /**
      *
@@ -114,14 +114,14 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field valor
+     * Method to set the value of field valor_nota
      *
-     * @param double $valor
+     * @param double $valor_nota
      * @return $this
      */
-    public function setValor($valor)
+    public function setValorNota($valor_nota)
     {
-        $this->valor = $valor;
+        $this->valor_nota = $valor_nota;
 
         return $this;
     }
@@ -180,13 +180,13 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field valor
+     * Returns the value of field valor_nota
      *
      * @return double
      */
-    public function getValor()
+    public function getValorNota()
     {
-        return $this->valor;
+        return $this->valor_nota;
     }
 
     /**

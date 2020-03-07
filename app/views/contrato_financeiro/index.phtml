@@ -66,16 +66,13 @@ $module = $this->router->getControllerName();
                 <?php
                 switch($contratofinanceiro->getStatusPagamento())
                 {
-                    case '0'://Inativo (False)
-                        $status = "Sem Pagamento";
+                    case '0':
                         $class_tr = null;
                         break;
-                    case '1'://Ativo (True)
-                        $status = "Pagamento em Aberto";
+                    case '1':
                         $class_tr = 'class="table-danger"';
                         break;
-                    case '2'://Ativo (True)
-                        $status = "Pagamento Efetuado";
+                    case '2':
                         $class_tr = 'class="table-success"';
                         break;
                 }
@@ -85,7 +82,7 @@ $module = $this->router->getControllerName();
                     <td><?= $contratofinanceiro->getNumeroAnoContrato() ?></td>
                     <td><?= $contratofinanceiro->getExercicio() ?></td>
                     <td><?= $contratofinanceiro->getMesCompetencia() ?></td>
-                    <td><?= $status ?></td>
+                    <td><?= $contratofinanceiro->getStatusDescricao() ?></td>
                     <td class="td_acoes">
                         <?php if($acl->isAllowed($role,$module, 'visualizar')): ?>
                             <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $contratofinanceiro->getId() ?>, true);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a>
@@ -95,6 +92,9 @@ $module = $this->router->getControllerName();
                                 <a href="javascript:void(0)" class="botoes_acao" onclick="ativar(<?= $contratofinanceiro->getId() ?>, '<?= $contratofinanceiro->getNumeroAnoContrato().'/'.$contratofinanceiro->getExercicio().'/'.$contratofinanceiro->getMesCompetencia() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/reativar.png" title="Ativar" alt="Ativar" height="25" width="25"></a>
                             <?php endif; ?>
                         <?php else: ?>
+                            <?php if($acl->isAllowed($role, $module, 'subir')): ?> <!-- Anexo de Arquivos -->
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="criarAnexo(<?= $contratofinanceiro->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/upload.png" title="Anexar Arquivo" alt="Anexar Arquivo" height="25" width="25"></a>
+                            <?php endif; ?>
                             <?php if($acl->isAllowed($role, $module, 'editar')): ?>
                                 <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $contratofinanceiro->getId() ?>, false);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
                             <?php endif; ?>
@@ -118,7 +118,7 @@ $module = $this->router->getControllerName();
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" aria-hidden="true" onclick="confirmaCancelar('modalCadastro');">×</button>
-                <h5 class="modal-title" id="modalCadastro">Dados do Fiscal do Contrato</h5>
+                <h5 class="modal-title" id="modalCadastro">Dados do Pagamento do Contrato</h5>
             </div>
             <form id="formCadastro">
                 <input type="hidden" id="token" name="<?= $token['tokenKey'] ?>" value="<?= $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
@@ -126,14 +126,37 @@ $module = $this->router->getControllerName();
                     <div class="form-row">
                         <div class="col-12">
                             <div class="form-row">
-                                <div class="form-group col-md-6 botoes_forms_alinhamento">
-                                    <label for="lid_contrato_financeiro_pai">Departamento Principal </label>
-                                    <?php echo $this->tag->textField(["lid_contrato_financeiro_pai", "size" => 120, "class" => "form-control", "id" => "lid_contrato_financeiro_pai", "placeholder" => "Departamento Principal", "onkeyup" => "autocompletarDepartamentoPrincipal('lid_contrato_financeiro_pai','id_contrato_financeiro_pai');"]) ?>
-                                    <?php echo $this->tag->hiddenField(["id_contrato_financeiro_pai", "size" => 120, "class" => "form-control", "id" => "id_contrato_financeiro_pai"]) ?>
+                                <div class="form-group col-md-4">
+                                    <label for="lid_contrato">Contrato <span class="required">*</span></label>
+                                    <?php echo $this->tag->textField(["lid_contrato", "class" => "form-control", "id" => "lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato('lid_contrato','id_contrato');", "onchange" => "carregarContratoExercicio();"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_contrato", "class" => "form-control", "id" => "id_contrato"]) ?>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="descricao">Descrição <span class="required">*</span></label>
-                                    <?= $this->tag->textField(["descricao", "size" => 200, "class" => "form-control", "id" => "descricao", "placeholder" => "Descrição da Torre"]) ?>
+                                <div class="form-group col-md-4">
+                                    <label for="lid_exercicio">Exercício <span class="required">*</span></label>
+                                    <?php echo $this->tag->textField(["lid_exercicio", "class" => "form-control", "id" => "lid_exercicio", "placeholder" => "Exercício", "onkeyup" => "autocompletarContratoExercicio('lid_exercicio','id_exercicio','id_contrato');", "onchange" => "carregarValoresExercicio();carregarCompetenciasExercicio();", "disabled" => "disabled"]) ?>
+                                    <?php echo $this->tag->hiddenField(["id_exercicio", "class" => "form-control", "id" => "id_exercicio"]) ?>
+                                </div>
+                                <div class="form-group col-md-4 botoes_forms_alinhamento">
+                                    <label for="valor-previsto-exercicio">Valor Previsto no Exercício </label>
+                                    <?= $this->tag->textField(["valor-previsto-exercicio", "class" => "form-control", "id" => "valor-previsto-exercicio", "placeholder" => "Valor Previsto no Exercício", "disabled" => "disabled"]) ?>
+                                </div>
+                                <div class="form-group col-md-4 botoes_forms_alinhamento">
+                                    <label for="valor-realizado-exercicio">Valor Realizado no Exercício </label>
+                                    <?= $this->tag->textField(["valor-realizado-exercicio", "class" => "form-control", "id" => "valor-realizado-exercicio", "placeholder" => "Valor Realizado no Exercício", "disabled" => "disabled"]) ?>
+                                </div>
+                                <div class="form-group col-md-4 botoes_forms_alinhamento">
+                                    <label for="valor-disponivel-exercicio">Valor Disponível no Exercício </label>
+                                    <?= $this->tag->textField(["valor-disponivel-exercicio", "class" => "form-control", "id" => "valor-disponivel-exercicio", "placeholder" => "Valor Disponível no Exercício", "disabled" => "disabled"]) ?>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="mes_competencia">Competência <span class="required">*</span></label>
+                                    <select name="mes_competencia" id="mes_competencia" class="form-control" onchange="validarCompetenciaExercicio();" disabled>
+                                        <option value="">Selecione uma competência</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="valor_pagamento">Valor do Pagamento <span class="required">*</span></label>
+                                    <?= $this->tag->textField(["valor_pagamento", "class" => "form-control valor_monetario_limpo", "id" => "valor_pagamento", "placeholder" => "Valor do Pagamento"]) ?>
                                 </div>
                             </div>
                         </div>
@@ -147,6 +170,72 @@ $module = $this->router->getControllerName();
                         <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
                         <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="confirmaCancelar('modalCadastro');">Fechar</button>
                         <button id="salvarCadastro" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light" onclick="salvar();" value="">Salvar</button>
+                    </div>
+                </div><!-- /.modal-footer -->
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!--  Modal Upload de Anexos -->
+<div id="modalAnexoArquivo" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalAnexoArquivo" aria-hidden="true"
+     style="display: none;" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-65">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h5 class="modal-title" id="modalAnexoArquivo">Anexar arquivos ao Pagamento.: <span id="identificador-anexado"></span></h5>
+            </div>
+            <form id="formAnexoArquivo" action="contrato_financeiro/subir" enctype="multipart/form-data" method="POST">
+                <input type="hidden" id="id_contrato_financeiro" name="id_contrato_financeiro" value=""><!-- Manter como hidden -->
+                <div class="modal-body">
+                    <table id="tabela_lista_anexos" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%" style="display: none;">
+                        <thead>
+                        <tr>
+                            <th colspan="4" class="fonte-15">Lista de Anexos</th>
+                        </tr>
+                        <tr>
+                            <th width="25%">Tipo Anexo</th>
+                            <th width="35%">Descrição</th>
+                            <th width="25%">Data de Inclusão</th>
+                            <th width="15%">Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="form-row">
+                        <button type="button" name="bt_inserir_anexo" id="bt_inserir_anexo" class="btn btn-info btn-rounded waves-light w-md" onclick="inserirAnexo();">Novo Anexo</button>
+                    </div>
+                    <div id="agrupamento-anexos">
+                        <div class="form-row" style="margin-top: 20px;">
+                            <div class="form-group col-md-3">
+                                <label for="id_tipo_anexo">Tipo de Anexo <span class="required">*</span></label>
+                                <?= $this->tag->select(["id_tipo_anexo[]", $tipos_anexos, "class" => "form-control selectpicker", "id" => "id_tipo_anexo", "data-live-search" => "true", "data-style" => "btn-light",
+                                    "using" => ["id", "descricao",],
+                                    "useEmpty" => true,
+                                    "emptyText" => "Selecione o Tipo de Anexo",
+                                    "emptyValue" => ""])
+                                ?>
+                            </div>
+                            <div class="form-group col-md-3 botoes_forms_alinhamento">
+                                <label for="descricao">Descrição </label>
+                                <?= $this->tag->textField(["descricao[]", "class" => "form-control", "id" => "descricao", "placeholder" => "Descrição"]) ?>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="anexo">Anexo <span class="required">*</span></label>
+                                <?= $this->tag->fileField(["anexo", "class" => "filestyle", "id" => "anexo"]) ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group col-md-6">
+                        <p class="texto_rodape">Os campos com <span class="required">*</span> são obrigatórios!</p>
+                    </div>
+                    <div class="form-group col-md-6 botoes_rodape">
+                        <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="limparModalAnexos();" data-dismiss="modal">Fechar</button>
+                        <button id="salvarAnexoArquivo" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light">Salvar</button>
                     </div>
                 </div><!-- /.modal-footer -->
             </form>
