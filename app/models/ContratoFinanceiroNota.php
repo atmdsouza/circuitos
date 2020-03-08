@@ -59,6 +59,12 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
      *
      * @var string
      */
+    protected $data_criacao;
+
+    /**
+     *
+     * @var string
+     */
     protected $data_update;
 
     /**
@@ -249,6 +255,24 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
     public function setDataUpdate($data_update)
     {
         $this->data_update = $data_update;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataCriacao()
+    {
+        return $this->data_criacao;
+    }
+
+    /**
+     * @param string $data_criacao
+     */
+    public function setDataCriacao($data_criacao)
+    {
+        $this->data_criacao = $data_criacao;
 
         return $this;
     }

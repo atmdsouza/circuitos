@@ -397,11 +397,11 @@
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
 			<column name="id_contrato" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="exercicio" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="competencia_inicial" type="char" length="8" jt="1" mandatory="y" >
+			<column name="competencia_inicial" type="char" length="2" jt="1" mandatory="y" >
 				<defo>&#039;1&#039;</defo>
 				<comment><![CDATA[Competência incial do exercício (01-12)]]></comment>
 			</column>
-			<column name="competencia_final" type="char" length="8" jt="1" mandatory="y" >
+			<column name="competencia_final" type="char" length="2" jt="1" mandatory="y" >
 				<defo>12</defo>
 				<comment><![CDATA[Competência final do exercício]]></comment>
 			</column>
@@ -429,7 +429,7 @@
 			<comment><![CDATA[Armazena as informações sobre o desembolso do contrato.]]></comment>
 			<column name="id" type="int" jt="4" mandatory="y" autoincrement="y" />
 			<column name="id_exercicio" type="int" jt="4" mandatory="y" />
-			<column name="mes_competencia" type="int" jt="4" mandatory="y" />
+			<column name="mes_competencia" type="char" length="2" jt="1" mandatory="y" />
 			<column name="status_pagamento" type="tinyint" jt="-6" mandatory="y" >
 				<defo>1</defo>
 				<comment><![CDATA[Status do pagamento a ser realizado.
@@ -464,9 +464,9 @@
 			<comment><![CDATA[Armazena as notas fiscais do acompanhamento financeiro e seus movimentos]]></comment>
 			<column name="id" type="int" jt="4" mandatory="y" autoincrement="y" />
 			<column name="id_contrato_financeiro" type="int" jt="4" mandatory="y" />
-			<column name="numero_nota_fiscal" type="varbinary" length="40" jt="-3" />
-			<column name="data_pagamento" type="date" jt="91" />
-			<column name="valor_nota" type="decimal" length="19" decimal="4" jt="3" />
+			<column name="numero_nota_fiscal" type="varchar" length="40" jt="12" />
+			<column name="data_pagamento" type="date" jt="91" mandatory="y" />
+			<column name="valor_nota" type="decimal" length="19" decimal="4" jt="3" mandatory="y" />
 			<column name="observacao" type="text" jt="-1" />
 			<column name="ativo" type="tinyint" jt="-6" mandatory="y" >
 				<defo>1</defo>
@@ -474,6 +474,7 @@
 			<column name="excluido" type="tinyint" jt="-6" mandatory="y" >
 				<defo>0</defo>
 			</column>
+			<column name="data_criacao" type="timestamp" jt="93" />
 			<column name="data_update" type="timestamp" jt="93" />
 			<index name="pk_contrato_acompanhamento_financeiro_nota_id" unique="PRIMARY_KEY" >
 				<column name="id" />
@@ -2215,13 +2216,13 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="contrato_fiscal" color="BEBEF4" x="1392" y="688" />
 		<entity schema="bd_circuitosnavega" name="contrato_garantia" color="BEBEF4" x="1088" y="512" />
 		<entity schema="bd_circuitosnavega" name="contrato_garantia_objeto" color="BEBEF4" x="1072" y="352" />
-		<entity schema="bd_circuitosnavega" name="contrato_exercicio" color="C7F4BE" x="1056" y="96" />
 		<entity schema="bd_circuitosnavega" name="contrato_financeiro_nota_anexo" color="C1D8EE" x="1488" y="288" />
 		<entity schema="bd_circuitosnavega" name="contrato_processo" color="C1D8EE" x="1472" y="80" />
 		<entity schema="bd_circuitosnavega" name="contrato_nao_conformidade" color="C1D8EE" x="1776" y="112" />
 		<entity schema="bd_circuitosnavega" name="contrato_nao_conformidade_anexo" color="C1D8EE" x="1792" y="272" />
-		<entity schema="bd_circuitosnavega" name="contrato_financeiro_nota" color="C1D8EE" x="1424" y="464" />
+		<entity schema="bd_circuitosnavega" name="contrato_exercicio" color="C7F4BE" x="1056" y="96" />
 		<entity schema="bd_circuitosnavega" name="contrato_financeiro" color="C1D8EE" x="1264" y="208" />
+		<entity schema="bd_circuitosnavega" name="contrato_financeiro_nota" color="C1D8EE" x="1424" y="464" />
 		<group name="Empresa" color="C4E0F9" >
 			<entity schema="bd_circuitosnavega" name="empresa" />
 			<entity schema="bd_circuitosnavega" name="empresa_parametros" />
