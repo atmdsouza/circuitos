@@ -19,6 +19,7 @@ use Circuitos\Models\Operations\AnexosOP;
 use Circuitos\Models\Operations\CidadeDigitalOP;
 use Circuitos\Models\Operations\CircuitosOP;
 use Circuitos\Models\Operations\ConectividadeOP;
+use Circuitos\Models\Operations\ContratoFinanceiroOP;
 use Circuitos\Models\Operations\ContratoFiscalOP;
 use Circuitos\Models\Operations\ContratoOP;
 use Circuitos\Models\Operations\CoreOP;
@@ -714,6 +715,10 @@ class CoreController extends ControllerBase
             case 'validacaoFiscalTitular':
                 $objeto = new ContratoFiscalOP();
                 return $objeto->validacaoFiscalTitular($dados['id']);
+                break;
+            case 'validarCompetenciaExercicio':
+                $objeto = new ContratoFinanceiroOP();
+                return $objeto->validarCompetenciaExercicio($dados);
                 break;
         }
     }

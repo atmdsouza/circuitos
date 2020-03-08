@@ -168,4 +168,22 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
             return false;
         }
     }
+
+    public function validarCompetenciaExercicio($arrDados)
+    {
+        $logger = new FileAdapter($this->arqLog);
+        try {
+            $objetoFinanceiro = ContratoFinanceiro::findFirst('id_exercicio='.$arrDados['id_exercicio'].' AND mes_competencia="'.$arrDados['mes_competencia'].'"');
+            $competenciaUtilizada = false;
+            if ($objetoFinanceiro){
+                $competenciaUtilizada = true;
+            }
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True, "competenciaUtilizada" => $competenciaUtilizada)));
+            return $response;
+        } catch (TxFailed $e) {
+            $logger->error($e->getMessage());
+            return false;
+        }
+    }
 }

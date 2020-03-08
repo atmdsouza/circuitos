@@ -137,9 +137,10 @@ function carregarCompetenciasExercicio()
             if (data.dados.length > 0){
                 $('.remove_competencias').remove();
                 $.each(data.dados, function(key, value) {
-                    var linhas = '<option class="remove_competencias" value="'+value+'">'+ ("00" + value).slice(-2) +'</option>';
+                    var linhas = '<option class="remove_competencias" value="'+("00" + value).slice(-2)+'">'+ ("00" + value).slice(-2) +'</option>';
                     $('#mes_competencia').append(linhas);
                 });
+                $('#mes_competencia').selectpicker('refresh');
             }
         }
     });
@@ -157,12 +158,14 @@ function limparCompetencias()
 function validarCompetenciaExercicio()
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxSelect");
+    var id_exercicio = $('#id_exercicio').val();
+    var mes_competencia = $('#mes_competencia').val();
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
     $.ajax({
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'validarCompetenciaExercicio'},
+        data: {metodo: 'validarCompetenciaExercicio', id_exercicio: id_exercicio, mes_competencia: mes_competencia},
         error: function (data) {
             if (data.status && data.status === 401) {
                 swal({
@@ -173,6 +176,23 @@ function validarCompetenciaExercicio()
             }
         },
         success: function (data) {
+            if (data.competenciaUtilizada){
+                swal({
+                    title: 'Verificação de Competência',
+                    text: 'A competência selecionada já teve um pagamento cadastrado para esse Contrato/Exercício. Por favor, utilize outra competência para continuar o cadastro!',
+                    type: "info",
+                    showCancelButton: false,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Ok"
+                }).then((result) => {
+                    $('#mes_competencia').val('').selected='true';
+                    $('#salvarCadastro').attr('disabled', 'disabled');
+                    $('#mes_competencia').focus();
+                });
+            } else {
+                $('#salvarCadastro').removeAttr('disabled', 'disabled');
+            }
         }
     });
 }
