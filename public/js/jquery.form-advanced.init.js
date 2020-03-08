@@ -43,7 +43,7 @@ $('input.maxlength-alloptions').maxlength({
     limitReachedClass: "badge badge-danger"
 });
 
-$('textarea#textarea').maxlength({
+$('textarea.maxlength-textarea').maxlength({
     alwaysShow: true,
     warningClass: "badge badge-success",
     limitReachedClass: "badge badge-danger"

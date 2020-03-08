@@ -4,6 +4,7 @@ namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
 use Util\Infra;
+use Util\Util;
 
 class ContratoFinanceiro extends \Phalcon\Mvc\Model
 {
@@ -304,6 +305,15 @@ class ContratoFinanceiro extends \Phalcon\Mvc\Model
     {
         $status = ($this->ativo == 1) ? 'Ativo' : 'Inativo';
         return $status;
+    }
+
+    /**
+     * @return float
+     */
+    public function getValorPagamentoFormatado()
+    {
+        $util = new Util();
+        return $util->formataMoedaReal($this->valor_pagamento);
     }
 
     /**

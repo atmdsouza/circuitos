@@ -467,7 +467,7 @@
 			<column name="id_anexo" type="int" jt="4" >
 				<comment><![CDATA[Identificador do anexo da nota fiscal]]></comment>
 			</column>
-			<column name="numero_nota_fiscal" type="varchar" length="40" jt="12" />
+			<column name="numero_nota_fiscal" type="varchar" length="20" jt="12" mandatory="y" />
 			<column name="data_pagamento" type="date" jt="91" mandatory="y" />
 			<column name="valor_nota" type="decimal" length="19" decimal="4" jt="3" mandatory="y" />
 			<column name="observacao" type="text" jt="-1" />

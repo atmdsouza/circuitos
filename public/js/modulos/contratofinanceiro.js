@@ -50,7 +50,7 @@ function confirmaCancelar(modal)
             $("#"+modal).modal('hide');
             limparModalBootstrap(modal);
             mudou = false;
-            limparValidacao();
+            limparValidacao('#formCadastro');
             limparCompetencias();
         }).catch(swal.noop);
     }
@@ -58,15 +58,15 @@ function confirmaCancelar(modal)
     {
         $("#"+modal).modal('hide');
         limparModalBootstrap(modal);
-        limparValidacao();
+        limparValidacao('#formCadastro');
         limparCompetencias();
     }
 }
 
-function limparValidacao()
+function limparValidacao(id_html_form)
 {
     'use strict';
-    var validator = $("#formCadastro").validate();
+    var validator = $(id_html_form).validate();
     validator.resetForm();
 }
 
@@ -204,6 +204,28 @@ function validarCompetenciaExercicio()
     });
 }
 
+function validarValorPagamentoPendente()
+{
+    'use strict';
+    var valor_pendente = $('#valor-disponivel-exercicio').val();
+    var valor_pagamento = $('#valor_pagamento').val();
+    var saldo = accounting.unformat(valor_pendente, ",") - accounting.unformat(valor_pagamento, ",");
+    if (saldo < 0) {
+        swal({
+            title: 'Valor do Pagamento Incorreto',
+            text: 'Você informou um valor de pagamento acima do saldo restante para o exercício. O valor precisa ser menor ou igual ao valor pendente no exercício!',
+            type: "warning",
+            showCancelButton: false,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ok"
+        }).then((result) => {
+            $('#valor_pagamento').val('');
+            $('#valor_pagamento').focus();
+        });
+    }
+}
+
 function criar()
 {
     'use strict';
@@ -233,11 +255,6 @@ function salvar()
             valor_pagamento:{
                 required: true,
                 maiorQueZero: true
-            }
-        },
-        messages:{
-            descricao:{
-                required:"É necessário informar uma descrição"
             }
         },
         submitHandler: function(form) {
@@ -564,7 +581,9 @@ function limpar()
     $('#formPesquisa').submit();
 }
 
-//Sessão de Anexos
+/**
+ * Sessão de Anexos
+ **/
 function criarAnexo(id_contrato_financeiro)
 {
     'use strict';
@@ -769,5 +788,166 @@ function excluirAnexo(id_anexo)
             }
         });
         return true;
+    });
+}
+
+/**
+ * Bloco de Controle de Baixa de Pagamento
+ **/
+function criarBaixaPagamento(id_contrato_financeiro)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: {metodo: 'visualizarContratoFinanceiro', id: id_contrato_financeiro},
+        error: function (data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function (data) {
+            if (!data.quitado) {
+                $('#valor-pagamento').val(data.dados_descricoes.valor_pagamento_formatado);
+                $('#valor-pago').val(data.dados_descricoes.valor_pagamento_realizado_formatado);
+                $('#valor-pendente').val(data.dados_descricoes.valor_pagamento_pendente_formatado);
+                $('#id-pagamento-baixa').html(data.dados_descricoes.ds_contrato +'/'+data.dados_descricoes.ds_exercicio +'/'+data.dados_objeto.mes_competencia);
+                $("#modalBaixarPagamento").modal();
+            } else {
+                swal({
+                    title: 'Pagamento Finalizado',
+                    text: 'O pagamento selecionado já encontra-se finalizado no sistema!',
+                    type: "info",
+                    showCancelButton: false,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Ok"
+                }).then((result) => {
+
+                });
+            }
+        }
+    });
+}
+
+function confirmaCancelarBaixarPagamento(modal)
+{
+    'use strict';
+    verificarAlteracao();
+    if (mudou)
+    {
+        swal({
+            title: "Sair sem Salvar",
+            text: "Deseja realmente sair sem salvar?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sim",
+            cancelButtonText: "Não"
+        }).then(() => {
+            $("#"+modal).modal('hide');
+            limparModalBootstrap(modal);
+            mudou = false;
+            limparValidacao('#formBaixarPagamento');
+        }).catch(swal.noop);
+    }
+    else
+    {
+        $("#"+modal).modal('hide');
+        limparModalBootstrap(modal);
+        limparValidacao('#formBaixarPagamento');
+    }
+}
+
+function validarValorNotaPendente()
+{
+    'use strict';
+    var valor_pendente = $('#valor-pendente').val();
+    var valor_nota = $('#valor_nota').val();
+    var saldo = accounting.unformat(valor_pendente, ",") - accounting.unformat(valor_nota, ",");
+    if (saldo < 0) {
+        swal({
+            title: 'Valor do Pagamento Incorreto',
+            text: 'Você informou um valor de pagamento acima do saldo restante do pagamento. O valor precisa ser menor ou igual ao valor pendente de recebimento!',
+            type: "warning",
+            showCancelButton: false,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ok"
+        }).then((result) => {
+            $('#valor_nota').val('');
+            $('#valor_nota').focus();
+        });
+    }
+}
+
+function salvarBaixarPagamento()
+{
+    'use strict';
+    alert('entrou na funcao');
+    $("#formBaixarPagamento").validate({
+        rules : {
+            data_pagamento:{
+                required: true
+            },
+            numero_nota_fiscal:{
+                required: true
+            },
+            valor_nota:{
+                required: true
+            }
+        },
+        submitHandler: function(form) {
+            var dados = $("#formBaixarPagamento").serialize();
+            var action = actionCorreta(window.location.href.toString(), "contrato_financeiro/baixar");
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: action,
+                data: {
+                    tokenKey: $("#token_baixar").attr("name"),
+                    tokenValue: $("#token_baixar").attr("value"),
+                    dados: dados
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        swal({
+                            title: data.titulo,
+                            text: data.mensagem,
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Ok"
+                        }).then((result) => {
+                            window.location.reload(true);
+                        });
+                    } else {
+                        swal({
+                            title: data.titulo,
+                            text: data.mensagem,
+                            type: "error"
+                        });
+                    }
+                }
+            });
+        }
     });
 }

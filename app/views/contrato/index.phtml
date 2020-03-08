@@ -572,85 +572,6 @@ $module = $this->router->getControllerName();
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<!--Modal Inclusão de Fiscal-->
-<div id="modalFiscalContrato" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalFiscalContrato" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" aria-hidden="true" onclick="confirmaCancelarFiscalContrato('modalFiscalContrato');">×</button>
-                <h5 class="modal-title" id="modalFiscalContrato">Fiscais do Contrato</h5>
-            </div>
-            <form id="formFiscalContrato">
-                <input type="hidden" id="token" name="<?= $token['tokenKey'] ?>" value="<?= $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
-                <div class="modal-body">
-                    <!--Corpo do Modal-->
-                    <div class="form-row">
-                        <div class="form-group col-md-12">
-                            <button type="button" name="bt_novo_fiscal" id="bt_novo_fiscal" class="btn btn-success btn-rounded waves-light w-md hide_buttons" onclick="criarFiscal();">Novo</button>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-12" id="div_tabela_fiscais">
-                            <table id="tabela_fiscais" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%"  style="display: none;">
-                                <thead>
-                                <tr style="text-align: center;">
-                                    <th>Tipo de Fiscal</th>
-                                    <th>Nome Fiscal</th>
-                                    <th>Data Nomeação</th>
-                                    <th>Documento Nomeação</th>
-                                    <th>Ações</th>
-                                </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div id="dados_fiscal" style="display: none;">
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="v_id_tipo_fiscal">Tipo de Fiscal <span class="required">*</span></label>
-                                <?php echo $this->tag->select(["v_id_tipo_fiscal", $tipos_fiscais, "class" => "form-control", "id" => "v_id_tipo_fiscal", "onchange" => "verificarTiposExistentes();",
-                                    "using" => ["id", "descricao",],
-                                    "useEmpty" => true,
-                                    "emptyText" => "Selecione o tipo de Fiscal",
-                                    "emptyValue" => ""])
-                                ?>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="lid_usuario">Nome Fiscal <span class="required">*</span></label>
-                                <?php echo $this->tag->textField(["lid_usuario", "size" => 120, "class" => "form-control", "id" => "lid_usuario", "placeholder" => "Contrato a ser vinculado", "onkeyup" => "autocompletarUsuario('lid_usuario','v_id_usuario');"]) ?>
-                                <?php echo $this->tag->hiddenField(["v_id_usuario", "size" => 120, "class" => "form-control", "id" => "v_id_usuario"]) ?>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="v_data_nomeacao">Data Nomeação <span class="required">*</span></label>
-                                <?php echo $this->tag->textField(["v_data_nomeacao", "size" => 120, "class" => "form-control data", "id" => "v_data_nomeacao", "placeholder" => "Data em que foi nomeado"]) ?>
-                            </div>
-                            <div class="form-group col-md-6 botoes_forms_alinhamento">
-                                <label for="v_documento_nomeacao">Documento de Nomeação </label>
-                                <?php echo $this->tag->textField(["v_documento_nomeacao", "size" => 120, "class" => "form-control", "id" => "v_documento_nomeacao", "placeholder" => "Documento de nomeação"]) ?>
-                            </div>
-                            <div class="form-group col-md-6 botoes_forms_alinhamento">
-                                <button type="button" name="bt_inserir_fiscal" id="bt_inserir_fiscal" class="btn btn-info btn-rounded waves-light w-md bt_menu_tabela hide_buttons" onclick="inserirFiscal();">Inserir</button>
-                                <button type="button" name="bt_cancelar_fiscal" id="bt_cancelar_fiscal" class="btn btn-danger btn-rounded waves-light w-md bt_menu_tabela" onclick="cancelarFiscal();">Cancelar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="form-group col-md-6">
-                        <p class="texto_rodape">Os campos com <span class="required">*</span> são obrigatórios!</p>
-                    </div>
-                    <div class="form-group col-md-6 botoes_rodape">
-                        <input type="hidden" id="id_contrato_fiscal" name="id_contrato_fiscal" value=""><!-- Manter como hidden -->
-                        <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="confirmaCancelarFiscalContrato('modalFiscalContrato');">Fechar</button>
-                        <button id="salvarFiscalContrato" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light" onclick="salvarFiscalContrato();" value="">Salvar</button>
-                    </div>
-                </div><!-- /.modal-footer -->
-            </form>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
 <!--Modal de Movimento de Contrato-->
 <div id="modalMovimentoContrato" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalMovimentoContrato" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sg">
@@ -745,7 +666,5 @@ $module = $this->router->getControllerName();
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<!--Modal de Gestão Financeira-->
-
-<!--Modal de Fiscalização e Não Conformidades-->
+<!--Modal de Fiscalização-->
 

@@ -57,6 +57,7 @@ $module = $this->router->getControllerName();
                 <th>Contrato</th>
                 <th>Exercício</th>
                 <th>Competência</th>
+                <th>Valor Pagamento</th>
                 <th>Status</th>
                 <th>Ações</th>
             </tr>
@@ -82,10 +83,14 @@ $module = $this->router->getControllerName();
                     <td><?= $contratofinanceiro->getNumeroAnoContrato() ?></td>
                     <td><?= $contratofinanceiro->getExercicio() ?></td>
                     <td><?= $contratofinanceiro->getMesCompetencia() ?></td>
+                    <td><?= $contratofinanceiro->getValorPagamentoFormatado() ?></td>
                     <td><?= $contratofinanceiro->getStatusDescricao() ?></td>
                     <td class="td_acoes">
                         <?php if($acl->isAllowed($role,$module, 'visualizar')): ?>
                             <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $contratofinanceiro->getId() ?>, true);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a>
+                        <?php endif; ?>
+                        <?php if($acl->isAllowed($role, $module, 'baixar')): ?>
+                            <a href="javascript:void(0)" class="botoes_acao" onclick="criarBaixaPagamento(<?= $contratofinanceiro->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/acompanhar_financeiro.png" title="Baixar Pagamento" alt="Baixar Pagamento" height="25" width="25"></a>
                         <?php endif; ?>
                         <?php if($acl->isAllowed($role, $module, 'subir')): ?> <!-- Anexo de Arquivos -->
                             <a href="javascript:void(0)" class="botoes_acao" onclick="criarAnexo(<?= $contratofinanceiro->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/upload.png" title="Anexar Arquivo" alt="Anexar Arquivo" height="25" width="25"></a>
@@ -147,7 +152,7 @@ $module = $this->router->getControllerName();
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="valor_pagamento">Valor do Pagamento <span class="required">*</span></label>
-                                    <?= $this->tag->textField(["valor_pagamento", "class" => "form-control valor_monetario_limpo", "id" => "valor_pagamento", "placeholder" => "Valor do Pagamento"]) ?>
+                                    <?= $this->tag->textField(["valor_pagamento", "class" => "form-control valor_monetario_limpo", "id" => "valor_pagamento", "placeholder" => "Valor do Pagamento", "onkeyup" => "validarValorPagamentoPendente();"]) ?>
                                 </div>
                             </div>
                         </div>
@@ -161,6 +166,62 @@ $module = $this->router->getControllerName();
                         <input type="hidden" id="id" name="id" value=""><!-- Manter como hidden -->
                         <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="confirmaCancelar('modalCadastro');">Fechar</button>
                         <button id="salvarCadastro" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light" onclick="salvar();" value="">Salvar</button>
+                    </div>
+                </div><!-- /.modal-footer -->
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!--Modal de Baixar de Pagamentos-->
+<div id="modalBaixarPagamento" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalBaixarPagamento" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-sg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" aria-hidden="true" onclick="confirmaCancelarBaixarPagamento('modalBaixarPagamento');">×</button>
+                <h5 class="modal-title" id="modalBaixarPagamento">Baixa de Pagamento: <span id="id-pagamento-baixa"></span></h5>
+            </div>
+            <form id="formBaixarPagamento">
+                <input type="hidden" id="token_baixar" name="<?= $token['tokenKey'] ?>" value="<?= $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-4 botoes_forms_alinhamento">
+                            <label for="valor-pagamento">Valor do Pagamento </label>
+                            <?= $this->tag->textField(["valor-pagamento", "class" => "form-control valor_monetario_limpo", "id" => "valor-pagamento", "placeholder" => "Valor do Pagamento", "disabled" => "disabled"]) ?>
+                        </div>
+                        <div class="form-group col-md-4 botoes_forms_alinhamento">
+                            <label for="valor-pago">Valor do Pago </label>
+                            <?= $this->tag->textField(["valor-pago", "class" => "form-control valor_monetario_limpo", "id" => "valor-pago", "placeholder" => "Valor do Pago", "disabled" => "disabled"]) ?>
+                        </div>
+                        <div class="form-group col-md-4 botoes_forms_alinhamento">
+                            <label for="valor-pendente">Valor do Pendente </label>
+                            <?= $this->tag->textField(["valor-pendente", "class" => "form-control valor_monetario_limpo", "id" => "valor-pendente", "placeholder" => "Valor do Pendente", "disabled" => "disabled"]) ?>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="data_pagamento">Data Pagamento <span class="required">*</span></label>
+                            <?= $this->tag->textField(["data_pagamento", "maxlength" => 10, "class" => "form-control data maxlength-alloptions", "id" => "data_pagamento", "placeholder" => "Data Pagamento"]) ?>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="numero_nota_fiscal">Nº Nota Fiscal <span class="required">*</span></label>
+                            <?= $this->tag->textField(["numero_nota_fiscal", "maxlength" => 20, "class" => "form-control maxlength-alloptions", "id" => "numero_nota_fiscal", "placeholder" => "Nº Nota Fiscal"]) ?>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="valor_nota">Valor Nota Fiscal <span class="required">*</span></label>
+                            <?= $this->tag->textField(["valor_nota", "class" => "form-control valor_monetario_limpo", "id" => "valor_nota", "placeholder" => "Valor Nota Fiscal", "onkeyup" => "validarValorNotaPendente();"]) ?>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="observacao">Observação <span class="required">*</span></label>
+                            <?php echo $this->tag->textArea(["observacao", "style" => "resize: none", "maxlength" => 3000, "class" => "form-control maxlength-textarea", "id" => "observacao", "placeholder" => "Observação"]) ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group col-md-6">
+                        <p class="texto_rodape">Os campos com <span class="required">*</span> são obrigatórios!</p>
+                    </div>
+                    <div class="form-group col-md-6 botoes_rodape">
+                        <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="confirmaCancelarBaixarPagamento('modalBaixarPagamento');">Fechar</button>
+                        <button id="salvarBaixarPagamento" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light" onclick="salvarBaixarPagamento();" value="">Salvar</button>
                     </div>
                 </div><!-- /.modal-footer -->
             </form>

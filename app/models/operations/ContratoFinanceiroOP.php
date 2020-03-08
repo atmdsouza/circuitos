@@ -3,6 +3,7 @@
 namespace Circuitos\Models\Operations;
 
 use Circuitos\Models\ContratoFinanceiro;
+use Circuitos\Models\ContratoFinanceiroNota;
 use Phalcon\Http\Response as Response;
 use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
@@ -164,15 +165,45 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
         $util = new Util();
         try {
             $objeto = ContratoFinanceiro::findFirst("id={$id}");
-            $objetoArray = array(
+            $arrValidaQuitacao = $this->verificarQuitacaoPagamento($objeto->getId());
+            $objetoDescricao = array(
                 'id_contrato' => $objeto->getIdContrato(),
                 'ds_contrato' => $objeto->getNumeroAnoContrato(),
                 'ds_exercicio' => $objeto->getExercicio(),
                 'valor_pagamento_formatado' => $util->formataMoedaReal($objeto->getValorPagamento()),
+                'valor_pagamento_realizado_formatado' => $util->formataMoedaReal($arrValidaQuitacao['valor_pago']),
+                'valor_pagamento_pendente_formatado' => $util->formataMoedaReal($objeto->getValorPagamento() - $arrValidaQuitacao['valor_pago']),
             );
             $response = new Response();
-            $response->setContent(json_encode(array("operacao" => True, "dados_objeto" => $objeto, "dados_descricoes" => $objetoArray)));
+            $response->setContent(json_encode(array("operacao" => True, "quitado" => $arrValidaQuitacao['qutado'], "dados_objeto" => $objeto, "dados_descricoes" => $objetoDescricao)));
             return $response;
+        } catch (TxFailed $e) {
+            $logger->error($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Verifica se um pagamento já possui sua quitação através do total de notas fiscais lançadas
+     * return @array
+     **/
+    private function verificarQuitacaoPagamento($id_contrato_financeiro)
+    {
+        $logger = new FileAdapter($this->arqLog);
+        try {
+            $valor_pago = 0;
+            $objeto = ContratoFinanceiro::findFirst('id='.$id_contrato_financeiro);
+            $objetosFilhos = ContratoFinanceiroNota::find('id_contrato_financeiro='.$id_contrato_financeiro);
+            if ($objetosFilhos){
+                foreach($objetosFilhos as $objetoFilho)
+                {
+                    $valor_pago += $objetoFilho->getValorNota();
+                }
+            }
+            return [
+                'qutado' => $objeto->getValorPagamento() <= $valor_pago,
+                'valor_pago' => $valor_pago
+            ];
         } catch (TxFailed $e) {
             $logger->error($e->getMessage());
             return false;

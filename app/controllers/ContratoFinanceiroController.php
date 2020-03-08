@@ -173,6 +173,34 @@ class ContratoFinanceiroController extends ControllerBase
         }
         return $response;
     }
+
+    public function baixarAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_POST);
+        $params = array();
+        parse_str($dados['dados'], $params);
+        $titulo = 'Cadastro de Lançamento Financeiro';
+        $msg = 'Lançamento Financeiro cadastrado com sucesso!';
+        $error_msg = 'Erro ao cadastrar um Lançamento Financeiro!';
+        $error_chk = 'Check de token de formulário inválido!';
+        var_dump($params);die();
+        //CSRF Token Check
+        if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
+            $contratofinanceiroOP = new ContratoFinanceiroOP();
+            $contratofinanceiro = new ContratoFinanceiro($params);
+            if($contratofinanceiroOP->cadastrar($contratofinanceiro)){//Cadastrou com sucesso
+                $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
+            } else {//Erro no cadastro
+                $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
+            }
+        } else {//Formulário Inválido
+            $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo, 'mensagem' => $error_chk)));
+        }
+        return $response;
+    }
 }
 
 
