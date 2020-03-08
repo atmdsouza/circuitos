@@ -7,6 +7,7 @@ use Phalcon\Http\Response as Response;
 use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
+use Util\Util;
 
 class ContratoFinanceiroOP extends ContratoFinanceiro
 {
@@ -22,20 +23,24 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
     public function cadastrar(ContratoFinanceiro $objArray)
     {
         $logger = new FileAdapter($this->arqLog);
+        $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
             $objeto = new ContratoFinanceiro();
-            $objeto->setIdEmpresa($objArray->getIdEmpresa());
-            $objeto->setIdDepartamentoPai(($objArray->getIdDepartamentoPai()) ? $objArray->getIdDepartamentoPai() : null);
-            $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
+            $objeto->setTransaction($transaction);
+            $objeto->setIdExercicio($objArray->getIdExercicio());
+            $objeto->setMesCompetencia($objArray->getMesCompetencia());
+            $objeto->setStatusPagamento(1);
+            $objeto->setValorPagamento($util->formataNumero($objArray->getValorPagamento()));
+            $objeto->setDataCriacao(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
                 $messages = $objeto->getMessages();
                 $errors = "";
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
-                $transaction->rollback("Erro ao criar a proposta: " . $errors);
+                $transaction->rollback("Erro ao criar o pagamento: " . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -48,20 +53,24 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
     public function alterar(ContratoFinanceiro $objArray)
     {
         $logger = new FileAdapter($this->arqLog);
+        $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
             $objeto = ContratoFinanceiro::findFirst($objArray->getId());
-            $objeto->setIdEmpresa($objArray->getIdEmpresa());
-            $objeto->setIdDepartamentoPai(($objArray->getIdDepartamentoPai()) ? $objArray->getIdDepartamentoPai() : null);
-            $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
+            $objeto->setTransaction($transaction);
+            $objeto->setIdExercicio($objArray->getIdExercicio());
+            $objeto->setMesCompetencia($objArray->getMesCompetencia());
+            $objeto->setStatusPagamento(1);
+            $objeto->setValorPagamento($util->formataNumero($objArray->getValorPagamento()));
+            $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
                 $messages = $objeto->getMessages();
                 $errors = "";
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
-                $transaction->rollback("Erro ao criar a proposta: " . $errors);
+                $transaction->rollback("Erro ao editar o pagamento: " . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -87,7 +96,7 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
-                $transaction->rollback("Erro ao criar a proposta: " . $errors);
+                $transaction->rollback("Erro ao ativar o pagamento: " . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -113,7 +122,7 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
-                $transaction->rollback("Erro ao criar a proposta: " . $errors);
+                $transaction->rollback("Erro ao inativar o pagamento: " . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -139,7 +148,7 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
-                $transaction->rollback("Erro ao criar a proposta: " . $errors);
+                $transaction->rollback("Erro ao excluiro pagamento: " . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -152,16 +161,17 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
     public function visualizarContratoFinanceiro($id)
     {
         $logger = new FileAdapter($this->arqLog);
+        $util = new Util();
         try {
             $objeto = ContratoFinanceiro::findFirst("id={$id}");
             $objetoArray = array(
-                'id' => $objeto->getId(),
-                'id_departamento_pai' => $objeto->getIdDepartamentoPai(),
-                'ds_departamento_pai' => $objeto->getNomeDepartamentoPai(),
-                'descricao' => $objeto->getDescricao(),
+                'id_contrato' => $objeto->getIdContrato(),
+                'ds_contrato' => $objeto->getNumeroAnoContrato(),
+                'ds_exercicio' => $objeto->getExercicio(),
+                'valor_pagamento_formatado' => $util->formataMoedaReal($objeto->getValorPagamento()),
             );
             $response = new Response();
-            $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoArray)));
+            $response->setContent(json_encode(array("operacao" => True, "dados_objeto" => $objeto, "dados_descricoes" => $objetoArray)));
             return $response;
         } catch (TxFailed $e) {
             $logger->error($e->getMessage());
@@ -173,7 +183,7 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
     {
         $logger = new FileAdapter($this->arqLog);
         try {
-            $objetoFinanceiro = ContratoFinanceiro::findFirst('id_exercicio='.$arrDados['id_exercicio'].' AND mes_competencia="'.$arrDados['mes_competencia'].'"');
+            $objetoFinanceiro = ContratoFinanceiro::findFirst('ativo=1 AND excluido=0 AND id_exercicio='.$arrDados['id_exercicio'].' AND mes_competencia="'.$arrDados['mes_competencia'].'"');
             $competenciaUtilizada = false;
             if ($objetoFinanceiro){
                 $competenciaUtilizada = true;

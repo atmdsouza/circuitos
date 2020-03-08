@@ -87,20 +87,11 @@ $module = $this->router->getControllerName();
                         <?php if($acl->isAllowed($role,$module, 'visualizar')): ?>
                             <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $contratofinanceiro->getId() ?>, true);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a>
                         <?php endif; ?>
-                        <?php if($contratofinanceiro->getAtivo() == '0'): ?>
-                            <?php if($acl->isAllowed($role, $module, 'ativar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="ativar(<?= $contratofinanceiro->getId() ?>, '<?= $contratofinanceiro->getNumeroAnoContrato().'/'.$contratofinanceiro->getExercicio().'/'.$contratofinanceiro->getMesCompetencia() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/reativar.png" title="Ativar" alt="Ativar" height="25" width="25"></a>
-                            <?php endif; ?>
-                        <?php else: ?>
-                            <?php if($acl->isAllowed($role, $module, 'subir')): ?> <!-- Anexo de Arquivos -->
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="criarAnexo(<?= $contratofinanceiro->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/upload.png" title="Anexar Arquivo" alt="Anexar Arquivo" height="25" width="25"></a>
-                            <?php endif; ?>
-                            <?php if($acl->isAllowed($role, $module, 'editar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $contratofinanceiro->getId() ?>, false);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
-                            <?php endif; ?>
-                            <?php if($acl->isAllowed($role, $module, 'inativar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="inativar(<?= $contratofinanceiro->getId() ?>, '<?= $contratofinanceiro->getNumeroAnoContrato().'/'.$contratofinanceiro->getExercicio().'/'.$contratofinanceiro->getMesCompetencia() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/desativar.png" title="Desativar" alt="Desativar" height="25" width="25"></a>
-                            <?php endif; ?>
+                        <?php if($acl->isAllowed($role, $module, 'subir')): ?> <!-- Anexo de Arquivos -->
+                            <a href="javascript:void(0)" class="botoes_acao" onclick="criarAnexo(<?= $contratofinanceiro->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/upload.png" title="Anexar Arquivo" alt="Anexar Arquivo" height="25" width="25"></a>
+                        <?php endif; ?>
+                        <?php if($acl->isAllowed($role, $module, 'editar')): ?>
+                            <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $contratofinanceiro->getId() ?>, false);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
                         <?php endif; ?>
                         <?php if($acl->isAllowed($role, $module, 'excluir')): ?>
                             <a href="javascript:void(0)" class="botoes_acao" onclick="excluir(<?= $contratofinanceiro->getId() ?>, '<?= $contratofinanceiro->getNumeroAnoContrato().'/'.$contratofinanceiro->getExercicio().'/'.$contratofinanceiro->getMesCompetencia() ?>');"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a>
@@ -150,7 +141,7 @@ $module = $this->router->getControllerName();
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="mes_competencia">Competência <span class="required">*</span></label>
-                                    <select name="mes_competencia" id="mes_competencia" class="form-control selectpicker" onchange="validarCompetenciaExercicio();" data-live-search="true" data-style="btn-light">
+                                    <select name="mes_competencia" id="mes_competencia" class="form-control selectpicker" onchange="validarCompetenciaExercicio();" data-live-search="true" data-style="btn-light" disabled>
                                         <option value="">Selecione uma competência</option>
                                     </select>
                                 </div>

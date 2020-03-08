@@ -450,7 +450,7 @@ class CoreOP
         $dados = filter_input_array(INPUT_GET);
         $objeto = ContratoExercicio::findFirst("id={$dados['id_exercicio']}");
         $valor_previsto =$objeto->getValorPrevisto();
-        $objetosFilhos = ContratoFinanceiro::find("id_exercicio={$dados['id_exercicio']}");
+        $objetosFilhos = ContratoFinanceiro::find("ativo=1 AND excluido=0 AND id_exercicio={$dados['id_exercicio']}");
         $valor_realizado = 0;
         if (count($objetosFilhos) > 0){
             foreach ($objetosFilhos as $objetoFilho)

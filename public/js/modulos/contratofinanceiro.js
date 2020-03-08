@@ -114,7 +114,7 @@ function carregarValoresExercicio()
     });
 }
 
-function carregarCompetenciasExercicio()
+function carregarCompetenciasExercicio(mes_competencia)
 {
     'use strict';
     var id_exercicio = $('#id_exercicio').val();
@@ -140,6 +140,11 @@ function carregarCompetenciasExercicio()
                     var linhas = '<option class="remove_competencias" value="'+("00" + value).slice(-2)+'">'+ ("00" + value).slice(-2) +'</option>';
                     $('#mes_competencia').append(linhas);
                 });
+                $('#mes_competencia').prop('disabled', false);
+                if (mes_competencia !== '' && mes_competencia !== null)
+                {
+                    $('#mes_competencia').selectpicker('val', mes_competencia);
+                }
                 $('#mes_competencia').selectpicker('refresh');
             }
         }
@@ -152,7 +157,8 @@ function limparCompetencias()
 {
     'use strict';
     $('.remove_competencias').remove();
-    $('#mes_competencia').attr('disabled', 'disabled');
+    $('#mes_competencia').prop('disabled', true);
+    $('#mes_competencia').selectpicker('refresh');
 }
 
 function validarCompetenciaExercicio()
@@ -186,7 +192,8 @@ function validarCompetenciaExercicio()
                     cancelButtonColor: "#d33",
                     confirmButtonText: "Ok"
                 }).then((result) => {
-                    $('#mes_competencia').val('').selected='true';
+                    $('#mes_competencia').selectpicker('val', '');
+                    $('#mes_competencia').selectpicker('render');
                     $('#salvarCadastro').attr('disabled', 'disabled');
                     $('#mes_competencia').focus();
                 });
@@ -214,8 +221,18 @@ function salvar()
     var acao = $('#salvarCadastro').val();
     $("#formCadastro").validate({
         rules : {
-            descricao:{
+            lid_contrato:{
                 required: true
+            },
+            lid_exercicio:{
+                required: true
+            },
+            mes_competencia:{
+                required: true
+            },
+            valor_pagamento:{
+                required: true,
+                maiorQueZero: true
             }
         },
         messages:{
@@ -461,6 +478,7 @@ function visualizar(id, ocultar)
                 $("#formCadastro input").removeAttr('readonly', 'readonly');
                 $("#formCadastro select").removeAttr('readonly', 'readonly');
                 $("#formCadastro textarea").removeAttr('readonly', 'readonly');
+                $("#lid_exercicio").removeAttr('disabled', 'disabled');
                 $("#salvarCadastro").val('editar');
                 $("#salvarCadastro").show();
                 $('.hide_buttons').show();
@@ -477,10 +495,14 @@ function visualizar(id, ocultar)
             }
         },
         success: function (data) {
-            $('#id').val(data.dados.id);
-            $('#lid_departamento_pai').val(data.dados.ds_departamento_pai);
-            $('#id_departamento_pai').val(data.dados.id_departamento_pai);
-            $('#descricao').val(data.dados.descricao);
+            $('#id').val(data.dados_objeto.id);
+            $('#lid_contrato').val(data.dados_descricoes.ds_contrato);
+            $('#id_contrato').val(data.dados_descricoes.id_contrato);
+            $('#lid_exercicio').val(data.dados_descricoes.ds_exercicio);
+            $('#id_exercicio').val(data.dados_objeto.id_exercicio);
+            carregarValoresExercicio();
+            carregarCompetenciasExercicio(data.dados_objeto.mes_competencia);
+            $('#valor_pagamento').val(data.dados_descricoes.valor_pagamento_formatado);
         }
     });
 }

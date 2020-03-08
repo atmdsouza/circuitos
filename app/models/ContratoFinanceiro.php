@@ -225,6 +225,22 @@ class ContratoFinanceiro extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return integer
+     */
+    public function getIdContrato()
+    {
+        return $this->ContratoExercicio->Contrato->id;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getValorPrevistoExercicio()
+    {
+        return $this->ContratoExercicio->valor_previsto;
+    }
+
+    /**
      * @return string
      */
     public function getStatusDescricao()
