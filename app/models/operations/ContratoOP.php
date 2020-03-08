@@ -51,8 +51,8 @@ class ContratoOP extends Contrato
             $objeto->setVigenciaPrazo($objArray->getVigenciaPrazo());
             $objeto->setNumero(mb_strtoupper($objArray->getNumero(), $this->encode));
             $objeto->setAno($objArray->getAno());
-            $objeto->setValorGlobal($util->formataNumeroMoeda($objArray->getValorGlobal()));
-            $objeto->setValorMensal($util->formataNumeroMoeda($objArray->getValorMensal()));
+            $objeto->setValorGlobal($util->formataNumero($objArray->getValorGlobal()));
+            $objeto->setValorMensal($util->formataNumero($objArray->getValorMensal()));
             $objeto->setObjeto(mb_strtoupper($objArray->getObjeto()));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
@@ -108,7 +108,7 @@ class ContratoOP extends Contrato
                     $objContratoExercicio->setExercicio($objExercicio->getExercicio());
                     $objContratoExercicio->setCompetenciaInicial($objExercicio->getCompetenciaInicial());
                     $objContratoExercicio->setCompetenciaFinal($objExercicio->getCompetenciaFinal());
-                    $objContratoExercicio->setValorPrevisto($util->formataNumeroMoeda($objExercicio->getValorPrevisto()));
+                    $objContratoExercicio->setValorPrevisto($util->formataNumero($objExercicio->getValorPrevisto()));
                     $objContratoExercicio->setDataUpdate(date('Y-m-d H:i:s'));
                     if ($objContratoExercicio->save() == false) {
                         $messages = $objContratoExercicio->getMessages();
@@ -128,8 +128,8 @@ class ContratoOP extends Contrato
                     $objContratoGarantia->setIdContrato($objeto->getId());
                     $objContratoGarantia->setIdModalidade($objGarantia->getIdModalidade());
                     $objContratoGarantia->setGarantiaConcretizada($objGarantia->getGarantiaConcretizada());
-                    $objContratoGarantia->setPercentual($util->formataNumeroMoeda($objGarantia->getPercentual()));
-                    $objContratoGarantia->setValor($util->formataNumeroMoeda($objGarantia->getValor()));
+                    $objContratoGarantia->setPercentual($util->formataNumero($objGarantia->getPercentual()));
+                    $objContratoGarantia->setValor($util->formataNumero($objGarantia->getValor()));
                     $objContratoGarantia->setDataUpdate(date('Y-m-d H:i:s'));
                     if ($objContratoGarantia->save() == false) {
                         $messages = $objContratoGarantia->getMessages();
@@ -174,8 +174,8 @@ class ContratoOP extends Contrato
             $objeto->setVigenciaPrazo($objArray->getVigenciaPrazo());
             $objeto->setNumero(mb_strtoupper($objArray->getNumero(), $this->encode));
             $objeto->setAno($objArray->getAno());
-            $objeto->setValorGlobal($util->formataNumeroMoeda($objArray->getValorGlobal()));
-            $objeto->setValorMensal($util->formataNumeroMoeda($objArray->getValorMensal()));
+            $objeto->setValorGlobal($util->formataNumero($objArray->getValorGlobal()));
+            $objeto->setValorMensal($util->formataNumero($objArray->getValorMensal()));
             $objeto->setObjeto(mb_strtoupper($objArray->getObjeto()));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
@@ -234,7 +234,7 @@ class ContratoOP extends Contrato
                     $objContratoExercicio->setExercicio($objExercicio->getExercicio());
                     $objContratoExercicio->setCompetenciaInicial($objExercicio->getCompetenciaInicial());
                     $objContratoExercicio->setCompetenciaFinal($objExercicio->getCompetenciaFinal());
-                    $objContratoExercicio->setValorPrevisto($util->formataNumeroMoeda($objExercicio->getValorPrevisto()));
+                    $objContratoExercicio->setValorPrevisto($util->formataNumero($objExercicio->getValorPrevisto()));
                     $objContratoExercicio->setDataUpdate(date('Y-m-d H:i:s'));
                     if ($objContratoExercicio->save() == false) {
                         $messages = $objContratoExercicio->getMessages();
@@ -254,8 +254,8 @@ class ContratoOP extends Contrato
                     $objContratoGarantia->setIdContrato($objeto->getId());
                     $objContratoGarantia->setIdModalidade($objGarantia->getIdModalidade());
                     $objContratoGarantia->setGarantiaConcretizada($objGarantia->getGarantiaConcretizada());
-                    $objContratoGarantia->setPercentual($util->formataNumeroMoeda($objGarantia->getPercentual()));
-                    $objContratoGarantia->setValor($util->formataNumeroMoeda($objGarantia->getValor()));
+                    $objContratoGarantia->setPercentual($util->formataNumero($objGarantia->getPercentual()));
+                    $objContratoGarantia->setValor($util->formataNumero($objGarantia->getValor()));
                     $objContratoGarantia->setDataUpdate(date('Y-m-d H:i:s'));
                     if ($objContratoGarantia->save() == false) {
                         $messages = $objContratoGarantia->getMessages();
@@ -380,11 +380,10 @@ class ContratoOP extends Contrato
             foreach ($objetosComponentes as $objetoComponente){
                 $objTransporte = new \stdClass();
                 $objTransporte->id_contrato_orcamento = $objetoComponente->getId();
-                $objTransporte->unidade_orcamentaria = $objetoComponente->getFuncionalProgramatica();
+                $objTransporte->funcional_programatica = $objetoComponente->getFuncionalProgramatica();
                 $objTransporte->fonte_orcamentaria = $objetoComponente->getFonteOrcamentaria();
                 $objTransporte->programa_trabalho = $objetoComponente->getProgramaTrabalho();
                 $objTransporte->elemento_despesa = $objetoComponente->getElementoDespesa();
-                $objTransporte->pi = $objetoComponente->getPi();
                 array_push($arrTransporte, $objTransporte);
             }
             $response = new Response();
@@ -452,11 +451,10 @@ class ContratoOP extends Contrato
             $objetoComponente = ContratoOrcamento::findFirst('id=' . $id);
             $objTransporte = new \stdClass();
             $objTransporte->id_contrato_orcamento = $objetoComponente->getId();
-            $objTransporte->unidade_orcamentaria = $objetoComponente->getFuncionalProgramatica();
+            $objTransporte->funcional_programatica = $objetoComponente->getFuncionalProgramatica();
             $objTransporte->fonte_orcamentaria = $objetoComponente->getFonteOrcamentaria();
             $objTransporte->programa_trabalho = $objetoComponente->getProgramaTrabalho();
             $objTransporte->elemento_despesa = $objetoComponente->getElementoDespesa();
-            $objTransporte->pi = $objetoComponente->getPi();
             $response = new Response();
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objTransporte)));
             return $response;
@@ -519,7 +517,6 @@ class ContratoOP extends Contrato
             $objetoComponente->setFonteOrcamentaria($objCom->getFonteOrcamentaria());
             $objetoComponente->setProgramaTrabalho($objCom->getProgramaTrabalho());
             $objetoComponente->setElementoDespesa($objCom->getElementoDespesa());
-            $objetoComponente->setPi($objCom->getPi());
             $objetoComponente->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objetoComponente->save() == false) {
                 $messages = $objetoComponente->getMessages();
@@ -573,7 +570,7 @@ class ContratoOP extends Contrato
             $objetoComponente->setExercicio($objCom->getExercicio());
             $objetoComponente->setCompetenciaFinal($objCom->getCompetenciaFinal());
             $objetoComponente->getCompetenciaInicial($objCom->getCompetenciaInicial());
-            $objetoComponente->setValorPrevisto($util->removerFormatacaoNumero($objCom->getValorPrevisto()));
+            $objetoComponente->setValorPrevisto($util->formataNumero($objCom->getValorPrevisto()));
             $objetoComponente->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objetoComponente->save() == false) {
                 $messages = $objetoComponente->getMessages();
@@ -626,8 +623,8 @@ class ContratoOP extends Contrato
             $objetoComponente->setTransaction($transaction);
             $objetoComponente->setIdModalidade($objCom->getIdModalidade());
             $objetoComponente->setGarantiaConcretizada($objCom->getGarantiaConcretizada());
-            $objetoComponente->setPercentual($util->removerFormatacaoNumero($objCom->getPercentual()));
-            $objetoComponente->setValor($util->removerFormatacaoNumero($objCom->getValor()));
+            $objetoComponente->setPercentual($util->formataNumero($objCom->getPercentual()));
+            $objetoComponente->setValor($util->formataNumero($objCom->getValor()));
             $objetoComponente->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objetoComponente->save() == false) {
                 $messages = $objetoComponente->getMessages();

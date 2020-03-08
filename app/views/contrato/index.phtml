@@ -200,7 +200,7 @@ $module = $this->router->getControllerName();
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="numero_processo">Número Processo <span class="required">*</span></label>
-                                    <?= $this->tag->textField(["numero_processo", "size" => 200, "class" => "form-control", "id" => "numero_processo", "placeholder" => "Número de Acompanhamento do Processo"]) ?>
+                                    <?= $this->tag->textField(["numero_processo", "maxlength" => "8", "class" => "form-control maxlength-alloptions", "id" => "numero_processo", "placeholder" => "Número de Acompanhamento do Processo"]) ?>
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="id_tipo_contrato">Tipo Contrato <span class="required">*</span></label>
