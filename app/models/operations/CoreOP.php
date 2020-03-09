@@ -91,7 +91,7 @@ class CoreOP
             return $uploader->getInfo();
         } catch (Exception $e) {
             $logger->error('['.$e->getMessage().'] ['.$uploader->getErrors().']');
-            return '['.$e->getMessage().'] ['.$uploader->getErrors().']';
+            return false;
         }
     }
 

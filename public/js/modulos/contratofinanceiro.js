@@ -656,27 +656,16 @@ function limpar()
 /**
  * Sessão de Anexos
  **/
-function criarAnexo(id_contrato_financeiro)
+function criarAnexo(id_contrato_financeiro, contrato, exercicio, competencia)
 {
     'use strict';
     $('#id_contrato_financeiro').val(id_contrato_financeiro);
-    getIdentificador(id_contrato_financeiro);
-    montarTabelaAnexos(id_contrato_financeiro, false);
-    $('#tabela_lista_anexos').removeAttr('style', 'display: table;');
-    $('#tabela_lista_anexos').attr('style', 'display: none;');
-    $('#modalAnexoArquivo').modal();
-
-}
-
-function getIdentificador(id)
-{
-    'use strict';
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
     $.ajax({
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarContratoFinanceiroPagamento', id: id},
+        data: {metodo: 'visualizarContratoFinanceiroNotas', id: id_contrato_financeiro},
         error: function (data) {
             if (data.status && data.status === 401) {
                 swal({
@@ -687,12 +676,33 @@ function getIdentificador(id)
             }
         },
         success: function (data) {
-            $('#identificador-anexado').html(data.dados);
+            if (!isEmpty(data.dados_objeto)) {
+                $('#id_contrato_financeiro').val(id_contrato_financeiro);
+                $('#identificador-anexado').html(contrato +'/'+exercicio +'/'+competencia);
+                $.each(data.dados_objeto, function(key, value) {
+                    inserirAnexo(value.id, value.numero_nota_fiscal, data.dados_descricoes[key].url_anexo);
+                });
+                montarTabelaAnexos(id_contrato_financeiro);
+                $('#modalAnexoArquivo').modal();
+            } else {
+                swal({
+                    title: 'Anexo de Nota Fiscal',
+                    text: 'O pagamento já teve todas os anexos de notas lançados ou não possui baixa de pagamentos!',
+                    type: "info",
+                    showCancelButton: false,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Ok"
+                }).then((result) => {
+
+                });
+            }
         }
     });
+
 }
 
-function montarTabelaAnexos(id_contrato_financeiro, visualizar)
+function montarTabelaAnexos(id_contrato_financeiro)
 {
     'use strict';
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
@@ -701,11 +711,6 @@ function montarTabelaAnexos(id_contrato_financeiro, visualizar)
         dataType: "JSON",
         url: action,
         data: { metodo: 'visualizarContratoFinanceiroAnexos', id: id_contrato_financeiro },
-        complete: function() {
-            if (visualizar) {
-                $('.hide_buttons').hide();
-            }
-        },
         error: function(data) {
             if (data.status && data.status === 401) {
                 swal({
@@ -762,54 +767,47 @@ function getTiposAnexo()
     return tipos_anexos;
 }
 
-function inserirAnexo()
+function inserirAnexo(id_contrato_financeiro_nota, descricao, url_anexo)
 {
     'use strict';
-    tipos_anexos = getTiposAnexo();
-    contador++;
-    var elemento = '<div id="div-anexo-'+ contador +'" class="form-row anexos-complementares">';
-    elemento += '<div class="form-group col-md-3">';
-    elemento += '<label for="id_tipo_anexo-'+ contador +'">Tipo de Anexo <span class="required">*</span></label>';
-    elemento += '<select id="id_tipo_anexo-'+ contador +'" name="id_tipo_anexo[]" class="form-control selectpicker" data-live-search="true" data-style="btn-light">';
-    elemento += '<option value="">Selecione o Tipo de Anexo</option>';
-    $.each(tipos_anexos, function(key, value) {
-        elemento += '<option value="'+value.id+'">'+value.descricao+'</option>';
-    });
-    elemento += '</select>';
-    elemento += '</div>';
-    elemento += '<div class="form-group col-md-3 botoes_forms_alinhamento">';
-    elemento += '<label for="descricao-'+ contador +'">Descrição </label>';
-    elemento += '<input type="text" id="descricao-'+ contador +'" name="descricao[]" class="form-control" size="200" placeholder="Descrição">';
-    elemento += '</div>';
-    elemento += '<div class="form-group col-md-5">';
-    elemento += '<label for="anexo-'+ contador +'">Anexo <span class="required">*</span></label>';
-    elemento += '<input type="file" id="anexo-'+ contador +'" name="anexo-'+ contador +'" class="filestyle">';
-    elemento += '</div>';
-    elemento += '<div class="form-group col-md-1 botoes_forms_alinhamento">';
-    elemento += '<a href="javascript:void(0)" onclick="removerAnexo('+ contador +');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Remover" alt="Remover" height="25" width="25" style="margin: 35px 0px 0px 10px;"></a>';
-    elemento += '</div>';
-    elemento += '</div>';
-    $('#agrupamento-anexos').append(elemento);
-    $('.selectpicker').selectpicker();
-    $(':file').last().filestyle({
-        dragdrop: true,
-        input: true,
-        htmlIcon: '<span class="fi-paper-clip"></span>',
-        text: 'Localize o Arquivo',
-        btnClass: 'btn-primary',
-        disabled: false,
-        buttonBefore: true,
-        badge: true,
-        badgeName: 'badge-danger',
-        placeholder: 'Sem arquivo',
-
-    });
-}
-
-function removerAnexo(contador)
-{
-    'use strict';
-    $('#div-anexo-'+ contador).remove();
+    if (url_anexo === '' || url_anexo === null){
+        tipos_anexos = getTiposAnexo();
+        contador++;
+        var elemento = '<div id="div-anexo-'+ contador +'" class="form-row anexos-complementares">';
+        elemento += '<input type="hidden" id="id_contrato_financeiro_nota_'+ contador +'" name="id_contrato_financeiro_nota[]" value="'+id_contrato_financeiro_nota+'">';
+        elemento += '<div class="form-group col-md-3">';
+        elemento += '<label for="id_tipo_anexo-'+ contador +'">Tipo de Anexo <span class="required">*</span></label>';
+        elemento += '<select id="id_tipo_anexo-'+ contador +'" name="id_tipo_anexo[]" class="form-control selectpicker" data-live-search="true" data-style="btn-light">';
+        elemento += '<option value="">Selecione o Tipo de Anexo</option>';
+        $.each(tipos_anexos, function(key, value) {
+            elemento += '<option value="'+value.id+'">'+value.descricao+'</option>';
+        });
+        elemento += '</select>';
+        elemento += '</div>';
+        elemento += '<div class="form-group col-md-3 botoes_forms_alinhamento">';
+        elemento += '<label for="descricao-'+ contador +'">Descrição </label>';
+        elemento += '<input type="text" id="descricao-'+ contador +'" name="descricao[]" class="form-control" size="200" value="NF-e Nº '+descricao+'">';
+        elemento += '</div>';
+        elemento += '<div class="form-group col-md-6">';
+        elemento += '<label for="anexo-'+ contador +'">Anexo <span class="required">*</span></label>';
+        elemento += '<input type="file" id="anexo-'+ contador +'" name="anexo-'+ contador +'" class="filestyle">';
+        elemento += '</div>';
+        elemento += '</div>';
+        $('#agrupamento-anexos').append(elemento);
+        $('.selectpicker').selectpicker();
+        $(':file').last().filestyle({
+            dragdrop: true,
+            input: true,
+            htmlIcon: '<span class="fi-paper-clip"></span>',
+            text: 'Localize o Arquivo',
+            btnClass: 'btn-primary',
+            disabled: false,
+            buttonBefore: true,
+            badge: true,
+            badgeName: 'badge-danger',
+            placeholder: 'Sem arquivo',
+        });
+    }
 }
 
 function limparModalAnexos()
@@ -818,47 +816,6 @@ function limparModalAnexos()
     contador = 0;
     $('.anexos-complementares').remove();
     $('#modalAnexoArquivo').find('form')[0].reset();
-}
-
-function excluirAnexo(id_anexo)
-{
-    'use strict';
-    swal({
-        title: "Tem certeza que deseja excluir o anexo?",
-        text: "O sistema irá excluir o anexo selecionado com essa ação.",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Sim, excluir!"
-    }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
-        $.ajax({
-            type: "POST",
-            dataType: "JSON",
-            url: action,
-            data: {metodo: 'excluirContratoFinanceiroAnexo', id: id_anexo},
-            error: function (data) {
-                if (data.status && data.status === 401) {
-                    swal({
-                        title: "Erro de Permissão",
-                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                        type: "warning"
-                    });
-                }
-            },
-            success: function (data) {
-                $('.tr_remove_anexo').remove();
-                montarTabelaAnexos(data, false);
-                swal({
-                    title: "Exclusão de Anexo",
-                    text: 'Anexo excluído com sucesso!',
-                    type: "success"
-                });
-            }
-        });
-        return true;
-    });
 }
 
 /**

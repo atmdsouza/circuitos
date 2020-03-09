@@ -3,10 +3,12 @@
 namespace Circuitos\Controllers;
 
 use Auth\Autentica;
+use Circuitos\Models\Anexos;
 use Circuitos\Models\ContratoFinanceiro;
 use Circuitos\Models\ContratoFinanceiroNota;
-use Circuitos\Models\Lov;
+use Circuitos\Models\Operations\AnexosOP;
 use Circuitos\Models\Operations\ContratoFinanceiroOP;
+use Circuitos\Models\Operations\CoreOP;
 use Phalcon\Http\Response as Response;
 use Util\TokenManager;
 
@@ -38,12 +40,7 @@ class ContratoFinanceiroController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $contratofinanceiroOP = new ContratoFinanceiroOP();
         $contratofinanceiro = $contratofinanceiroOP->listar($dados['pesquisa']);
-        $tipos_anexos = Lov::find(array(
-            "tipo = 20 AND excluido = 0 AND ativo = 1",
-            "order" => "descricao"
-        ));
         $this->view->page = $contratofinanceiro;
-        $this->view->tipos_anexos = $tipos_anexos;
     }
 
     public function criarAction()
@@ -200,6 +197,42 @@ class ContratoFinanceiroController extends ControllerBase
             $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo, 'mensagem' => $error_chk)));
         }
         return $response;
+    }
+
+    /**
+     * Created by PhpStorm.
+     * User: andre
+     * Date: 06/11/2019
+     * Time: 19:00
+     * Responsável por vincular arquivos a um contrato
+     */
+    public function subirAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $anexosOP = new AnexosOP();
+        $modulo = $this->router->getControllerName();
+        $action = $this->router->getActionName();
+        $request = $this->request;
+        $id_contrato_financeiro = $request->get('id_contrato_financeiro');
+        $id_contrato_financeiro_nota = $request->get('id_contrato_financeiro_nota');
+        $id_tipo_anexo = $request->get('id_tipo_anexo');
+        $descricao = $request->get('descricao');
+        $coreOP = new CoreOP();
+        $files = $coreOP->servicoUpload($request, $modulo, $action, $id_contrato_financeiro, null);
+        foreach ($files as $key => $file)
+        {
+            $anexos = new Anexos();
+            $anexos->setDescricao($descricao[$key]);
+            $anexos->setIdTipoAnexo($id_tipo_anexo[$key]);
+            $anexos->setUrl($file['path']);
+            $anexo_cadastrado = $anexosOP->cadastrar($anexos);
+            $contratofinanceironotaanexos = new ContratoFinanceiroNota();
+            $contratofinanceironotaanexos->setId($id_contrato_financeiro_nota[$key]);
+            $contratofinanceironotaanexos->setIdAnexo($anexo_cadastrado->getId());
+            $anexosOP->cadastrarContratoFinanceiroNotaAnexo($contratofinanceironotaanexos);
+        }
+        $this->response->redirect('contrato_financeiro');
     }
 }
 

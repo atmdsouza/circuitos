@@ -245,6 +245,36 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
         }
     }
 
+    public function visualizarContratoFinanceiroAnexos($id_contrato_financeiro)
+    {
+        $logger = new FileAdapter($this->arqLog);
+        $util = new Util();
+        try {
+            $objetosComponentes = ContratoFinanceiroNota::find('id_anexo IS NOT NULL AND id_contrato_financeiro= ' . $id_contrato_financeiro);
+            $arrTransporte = [];
+            foreach ($objetosComponentes as $objetoComponente){
+                chmod($objetoComponente->getUrlAnexo(), 0777);
+                $url_base = explode("/", $objetoComponente->getUrlAnexo());
+                $url = $url_base[count($url_base)-5].'/'.$url_base[count($url_base)-4].'/'.$url_base[count($url_base)-3].'/'.$url_base[count($url_base)-2].'/'.$url_base[count($url_base)-1];
+                $objTransporte = new \stdClass();
+                $objTransporte->id_contrato_anexo = $objetoComponente->getId();
+                $objTransporte->id_anexo = $objetoComponente->getIdAnexo();
+                $objTransporte->id_tipo_anexo = $objetoComponente->getIdTipoAnexo();
+                $objTransporte->ds_tipo_anexo = $objetoComponente->getDescricaoTipoAnexo();
+                $objTransporte->descricao = $objetoComponente->getDescricaoAnexo();
+                $objTransporte->url = $url;
+                $objTransporte->data_criacao = $util->converterDataHoraParaBr($objetoComponente->getDataCriacaoAnexo());
+                array_push($arrTransporte, $objTransporte);
+            }
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
+            return $response;
+        } catch (TxFailed $e) {
+            $logger->error($e->getMessage());
+            return false;
+        }
+    }
+
     public function cadastrarBaixa(ContratoFinanceiroNota $objContratoFinanceiroNota)
     {
         $logger = new FileAdapter($this->arqLog);

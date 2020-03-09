@@ -696,6 +696,10 @@ class CoreController extends ControllerBase
                 $objeto = new ContratoFiscalOP();
                 return $objeto->visualizarContratoFiscalAnexos($dados['id']);
                 break;
+            case 'visualizarContratoFinanceiroAnexos':
+                $objeto = new ContratoFinanceiroOP();
+                return $objeto->visualizarContratoFinanceiroAnexos($dados['id']);
+                break;
             case 'visualizarEmpresaDepartamento':
                 $objeto = new EmpresaDepartamentoOP();
                 return $objeto->visualizarEmpresaDepartamento($dados['id']);
