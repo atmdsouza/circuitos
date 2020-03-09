@@ -637,7 +637,7 @@ function montarTabelaPagamentos(id_contrato_financeiro, visualizar)
                     linhas += '</tr>';
                 });
             } else {
-                linhas += "<tr class='tr_remove_anexov'>";
+                linhas += "<tr class='tr_remove_notas'>";
                 linhas += "<td colspan='6' style='text-align: center;'>Não existem notas fiscais para serem exibidas! Favor Cadastrar!</td>";
                 linhas += "</tr>";
             }
