@@ -170,12 +170,37 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
                 'id_contrato' => $objeto->getIdContrato(),
                 'ds_contrato' => $objeto->getNumeroAnoContrato(),
                 'ds_exercicio' => $objeto->getExercicio(),
+                'ds_status_pagamento' => $objeto->getStatusDescricao(),
                 'valor_pagamento_formatado' => $util->formataMoedaReal($objeto->getValorPagamento()),
                 'valor_pagamento_realizado_formatado' => $util->formataMoedaReal($arrValidaQuitacao['valor_pago']),
                 'valor_pagamento_pendente_formatado' => $util->formataMoedaReal($objeto->getValorPagamento() - $arrValidaQuitacao['valor_pago']),
             );
             $response = new Response();
-            $response->setContent(json_encode(array("operacao" => True, "quitado" => $arrValidaQuitacao['qutado'], "dados_objeto" => $objeto, "dados_descricoes" => $objetoDescricao)));
+            $response->setContent(json_encode(array("operacao" => True, "quitado" => $arrValidaQuitacao['quitado'], "dados_objeto" => $objeto, "dados_descricoes" => $objetoDescricao)));
+            return $response;
+        } catch (TxFailed $e) {
+            $logger->error($e->getMessage());
+            return false;
+        }
+    }
+
+    public function visualizarContratoFinanceiroNotas($id)
+    {
+        $logger = new FileAdapter($this->arqLog);
+        $util = new Util();
+        try {
+            $objetos = ContratoFinanceiroNota::find("id_contrato_financeiro={$id}");
+            $objetosDescricoes = [];
+            foreach ($objetos as $objeto)
+            {
+                $objetoDescricao = new \stdClass();
+                $objetoDescricao->url_anexo = $objeto->getUrlAnexo();
+                $objetoDescricao->data_pagamento_formatada = $util->converterDataParaBr($objeto->getDataPagamento());
+                $objetoDescricao->valor_pagamento_formatado = $util->formataMoedaReal($objeto->getValorNota());
+                array_push($objetosDescricoes, $objetoDescricao);
+            }
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True, "dados_objeto" => $objetos, "dados_descricoes" => $objetosDescricoes)));
             return $response;
         } catch (TxFailed $e) {
             $logger->error($e->getMessage());
@@ -191,18 +216,10 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
     {
         $logger = new FileAdapter($this->arqLog);
         try {
-            $valor_pago = 0;
             $objeto = ContratoFinanceiro::findFirst('id='.$id_contrato_financeiro);
-            $objetosFilhos = ContratoFinanceiroNota::find('id_contrato_financeiro='.$id_contrato_financeiro);
-            if ($objetosFilhos){
-                foreach($objetosFilhos as $objetoFilho)
-                {
-                    $valor_pago += $objetoFilho->getValorNota();
-                }
-            }
             return [
-                'qutado' => $objeto->getValorPagamento() <= $valor_pago,
-                'valor_pago' => $valor_pago
+                'quitado' => $objeto->getValorPagamento() <= $objeto->getValorPago(),
+                'valor_pago' => $objeto->getValorPago()
             ];
         } catch (TxFailed $e) {
             $logger->error($e->getMessage());
@@ -222,6 +239,50 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
             $response = new Response();
             $response->setContent(json_encode(array("operacao" => True, "competenciaUtilizada" => $competenciaUtilizada)));
             return $response;
+        } catch (TxFailed $e) {
+            $logger->error($e->getMessage());
+            return false;
+        }
+    }
+
+    public function cadastrarBaixa(ContratoFinanceiroNota $objContratoFinanceiroNota)
+    {
+        $logger = new FileAdapter($this->arqLog);
+        $util = new Util();
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        try {
+            $objeto = new ContratoFinanceiroNota();
+            $objeto->setTransaction($transaction);
+            $objeto->setIdContratoFinanceiro($objContratoFinanceiroNota->getIdContratoFinanceiro());
+            $objeto->setNumeroNotaFiscal($objContratoFinanceiroNota->getNumeroNotaFiscal());
+            $objeto->setDataPagamento($util->converterDataUSA($objContratoFinanceiroNota->getDataPagamento()));
+            $objeto->setValorNota($util->formataNumero($objContratoFinanceiroNota->getValorNota()));
+            $objeto->setObservacao(mb_strtoupper($objContratoFinanceiroNota->getObservacao(), $this->encode));
+            $objeto->setDataCriacao(date('Y-m-d H:i:s'));
+            if ($objeto->save() == false) {
+                $messages = $objeto->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao criar a nota: " . $errors);
+            }
+            $arrQuitacao = $this->verificarQuitacaoPagamento($objeto->getIdContratoFinanceiro());
+            $objetoPai = ContratoFinanceiro::findFirst($objContratoFinanceiroNota->getIdContratoFinanceiro());
+            $objetoPai->setTransaction($transaction);
+            $objetoPai->setStatusPagamento(($arrQuitacao['quitado']) ? 2 : 3);
+            $objetoPai->setDataUpdate(date('Y-m-d H:i:s'));
+            if ($objetoPai->save() == false) {
+                $messages = $objetoPai->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao alterar o pagamento: " . $errors);
+            }
+            $transaction->commit();
+            return $objeto;
         } catch (TxFailed $e) {
             $logger->error($e->getMessage());
             return false;

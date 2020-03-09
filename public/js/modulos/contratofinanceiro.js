@@ -209,7 +209,7 @@ function validarValorPagamentoPendente()
     'use strict';
     var valor_pendente = $('#valor-disponivel-exercicio').val();
     var valor_pagamento = $('#valor_pagamento').val();
-    var saldo = accounting.unformat(valor_pendente, ",") - accounting.unformat(valor_pagamento, ",");
+    var saldo = accounting.unformat(valor_pendente) - accounting.unformat(valor_pagamento);
     if (saldo < 0) {
         swal({
             title: 'Valor do Pagamento Incorreto',
@@ -232,6 +232,10 @@ function criar()
     $("#formCadastro input").removeAttr('readonly', 'readonly');
     $("#formCadastro select").removeAttr('readonly', 'readonly');
     $("#formCadastro textarea").removeAttr('readonly', 'readonly');
+    ocultarTabelaPagamentos();
+    ocultarTabelaAnexosv();
+    $('#div-valor-pagov').hide();
+    $('#div-status-pagamento').hide();
     $("#salvarCadastro").val('criar');
     $("#salvarCadastro").show();
     $("#modalCadastro").modal();
@@ -490,12 +494,16 @@ function visualizar(id, ocultar)
                 $("#formCadastro input").attr('readonly', 'readonly');
                 $("#formCadastro select").attr('readonly', 'readonly');
                 $("#formCadastro textarea").attr('readonly', 'readonly');
+                $('#div-valor-pagov').show();
+                $('#div-status-pagamento').show();
                 $("#salvarCadastro").hide();
             } else {
                 $("#formCadastro input").removeAttr('readonly', 'readonly');
                 $("#formCadastro select").removeAttr('readonly', 'readonly');
                 $("#formCadastro textarea").removeAttr('readonly', 'readonly');
                 $("#lid_exercicio").removeAttr('disabled', 'disabled');
+                $('#div-valor-pagov').hide();
+                $('#div-status-pagamento').hide();
                 $("#salvarCadastro").val('editar');
                 $("#salvarCadastro").show();
                 $('.hide_buttons').show();
@@ -520,6 +528,9 @@ function visualizar(id, ocultar)
             carregarValoresExercicio();
             carregarCompetenciasExercicio(data.dados_objeto.mes_competencia);
             $('#valor_pagamento').val(data.dados_descricoes.valor_pagamento_formatado);
+            $('#valor-pagov').val(data.dados_descricoes.valor_pagamento_realizado_formatado);
+            $('#status-pagamento').val(data.dados_descricoes.ds_status_pagamento);
+            montarTabelaPagamentos(data.dados_objeto.id, ocultar);
         }
     });
 }
@@ -535,12 +546,9 @@ function montarTabelaAnexosv(id_contrato_financeiro, visualizar)
         data: { metodo: 'visualizarContratoFinanceiroAnexos', id: id_contrato_financeiro },
         complete: function() {
             if (visualizar) {
-                $('#tabela_lista_anexosv').removeAttr('style', 'display: none;');
-                $('#tabela_lista_anexosv').attr('style', 'display: table;');
+                exibirTabelaTabelaAnexosv();
             } else {
-                $('.tr_remove_anexov').remove();
-                $('#tabela_lista_anexosv').removeAttr('style', 'display: table;');
-                $('#tabela_lista_anexosv').attr('style', 'display: none;');
+                ocultarTabelaAnexosv();
             }
         },
         error: function(data) {
@@ -572,6 +580,85 @@ function montarTabelaAnexosv(id_contrato_financeiro, visualizar)
             $("#tabela_lista_anexosv").append(linhas);
         }
     });
+}
+
+function ocultarTabelaAnexosv()
+{
+    'use strict';
+    $('.tr_remove_anexov').remove();
+    $('#tabela_lista_anexosv').removeAttr('style', 'display: table;');
+    $('#tabela_lista_anexosv').attr('style', 'display: none;');
+}
+
+function exibirTabelaTabelaAnexosv()
+{
+    'use strict';
+    $('#tabela_lista_anexosv').removeAttr('style', 'display: none;');
+    $('#tabela_lista_anexosv').attr('style', 'display: table;');
+}
+
+function montarTabelaPagamentos(id_contrato_financeiro, visualizar)
+{
+    'use strict';
+    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+    $.ajax({
+        type: "GET",
+        dataType: "JSON",
+        url: action,
+        data: { metodo: 'visualizarContratoFinanceiroNotas', id: id_contrato_financeiro },
+        complete: function() {
+            if (visualizar) {
+                exibirTabelaPagamentos();
+            } else {
+                ocultarTabelaPagamentos();
+            }
+        },
+        error: function(data) {
+            if (data.status && data.status === 401) {
+                swal({
+                    title: "Erro de Permissão",
+                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                    type: "warning"
+                });
+            }
+        },
+        success: function(data) {
+            $('.tr_remove_notas').remove();
+            var linhas =null;
+            if (!isEmpty(data.dados_objeto)){
+                $.each(data.dados_objeto, function(key, value) {
+                    linhas += '<tr class="tr_remove_notas">';
+                    linhas += '<td>'+ value.id +'</td>';
+                    linhas += '<td>'+ data.dados_descricoes[key].data_pagamento_formatada +'</td>';
+                    linhas += '<td>'+ value.numero_nota_fiscal +'</td>';
+                    linhas += '<td>'+ data.dados_descricoes[key].valor_pagamento_formatado +'</td>';
+                    linhas += '<td>'+ value.observacao +'</td>';
+                    linhas += '<td><a href="'+ data.dados_descricoes[key].url_anexo +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
+                    linhas += '</tr>';
+                });
+            } else {
+                linhas += "<tr class='tr_remove_anexov'>";
+                linhas += "<td colspan='6' style='text-align: center;'>Não existem notas fiscais para serem exibidas! Favor Cadastrar!</td>";
+                linhas += "</tr>";
+            }
+            $("#tabela_lista_pagamentos").append(linhas);
+        }
+    });
+}
+
+function ocultarTabelaPagamentos()
+{
+    'use strict';
+    $('.tr_remove_notas').remove();
+    $('#tabela_lista_pagamentos').removeAttr('style', 'display: table;');
+    $('#tabela_lista_pagamentos').attr('style', 'display: none;');
+}
+
+function exibirTabelaPagamentos()
+{
+    'use strict';
+    $('#tabela_lista_pagamentos').removeAttr('style', 'display: none;');
+    $('#tabela_lista_pagamentos').attr('style', 'display: table;');
 }
 
 function limpar()
@@ -657,14 +744,27 @@ function montarTabelaAnexos(id_contrato_financeiro, visualizar)
                     linhas += '</tr>';
                 });
                 $("#tabela_lista_anexos").append(linhas);
-                $('#tabela_lista_anexos').removeAttr('style', 'display: none;');
-                $('#tabela_lista_anexos').attr('style', 'display: table;');
+                exibirTabelaTabelaAnexos();
             } else {
-                $('#tabela_lista_anexos').removeAttr('style', 'display: table;');
-                $('#tabela_lista_anexos').attr('style', 'display: none;');
+                ocultarTabelaAnexos();
             }
         }
     });
+}
+
+function ocultarTabelaAnexos()
+{
+    'use strict';
+    $('.tr_remove_anexo').remove();
+    $('#tabela_lista_anexos').removeAttr('style', 'display: table;');
+    $('#tabela_lista_anexos').attr('style', 'display: none;');
+}
+
+function exibirTabelaTabelaAnexos()
+{
+    'use strict';
+    $('#tabela_lista_anexos').removeAttr('style', 'display: none;');
+    $('#tabela_lista_anexos').attr('style', 'display: table;');
 }
 
 function getTiposAnexo()
@@ -814,6 +914,7 @@ function criarBaixaPagamento(id_contrato_financeiro)
         },
         success: function (data) {
             if (!data.quitado) {
+                $('#id_contrato_financeiro_da_nota').val(data.dados_objeto.id);
                 $('#valor-pagamento').val(data.dados_descricoes.valor_pagamento_formatado);
                 $('#valor-pago').val(data.dados_descricoes.valor_pagamento_realizado_formatado);
                 $('#valor-pendente').val(data.dados_descricoes.valor_pagamento_pendente_formatado);
@@ -871,7 +972,7 @@ function validarValorNotaPendente()
     'use strict';
     var valor_pendente = $('#valor-pendente').val();
     var valor_nota = $('#valor_nota').val();
-    var saldo = accounting.unformat(valor_pendente, ",") - accounting.unformat(valor_nota, ",");
+    var saldo = accounting.unformat(valor_pendente) - accounting.unformat(valor_nota);
     if (saldo < 0) {
         swal({
             title: 'Valor do Pagamento Incorreto',
@@ -891,7 +992,6 @@ function validarValorNotaPendente()
 function salvarBaixarPagamento()
 {
     'use strict';
-    alert('entrou na funcao');
     $("#formBaixarPagamento").validate({
         rules : {
             data_pagamento:{

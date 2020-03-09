@@ -58,6 +58,7 @@ $module = $this->router->getControllerName();
                 <th>Exercício</th>
                 <th>Competência</th>
                 <th>Valor Pagamento</th>
+                <th>Valor Pago</th>
                 <th>Status</th>
                 <th>Ações</th>
             </tr>
@@ -76,6 +77,9 @@ $module = $this->router->getControllerName();
                     case '2':
                         $class_tr = 'class="table-success"';
                         break;
+                    case '3':
+                        $class_tr = 'class="table-warning"';
+                        break;
                 }
                 ?>
                 <tr <?= $class_tr; ?>>
@@ -84,6 +88,7 @@ $module = $this->router->getControllerName();
                     <td><?= $contratofinanceiro->getExercicio() ?></td>
                     <td><?= $contratofinanceiro->getMesCompetencia() ?></td>
                     <td><?= $contratofinanceiro->getValorPagamentoFormatado() ?></td>
+                    <td><?= $contratofinanceiro->getValorPagoFormatado() ?></td>
                     <td><?= $contratofinanceiro->getStatusDescricao() ?></td>
                     <td class="td_acoes">
                         <?php if($acl->isAllowed($role,$module, 'visualizar')): ?>
@@ -154,7 +159,32 @@ $module = $this->router->getControllerName();
                                     <label for="valor_pagamento">Valor do Pagamento <span class="required">*</span></label>
                                     <?= $this->tag->textField(["valor_pagamento", "class" => "form-control valor_monetario_limpo", "id" => "valor_pagamento", "placeholder" => "Valor do Pagamento", "onkeyup" => "validarValorPagamentoPendente();"]) ?>
                                 </div>
+                                <div id="div-valor-pagov" class="form-group col-md-4 botoes_forms_alinhamento" style="display: none;">
+                                    <label for="valor-pagov">Valor do Pago </label>
+                                    <?= $this->tag->textField(["valor-pagov", "class" => "form-control", "id" => "valor-pagov"]) ?>
+                                </div>
+                                <div id="div-status-pagamento" class="form-group col-md-4 botoes_forms_alinhamento" style="display: none;">
+                                    <label for="status-pagamento">Status Pagamento </label>
+                                    <?= $this->tag->textField(["status-pagamento", "class" => "form-control", "id" => "status-pagamento"]) ?>
+                                </div>
                             </div>
+                            <table id="tabela_lista_pagamentos" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%" style="display: none;">
+                                <thead>
+                                <tr>
+                                    <th colspan="6" class="fonte-15">Lista de Pagamentos Realizados</th>
+                                </tr>
+                                <tr>
+                                    <th>Código Pagamento</th>
+                                    <th>Data Pagamento</th>
+                                    <th>Nº Nota Fiscal</th>
+                                    <th>Valor Nota Fiscal</th>
+                                    <th>Observação</th>
+                                    <th>Anexo</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -183,6 +213,7 @@ $module = $this->router->getControllerName();
             </div>
             <form id="formBaixarPagamento">
                 <input type="hidden" id="token_baixar" name="<?= $token['tokenKey'] ?>" value="<?= $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
+                <input type="hidden" id="id_contrato_financeiro_da_nota" name="id_contrato_financeiro" value=""><!-- Manter como hidden -->
                 <div class="modal-body">
                     <div class="form-row">
                         <div class="form-group col-md-4 botoes_forms_alinhamento">
@@ -210,7 +241,7 @@ $module = $this->router->getControllerName();
                             <?= $this->tag->textField(["valor_nota", "class" => "form-control valor_monetario_limpo", "id" => "valor_nota", "placeholder" => "Valor Nota Fiscal", "onkeyup" => "validarValorNotaPendente();"]) ?>
                         </div>
                         <div class="form-group col-md-12">
-                            <label for="observacao">Observação <span class="required">*</span></label>
+                            <label for="observacao">Observação </label>
                             <?php echo $this->tag->textArea(["observacao", "style" => "resize: none", "maxlength" => 3000, "class" => "form-control maxlength-textarea", "id" => "observacao", "placeholder" => "Observação"]) ?>
                         </div>
                     </div>
@@ -221,7 +252,7 @@ $module = $this->router->getControllerName();
                     </div>
                     <div class="form-group col-md-6 botoes_rodape">
                         <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="confirmaCancelarBaixarPagamento('modalBaixarPagamento');">Fechar</button>
-                        <button id="salvarBaixarPagamento" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light" onclick="salvarBaixarPagamento();" value="">Salvar</button>
+                        <button id="btn-salvarBaixarPagamento" name="btn-salvarBaixarPagamento" class="btn btn-primary btn-rounded waves-effect waves-light" onclick="salvarBaixarPagamento();">Salvar</button>
                     </div>
                 </div><!-- /.modal-footer -->
             </form>

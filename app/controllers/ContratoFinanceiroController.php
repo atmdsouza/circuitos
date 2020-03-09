@@ -4,6 +4,7 @@ namespace Circuitos\Controllers;
 
 use Auth\Autentica;
 use Circuitos\Models\ContratoFinanceiro;
+use Circuitos\Models\ContratoFinanceiroNota;
 use Circuitos\Models\Lov;
 use Circuitos\Models\Operations\ContratoFinanceiroOP;
 use Phalcon\Http\Response as Response;
@@ -186,12 +187,11 @@ class ContratoFinanceiroController extends ControllerBase
         $msg = 'Lançamento Financeiro cadastrado com sucesso!';
         $error_msg = 'Erro ao cadastrar um Lançamento Financeiro!';
         $error_chk = 'Check de token de formulário inválido!';
-        var_dump($params);die();
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             $contratofinanceiroOP = new ContratoFinanceiroOP();
-            $contratofinanceiro = new ContratoFinanceiro($params);
-            if($contratofinanceiroOP->cadastrar($contratofinanceiro)){//Cadastrou com sucesso
+            $contratofinanceironota = new ContratoFinanceiroNota($params);
+            if($contratofinanceiroOP->cadastrarBaixa($contratofinanceironota)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));

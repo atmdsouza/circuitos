@@ -317,6 +317,35 @@ class ContratoFinanceiro extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return float
+     */
+    public function getValorPago()
+    {
+        $objetosFilhos = ContratoFinanceiroNota::find('id_contrato_financeiro='.$this->id);
+        $valor_pago = 0;
+        foreach ($objetosFilhos as $objetoFilho)
+        {
+            $valor_pago += $objetoFilho->getValorNota();
+        }
+        return $valor_pago;
+    }
+
+    /**
+     * @return float
+     */
+    public function getValorPagoFormatado()
+    {
+        $objetosFilhos = ContratoFinanceiroNota::find('id_contrato_financeiro='.$this->id);
+        $valor_pago = 0;
+        foreach ($objetosFilhos as $objetoFilho)
+        {
+            $valor_pago += $objetoFilho->getValorNota();
+        }
+        $util = new Util();
+        return $util->formataMoedaReal($valor_pago);
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()

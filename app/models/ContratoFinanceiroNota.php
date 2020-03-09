@@ -21,6 +21,12 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
 
     /**
      *
+     * @var integer
+     */
+    protected $id_anexo;
+
+    /**
+     *
      * @var string
      */
     protected $numero_nota_fiscal;
@@ -278,6 +284,32 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return int
+     */
+    public function getIdAnexo()
+    {
+        return $this->id_anexo;
+    }
+
+    /**
+     * @param int $id_anexo
+     */
+    public function setIdAnexo($id_anexo)
+    {
+        $this->id_anexo = $id_anexo;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrlAnexo()
+    {
+        return (isset($this->Anexos->url)) ? $this->Anexos->url : null;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -287,6 +319,7 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
         $this->setSource("contrato_financeiro_nota");
         $this->hasMany('id', 'Circuitos\Models\ContratoFinanceiroNotaAnexo', 'id_contrato_financeiro_nota', ['alias' => 'ContratoFinanceiroNotaAnexo']);
         $this->belongsTo('id_contrato_financeiro', 'Circuitos\Models\ContratoFinanceiro', 'id', ['alias' => 'ContratoFinanceiro']);
+        $this->belongsTo('id_anexo', 'Circuitos\Models\Anexos', 'id', ['alias' => 'Anexos']);
     }
 
     /**
