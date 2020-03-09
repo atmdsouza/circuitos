@@ -232,8 +232,8 @@ function criar()
     $("#formCadastro input").removeAttr('readonly', 'readonly');
     $("#formCadastro select").removeAttr('readonly', 'readonly');
     $("#formCadastro textarea").removeAttr('readonly', 'readonly');
-    ocultarTabelaPagamentos();
-    ocultarTabelaAnexosv();
+    exibirTabela('tabela_lista_pagamentosv');
+    ocultarTabela('tabela_lista_pagamentosv','tr_remove_notasv');
     $('#div-valor-pagov').hide();
     $('#div-status-pagamento').hide();
     $("#salvarCadastro").val('criar');
@@ -530,7 +530,7 @@ function visualizar(id, ocultar)
             $('#valor_pagamento').val(data.dados_descricoes.valor_pagamento_formatado);
             $('#valor-pagov').val(data.dados_descricoes.valor_pagamento_realizado_formatado);
             $('#status-pagamento').val(data.dados_descricoes.ds_status_pagamento);
-            montarTabelaPagamentos(data.dados_objeto.id, ocultar);
+            montarTabelaPagamentos(data.dados_objeto.id, ocultar, 'tabela_lista_pagamentosv', 'notasv');
         }
     });
 }
@@ -546,9 +546,9 @@ function montarTabelaAnexosv(id_contrato_financeiro, visualizar)
         data: { metodo: 'visualizarContratoFinanceiroAnexos', id: id_contrato_financeiro },
         complete: function() {
             if (visualizar) {
-                exibirTabelaTabelaAnexosv();
+                exibirTabela('tabela_lista_anexosv');
             } else {
-                ocultarTabelaAnexosv();
+                ocultarTabela('tabela_lista_anexosv','tr_remove_anexov');
             }
         },
         error: function(data) {
@@ -582,22 +582,22 @@ function montarTabelaAnexosv(id_contrato_financeiro, visualizar)
     });
 }
 
-function ocultarTabelaAnexosv()
+function ocultarTabela(id_html_tabela, class_tr)
 {
     'use strict';
-    $('.tr_remove_anexov').remove();
-    $('#tabela_lista_anexosv').removeAttr('style', 'display: table;');
-    $('#tabela_lista_anexosv').attr('style', 'display: none;');
+    $('.'+class_tr).remove();
+    $('#'+id_html_tabela).removeAttr('style', 'display: table;');
+    $('#'+id_html_tabela).attr('style', 'display: none;');
 }
 
-function exibirTabelaTabelaAnexosv()
+function exibirTabela(id_html_tabela)
 {
     'use strict';
-    $('#tabela_lista_anexosv').removeAttr('style', 'display: none;');
-    $('#tabela_lista_anexosv').attr('style', 'display: table;');
+    $('#'+id_html_tabela).removeAttr('style', 'display: none;');
+    $('#'+id_html_tabela).attr('style', 'display: table;');
 }
 
-function montarTabelaPagamentos(id_contrato_financeiro, visualizar)
+function montarTabelaPagamentos(id_contrato_financeiro, visualizar, id_html_tabela, remove)
 {
     'use strict';
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
@@ -608,9 +608,9 @@ function montarTabelaPagamentos(id_contrato_financeiro, visualizar)
         data: { metodo: 'visualizarContratoFinanceiroNotas', id: id_contrato_financeiro },
         complete: function() {
             if (visualizar) {
-                exibirTabelaPagamentos();
+                exibirTabela(id_html_tabela);
             } else {
-                ocultarTabelaPagamentos();
+                ocultarTabela(id_html_tabela,'tr_remove_'+remove);
             }
         },
         error: function(data) {
@@ -623,11 +623,11 @@ function montarTabelaPagamentos(id_contrato_financeiro, visualizar)
             }
         },
         success: function(data) {
-            $('.tr_remove_notas').remove();
+            $('.tr_remove_'+remove).remove();
             var linhas =null;
             if (!isEmpty(data.dados_objeto)){
                 $.each(data.dados_objeto, function(key, value) {
-                    linhas += '<tr class="tr_remove_notas">';
+                    linhas += '<tr class="tr_remove_'+remove+'">';
                     linhas += '<td>'+ value.id +'</td>';
                     linhas += '<td>'+ data.dados_descricoes[key].data_pagamento_formatada +'</td>';
                     linhas += '<td>'+ value.numero_nota_fiscal +'</td>';
@@ -637,28 +637,13 @@ function montarTabelaPagamentos(id_contrato_financeiro, visualizar)
                     linhas += '</tr>';
                 });
             } else {
-                linhas += "<tr class='tr_remove_notas'>";
-                linhas += "<td colspan='6' style='text-align: center;'>Não existem notas fiscais para serem exibidas! Favor Cadastrar!</td>";
-                linhas += "</tr>";
+                linhas += '<tr class="tr_remove_'+remove+'">';
+                linhas += '<td colspan="6" style="text-align: center;">Não existem notas fiscais para serem exibidas! Favor Cadastrar!</td>';
+                linhas += '</tr>';
             }
-            $("#tabela_lista_pagamentos").append(linhas);
+            $("#"+id_html_tabela).append(linhas);
         }
     });
-}
-
-function ocultarTabelaPagamentos()
-{
-    'use strict';
-    $('.tr_remove_notas').remove();
-    $('#tabela_lista_pagamentos').removeAttr('style', 'display: table;');
-    $('#tabela_lista_pagamentos').attr('style', 'display: none;');
-}
-
-function exibirTabelaPagamentos()
-{
-    'use strict';
-    $('#tabela_lista_pagamentos').removeAttr('style', 'display: none;');
-    $('#tabela_lista_pagamentos').attr('style', 'display: table;');
 }
 
 function limpar()
@@ -744,27 +729,12 @@ function montarTabelaAnexos(id_contrato_financeiro, visualizar)
                     linhas += '</tr>';
                 });
                 $("#tabela_lista_anexos").append(linhas);
-                exibirTabelaTabelaAnexos();
+                exibirTabela('tabela_lista_anexos');
             } else {
-                ocultarTabelaAnexos();
+                ocultarTabela('tabela_lista_anexos','tr_remove_anexo');
             }
         }
     });
-}
-
-function ocultarTabelaAnexos()
-{
-    'use strict';
-    $('.tr_remove_anexo').remove();
-    $('#tabela_lista_anexos').removeAttr('style', 'display: table;');
-    $('#tabela_lista_anexos').attr('style', 'display: none;');
-}
-
-function exibirTabelaTabelaAnexos()
-{
-    'use strict';
-    $('#tabela_lista_anexos').removeAttr('style', 'display: none;');
-    $('#tabela_lista_anexos').attr('style', 'display: table;');
 }
 
 function getTiposAnexo()
@@ -919,6 +889,7 @@ function criarBaixaPagamento(id_contrato_financeiro)
                 $('#valor-pago').val(data.dados_descricoes.valor_pagamento_realizado_formatado);
                 $('#valor-pendente').val(data.dados_descricoes.valor_pagamento_pendente_formatado);
                 $('#id-pagamento-baixa').html(data.dados_descricoes.ds_contrato +'/'+data.dados_descricoes.ds_exercicio +'/'+data.dados_objeto.mes_competencia);
+                montarTabelaPagamentos(data.dados_objeto.id, true, 'tabela_lista_pagamentos', 'notas');
                 $("#modalBaixarPagamento").modal();
             } else {
                 swal({
