@@ -35,7 +35,7 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
      *
      * @var double
      */
-    protected $valor;
+    protected $valor_nota;
 
     /**
      *
@@ -60,6 +60,18 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $data_update;
+
+    /**
+     *
+     * @var string
+     */
+    protected $data_criacao;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $id_anexo;
 
     /**
      * Method to set the value of field id
@@ -114,14 +126,14 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field valor
+     * Method to set the value of field valor_nota
      *
-     * @param double $valor
+     * @param double $valor_nota
      * @return $this
      */
-    public function setValor($valor)
+    public function setValorNota($valor_nota)
     {
-        $this->valor = $valor;
+        $this->valor_nota = $valor_nota;
 
         return $this;
     }
@@ -135,6 +147,71 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
     public function setObservacao($observacao)
     {
         $this->observacao = $observacao;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field ativo
+     *
+     * @param integer $ativo
+     * @return $this
+     */
+    public function setAtivo($ativo)
+    {
+        $this->ativo = $ativo;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field excluido
+     *
+     * @param integer $excluido
+     * @return $this
+     */
+    public function setExcluido($excluido)
+    {
+        $this->excluido = $excluido;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field data_update
+     *
+     * @param string $data_update
+     * @return $this
+     */
+    public function setDataUpdate($data_update)
+    {
+        $this->data_update = $data_update;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field data_criacao
+     *
+     * @param string $data_criacao
+     * @return $this
+     */
+    public function setDataCriacao($data_criacao)
+    {
+        $this->data_criacao = $data_criacao;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field id_anexo
+     *
+     * @param integer $id_anexo
+     * @return $this
+     */
+    public function setIdAnexo($id_anexo)
+    {
+        $this->id_anexo = $id_anexo;
 
         return $this;
     }
@@ -180,13 +257,13 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field valor
+     * Returns the value of field valor_nota
      *
      * @return double
      */
-    public function getValor()
+    public function getValorNota()
     {
-        return $this->valor;
+        return $this->valor_nota;
     }
 
     /**
@@ -200,7 +277,9 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
     }
 
     /**
-     * @return int
+     * Returns the value of field ativo
+     *
+     * @return integer
      */
     public function getAtivo()
     {
@@ -208,17 +287,9 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
     }
 
     /**
-     * @param int $ativo
-     */
-    public function setAtivo($ativo)
-    {
-        $this->ativo = $ativo;
-
-        return $this;
-    }
-
-    /**
-     * @return int
+     * Returns the value of field excluido
+     *
+     * @return integer
      */
     public function getExcluido()
     {
@@ -226,16 +297,8 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
     }
 
     /**
-     * @param int $excluido
-     */
-    public function setExcluido($excluido)
-    {
-        $this->excluido = $excluido;
-
-        return $this;
-    }
-
-    /**
+     * Returns the value of field data_update
+     *
      * @return string
      */
     public function getDataUpdate()
@@ -244,13 +307,80 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
     }
 
     /**
-     * @param string $data_update
+     * Returns the value of field data_criacao
+     *
+     * @return string
      */
-    public function setDataUpdate($data_update)
+    public function getDataCriacao()
     {
-        $this->data_update = $data_update;
+        return $this->data_criacao;
+    }
 
-        return $this;
+    /**
+     * Returns the value of field id_anexo
+     *
+     * @return integer
+     */
+    public function getIdAnexo()
+    {
+        return $this->id_anexo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrlAnexo()
+    {
+        return $this->Anexos->url;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrlFormatadaAnexo()
+    {
+        $url_base = explode("/", $this->Anexos->url);
+        return $url_base[count($url_base)-5].'/'.$url_base[count($url_base)-4].'/'.$url_base[count($url_base)-3].'/'.$url_base[count($url_base)-2].'/'.$url_base[count($url_base)-1];
+    }
+
+    /**
+     * Returns the value of field descricao
+     *
+     * @return string
+     */
+    public function getDescricaoAnexo()
+    {
+        return $this->Anexos->descricao;
+    }
+
+    /**
+     * Returns the value of field data criação
+     *
+     * @return string
+     */
+    public function getDataCriacaoAnexo()
+    {
+        return $this->Anexos->data_criacao;
+    }
+
+    /**
+     * Returns the value of field descricao tipo anexo
+     *
+     * @return string
+     */
+    public function getDescricaoTipoAnexo()
+    {
+        return $this->Anexos->Lov->descricao;
+    }
+
+    /**
+     * Returns the value of field id_tipo_anexo
+     *
+     * @return integer
+     */
+    public function getIdTipoAnexo()
+    {
+        return $this->Anexos->id_tipo_anexo;
     }
 
     /**
@@ -261,18 +391,8 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
         $schema = new Infra();
         $this->setSchema($schema->getSchemaBanco());
         $this->setSource("contrato_financeiro_nota");
-        $this->hasMany('id', 'Circuitos\Models\ContratoFinanceiroNotaAnexo', 'id_contrato_financeiro_nota', ['alias' => 'ContratoFinanceiroNotaAnexo']);
         $this->belongsTo('id_contrato_financeiro', 'Circuitos\Models\ContratoFinanceiro', 'id', ['alias' => 'ContratoFinanceiro']);
-    }
-
-    /**
-     * Returns table name mapped in the model.
-     *
-     * @return string
-     */
-    public function getSource()
-    {
-        return 'contrato_financeiro_nota';
+        $this->hasOne('id_anexo', 'Circuitos\Models\Anexos', 'id', ['alias' => 'Anexos']);
     }
 
     /**
@@ -295,6 +415,16 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Returns table name mapped in the model.
+     *
+     * @return string
+     */
+    public function getSource()
+    {
+        return 'contrato_financeiro_nota';
     }
 
 }

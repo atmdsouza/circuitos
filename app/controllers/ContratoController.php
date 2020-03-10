@@ -128,7 +128,7 @@ class ContratoController extends ControllerBase
                 $contrato_garantia->setIdModalidade($id_modalidade);
                 $contrato_garantia->setGarantiaConcretizada($params['garantia_concretizada'][$key]);
                 $contrato_garantia->setPercentual($params['percentual'][$key]);
-                $contrato_garantia->setValor($params['valor'][$key]);
+                $contrato_garantia->setValor($params['valor_garantia'][$key]);
                 array_push($arrayCtGarantia, $contrato_garantia);
             }
             if($contratoOP->cadastrar($contrato, $contratoarquivo, $arrayCtOrcamento, $arrayCtExercicio, $arrayCtGarantia)){//Cadastrou com sucesso
@@ -192,7 +192,7 @@ class ContratoController extends ControllerBase
                     $contrato_garantia->setIdModalidade($id_modalidade);
                     $contrato_garantia->setGarantiaConcretizada($params['garantia_concretizada'][$key]);
                     $contrato_garantia->setPercentual($params['percentual'][$key]);
-                    $contrato_garantia->setValor($params['valor'][$key]);
+                    $contrato_garantia->setValor($params['valor_garantia'][$key]);
                     array_push($arrayCtGarantia, $contrato_garantia);
                 }
             }

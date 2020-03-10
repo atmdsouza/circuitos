@@ -1201,7 +1201,6 @@ function excluirAnexo(id_anexo)
                 }
             },
             success: function (data) {
-                console.log(data);
                 $('.tr_remove_anexo').remove();
                 montarTabelaAnexos(data, false);
                 swal({

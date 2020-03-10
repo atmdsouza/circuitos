@@ -54,6 +54,7 @@ $module = $this->router->getControllerName();
             <thead>
             <tr>
                 <th>Código</th>
+                <th>Contrato</th>
                 <th>Tipo</th>
                 <th>Nome</th>
                 <th>Data Nomeação</th>
@@ -67,30 +68,20 @@ $module = $this->router->getControllerName();
                 switch($contratofiscal->getAtivo())
                 {
                     case '0'://Inativo (False)
-                        $ativo = "Inativo";
                         $class_tr = 'class="table-danger"';
                         break;
                     case '1'://Ativo (True)
-                        $ativo = "Ativo";
                         $class_tr = null;
-                        break;
-                }
-                switch($contratofiscal->getTipoFiscal())
-                {
-                    case '0'://Suplente (False)
-                        $tipo_fiscal = "Suplente";
-                        break;
-                    case '1'://Titular (True)
-                        $tipo_fiscal = "Titular";
                         break;
                 }
                 ?>
                 <tr <?= $class_tr; ?>>
                     <td><?= $contratofiscal->getId() ?></td>
-                    <td><?= $tipo_fiscal ?></td>
+                    <td><?= $contratofiscal->getNumeroAnoContrato() ?></td>
+                    <td><?= $contratofiscal->getTipoFiscalDescricao() ?></td>
                     <td><?= $contratofiscal->getNomeFiscal() ?></td>
                     <td><?= $util->converterDataParaBr($contratofiscal->getDataNomeacao()) ?></td>
-                    <td><?= $ativo ?></td>
+                    <td><?= $contratofiscal->getAtivoDescricao() ?></td>
                     <td class="td_acoes">
                         <?php if($acl->isAllowed($role,$module, 'visualizar')): ?>
                             <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $contratofiscal->getId() ?>, true);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a>
@@ -136,7 +127,7 @@ $module = $this->router->getControllerName();
                             <div class="form-row">
                                 <div class="form-group col-md-4">
                                     <label for="lid_contrato">Contrato <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["lid_contrato", "class" => "form-control", "id" => "lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato('lid_contrato','id_contrato');"]) ?>
+                                    <?php echo $this->tag->textField(["lid_contrato", "class" => "form-control", "id" => "lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato('lid_contrato','id_contrato');", "onchange" => "validacaoFiscalTitular();"]) ?>
                                     <?php echo $this->tag->hiddenField(["id_contrato", "class" => "form-control", "id" => "id_contrato"]) ?>
                                 </div>
                                 <div class="form-group col-md-4">

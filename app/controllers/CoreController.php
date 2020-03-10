@@ -7,6 +7,7 @@ use Circuitos\Models\CircuitosAnexo;
 use Circuitos\Models\Conectividade;
 use Circuitos\Models\ContratoAnexo;
 use Circuitos\Models\ContratoExercicio;
+use Circuitos\Models\ContratoFinanceiroNota;
 use Circuitos\Models\ContratoFiscalAnexo;
 use Circuitos\Models\ContratoGarantia;
 use Circuitos\Models\ContratoOrcamento;
@@ -19,6 +20,7 @@ use Circuitos\Models\Operations\AnexosOP;
 use Circuitos\Models\Operations\CidadeDigitalOP;
 use Circuitos\Models\Operations\CircuitosOP;
 use Circuitos\Models\Operations\ConectividadeOP;
+use Circuitos\Models\Operations\ContratoFinanceiroOP;
 use Circuitos\Models\Operations\ContratoFiscalOP;
 use Circuitos\Models\Operations\ContratoOP;
 use Circuitos\Models\Operations\CoreOP;
@@ -437,6 +439,10 @@ class CoreController extends ControllerBase
                 $objeto = new CoreOP();
                 return $objeto->contratosPrincipaisAtivos();
                 break;
+            case 'contratoExercíciosAtivos':
+                $objeto = new CoreOP();
+                return $objeto->contratoExercíciosAtivos();
+                break;
             case 'propostasComerciaisAtivas':
                 $objeto = new CoreOP();
                 return $objeto->propostasComerciaisAtivas();
@@ -571,6 +577,14 @@ class CoreController extends ControllerBase
                 $objeto = new ContratoFiscalOP();
                 return $objeto->visualizarContratoFiscal($dados['id']);
                 break;
+            case 'visualizarContratoFinanceiro':
+                $objeto = new ContratoFinanceiroOP();
+                return $objeto->visualizarContratoFinanceiro($dados['id']);
+                break;
+            case 'visualizarContratoFinanceiroNotas':
+                $objeto = new ContratoFinanceiroOP();
+                return $objeto->visualizarContratoFinanceiroNotas($dados['id']);
+                break;
             case 'visualizarContratoOrcamentos':
                 $objeto = new ContratoOP();
                 return $objeto->visualizarContratoOrcamentos($dados['id']);
@@ -582,6 +596,10 @@ class CoreController extends ControllerBase
             case 'visualizarContratoExercicios':
                 $objeto = new ContratoOP();
                 return $objeto->visualizarContratoExercicios($dados['id']);
+                break;
+            case 'carregarValoresExercicio':
+                $objeto = new CoreOP();
+                return $objeto->carregarValoresExercicio();
                 break;
             case 'visualizarContratoOrcamento':
                 $objeto = new ContratoOP();
@@ -679,6 +697,10 @@ class CoreController extends ControllerBase
                 $objeto = new ContratoFiscalOP();
                 return $objeto->visualizarContratoFiscalAnexos($dados['id']);
                 break;
+            case 'visualizarContratoFinanceiroAnexos':
+                $objeto = new ContratoFinanceiroOP();
+                return $objeto->visualizarContratoFinanceiroAnexos($dados['id']);
+                break;
             case 'visualizarEmpresaDepartamento':
                 $objeto = new EmpresaDepartamentoOP();
                 return $objeto->visualizarEmpresaDepartamento($dados['id']);
@@ -702,6 +724,14 @@ class CoreController extends ControllerBase
             case 'visualizarContratosVinculados':
                 $objeto = new ContratoOP();
                 return $objeto->visualizarContratosVinculados($dados['id']);
+                break;
+            case 'validacaoFiscalTitular':
+                $objeto = new ContratoFiscalOP();
+                return $objeto->validacaoFiscalTitular($dados['id']);
+                break;
+            case 'validarCompetenciaExercicio':
+                $objeto = new ContratoFinanceiroOP();
+                return $objeto->validarCompetenciaExercicio($dados);
                 break;
         }
     }
@@ -888,6 +918,11 @@ class CoreController extends ControllerBase
                 $objPrincipal = ContratoFiscalAnexo::findFirst('id_anexo='.$dados['id']);
                 return $objeto->excluirContratoFiscalAnexo($objPrincipal);
                 break;
+            case 'excluirContratoFinanceiroNotaAnexo':
+                $objeto = new AnexosOP();
+                $objPrincipal = ContratoFinanceiroNota::findFirst('id='.$dados['id']);
+                return $objeto->excluirContratoFinanceiroNotaAnexo($objPrincipal);
+                break;
         }
     }
 
@@ -897,6 +932,10 @@ class CoreController extends ControllerBase
         $this->view->disable();
         $dados = filter_input_array(INPUT_GET);
         switch ($dados['metodo']) {
+            case 'carregarCompetenciasExercicio':
+                $objeto = new CoreOP();
+                return $objeto->carregarCompetenciasExercicio();
+                break;
             case 'selectTiposAnexos':
                 $objeto = new CoreOP();
                 return $objeto->selectTiposAnexos();

@@ -5,6 +5,8 @@ namespace Circuitos\Models\Operations;
 use Circuitos\Models\CidadeDigital;
 use Circuitos\Models\Cliente;
 use Circuitos\Models\Contrato;
+use Circuitos\Models\ContratoExercicio;
+use Circuitos\Models\ContratoFinanceiro;
 use Circuitos\Models\EmpresaDepartamento;
 use Circuitos\Models\EndCidade;
 use Circuitos\Models\EndEndereco;
@@ -89,7 +91,7 @@ class CoreOP
             return $uploader->getInfo();
         } catch (Exception $e) {
             $logger->error('['.$e->getMessage().'] ['.$uploader->getErrors().']');
-            return '['.$e->getMessage().'] ['.$uploader->getErrors().']';
+            return false;
         }
     }
 
@@ -431,6 +433,52 @@ class CoreOP
         $objeto = Contrato::find("excluido=0 AND ativo=1 AND id_contrato_principal IS NULL AND numero LIKE '%{$dados['string']}%'");
         $response = new Response();
         $response->setContent(json_encode(array("operacao" => True, "dados" => $objeto)));
+        return $response;
+    }
+
+    public function contratoExercíciosAtivos()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $objeto = ContratoExercicio::find("excluido=0 AND ativo=1 AND id_contrato = {$dados['id_contrato']} AND exercicio LIKE '%{$dados['string']}%'");
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $objeto)));
+        return $response;
+    }
+
+    public function carregarValoresExercicio()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $objeto = ContratoExercicio::findFirst("id={$dados['id_exercicio']}");
+        $valor_previsto =$objeto->getValorPrevisto();
+        $objetosFilhos = ContratoFinanceiro::find("ativo=1 AND excluido=0 AND id_exercicio={$dados['id_exercicio']}");
+        $valor_realizado = 0;
+        if (count($objetosFilhos) > 0){
+            foreach ($objetosFilhos as $objetoFilho)
+            {
+                $valor_realizado += $objetoFilho->getValorPagamento();
+            }
+        }
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "valor_previsto" => $valor_previsto, "valor_realizado" => $valor_realizado)));
+        return $response;
+    }
+
+    public function carregarCompetenciasExercicio()
+    {
+        $dados = filter_input_array(INPUT_GET);
+        $objeto = ContratoExercicio::findFirst("id={$dados['id_exercicio']}");
+        $arrCompetencias = array();
+        $indice = $objeto->getCompetenciaFinal() - $objeto->getCompetenciaInicial();
+        for ($i = 0; $i <= $indice; $i++)
+        {
+            if ($i == 0) {
+                array_push($arrCompetencias, (int)$objeto->getCompetenciaInicial());
+            } else {
+                array_push($arrCompetencias, $objeto->getCompetenciaInicial() + $i);
+            }
+        }
+        $response = new Response();
+        $response->setContent(json_encode(array("operacao" => True, "dados" => $arrCompetencias)));
         return $response;
     }
 
