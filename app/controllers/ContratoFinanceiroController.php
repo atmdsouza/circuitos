@@ -199,6 +199,33 @@ class ContratoFinanceiroController extends ControllerBase
         return $response;
     }
 
+    public function baixarExcluirAction()
+    {
+        //Desabilita o layout para o ajax
+        $this->view->disable();
+        $response = new Response();
+        $dados = filter_input_array(INPUT_POST);
+        $params = array();
+        parse_str($dados['dados'], $params);
+        $titulo = 'Exclusão de Pagamento';
+        $msg = 'Pagamento excluído com sucesso!';
+        $error_msg = 'Erro ao excluir um Pagamento!';
+        $error_chk = 'Check de token de formulário inválido!';
+        //CSRF Token Check
+        if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
+            $contratofinanceiroOP = new ContratoFinanceiroOP();
+            $contratofinanceironota = new ContratoFinanceiroNota($params);
+            if($contratofinanceiroOP->excluirBaixa($contratofinanceironota)){//Cadastrou com sucesso
+                $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
+            } else {//Erro no cadastro
+                $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
+            }
+        } else {//Formulário Inválido
+            $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo, 'mensagem' => $error_chk)));
+        }
+        return $response;
+    }
+
     /**
      * Created by PhpStorm.
      * User: andre

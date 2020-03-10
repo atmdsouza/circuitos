@@ -2,6 +2,7 @@
 
 namespace Circuitos\Models\Operations;
 
+use Circuitos\Models\Anexos;
 use Circuitos\Models\ContratoFinanceiro;
 use Circuitos\Models\ContratoFinanceiroNota;
 use Phalcon\Http\Response as Response;
@@ -189,14 +190,20 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
         $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         try {
-            $objetos = ContratoFinanceiroNota::find("id_contrato_financeiro={$id}");
+            $objetos = ContratoFinanceiroNota::find("ativo=1 AND excluido=0 AND id_contrato_financeiro={$id}");
             $objetosDescricoes = [];
             foreach ($objetos as $objeto)
             {
                 $objetoDescricao = new \stdClass();
                 $objetoDescricao->url_anexo = $objeto->getUrlAnexo();
+                $objetoDescricao->url_anexo_formatado = $objeto->getUrlFormatadaAnexo();
                 $objetoDescricao->data_pagamento_formatada = $util->converterDataParaBr($objeto->getDataPagamento());
                 $objetoDescricao->valor_pagamento_formatado = $util->formataMoedaReal($objeto->getValorNota());
+                $objetoDescricao->id_anexo = $objeto->getIdAnexo();
+                $objetoDescricao->id_tipo_anexo = $objeto->getIdTipoAnexo();
+                $objetoDescricao->ds_tipo_anexo = $objeto->getDescricaoTipoAnexo();
+                $objetoDescricao->descricao = $objeto->getDescricaoAnexo();
+                $objetoDescricao->data_criacao = $util->converterDataHoraParaBr($objeto->getDataCriacaoAnexo());
                 array_push($objetosDescricoes, $objetoDescricao);
             }
             $response = new Response();
@@ -245,36 +252,6 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
         }
     }
 
-    public function visualizarContratoFinanceiroAnexos($id_contrato_financeiro)
-    {
-        $logger = new FileAdapter($this->arqLog);
-        $util = new Util();
-        try {
-            $objetosComponentes = ContratoFinanceiroNota::find('id_anexo IS NOT NULL AND id_contrato_financeiro= ' . $id_contrato_financeiro);
-            $arrTransporte = [];
-            foreach ($objetosComponentes as $objetoComponente){
-                chmod($objetoComponente->getUrlAnexo(), 0777);
-                $url_base = explode("/", $objetoComponente->getUrlAnexo());
-                $url = $url_base[count($url_base)-5].'/'.$url_base[count($url_base)-4].'/'.$url_base[count($url_base)-3].'/'.$url_base[count($url_base)-2].'/'.$url_base[count($url_base)-1];
-                $objTransporte = new \stdClass();
-                $objTransporte->id_contrato_anexo = $objetoComponente->getId();
-                $objTransporte->id_anexo = $objetoComponente->getIdAnexo();
-                $objTransporte->id_tipo_anexo = $objetoComponente->getIdTipoAnexo();
-                $objTransporte->ds_tipo_anexo = $objetoComponente->getDescricaoTipoAnexo();
-                $objTransporte->descricao = $objetoComponente->getDescricaoAnexo();
-                $objTransporte->url = $url;
-                $objTransporte->data_criacao = $util->converterDataHoraParaBr($objetoComponente->getDataCriacaoAnexo());
-                array_push($arrTransporte, $objTransporte);
-            }
-            $response = new Response();
-            $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
-            return $response;
-        } catch (TxFailed $e) {
-            $logger->error($e->getMessage());
-            return false;
-        }
-    }
-
     public function cadastrarBaixa(ContratoFinanceiroNota $objContratoFinanceiroNota)
     {
         $logger = new FileAdapter($this->arqLog);
@@ -297,6 +274,59 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
                     $errors .= "[".$messages[$i]."] ";
                 }
                 $transaction->rollback("Erro ao criar a nota: " . $errors);
+            }
+            $arrQuitacao = $this->verificarQuitacaoPagamento($objeto->getIdContratoFinanceiro());
+            $objetoPai = ContratoFinanceiro::findFirst($objContratoFinanceiroNota->getIdContratoFinanceiro());
+            $objetoPai->setTransaction($transaction);
+            $objetoPai->setStatusPagamento(($arrQuitacao['quitado']) ? 2 : 3);
+            $objetoPai->setDataUpdate(date('Y-m-d H:i:s'));
+            if ($objetoPai->save() == false) {
+                $messages = $objetoPai->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao alterar o pagamento: " . $errors);
+            }
+            $transaction->commit();
+            return $objeto;
+        } catch (TxFailed $e) {
+            $logger->error($e->getMessage());
+            return false;
+        }
+    }
+
+    public function excluirBaixa(ContratoFinanceiroNota $objContratoFinanceiroNota)
+    {
+        $logger = new FileAdapter($this->arqLog);
+        $util = new Util();
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        try {
+            $objeto = ContratoFinanceiroNota::findFirst('id='.$objContratoFinanceiroNota->getId());
+            $objeto->setTransaction($transaction);
+            $objeto->setExcluido(1);
+            $objeto->setDataCriacao(date('Y-m-d H:i:s'));
+            if ($objeto->save() == false) {
+                $messages = $objeto->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao excluir o pagamento: " . $errors);
+            }
+            $ObjetoAnexo = Anexos::findFirst('id='.$objeto->getIdAnexo());
+            unlink($ObjetoAnexo->getUrl());
+            $ObjetoAnexo->setTransaction($transaction);
+            $ObjetoAnexo->setExcluido(1);
+            $ObjetoAnexo->setDataCriacao(date('Y-m-d H:i:s'));
+            if ($ObjetoAnexo->save() == false) {
+                $messages = $ObjetoAnexo->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao excluir o anexo: " . $errors);
             }
             $arrQuitacao = $this->verificarQuitacaoPagamento($objeto->getIdContratoFinanceiro());
             $objetoPai = ContratoFinanceiro::findFirst($objContratoFinanceiroNota->getIdContratoFinanceiro());

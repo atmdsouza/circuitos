@@ -335,6 +335,15 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
     }
 
     /**
+     * @return string
+     */
+    public function getUrlFormatadaAnexo()
+    {
+        $url_base = explode("/", $this->Anexos->url);
+        return $url_base[count($url_base)-5].'/'.$url_base[count($url_base)-4].'/'.$url_base[count($url_base)-3].'/'.$url_base[count($url_base)-2].'/'.$url_base[count($url_base)-1];
+    }
+
+    /**
      * Returns the value of field descricao
      *
      * @return string

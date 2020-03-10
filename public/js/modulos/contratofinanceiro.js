@@ -535,53 +535,6 @@ function visualizar(id, ocultar)
     });
 }
 
-function montarTabelaAnexosv(id_contrato_financeiro, visualizar)
-{
-    'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: { metodo: 'visualizarContratoFinanceiroAnexos', id: id_contrato_financeiro },
-        complete: function() {
-            if (visualizar) {
-                exibirTabela('tabela_lista_anexosv');
-            } else {
-                ocultarTabela('tabela_lista_anexosv','tr_remove_anexov');
-            }
-        },
-        error: function(data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function(data) {
-            $('.tr_remove_anexov').remove();
-            var linhas =null;
-            if (data.dados.length > 0){
-                $.each(data.dados, function(key, value) {
-                    linhas += '<tr class="tr_remove_anexov">';
-                    linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
-                    linhas += '<td>'+ value.descricao +'</td>';
-                    linhas += '<td>'+ value.data_criacao +'</td>';
-                    linhas += '<td><a href="'+ value.url +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
-                    linhas += '</tr>';
-                });
-            } else {
-                linhas += "<tr class='tr_remove_anexov'>";
-                linhas += "<td colspan='5' style='text-align: center;'>Não existem anexos para serem exibidos! Favor Cadastrar!</td>";
-                linhas += "</tr>";
-            }
-            $("#tabela_lista_anexosv").append(linhas);
-        }
-    });
-}
-
 function ocultarTabela(id_html_tabela, class_tr)
 {
     'use strict';
@@ -607,11 +560,7 @@ function montarTabelaPagamentos(id_contrato_financeiro, visualizar, id_html_tabe
         url: action,
         data: { metodo: 'visualizarContratoFinanceiroNotas', id: id_contrato_financeiro },
         complete: function() {
-            if (visualizar) {
-                exibirTabela(id_html_tabela);
-            } else {
-                ocultarTabela(id_html_tabela,'tr_remove_'+remove);
-            }
+            exibirTabela(id_html_tabela);
         },
         error: function(data) {
             if (data.status && data.status === 401) {
@@ -624,7 +573,7 @@ function montarTabelaPagamentos(id_contrato_financeiro, visualizar, id_html_tabe
         },
         success: function(data) {
             $('.tr_remove_'+remove).remove();
-            var linhas =null;
+            var linhas=null;
             if (!isEmpty(data.dados_objeto)){
                 $.each(data.dados_objeto, function(key, value) {
                     linhas += '<tr class="tr_remove_'+remove+'">';
@@ -633,7 +582,22 @@ function montarTabelaPagamentos(id_contrato_financeiro, visualizar, id_html_tabe
                     linhas += '<td>'+ value.numero_nota_fiscal +'</td>';
                     linhas += '<td>'+ data.dados_descricoes[key].valor_pagamento_formatado +'</td>';
                     linhas += '<td>'+ value.observacao +'</td>';
-                    linhas += '<td><a href="'+ data.dados_descricoes[key].url_anexo +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
+                    if (visualizar) {
+                        if (data.dados_descricoes[key].url_anexo) {
+                            linhas += '<td><a href="'+ data.dados_descricoes[key].url_anexo_formatado +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
+                        } else {
+                            linhas += '<td>Sem Anexo</td>';
+                        }
+                    } else {
+                        linhas += '<td>';
+                        if (data.dados_descricoes[key].url_anexo) {
+                            linhas += '<a href="'+ data.dados_descricoes[key].url_anexo_formatado +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a>';
+                        } else {
+                            linhas += 'Sem Anexo';
+                        }
+                        linhas += '<a href="javascript:void(0)" onclick="excluirBaixarPagamento(' + value.id + ');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a>';
+                        linhas += '</td>';
+                    }
                     linhas += '</tr>';
                 });
             } else {
@@ -644,6 +608,36 @@ function montarTabelaPagamentos(id_contrato_financeiro, visualizar, id_html_tabe
             $("#"+id_html_tabela).append(linhas);
         }
     });
+}
+
+function montarTabelaAnexos(objeto, objeto_descricoes)
+{
+    'use strict';
+    $('.tr_remove_anexo').remove();
+    var linhas =null;
+    if (!isEmpty(objeto)){
+        $.each(objeto, function(key, value) {
+            if (value.id_anexo) {
+                linhas += '<tr class="tr_remove_anexo">';
+                linhas += '<td>'+ objeto_descricoes[key].ds_tipo_anexo +'</td>';
+                linhas += '<td>'+ objeto_descricoes[key].descricao +'</td>';
+                linhas += '<td>'+ objeto_descricoes[key].data_criacao +'</td>';
+                linhas += '<td><a href="'+ objeto_descricoes[key].url_anexo_formatado +'" class="botoes_acao nova-aba" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a>' +
+                    '<a href="javascript:void(0)" onclick="excluirAnexo(' + value.id_anexo + ');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+                linhas += '</tr>';
+            }
+        });
+    } else {
+        linhas += "<tr class='tr_remove_anexo'>";
+        linhas += "<td colspan='5' style='text-align: center;'>Não existem anexos para serem exibidos! Favor Cadastrar!</td>";
+        linhas += "</tr>";
+    }
+    if (linhas) {
+        $("#tabela_lista_anexos").append(linhas);
+        exibirTabela('tabela_lista_anexos');
+    } else {
+        ocultarTabela('tabela_lista_anexos','tr_remove_anexo');
+    }
 }
 
 function limpar()
@@ -680,9 +674,9 @@ function criarAnexo(id_contrato_financeiro, contrato, exercicio, competencia)
                 $('#id_contrato_financeiro').val(id_contrato_financeiro);
                 $('#identificador-anexado').html(contrato +'/'+exercicio +'/'+competencia);
                 $.each(data.dados_objeto, function(key, value) {
-                    inserirAnexo(value.id, value.numero_nota_fiscal, data.dados_descricoes[key].url_anexo);
+                    inserirAnexo(value.id, value.numero_nota_fiscal, value.id_anexo);
                 });
-                montarTabelaAnexos(id_contrato_financeiro);
+                montarTabelaAnexos(data.dados_objeto, data.dados_descricoes);
                 $('#modalAnexoArquivo').modal();
             } else {
                 swal({
@@ -700,46 +694,6 @@ function criarAnexo(id_contrato_financeiro, contrato, exercicio, competencia)
         }
     });
 
-}
-
-function montarTabelaAnexos(id_contrato_financeiro)
-{
-    'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: { metodo: 'visualizarContratoFinanceiroAnexos', id: id_contrato_financeiro },
-        error: function(data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function(data) {
-            if (data.dados.length > 0){
-                $('.tr_remove_anexo').remove();
-                var linhas =null;
-                $.each(data.dados, function(key, value) {
-                    linhas += '<tr class="tr_remove_anexo">';
-                    linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
-                    linhas += '<td>'+ value.descricao +'</td>';
-                    linhas += '<td>'+ value.data_criacao +'</td>';
-                    linhas += '<td><a href="'+ value.url +'" class="botoes_acao nova-aba" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a>' +
-                        '<a href="javascript:void(0)" onclick="excluirAnexo(' + value.id_anexo + ');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
-                    linhas += '</tr>';
-                });
-                $("#tabela_lista_anexos").append(linhas);
-                exibirTabela('tabela_lista_anexos');
-            } else {
-                ocultarTabela('tabela_lista_anexos','tr_remove_anexo');
-            }
-        }
-    });
 }
 
 function getTiposAnexo()
@@ -767,10 +721,10 @@ function getTiposAnexo()
     return tipos_anexos;
 }
 
-function inserirAnexo(id_contrato_financeiro_nota, descricao, url_anexo)
+function inserirAnexo(id_contrato_financeiro_nota, descricao, id_anexo)
 {
     'use strict';
-    if (url_anexo === '' || url_anexo === null){
+    if (id_anexo === '' || id_anexo === null){
         tipos_anexos = getTiposAnexo();
         contador++;
         var elemento = '<div id="div-anexo-'+ contador +'" class="form-row anexos-complementares">';
@@ -978,4 +932,9 @@ function salvarBaixarPagamento()
             });
         }
     });
+}
+
+function excluirBaixarPagamento(id)
+{
+
 }
