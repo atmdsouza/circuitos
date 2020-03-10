@@ -7,6 +7,7 @@ use Circuitos\Models\CircuitosAnexo;
 use Circuitos\Models\Conectividade;
 use Circuitos\Models\ContratoAnexo;
 use Circuitos\Models\ContratoExercicio;
+use Circuitos\Models\ContratoFinanceiroNota;
 use Circuitos\Models\ContratoFiscalAnexo;
 use Circuitos\Models\ContratoGarantia;
 use Circuitos\Models\ContratoOrcamento;
@@ -916,6 +917,11 @@ class CoreController extends ControllerBase
                 $objeto = new AnexosOP();
                 $objPrincipal = ContratoFiscalAnexo::findFirst('id_anexo='.$dados['id']);
                 return $objeto->excluirContratoFiscalAnexo($objPrincipal);
+                break;
+            case 'excluirContratoFinanceiroNotaAnexo':
+                $objeto = new AnexosOP();
+                $objPrincipal = ContratoFinanceiroNota::findFirst('id='.$dados['id']);
+                return $objeto->excluirContratoFinanceiroNotaAnexo($objPrincipal);
                 break;
         }
     }

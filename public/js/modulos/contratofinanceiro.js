@@ -610,36 +610,6 @@ function montarTabelaPagamentos(id_contrato_financeiro, visualizar, id_html_tabe
     });
 }
 
-function montarTabelaAnexos(objeto, objeto_descricoes)
-{
-    'use strict';
-    $('.tr_remove_anexo').remove();
-    var linhas =null;
-    if (!isEmpty(objeto)){
-        $.each(objeto, function(key, value) {
-            if (value.id_anexo) {
-                linhas += '<tr class="tr_remove_anexo">';
-                linhas += '<td>'+ objeto_descricoes[key].ds_tipo_anexo +'</td>';
-                linhas += '<td>'+ objeto_descricoes[key].descricao +'</td>';
-                linhas += '<td>'+ objeto_descricoes[key].data_criacao +'</td>';
-                linhas += '<td><a href="'+ objeto_descricoes[key].url_anexo_formatado +'" class="botoes_acao nova-aba" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a>' +
-                    '<a href="javascript:void(0)" onclick="excluirAnexo(' + value.id_anexo + ');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
-                linhas += '</tr>';
-            }
-        });
-    } else {
-        linhas += "<tr class='tr_remove_anexo'>";
-        linhas += "<td colspan='5' style='text-align: center;'>Não existem anexos para serem exibidos! Favor Cadastrar!</td>";
-        linhas += "</tr>";
-    }
-    if (linhas) {
-        $("#tabela_lista_anexos").append(linhas);
-        exibirTabela('tabela_lista_anexos');
-    } else {
-        ocultarTabela('tabela_lista_anexos','tr_remove_anexo');
-    }
-}
-
 function limpar()
 {
     'use strict';
@@ -674,7 +644,7 @@ function criarAnexo(id_contrato_financeiro, contrato, exercicio, competencia)
                 $('#id_contrato_financeiro').val(id_contrato_financeiro);
                 $('#identificador-anexado').html(contrato +'/'+exercicio +'/'+competencia);
                 $.each(data.dados_objeto, function(key, value) {
-                    inserirAnexo(value.id, value.numero_nota_fiscal, value.id_anexo);
+                    inserirAnexo(value.id, value.numero_nota_fiscal, value.id_anexo, tipos_anexos);
                 });
                 montarTabelaAnexos(data.dados_objeto, data.dados_descricoes);
                 $('#modalAnexoArquivo').modal();
@@ -693,7 +663,36 @@ function criarAnexo(id_contrato_financeiro, contrato, exercicio, competencia)
             }
         }
     });
+}
 
+function montarTabelaAnexos(objeto, objeto_descricoes)
+{
+    'use strict';
+    $('.tr_remove_anexo').remove();
+    var linhas =null;
+    if (!isEmpty(objeto)){
+        $.each(objeto, function(key, value) {
+            if (value.id_anexo) {
+                linhas += '<tr class="tr_remove_anexo">';
+                linhas += '<td>'+ objeto_descricoes[key].ds_tipo_anexo +'</td>';
+                linhas += '<td>'+ objeto_descricoes[key].descricao +'</td>';
+                linhas += '<td>'+ objeto_descricoes[key].data_criacao +'</td>';
+                linhas += '<td><a href="'+ objeto_descricoes[key].url_anexo_formatado +'" class="botoes_acao nova-aba" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a>' +
+                    '<a href="javascript:void(0)" onclick="excluirContratoFinanceiroNotaAnexo(' + value.id + ');" class="botoes_acao"><img src="public/images/sistema/excluir.png" title="Excluir" alt="Excluir" height="25" width="25"></a></td>';
+                linhas += '</tr>';
+            }
+        });
+    } else {
+        linhas += "<tr class='tr_remove_anexo'>";
+        linhas += "<td colspan='5' style='text-align: center;'>Não existem anexos para serem exibidos! Favor Cadastrar!</td>";
+        linhas += "</tr>";
+    }
+    if (linhas) {
+        $("#tabela_lista_anexos").append(linhas);
+        exibirTabela('tabela_lista_anexos');
+    } else {
+        ocultarTabela('tabela_lista_anexos','tr_remove_anexo');
+    }
 }
 
 function getTiposAnexo()
@@ -721,11 +720,10 @@ function getTiposAnexo()
     return tipos_anexos;
 }
 
-function inserirAnexo(id_contrato_financeiro_nota, descricao, id_anexo)
+function inserirAnexo(id_contrato_financeiro_nota, descricao, id_anexo, tipos_de_anexo)
 {
     'use strict';
     if (id_anexo === '' || id_anexo === null){
-        tipos_anexos = getTiposAnexo();
         contador++;
         var elemento = '<div id="div-anexo-'+ contador +'" class="form-row anexos-complementares">';
         elemento += '<input type="hidden" id="id_contrato_financeiro_nota_'+ contador +'" name="id_contrato_financeiro_nota[]" value="'+id_contrato_financeiro_nota+'">';
@@ -733,7 +731,7 @@ function inserirAnexo(id_contrato_financeiro_nota, descricao, id_anexo)
         elemento += '<label for="id_tipo_anexo-'+ contador +'">Tipo de Anexo <span class="required">*</span></label>';
         elemento += '<select id="id_tipo_anexo-'+ contador +'" name="id_tipo_anexo[]" class="form-control selectpicker" data-live-search="true" data-style="btn-light">';
         elemento += '<option value="">Selecione o Tipo de Anexo</option>';
-        $.each(tipos_anexos, function(key, value) {
+        $.each(tipos_de_anexo, function(key, value) {
             elemento += '<option value="'+value.id+'">'+value.descricao+'</option>';
         });
         elemento += '</select>';
@@ -762,6 +760,40 @@ function inserirAnexo(id_contrato_financeiro_nota, descricao, id_anexo)
             placeholder: 'Sem arquivo',
         });
     }
+}
+
+function excluirContratoFinanceiroNotaAnexo(id_contrato_financeiro_nota)
+{
+    'use strict';
+    swal({
+        title: "Tem certeza que deseja excluir o anexo?",
+        text: "O sistema irá excluir o anexo selecionado com essa ação.",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, excluir!"
+    }).then((result) => {
+        var action = actionCorreta(window.location.href.toString(), "core/processarAjaxAcao");
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: action,
+            data: {metodo: 'excluirContratoFinanceiroNotaAnexo', id: id_contrato_financeiro_nota},
+            error: function (data) {
+                if (data.status && data.status === 401) {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            },
+            complete: function (data) {
+                window.location.reload(true);
+            }
+        });
+    });
 }
 
 function limparModalAnexos()
