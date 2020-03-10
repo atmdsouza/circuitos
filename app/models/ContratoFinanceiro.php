@@ -321,7 +321,7 @@ class ContratoFinanceiro extends \Phalcon\Mvc\Model
      */
     public function getValorPago()
     {
-        $objetosFilhos = ContratoFinanceiroNota::find('id_contrato_financeiro='.$this->id);
+        $objetosFilhos = ContratoFinanceiroNota::find('ativo=1 AND excluido=0 AND id_contrato_financeiro='.$this->id);
         $valor_pago = 0;
         foreach ($objetosFilhos as $objetoFilho)
         {
@@ -335,7 +335,7 @@ class ContratoFinanceiro extends \Phalcon\Mvc\Model
      */
     public function getValorPagoFormatado()
     {
-        $objetosFilhos = ContratoFinanceiroNota::find('id_contrato_financeiro='.$this->id);
+        $objetosFilhos = ContratoFinanceiroNota::find('ativo=1 AND excluido=0 AND id_contrato_financeiro='.$this->id);
         $valor_pago = 0;
         foreach ($objetosFilhos as $objetoFilho)
         {

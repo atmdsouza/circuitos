@@ -36,7 +36,7 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
             $objeto->setStatusPagamento(1);
             $objeto->setValorPagamento($util->formataNumero($objArray->getValorPagamento()));
             $objeto->setDataCriacao(date('Y-m-d H:i:s'));
-            if ($objeto->save() == false) {
+            if ($objeto->save() === false) {
                 $messages = $objeto->getMessages();
                 $errors = "";
                 for ($i = 0; $i < count($messages); $i++) {
@@ -66,7 +66,7 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
             $objeto->setStatusPagamento(1);
             $objeto->setValorPagamento($util->formataNumero($objArray->getValorPagamento()));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
-            if ($objeto->save() == false) {
+            if ($objeto->save() === false) {
                 $messages = $objeto->getMessages();
                 $errors = "";
                 for ($i = 0; $i < count($messages); $i++) {
@@ -92,7 +92,7 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
             $objeto->setTransaction($transaction);
             $objeto->setAtivo(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
-            if ($objeto->save() == false) {
+            if ($objeto->save() === false) {
                 $messages = $objeto->getMessages();
                 $errors = "";
                 for ($i = 0; $i < count($messages); $i++) {
@@ -118,13 +118,13 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
             $objeto->setTransaction($transaction);
             $objeto->setAtivo(0);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
-            if ($objeto->save() == false) {
+            if ($objeto->save() === false) {
                 $messages = $objeto->getMessages();
-                $errors = "";
+                $errors = '';
                 for ($i = 0; $i < count($messages); $i++) {
-                    $errors .= "[".$messages[$i]."] ";
+                    $errors .= '[' .$messages[$i]. '] ';
                 }
-                $transaction->rollback("Erro ao inativar o pagamento: " . $errors);
+                $transaction->rollback('Erro ao inativar o pagamento: ' . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -144,13 +144,13 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
             $objeto->setTransaction($transaction);
             $objeto->setExcluido(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
-            if ($objeto->save() == false) {
+            if ($objeto->save() === false) {
                 $messages = $objeto->getMessages();
-                $errors = "";
+                $errors = '';
                 for ($i = 0; $i < count($messages); $i++) {
-                    $errors .= "[".$messages[$i]."] ";
+                    $errors .= '[' .$messages[$i]. ']';
                 }
-                $transaction->rollback("Erro ao excluiro pagamento: " . $errors);
+                $transaction->rollback('Erro ao excluiro pagamento: ' . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -267,7 +267,7 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
             $objeto->setValorNota($util->formataNumero($objContratoFinanceiroNota->getValorNota()));
             $objeto->setObservacao(mb_strtoupper($objContratoFinanceiroNota->getObservacao(), $this->encode));
             $objeto->setDataCriacao(date('Y-m-d H:i:s'));
-            if ($objeto->save() == false) {
+            if ($objeto->save() === false) {
                 $messages = $objeto->getMessages();
                 $errors = "";
                 for ($i = 0; $i < count($messages); $i++) {
@@ -280,7 +280,7 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
             $objetoPai->setTransaction($transaction);
             $objetoPai->setStatusPagamento(($arrQuitacao['quitado']) ? 2 : 3);
             $objetoPai->setDataUpdate(date('Y-m-d H:i:s'));
-            if ($objetoPai->save() == false) {
+            if ($objetoPai->save() === false) {
                 $messages = $objetoPai->getMessages();
                 $errors = "";
                 for ($i = 0; $i < count($messages); $i++) {
@@ -299,7 +299,6 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
     public function excluirBaixa(ContratoFinanceiroNota $objContratoFinanceiroNota)
     {
         $logger = new FileAdapter($this->arqLog);
-        $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
@@ -307,42 +306,44 @@ class ContratoFinanceiroOP extends ContratoFinanceiro
             $objeto->setTransaction($transaction);
             $objeto->setExcluido(1);
             $objeto->setDataCriacao(date('Y-m-d H:i:s'));
-            if ($objeto->save() == false) {
+            if ($objeto->save() === false) {
                 $messages = $objeto->getMessages();
-                $errors = "";
+                $errors = '';
                 for ($i = 0; $i < count($messages); $i++) {
-                    $errors .= "[".$messages[$i]."] ";
+                    $errors .= '[' .$messages[$i]. '] ';
                 }
-                $transaction->rollback("Erro ao excluir o pagamento: " . $errors);
+                $transaction->rollback('Erro ao excluir o pagamento: ' . $errors);
             }
-            $ObjetoAnexo = Anexos::findFirst('id='.$objeto->getIdAnexo());
-            unlink($ObjetoAnexo->getUrl());
-            $ObjetoAnexo->setTransaction($transaction);
-            $ObjetoAnexo->setExcluido(1);
-            $ObjetoAnexo->setDataCriacao(date('Y-m-d H:i:s'));
-            if ($ObjetoAnexo->save() == false) {
-                $messages = $ObjetoAnexo->getMessages();
-                $errors = "";
-                for ($i = 0; $i < count($messages); $i++) {
-                    $errors .= "[".$messages[$i]."] ";
+            if ($objeto->getIdAnexo() !== null) {
+                $objetoAnexo = Anexos::findFirst('id='.$objeto->getIdAnexo());
+                unlink($objetoAnexo->getUrl());
+                $objetoAnexo->setTransaction($transaction);
+                $objetoAnexo->setExcluido(1);
+                $objetoAnexo->setDataCriacao(date('Y-m-d H:i:s'));
+                if ($objetoAnexo->save() === false) {
+                    $messages = $objetoAnexo->getMessages();
+                    $errors = '';
+                    for ($i = 0; $i < count($messages); $i++) {
+                        $errors .= '[' .$messages[$i]. '] ';
+                    }
+                    $transaction->rollback('Erro ao excluir o anexo: ' . $errors);
                 }
-                $transaction->rollback("Erro ao excluir o anexo: " . $errors);
             }
             $arrQuitacao = $this->verificarQuitacaoPagamento($objeto->getIdContratoFinanceiro());
-            $objetoPai = ContratoFinanceiro::findFirst($objContratoFinanceiroNota->getIdContratoFinanceiro());
+            $objetoPai = ContratoFinanceiro::findFirst($objeto->getIdContratoFinanceiro());
             $objetoPai->setTransaction($transaction);
             $objetoPai->setStatusPagamento(($arrQuitacao['quitado']) ? 2 : 3);
             $objetoPai->setDataUpdate(date('Y-m-d H:i:s'));
-            if ($objetoPai->save() == false) {
+            if ($objetoPai->save() === false) {
                 $messages = $objetoPai->getMessages();
-                $errors = "";
+                $errors = '';
                 for ($i = 0; $i < count($messages); $i++) {
-                    $errors .= "[".$messages[$i]."] ";
+                    $errors .= '[' .$messages[$i]. '] ';
                 }
-                $transaction->rollback("Erro ao alterar o pagamento: " . $errors);
+                $transaction->rollback('Erro ao alterar o pagamento: ' . $errors);
             }
             $transaction->commit();
-            return $objeto;
+            return $objeto->getIdContratoFinanceiro();
         } catch (TxFailed $e) {
             $logger->error($e->getMessage());
             return false;

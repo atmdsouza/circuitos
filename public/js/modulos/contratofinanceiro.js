@@ -105,8 +105,9 @@ function carregarValoresExercicio()
         },
         success: function (data) {
             var valor_previsto = accounting.formatMoney(data.valor_previsto, "", 2, ".", ",");
-            var valor_realizado = accounting.formatMoney(data.valor_realizado, "", 2, ".", ",");
-            var valor_disponivel = accounting.formatMoney(parseFloat(data.valor_previsto) - parseFloat(data.valor_realizado), "", 2, ".", ",");
+            var valor_realizado = (data.valor_realizado) ? accounting.formatMoney(data.valor_realizado, "", 2, ".", ",") : '0,00';
+            var subtracao = parseFloat(data.valor_previsto) - parseFloat(data.valor_realizado);
+            var valor_disponivel = (subtracao) ? accounting.formatMoney(subtracao, "", 2, ".", ",") : '0,00';
             $('#valor-previsto-exercicio').val(valor_previsto);
             $('#valor-realizado-exercicio').val(valor_realizado);
             $('#valor-disponivel-exercicio').val(valor_disponivel);
@@ -968,5 +969,56 @@ function salvarBaixarPagamento()
 
 function excluirBaixarPagamento(id)
 {
-
+    'use strict';
+    swal({
+        title: "Tem certeza que deseja excluir o pagamento?",
+        text: "O sistema irá excluir o pagamento selecionado com essa ação.",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, excluir!"
+    }).then((result) => {
+        var action = actionCorreta(window.location.href.toString(), "contrato_financeiro/baixarExcluir");
+        $.ajax({
+            type: "POST",
+            dataType: "JSON",
+            url: action,
+            data: {
+                tokenKey: $("#token_baixar").attr("name"),
+                tokenValue: $("#token_baixar").attr("value"),
+                dados: {id: id}
+            },
+            error: function (data) {
+                if (data.status && data.status === 401) {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            },
+            success: function (data) {
+                if (data.operacao){
+                    swal({
+                        title: "Excluído!",
+                        text: "O pagamento selecionado foi excluído com sucesso.",
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Ok"
+                    }).then((result) => {
+                        window.location.reload(true);
+                    });
+                } else {
+                    swal({
+                        title: "Excluir",
+                        text: data.mensagem,
+                        type: "error"
+                    });
+                }
+            }
+        });
+    });
 }

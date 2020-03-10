@@ -205,8 +205,6 @@ class ContratoFinanceiroController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $params = array();
-        parse_str($dados['dados'], $params);
         $titulo = 'Exclusão de Pagamento';
         $msg = 'Pagamento excluído com sucesso!';
         $error_msg = 'Erro ao excluir um Pagamento!';
@@ -214,7 +212,7 @@ class ContratoFinanceiroController extends ControllerBase
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             $contratofinanceiroOP = new ContratoFinanceiroOP();
-            $contratofinanceironota = new ContratoFinanceiroNota($params);
+            $contratofinanceironota = new ContratoFinanceiroNota($dados['dados']);
             if($contratofinanceiroOP->excluirBaixa($contratofinanceironota)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
