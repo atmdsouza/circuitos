@@ -582,38 +582,42 @@ function montarTabelaFinanceiros(id_contrato, visualizar)
             if (data.dados.length > 0){
                 for (var key1 = 0; key1 < (data.dados.length); key1++) {
                     var size1 = Object.size(data.dados[key1]) - 2;
-                    var rowspan1 = 'rowspan="'+size1+'"';
-                    linhas += '<tr class="tr_remove_financeiro">';
-                    linhas += '<td '+rowspan1+'>'+ data.dados[key1].exercicio +'</td>';
-                    linhas += '<td '+rowspan1+'>'+ data.dados[key1].valor_exercicio_formatado +'</td>';
                     if (size1){
                         for (var key2 = 0; key2 < size1; key2++) {
                             var size2 = (Object.size(data.dados[key1][key2]) - 3) ? Object.size(data.dados[key1][key2]) - 3 : null;
-                            var rowspan2 = (size2) ? 'rowspan="'+size2+'"' : '';
-                            linhas += '<td '+rowspan2+'>' + data.dados[key1][key2].competencia + '</td>';
-                            linhas += '<td '+rowspan2+'>' + data.dados[key1][key2].status_descricao + '</td>';
-                            linhas += '<td '+rowspan2+'>' + data.dados[key1][key2].valor_pagamento_formatado + '</td>';
                             if (size2) {
                                 for (var key3 = 0; key3 < size2; key3++) {
+                                    linhas += '<tr class="tr_remove_financeiro">';
+                                    linhas += '<td>'+ data.dados[key1].exercicio +'</td>';
+                                    linhas += '<td>'+ data.dados[key1].valor_exercicio_formatado +'</td>';
+                                    linhas += '<td>' + data.dados[key1][key2].competencia + '</td>';
+                                    linhas += '<td>' + data.dados[key1][key2].status_descricao + '</td>';
+                                    linhas += '<td>' + data.dados[key1][key2].valor_pagamento_formatado + '</td>';
                                     linhas += '<td>' + data.dados[key1][key2][key3].numero_nota_fiscal + '</td>';
                                     linhas += '<td>' + data.dados[key1][key2][key3].data_pagamento_formatada + '</td>';
                                     linhas += '<td>' + data.dados[key1][key2][key3].valor_nota_formatado + '</td>';
                                     linhas += '<td>' + data.dados[key1][key2][key3].observacao + '</td>';
                                     if (data.dados[key1][key2][key3].id_anexo){
-                                        linhas += '<td><a href="'+data.caminho_anexo+data.dados[key1][key2][key3].url +'" class="botoes_acao nova-aba" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
+                                        linhas += '<td><a href="'+data.caminho_anexo+data.dados[key1][key2][key3].url +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
                                     } else {
                                         linhas += '<td>Sem anexo!</td>';
                                     }
-                                    linhas += '</tr>';
                                 }
                             } else {
+                                linhas += '<tr class="tr_remove_financeiro">';
+                                linhas += '<td>'+ data.dados[key1].exercicio +'</td>';
+                                linhas += '<td>'+ data.dados[key1].valor_exercicio_formatado +'</td>';
+                                linhas += '<td>' + data.dados[key1][key2].competencia + '</td>';
+                                linhas += '<td>' + data.dados[key1][key2].status_descricao + '</td>';
+                                linhas += '<td>' + data.dados[key1][key2].valor_pagamento_formatado + '</td>';
                                 linhas += "<td colspan='5' style='text-align: center;'>Não existem notas fiscais!</td>";
-                                linhas += '</tr>';
                             }
                         }
                     } else {
+                        linhas += '<tr class="tr_remove_financeiro">';
+                        linhas += '<td>'+ data.dados[key1].exercicio +'</td>';
+                        linhas += '<td>'+ data.dados[key1].valor_exercicio_formatado +'</td>';
                         linhas += "<td colspan='8' style='text-align: center;'>Não existem pagamentos!</td>";
-                        linhas += '</tr>';
                     }
                 }
             } else {
@@ -622,6 +626,7 @@ function montarTabelaFinanceiros(id_contrato, visualizar)
                 linhas += "</tr>";
             }
             $("#tabela_lista_financeiro").append(linhas);
+            $('#tabela_lista_financeiro').rowspanizer({columns: [0,1,2]});
         }
     });
 }
