@@ -6,6 +6,11 @@ use Util\Infra;
 
 class ContratoFiscalHasContrato extends \Phalcon\Mvc\Model
 {
+    /**
+     *
+     * @var integer
+     */
+    protected $id;
 
     /**
      *
@@ -18,6 +23,16 @@ class ContratoFiscalHasContrato extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $id_contrato;
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     /**
      * Method to set the value of field id_contrato_fiscal
@@ -43,6 +58,14 @@ class ContratoFiscalHasContrato extends \Phalcon\Mvc\Model
         $this->id_contrato = $id_contrato;
 
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**

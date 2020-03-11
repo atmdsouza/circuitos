@@ -6,6 +6,8 @@ use Circuitos\Models\Contrato;
 use Circuitos\Models\ContratoAnexo;
 use Circuitos\Models\ContratoArquivoFisico;
 use Circuitos\Models\ContratoExercicio;
+use Circuitos\Models\ContratoFiscal;
+use Circuitos\Models\ContratoFiscalHasContrato;
 use Circuitos\Models\ContratoGarantia;
 use Circuitos\Models\ContratoOrcamento;
 use Phalcon\Http\Response as Response;
@@ -706,6 +708,52 @@ class ContratoOP extends Contrato
             }
             $response = new Response();
             $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
+            return $response;
+        } catch (TxFailed $e) {
+            $logger->error($e->getMessage());
+            return false;
+        }
+    }
+
+    public function visualizarContratosFiscais($id_contrato)
+    {
+        $logger = new FileAdapter($this->arqLog);
+        try {
+            $objetos = ContratoFiscalHasContrato::find('id_contrato='.$id_contrato);
+            $arrObjetos = [];
+            $arrDescricoes = [];
+            foreach ($objetos as $objeto)
+            {
+                $objetoFiscal = ContratoFiscal::findFirst('id='.$objeto->getIdContratoFiscal());
+                $objetoDescricao = new \stdClass();
+                $objetoDescricao->tipo_fiscal = $objetoFiscal->getTipoFiscalDescricao();
+                $objetoDescricao->nome_fiscal = $objetoFiscal->getNomeFiscal();
+                $objetoDescricao->data_nomeacao_formatada = $objetoFiscal->getDataNomeacaoFormatada();
+                array_push($arrObjetos, $objetoFiscal);
+                array_push($arrDescricoes, $objetoDescricao);
+            }
+            $response = new Response();
+            $response->setContent(json_encode(array('operacao' => True, 'dados_objeto' => $arrObjetos, 'dados_descricao' => $arrDescricoes)));
+            return $response;
+        } catch (TxFailed $e) {
+            $logger->error($e->getMessage());
+            return false;
+        }
+    }
+
+    public function visualizarContratosFinanceiros($id_contrato)
+    {
+        $logger = new FileAdapter($this->arqLog);
+        $util = new Util();
+        try {
+            $objFilho = Contrato::findFirst('id='.$id_contrato);
+            $objetoPai = new \stdClass();
+            if (!empty($objFilho->getIdContratoPrincipal())){
+                $objPai = Contrato::findFirst('id='.$objFilho->getIdContratoPrincipal());
+                $objetoPai->tipo_vinculo = 'Pai';
+            }
+            $response = new Response();
+            $response->setContent(json_encode(array("operacao" => True, "dados_pai" => $objetoPai)));
             return $response;
         } catch (TxFailed $e) {
             $logger->error($e->getMessage());

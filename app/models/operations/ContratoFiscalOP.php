@@ -37,7 +37,7 @@ class ContratoFiscalOP extends ContratoFiscal
             $objeto->setDataNomeacao(($objArray->getDataNomeacao()) ? $util->converterDataUSA($objArray->getDataNomeacao()) : null);
             $objeto->setDocumentoNomeacao(mb_strtoupper($objArray->getDocumentoNomeacao(), $this->encode));
             $objeto->setDataCriacao(date('Y-m-d H:i:s'));
-            if ($objeto->save() == false) {
+            if ($objeto->save() === false) {
                 $messages = $objeto->getMessages();
                 $errors = "";
                 for ($i = 0; $i < count($messages); $i++) {
@@ -49,7 +49,7 @@ class ContratoFiscalOP extends ContratoFiscal
             $objetoVicunlo->setTransaction($transaction);
             $objetoVicunlo->setIdContrato($objVicunlo->getIdContrato());
             $objetoVicunlo->setIdContratoFiscal($objeto->getId());
-            if ($objetoVicunlo->save() == false) {
+            if ($objetoVicunlo->save() === false) {
                 $messages = $objetoVicunlo->getMessages();
                 $errors = "";
                 for ($i = 0; $i < count($messages); $i++) {
@@ -80,7 +80,7 @@ class ContratoFiscalOP extends ContratoFiscal
             $objeto->setDataNomeacao(($objArray->getDataNomeacao()) ? $util->converterDataUSA($objArray->getDataNomeacao()) : null);
             $objeto->setDocumentoNomeacao(mb_strtoupper($objArray->getDocumentoNomeacao(), $this->encode));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
-            if ($objeto->save() == false) {
+            if ($objeto->save() === false) {
                 $messages = $objeto->getMessages();
                 $errors = "";
                 for ($i = 0; $i < count($messages); $i++) {
@@ -92,7 +92,7 @@ class ContratoFiscalOP extends ContratoFiscal
             $objetoVicunlo->setTransaction($transaction);
             $objetoVicunlo->setIdContrato($objVicunlo->getIdContrato());
             $objetoVicunlo->setIdContratoFiscal($objeto->getId());
-            if ($objetoVicunlo->save() == false) {
+            if ($objetoVicunlo->save() === false) {
                 $messages = $objetoVicunlo->getMessages();
                 $errors = "";
                 for ($i = 0; $i < count($messages); $i++) {
@@ -118,7 +118,7 @@ class ContratoFiscalOP extends ContratoFiscal
             $objeto->setTransaction($transaction);
             $objeto->setAtivo(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
-            if ($objeto->save() == false) {
+            if ($objeto->save() === false) {
                 $messages = $objeto->getMessages();
                 $errors = "";
                 for ($i = 0; $i < count($messages); $i++) {
@@ -144,7 +144,7 @@ class ContratoFiscalOP extends ContratoFiscal
             $objeto->setTransaction($transaction);
             $objeto->setAtivo(0);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
-            if ($objeto->save() == false) {
+            if ($objeto->save() === false) {
                 $messages = $objeto->getMessages();
                 $errors = "";
                 for ($i = 0; $i < count($messages); $i++) {
@@ -166,17 +166,27 @@ class ContratoFiscalOP extends ContratoFiscal
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = ContratoFiscal::findFirst($objArray->getId());
+            $objeto = ContratoFiscal::findFirst('id='.$objArray->getId());
             $objeto->setTransaction($transaction);
             $objeto->setExcluido(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
-            if ($objeto->save() == false) {
+            if ($objeto->save() === false) {
                 $messages = $objeto->getMessages();
                 $errors = "";
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
                 $transaction->rollback("Erro ao excluir o fiscal: " . $errors);
+            }
+            $objetoVinculo = ContratoFiscalHasContrato::findFirst('id_contrato_fiscal='.$objeto->getId().' AND id_contrato='.$objeto->getIdContrato());
+            $objetoVinculo->setTransaction($transaction);
+            if ($objetoVinculo->delete() === false) {
+                $messages = $objetoVinculo->getMessages();
+                $errors = "";
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= "[".$messages[$i]."] ";
+                }
+                $transaction->rollback("Erro ao excluir o vinculo: " . $errors);
             }
             $transaction->commit();
             return $objeto;
