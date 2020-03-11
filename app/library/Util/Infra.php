@@ -50,4 +50,10 @@ class Infra
 //        return '/circuitos/public/relatorios/';
         return '/public/relatorios/';
     }
+
+    public function getCaminhoAnexos()
+    {
+//        return '/circuitos/public/';
+        return '/public/';
+    }
 }

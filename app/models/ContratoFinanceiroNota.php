@@ -3,6 +3,7 @@
 namespace Circuitos\Models;
 
 use Util\Infra;
+use Util\Util;
 
 class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
 {
@@ -381,6 +382,28 @@ class ContratoFinanceiroNota extends \Phalcon\Mvc\Model
     public function getIdTipoAnexo()
     {
         return $this->Anexos->id_tipo_anexo;
+    }
+
+    /**
+     * Returns the value of field data_pagamento
+     *
+     * @return string
+     */
+    public function getDataPagamentoFormatada()
+    {
+        $util = new Util();
+        return $util->converterDataParaBr($this->data_pagamento);
+    }
+
+    /**
+     * Returns the value of field valor_nota
+     *
+     * @return double
+     */
+    public function getValorNotaFormatado()
+    {
+        $util = new Util();
+        return $util->formataMoedaReal($this->valor_nota);
     }
 
     /**

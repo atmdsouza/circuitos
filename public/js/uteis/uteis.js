@@ -14,6 +14,17 @@ function actionCorreta(url, action) {
     return novaAction;
 }
 
+Object.size = function(obj) {
+    'use strict';
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            size++;
+        }
+    }
+    return size;
+};
+
 //Processo para fazer funcionar o CSRF_Token
 function getCookie(c_name) {
     'use strict';

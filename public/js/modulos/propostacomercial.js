@@ -1118,7 +1118,6 @@ function getTiposAnexo()
 function inserirAnexo()
 {
     'use strict';
-    tipos_anexos = getTiposAnexo();
     contador++;
     var elemento = '<div id="div-anexo-'+ contador +'" class="form-row anexos-complementares">';
     elemento += '<div class="form-group col-md-3">';

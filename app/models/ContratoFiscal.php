@@ -4,6 +4,7 @@ namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
 use Util\Infra;
+use Util\Util;
 
 class ContratoFiscal extends \Phalcon\Mvc\Model
 {
@@ -344,6 +345,15 @@ class ContratoFiscal extends \Phalcon\Mvc\Model
     {
         $tipo_fiscal = ($this->tipo_fiscal == 1) ? 'Titular' : 'Suplente';
         return $tipo_fiscal;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataNomeacaoFormatada()
+    {
+        $util = new Util();
+        return ($this->data_nomeacao) ? $util->converterDataParaBr($this->data_nomeacao) : null;
     }
 
     /**
