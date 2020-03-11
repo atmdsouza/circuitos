@@ -3,6 +3,7 @@
 namespace Circuitos\Models;
 
 use Util\Infra;
+use Util\Util;
 
 class ContratoExercicio extends \Phalcon\Mvc\Model
 {
@@ -266,6 +267,17 @@ class ContratoExercicio extends \Phalcon\Mvc\Model
     public function getCompetenciaFinal()
     {
         return $this->competencia_final;
+    }
+
+    /**
+     * Returns the value of field valor_previsto
+     *
+     * @return double
+     */
+    public function getValorPrevistoFormatado()
+    {
+        $util = new Util();
+        return $util->formataMoedaReal($this->valor_previsto);
     }
 
     /**

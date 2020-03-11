@@ -6,6 +6,8 @@ use Circuitos\Models\Contrato;
 use Circuitos\Models\ContratoAnexo;
 use Circuitos\Models\ContratoArquivoFisico;
 use Circuitos\Models\ContratoExercicio;
+use Circuitos\Models\ContratoFinanceiro;
+use Circuitos\Models\ContratoFinanceiroNota;
 use Circuitos\Models\ContratoFiscal;
 use Circuitos\Models\ContratoFiscalHasContrato;
 use Circuitos\Models\ContratoGarantia;
@@ -14,6 +16,7 @@ use Phalcon\Http\Response as Response;
 use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
+use Util\Infra;
 use Util\Util;
 
 class ContratoOP extends Contrato
@@ -689,7 +692,7 @@ class ContratoOP extends Contrato
         $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         try {
-            $objetosComponentes = ContratoAnexo::find('id_contrato = ' . $id_contrato);
+            $objetosComponentes = ContratoAnexo::find('ativo=1 AND excluido=0 AND id_contrato = ' . $id_contrato);
             $arrTransporte = [];
             foreach ($objetosComponentes as $objetoComponente){
                 chmod($objetoComponente->getUrlAnexo(), 0777);
@@ -744,16 +747,46 @@ class ContratoOP extends Contrato
     public function visualizarContratosFinanceiros($id_contrato)
     {
         $logger = new FileAdapter($this->arqLog);
-        $util = new Util();
+        $infra = new Infra();
+        $caminho = $infra->getCaminhoAnexos();
         try {
-            $objFilho = Contrato::findFirst('id='.$id_contrato);
-            $objetoPai = new \stdClass();
-            if (!empty($objFilho->getIdContratoPrincipal())){
-                $objPai = Contrato::findFirst('id='.$objFilho->getIdContratoPrincipal());
-                $objetoPai->tipo_vinculo = 'Pai';
+            $arrDadosCompletos = [];
+            $objExercicios = ContratoExercicio::find('ativo=1 AND excluido=0 AND id_contrato='.$id_contrato);
+            if ($objExercicios) {
+                foreach ($objExercicios as $key1 => $objExercicio)
+                {
+                    $arrExercicio = [
+                        'exercicio' => $objExercicio->getExercicio(),
+                        'valor_exercicio_formatado' => $objExercicio->getValorPrevistoFormatado()
+                    ];
+                    $arrDadosCompletos[$key1]= $arrExercicio;
+                    $objFinanceiros = ContratoFinanceiro::find('ativo=1 AND excluido=0 AND id_exercicio='.$objExercicio->getId());
+                    foreach($objFinanceiros as $key2 => $objFinanceiro)
+                    {
+                        $arrFinanceiro = [
+                            'competencia' => $objFinanceiro->getMesCompetencia(),
+                            'status_descricao' => $objFinanceiro->getStatusDescricao(),
+                            'valor_pagamento_formatado' => $objFinanceiro->getValorPagamentoFormatado()
+                        ];
+                        $arrDadosCompletos[$key1][$key2]= $arrFinanceiro;
+                        $objPagamentos = ContratoFinanceiroNota::find('ativo=1 AND excluido=0 AND id_contrato_financeiro='.$objFinanceiro->getId());
+                        foreach($objPagamentos as $key3 => $objPagamento)
+                        {
+                            $arrPagamento = [
+                                'numero_nota_fiscal' => $objPagamento->getNumeroNotaFiscal(),
+                                'data_pagamento_formatada' => $objPagamento->getDataPagamentoFormatada(),
+                                'valor_nota_formatado' => $objPagamento->getValorNotaFormatado(),
+                                'observacao' => $objPagamento->getObservacao(),
+                                'id_anexo' => $objPagamento->getIdAnexo(),
+                                'url' => $objPagamento->getUrlFormatadaAnexo()
+                            ];
+                            $arrDadosCompletos[$key1][$key2][$key3]= $arrPagamento;
+                        }
+                    }
+                }
             }
             $response = new Response();
-            $response->setContent(json_encode(array("operacao" => True, "dados_pai" => $objetoPai)));
+            $response->setContent(json_encode(array('operacao' => True, 'dados' => $arrDadosCompletos, 'caminho_anexo' => $caminho)));
             return $response;
         } catch (TxFailed $e) {
             $logger->error($e->getMessage());
@@ -767,7 +800,7 @@ class ContratoOP extends Contrato
         $util = new Util();
         try {
             //Objetos Filhos
-            $objetosFilhos = Contrato::find('id_contrato_principal = ' . $id_contrato);
+            $objetosFilhos = Contrato::find('ativo=1 AND excluido=0 AND id_contrato_principal = ' . $id_contrato);
             $arrTransporteFilhos = [];
             foreach ($objetosFilhos as $objetoFilho){
                 $objTransporte = new \stdClass();
