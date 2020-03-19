@@ -80,6 +80,7 @@ class SessionController extends ControllerBase {
                 }
             }
         } catch (Exception $e) {
+            $logger->error("Falha de acesso: [{$e->getMessage()}].");
             $this->flash->error($e->getMessage());
         }
     }

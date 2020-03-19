@@ -519,7 +519,7 @@ class UsuarioController extends ControllerBase
         } else {
             switch ($usuario->getPrimeiroacesso()) {
                 case '1':
-                    $redirect = "index/index";
+                    $redirect = "index";
                     break;
                 case '0':
                     $redirect = "usuario/primeiro";
