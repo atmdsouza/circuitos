@@ -95,7 +95,7 @@ function salvar()
             descricao: {
                 required: true
             }
-        }
+        },
         submitHandler: function(form) {
             var dados = $("#formCadastro").serialize();
             var action = actionCorreta(window.location.href.toString(), "set_seguranca/" + acao);
