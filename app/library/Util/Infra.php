@@ -42,7 +42,7 @@ class Infra
 
     public function getVersao()
     {
-        return '2.02.04';//Função de Upload em Circuitos, Contrato e Proposta, além de outras melhorias em 04/03/2020
+        return '2.02.05';//Ajustes de acesso e perfil, além de textos em funcionalidades
     }
 
     public function getCaminhoRelatorios()
