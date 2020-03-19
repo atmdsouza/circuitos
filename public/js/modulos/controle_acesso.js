@@ -519,6 +519,10 @@ function checkAcessoUnitario(resources)
             seletor_unitario = ".permissao_unitaria_empresa";
             seletor_total = ".check_total_empresa";
             break;
+        case "empresa_departamento":
+            seletor_unitario = ".permissao_unitaria_empresa_departamento";
+            seletor_total = ".check_total_empresa_departamento";
+            break;
         case "equipamento":
             seletor_unitario = ".permissao_unitaria_equipamento";
             seletor_total = ".check_total_equipamento";
@@ -550,6 +554,18 @@ function checkAcessoUnitario(resources)
         case "contrato":
             seletor_unitario = ".permissao_unitaria_contrato";
             seletor_total = ".check_total_contrato";
+            break;
+        case "contrato_fiscal":
+            seletor_unitario = ".permissao_unitaria_contrato_fiscal";
+            seletor_total = ".check_total_contrato_fiscal";
+            break;
+        case "contrato_financeiro":
+            seletor_unitario = ".permissao_unitaria_contrato_financeiro";
+            seletor_total = ".check_total_contrato_financeiro";
+            break;
+        case "contrato_penalidade":
+            seletor_unitario = ".permissao_unitaria_contrato_penalidade";
+            seletor_total = ".check_total_contrato_penalidade";
             break;
         case "estacao_telecon":
             seletor_unitario = ".permissao_unitaria_estacao_telecon";
@@ -810,6 +826,9 @@ $(".permissao_total_modulo").on("change", function(){
         case "empresa":
             seletor = ".permissao_unitaria_empresa";
             break;
+        case "empresa_departamento":
+            seletor = ".permissao_unitaria_empresa_departamento";
+            break;
         case "equipamento":
             seletor = ".permissao_unitaria_equipamento";
             break;
@@ -833,6 +852,15 @@ $(".permissao_total_modulo").on("change", function(){
             break;
         case "contrato":
             seletor = ".permissao_unitaria_contrato";
+            break;
+        case "contrato_fiscal":
+            seletor = ".permissao_unitaria_contrato_fiscal";
+            break;
+        case "contrato_financeiro":
+            seletor = ".permissao_unitaria_contrato_financeiro";
+            break;
+        case "contrato_penalidade":
+            seletor = ".permissao_unitaria_contrato_penalidade";
             break;
         case "estacao_telecon":
             seletor = ".permissao_unitaria_estacao_telecon";
