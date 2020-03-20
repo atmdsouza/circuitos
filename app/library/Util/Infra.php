@@ -42,7 +42,7 @@ class Infra
 
     public function getVersao()
     {
-        return '2.02.05';//Ajustes de acesso e perfil, além de textos em funcionalidades
+        return '2.02.06';//Ajustes deleção de perfil
     }
 
     public function getCaminhoRelatorios()

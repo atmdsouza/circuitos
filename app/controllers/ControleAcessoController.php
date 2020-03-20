@@ -186,34 +186,31 @@ class ControleAcessoController extends ControllerBase
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             try {
-                foreach($dados["ids"] as $dado){
-                    $controleacesso = PhalconRoles::findFirst("id={$dado}");
+                foreach($dados['ids'] as $dado){
+                    $controleacesso = PhalconRoles::findFirst('name="'.$dado.'"');
+                    $permissoes = PhalconAccessList::find('roles_name="'.$controleacesso->getName().'"');
+                    foreach ($permissoes as $permissao)
+                    {
+                        $permissao->setTransaction($transaction);
+                        if ($permissao->delete() == false) {
+                            $transaction->rollback('Não foi possível excluir a permissão!');
+                        }
+                    }
                     $controleacesso->setTransaction($transaction);
-                    $controleacesso->setExcluido(1);
-                    if ($controleacesso->save() == false) {
-                        $transaction->rollback("Não foi possível editar o cidadedigital!");
+                    if ($controleacesso->delete() == false) {
+                        $transaction->rollback('Não foi possível excluir o perfil!');
                     }
                 }
                 //Commita a transação
                 $transaction->commit();
-                $response->setContent(json_encode(array(
-                    "operacao" => True
-                )));
-                return $response;
+                $response->setContent(json_encode(array('operacao' => True)));
             } catch (TxFailed $e) {
-                $response->setContent(json_encode(array(
-                    "operacao" => False,
-                    "mensagem" => $e->getMessage()
-                )));
-                return $response;
+                $response->setContent(json_encode(array('operacao' => False, 'mensagem' => $e->getMessage())));
             }
         } else {//Formulário Inválido
-            $response->setContent(json_encode(array(
-                "operacao" => False,
-                "mensagem" => "Check de formulário inválido!"
-            )));
-            return $response;
+            $response->setContent(json_encode(array('operacao' => False, 'mensagem' => 'Check de formulário inválido!')));
         }
+        return $response;
     }
 
     private function permissoesPadraoAction($roles)
