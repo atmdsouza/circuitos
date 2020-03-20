@@ -4,7 +4,6 @@ namespace Circuitos\Models\Operations;
 
 use Circuitos\Models\ContratoPenalidade;
 use Circuitos\Models\ContratoPenalidadeAnexo;
-use Circuitos\Models\ContratoPenalidadeHasContrato;
 use Phalcon\Http\Response as Response;
 use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
