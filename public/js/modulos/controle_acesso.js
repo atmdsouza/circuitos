@@ -341,7 +341,7 @@ $(".bt_del").on("click", function(){
             cancelButtonColor: "#d33",
             confirmButtonText: "Sim, apagar!"
         }).then((result) => {
-            var action = actionCorreta(window.location.href.toString(), "controle_acesso/editarControleAcesso");
+            var action = actionCorreta(window.location.href.toString(), "controle_acesso/deletarControleAcesso");
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
