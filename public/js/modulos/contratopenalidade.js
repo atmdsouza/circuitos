@@ -17,7 +17,7 @@ function inicializar()
         language: {
             select: false
         },
-        order: [[5, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
+        order: [[0, "desc"]]//Ordenação default
     });
     getTiposAnexo();
 }

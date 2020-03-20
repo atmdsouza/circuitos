@@ -95,13 +95,63 @@ class ContratoPenalidadeAnexo extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field url
+     *
+     * @return string
+     */
+    public function getUrlAnexo()
+    {
+        return $this->Anexos->url;
+    }
+
+    /**
+     * Returns the value of field descricao
+     *
+     * @return string
+     */
+    public function getDescricaoAnexo()
+    {
+        return $this->Anexos->descricao;
+    }
+
+    /**
+     * Returns the value of field data criação
+     *
+     * @return string
+     */
+    public function getDataCriacaoAnexo()
+    {
+        return $this->Anexos->data_criacao;
+    }
+
+    /**
+     * Returns the value of field descricao tipo anexo
+     *
+     * @return string
+     */
+    public function getDescricaoTipoAnexo()
+    {
+        return $this->Anexos->Lov->descricao;
+    }
+
+    /**
+     * Returns the value of field id_tipo_anexo
+     *
+     * @return integer
+     */
+    public function getIdTipoAnexo()
+    {
+        return $this->Anexos->id_tipo_anexo;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
     {
         $schema = new Infra();
         $this->setSchema($schema->getSchemaBanco());
-        $this->setSource("contrato_penalidade_anexo");
+        $this->setSource('contrato_penalidade_anexo');
         $this->belongsTo('id_anexo', 'Circuitos\Models\Anexos', 'id', ['alias' => 'Anexos']);
         $this->belongsTo('id_contrato_penalidade', 'Circuitos\Models\ContratoPenalidade', 'id', ['alias' => 'ContratoPenalidade']);
     }

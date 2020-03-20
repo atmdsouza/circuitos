@@ -5,9 +5,7 @@
 
 use Auth\Autentica;
 use Util\Infra;
-use Util\Util;
 
-$util = new Util();
 $infra = new Infra();
 $auth = new Autentica();
 $security_plugin = new SecurityPlugin();
@@ -22,22 +20,22 @@ $module = $this->router->getControllerName();
 <div class="col-12">
     <?= $this->tag->form(
         [
-            "contrato_penalidade",
-            "autocomplete" => "off",
-            "id" => "formPesquisa"
+            'contrato_penalidade',
+            'autocomplete' => 'off',
+            'id' => 'formPesquisa'
         ]
-    );
+    )
     ?>
     <div class="form-row">
         <div class="form-group col-md-2">
             <label for="fieldPesquisa" class="col-sm-2 control-label">Pesquisa</label>
             <div class="col-sm-10">
-                <?= $this->tag->textField(["pesquisa", "size" => 60, "class" => "form-control", "id" => "fieldPesquisa"]) ?>
+                <?= $this->tag->textField(['pesquisa', 'size' => 60, 'class' => 'form-control', 'id' => 'fieldPesquisa']) ?>
             </div>
         </div>
         <div class="form-group col-md-4">
             <div class="bt_menu_tabela">
-                <?= $this->tag->submitButton(["Pesquisar", "class" => "btn btn-info btn-rounded waves-light w-md"]) ?>
+                <?= $this->tag->submitButton(['Pesquisar', 'class' => 'btn btn-info btn-rounded waves-light w-md']) ?>
                 <button type="button" name="bt_limpar" id="bt_limpar" class="btn btn-warning btn-rounded waves-light w-md" onclick="limpar();">Limpar</button>
                 <?php if($acl->isAllowed($role,$module, 'criar')): ?>
                     <button type="button" name="bt_novo" id="bt_novo" class="btn btn-success btn-rounded waves-light w-md" onclick="criar();">Novo</button>
@@ -55,17 +53,19 @@ $module = $this->router->getControllerName();
             <tr>
                 <th>Código</th>
                 <th>Contrato</th>
-                <th>Tipo</th>
-                <th>Nome</th>
-                <th>Data Nomeação</th>
-                <th>Ativo</th>
+                <th>Status</th>
+                <th>Número Processo</th>
+                <th>Número Notificação</th>
+                <th>Número RT</th>
+                <th>Data Criação</th>
+                <th>Valor da Multa</th>
                 <th>Ações</th>
             </tr>
             </thead>
             <tbody>
             <?php foreach ($page as $contratopenalidade): ?>
                 <?php
-                switch($contratopenalidade->getAtivo())
+                switch($contratopenalidade->getStatus())
                 {
                     case '0'://Inativo (False)
                         $class_tr = 'class="table-danger"';
@@ -78,10 +78,12 @@ $module = $this->router->getControllerName();
                 <tr <?= $class_tr ?>>
                     <td><?= $contratopenalidade->getId() ?></td>
                     <td><?= $contratopenalidade->getNumeroAnoContrato() ?></td>
-                    <td><?= $contratopenalidade->getTipoFiscalDescricao() ?></td>
+                    <td><?= $contratopenalidade->getStatusDescricao() ?></td>
                     <td><?= $contratopenalidade->getNumeroProcesso() ?></td>
-                    <td><?= $util->converterDataParaBr($contratopenalidade->getDataNomeacao()) ?></td>
-                    <td><?= $contratopenalidade->getAtivoDescricao() ?></td>
+                    <td><?= $contratopenalidade->getNumeroNotificacao() ?></td>
+                    <td><?= $contratopenalidade->getNumeroRt() ?></td>
+                    <td><?= $contratopenalidade->getDataCriacaoFormatada() ?></td>
+                    <td><?= $contratopenalidade->getValorMultaFormatado() ?></td>
                     <td class="td_acoes">
                         <?php if($acl->isAllowed($role,$module, 'visualizar')): ?>
                             <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $contratopenalidade->getId() ?>, true);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a>
@@ -117,7 +119,7 @@ $module = $this->router->getControllerName();
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" aria-hidden="true" onclick="confirmaCancelar('modalCadastro');">×</button>
-                <h5 class="modal-title" id="modalCadastro">Dados do Fiscal do Contrato</h5>
+                <h5 class="modal-title" id="modalCadastro">Dados da Penalidade do Contrato</h5>
             </div>
             <form id="formCadastro">
                 <input type="hidden" id="token" name="<?= $token['tokenKey'] ?>" value="<?= $token['tokenValue'] ?>"> <!-- CSRFToken Control -->

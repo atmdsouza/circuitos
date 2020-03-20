@@ -2,7 +2,9 @@
 
 namespace Circuitos\Models;
 
+use Phalcon\Mvc\Model\Query\Builder;
 use Util\Infra;
+use Util\Util;
 
 class ContratoPenalidade extends \Phalcon\Mvc\Model
 {
@@ -617,13 +619,85 @@ class ContratoPenalidade extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field status descrição
+     *
+     * @return string
+     */
+    public function getStatusDescricao()
+    {
+        switch ($this->status)
+        {
+            case 0:
+                $motivo = 'Aberta';
+                break;
+            case 1:
+                $motivo = 'Executada';
+                break;
+            case 2:
+                $motivo = 'Cancelada';
+                break;
+        }
+        return $motivo;
+    }
+
+    /**
+     * Returns the value of field numero/ano contrato
+     *
+     * @return string
+     */
+    public function getNumeroAnoContrato()
+    {
+        return $this->Contrato->numero .'/'.$this->Contrato->ano;
+    }
+
+    /**
+     * Returns the value of field data criação formatada
+     *
+     * @return string
+     */
+    public function getDataCriacaoFormatada()
+    {
+        $util = new Util();
+        return ($this->data_criacao) ? $util->converterDataHoraParaBr($this->data_criacao) : null;
+    }
+
+    /**
+     * Returns the value of field data valor da multa formatado
+     *
+     * @return string
+     */
+    public function getValorMultaFormatado()
+    {
+        $util = new Util();
+        return $util->formataMoedaReal($this->valor_multa);
+    }
+
+    /**
+     * @return string
+     */
+    public function getAtivoDescricao()
+    {
+        return ($this->ativo === 1) ? 'Ativo' : 'Inativo';
+    }
+
+    /**
+     * Returns the value of field numero/ano contrato
+     *
+     * @return string
+     */
+    public function getServicoDescricao()
+    {
+        return $this->Lov->descricao;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
     {
         $schema = new Infra();
         $this->setSchema($schema->getSchemaBanco());
-        $this->setSource("contrato_penalidade");
+        $this->setSource('contrato_penalidade');
         $this->hasMany('id', 'Circuitos\Models\ContratoPenalidadeAnexo', 'id_contrato_penalidade', ['alias' => 'ContratoPenalidadeAnexo']);
         $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
         $this->belongsTo('id_servico', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
@@ -659,6 +733,34 @@ class ContratoPenalidade extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    /**
+     * Consulta completa de ContratoPenalidade, incluíndo os joins de tabelas
+     *
+     * @param string $parameters
+     * @return ContratoPenalidade|\Phalcon\Mvc\Model\Resultset
+     */
+    public static function pesquisarContratoPenalidade($parameters = null)
+    {
+        $query = new Builder();
+        $query->from(array('ContratoPenalidade' => 'Circuitos\Models\ContratoPenalidade'));
+        $query->columns('ContratoPenalidade.*');
+        $query->leftJoin('Circuitos\Models\Contrato', 'Contrato.id = ContratoPenalidade.id_contrato', 'Contrato');
+        $query->leftJoin('Circuitos\Models\Lov', 'Lov.id = ContratoPenalidade.id_servico', 'Lov');
+        $query->where('ContratoPenalidade.excluido = 0 AND (CONVERT(ContratoPenalidade.id USING utf8) LIKE "%'.$parameters.'%"
+                        OR CONVERT(ContratoPenalidade.numero_processo USING utf8) LIKE "%'.$parameters.'%"
+                        OR CONVERT(ContratoPenalidade.numero_notificacao USING utf8) LIKE "%'.$parameters.'%"
+                        OR CONVERT(ContratoPenalidade.numero_rt USING utf8) LIKE "%'.$parameters.'%"
+                        OR CONVERT(ContratoPenalidade.numero_oficio USING utf8) LIKE "%'.$parameters.'%"
+                        OR CONVERT(ContratoPenalidade.numero_oficio_multa USING utf8) LIKE "%'.$parameters.'%"
+                        OR CONVERT(Contrato.numero USING utf8) LIKE "%'.$parameters.'%"
+                        OR CONVERT(Contrato.ano USING utf8) LIKE "%'.$parameters.'%"
+                        OR CONVERT(Lov.descricao USING utf8) LIKE "%'.$parameters.'%")');
+        $query->groupBy('ContratoPenalidade.id');
+        $query->orderBy('ContratoPenalidade.id DESC');
+        $resultado = $query->getQuery()->execute();
+        return $resultado;
     }
 
 }

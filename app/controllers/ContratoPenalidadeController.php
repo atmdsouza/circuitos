@@ -40,12 +40,17 @@ class ContratoPenalidadeController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $contratpenalidadeOP = new ContratoPenalidadeOP();
         $contratpenalidade = $contratpenalidadeOP->listar($dados['pesquisa']);
+        $tipos_anexos = Lov::find(array(
+            'tipo = 20 AND excluido = 0 AND ativo = 1',
+            'order' => 'descricao'
+        ));
         $tipos_servicos = Lov::find(array(
             'tipo = 33 AND excluido = 0 AND ativo = 1',
             'order' => 'descricao'
         ));
         $this->view->page = $contratpenalidade;
-        $this->view->tipos_anexos = $tipos_servicos;
+        $this->view->tipos_servicos = $tipos_servicos;
+        $this->view->tipos_anexos = $tipos_anexos;
     }
 
     public function criarAction()
