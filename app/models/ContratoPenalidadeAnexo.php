@@ -4,7 +4,7 @@ namespace Circuitos\Models;
 
 use Util\Infra;
 
-class ContratoNaoConformidadeAnexo extends \Phalcon\Mvc\Model
+class ContratoPenalidadeAnexo extends \Phalcon\Mvc\Model
 {
 
     /**
@@ -17,7 +17,7 @@ class ContratoNaoConformidadeAnexo extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $id_contrato_nao_conformidade;
+    protected $id_contrato_penalidade;
 
     /**
      *
@@ -39,14 +39,14 @@ class ContratoNaoConformidadeAnexo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field id_contrato_nao_conformidade
+     * Method to set the value of field id_contrato_penalidade
      *
-     * @param integer $id_contrato_nao_conformidade
+     * @param integer $id_contrato_penalidade
      * @return $this
      */
-    public function setIdContratoNaoConformidade($id_contrato_nao_conformidade)
+    public function setIdContratoPenalidade($id_contrato_penalidade)
     {
-        $this->id_contrato_nao_conformidade = $id_contrato_nao_conformidade;
+        $this->id_contrato_penalidade = $id_contrato_penalidade;
 
         return $this;
     }
@@ -75,13 +75,13 @@ class ContratoNaoConformidadeAnexo extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id_contrato_nao_conformidade
+     * Returns the value of field id_contrato_penalidade
      *
      * @return integer
      */
-    public function getIdContratoNaoConformidade()
+    public function getIdContratoPenalidade()
     {
-        return $this->id_contrato_nao_conformidade;
+        return $this->id_contrato_penalidade;
     }
 
     /**
@@ -101,9 +101,9 @@ class ContratoNaoConformidadeAnexo extends \Phalcon\Mvc\Model
     {
         $schema = new Infra();
         $this->setSchema($schema->getSchemaBanco());
-        $this->setSource("contrato_nao_conformidade_anexo");
+        $this->setSource("contrato_penalidade_anexo");
         $this->belongsTo('id_anexo', 'Circuitos\Models\Anexos', 'id', ['alias' => 'Anexos']);
-        $this->belongsTo('id_contrato_nao_conformidade', 'Circuitos\Models\ContratoNaoConformidade', 'id', ['alias' => 'ContratoNaoConformidade']);
+        $this->belongsTo('id_contrato_penalidade', 'Circuitos\Models\ContratoPenalidade', 'id', ['alias' => 'ContratoPenalidade']);
     }
 
     /**
@@ -113,14 +113,14 @@ class ContratoNaoConformidadeAnexo extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'contrato_nao_conformidade_anexo';
+        return 'contrato_penalidade_anexo';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return ContratoNaoConformidadeAnexo[]|ContratoNaoConformidadeAnexo|\Phalcon\Mvc\Model\ResultSetInterface
+     * @return ContratoPenalidadeAnexo[]|ContratoPenalidadeAnexo|\Phalcon\Mvc\Model\ResultSetInterface
      */
     public static function find($parameters = null)
     {
@@ -131,7 +131,7 @@ class ContratoNaoConformidadeAnexo extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return ContratoNaoConformidadeAnexo|\Phalcon\Mvc\Model\ResultInterface
+     * @return ContratoPenalidadeAnexo|\Phalcon\Mvc\Model\ResultInterface
      */
     public static function findFirst($parameters = null)
     {

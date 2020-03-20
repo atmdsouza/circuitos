@@ -32,7 +32,7 @@ Códigos LOV para o diagrama
 30 - Status Contrato (Vigente, Bloqueado, Suspenso, Encerrado)
 31 - Tipo Fiscal de Contrato
 32 - Tipo de Estação Telecom
-33 -
+33 - Tipo de Serviço na Penalidade
 34 -
 35 -
 36 -

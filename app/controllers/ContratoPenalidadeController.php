@@ -4,23 +4,21 @@ namespace Circuitos\Controllers;
 
 use Auth\Autentica;
 use Circuitos\Models\Anexos;
-use Circuitos\Models\ContratoFiscal;
-use Circuitos\Models\ContratoFiscalAnexo;
-use Circuitos\Models\ContratoFiscalHasContrato;
+use Circuitos\Models\ContratoPenalidade;
+use Circuitos\Models\ContratoPenalidadeAnexo;
 use Circuitos\Models\Lov;
 use Circuitos\Models\Operations\AnexosOP;
-use Circuitos\Models\Operations\ContratoFiscalOP;
+use Circuitos\Models\Operations\ContratoPenalidadeOP;
 use Circuitos\Models\Operations\CoreOP;
-use Phalcon\Http\Response as Response;
 use Util\TokenManager;
 
-class ContratoFiscalController extends ControllerBase
+class ContratoPenalidadeController extends ControllerBase
 {
     public $tokenManager;
 
     public function initialize()
     {
-        $this->tag->setTitle("Fiscais de Contratos");
+        $this->tag->setTitle("Penalidades de Contratos");
         parent::initialize();
         //Voltando o usuário não autenticado para a página de login
         $auth = new Autentica();
@@ -40,14 +38,14 @@ class ContratoFiscalController extends ControllerBase
     public function indexAction()
     {
         $dados = filter_input_array(INPUT_POST);
-        $contratofiscalOP = new ContratoFiscalOP();
-        $contratofiscal = $contratofiscalOP->listar($dados['pesquisa']);
-        $tipos_anexos = Lov::find(array(
-            "tipo = 20 AND excluido = 0 AND ativo = 1",
-            "order" => "descricao"
+        $contratpenalidadeOP = new ContratoPenalidadeOP();
+        $contratpenalidade = $contratpenalidadeOP->listar($dados['pesquisa']);
+        $tipos_servicos = Lov::find(array(
+            'tipo = 33 AND excluido = 0 AND ativo = 1',
+            'order' => 'descricao'
         ));
-        $this->view->page = $contratofiscal;
-        $this->view->tipos_anexos = $tipos_anexos;
+        $this->view->page = $contratpenalidade;
+        $this->view->tipos_anexos = $tipos_servicos;
     }
 
     public function criarAction()
@@ -58,16 +56,16 @@ class ContratoFiscalController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-        $titulo = 'Cadastro de Fiscal de Contrato';
-        $msg = 'Fiscal de Contrato cadastrado com sucesso!';
-        $error_msg = 'Erro ao cadastrar um Fiscal de Contrato!';
+        $titulo = 'Cadastro de Penalidade de Contrato';
+        $msg = 'Penalidade de Contrato cadastrado com sucesso!';
+        $error_msg = 'Erro ao cadastrar um Penalidade de Contrato!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
-            $contratofiscalOP = new ContratoFiscalOP();
-            $contratofiscal = new ContratoFiscal($params);
-            $vinculocontrato = new ContratoFiscalHasContrato($params);
-            if($contratofiscalOP->cadastrar($contratofiscal, $vinculocontrato)){//Cadastrou com sucesso
+            $contratpenalidadeOP = new ContratoPenalidadeOP();
+            $contratpenalidade = new ContratoPenalidade($params);
+            $vinculocontrato = new ContratoPenalidadeHasContrato($params);
+            if($contratpenalidadeOP->cadastrar($contratpenalidade, $vinculocontrato)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -86,16 +84,16 @@ class ContratoFiscalController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-        $titulo = 'Alteração de Fiscal de Contrato';
-        $msg = 'Fiscal de Contrato alterado com sucesso!';
-        $error_msg = 'Erro ao alterar um Fiscal de Contrato!';
+        $titulo = 'Alteração de Penalidade de Contrato';
+        $msg = 'Penalidade de Contrato alterado com sucesso!';
+        $error_msg = 'Erro ao alterar um Penalidade de Contrato!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
-            $contratofiscalOP = new ContratoFiscalOP();
-            $contratofiscal = new ContratoFiscal($params);
-            $vinculocontrato = new ContratoFiscalHasContrato($params);
-            if($contratofiscalOP->alterar($contratofiscal, $vinculocontrato)){//Altera com sucesso
+            $contratpenalidadeOP = new ContratoPenalidadeOP();
+            $contratpenalidade = new ContratoPenalidade($params);
+            $vinculocontrato = new ContratoPenalidadeHasContrato($params);
+            if($contratpenalidadeOP->alterar($contratpenalidade, $vinculocontrato)){//Altera com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -106,21 +104,26 @@ class ContratoFiscalController extends ControllerBase
         return $response;
     }
 
+    public function movimentarAction()
+    {
+
+    }
+
     public function ativarAction()
     {
         //Desabilita o layout para o ajax
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Reativação de Fiscal de Contrato';
-        $msg = 'Fiscal de Contrato reativado com sucesso!';
-        $error_msg = 'Erro ao reativar um Fiscal de Contrato!';
+        $titulo = 'Reativação de Penalidade de Contrato';
+        $msg = 'Penalidade de Contrato reativado com sucesso!';
+        $error_msg = 'Erro ao reativar um Penalidade de Contrato!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
-            $contratofiscalOP = new ContratoFiscalOP();
-            $contratofiscal = new ContratoFiscal($dados['dados']);
-            if($contratofiscalOP->ativar($contratofiscal)){//Cadastrou com sucesso
+            $contratpenalidadeOP = new ContratoPenalidadeOP();
+            $contratpenalidade = new ContratoPenalidade($dados['dados']);
+            if($contratpenalidadeOP->ativar($contratpenalidade)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -137,15 +140,15 @@ class ContratoFiscalController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Desativação de Fiscal de Contrato';
-        $msg = 'Fiscal de Contrato desativado com sucesso!';
-        $error_msg = 'Erro ao desativar um Fiscal de Contrato!';
+        $titulo = 'Desativação de Penalidade de Contrato';
+        $msg = 'Penalidade de Contrato desativado com sucesso!';
+        $error_msg = 'Erro ao desativar um Penalidade de Contrato!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
-            $contratofiscalOP = new ContratoFiscalOP();
-            $contratofiscal = new ContratoFiscal($dados['dados']);
-            if($contratofiscalOP->inativar($contratofiscal)){//Cadastrou com sucesso
+            $contratpenalidadeOP = new ContratoPenalidadeOP();
+            $contratpenalidade = new ContratoPenalidade($dados['dados']);
+            if($contratpenalidadeOP->inativar($contratpenalidade)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -162,15 +165,15 @@ class ContratoFiscalController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Exclusão de Fiscal de Contrato';
-        $msg = 'Fiscal de Contrato excluído com sucesso!';
-        $error_msg = 'Erro ao excluir o Fiscal de Contrato!';
+        $titulo = 'Exclusão de Penalidade de Contrato';
+        $msg = 'Penalidade de Contrato excluído com sucesso!';
+        $error_msg = 'Erro ao excluir o Penalidade de Contrato!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
-            $contratofiscalOP = new ContratoFiscalOP();
-            $contratofiscal = new ContratoFiscal($dados['dados']);
-            if($contratofiscalOP->excluir($contratofiscal)){//Cadastrou com sucesso
+            $contratpenalidadeOP = new ContratoPenalidadeOP();
+            $contratpenalidade = new ContratoPenalidade($dados['dados']);
+            if($contratpenalidadeOP->excluir($contratpenalidade)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -207,10 +210,10 @@ class ContratoFiscalController extends ControllerBase
             $anexos->setIdTipoAnexo($id_tipo_anexo[$key]);
             $anexos->setUrl($file['path']);
             $anexo_cadastrado = $anexosOP->cadastrar($anexos);
-            $vinculoanexos = new ContratoFiscalAnexo();
+            $vinculoanexos = new ContratoPenalidadeAnexo();
             $vinculoanexos->setIdAnexo($anexo_cadastrado->getId());
-            $vinculoanexos->setIdContratoFiscal($id_contrato_fiscal);
-            $anexosOP->cadastrarContratoFiscalAnexo($vinculoanexos);
+            $vinculoanexos->setIdContratoPenalidade($id_contrato_fiscal);
+            $anexosOP->cadastrarContratoPenalidadeAnexo($vinculoanexos);
         }
         $this->response->redirect('contrato_fiscal');
     }

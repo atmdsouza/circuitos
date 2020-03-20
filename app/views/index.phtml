@@ -324,6 +324,12 @@ $infra = new Infra(); ?>
                                     <li><?php echo $this->tag->linkTo(["contrato_financeiro", "Lançamentos Financeiros"]) ?></li>
                                     <?php
                                 }
+                                if ($acl->isAllowed($role, 'contrato_penalidade', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["contrato_penalidade", "Penalidades de Contrato"]) ?></li>
+                                    <?php
+                                }
                                 ?>
                             </ul>
                         </li>
@@ -582,6 +588,9 @@ case "contrato_fiscal":?>
 <?php break;
 case "contrato_financeiro":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/contratofinanceiro.js?<?= filemtime(BASE_PATH.'/public/js/modulos/contratofinanceiro.js'); ?>" type="text/javascript"></script>
+<?php break;
+case "contrato_penalidade":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/contratopenalidade.js?<?= filemtime(BASE_PATH.'/public/js/modulos/contratopenalidade.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "estacao_telecon":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/estacaotelecon.js?<?= filemtime(BASE_PATH.'/public/js/modulos/estacaotelecon.js'); ?>" type="text/javascript"></script>
