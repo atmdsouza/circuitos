@@ -19,6 +19,7 @@ function inicializar()
         },
         order: [[0, "desc"]]//Ordenação default
     });
+    autocompletarContrato('lid_contrato','id_contrato');
     getTiposAnexo();
 }
 
@@ -76,9 +77,22 @@ function criar()
     $("#formCadastro input").removeAttr('readonly', 'readonly');
     $("#formCadastro select").removeAttr('readonly', 'readonly');
     $("#formCadastro textarea").removeAttr('readonly', 'readonly');
+    ocultarInputs();
     $("#salvarCadastro").val('criar');
     $("#salvarCadastro").show();
     $("#modalCadastro").modal();
+}
+
+function ocultarInputs()
+{
+    'use strict';
+    $('.inputs_ocultos').hide();
+}
+
+function exibirInputs()
+{
+    'use strict';
+    $('.inputs_ocultos').show();
 }
 
 function salvar()
@@ -90,10 +104,22 @@ function salvar()
             lid_contrato:{
                 required: true
             },
-            lid_usuario:{
+            id_servico:{
                 required: true
             },
-            tipo_fiscal:{
+            numero_processo:{
+                required: true
+            },
+            numero_notificacao:{
+                required: true
+            },
+            numero_rt:{
+                required: true
+            },
+            numero_oficio:{
+                required: true
+            },
+            motivo_penalidade:{
                 required: true
             }
         },
