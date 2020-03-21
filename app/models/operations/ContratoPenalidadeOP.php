@@ -66,17 +66,22 @@ class ContratoPenalidadeOP extends ContratoPenalidade
         try {
             $objeto = ContratoPenalidade::findFirst('id='.$objPenalidade->getId());
             $objeto->setTransaction($transaction);
-            $objeto->setIdUsuario($objPenalidade->getIdUsuario());
-            $objeto->setIdFiscalSuplente(($objPenalidade->getIdFiscalSuplente()) ? $objPenalidade->getIdFiscalSuplente() : null);
-            $objeto->setTipoFiscal($objPenalidade->getTipoFiscal());
-            $objeto->setDataNomeacao(($objPenalidade->getDataNomeacao()) ? $util->converterDataUSA($objPenalidade->getDataNomeacao()) : null);
-            $objeto->setDocumentoNomeacao(mb_strtoupper($objPenalidade->getDocumentoNomeacao(), $this->encode));
+            $objeto->setIdContrato($objPenalidade->getIdContrato());
+            $objeto->setIdServico($objPenalidade->getIdServico());
+            $objeto->setNumeroProcesso(mb_strtoupper($objPenalidade->getNumeroProcesso(), $this->encode));
+            $objeto->setNumeroNotificacao(mb_strtoupper($objPenalidade->getNumeroNotificacao(), $this->encode));
+            $objeto->setNumeroRt(mb_strtoupper($objPenalidade->getNumeroRt(), $this->encode));
+            $objeto->setNumeroOficio(mb_strtoupper($objPenalidade->getNumeroOficio(), $this->encode));
+            $objeto->setMotivoPenalidade(mb_strtoupper($objPenalidade->getMotivoPenalidade(), $this->encode));
+            $objeto->setNumeroOficioMulta(mb_strtoupper($objPenalidade->getNumeroOficioMulta(), $this->encode));
+            $objeto->setValorMulta(($objPenalidade->getValorMulta()) ? $util->formataNumero($objPenalidade->getValorMulta()) : 0);
+            $objeto->setObservacao(mb_strtoupper($objPenalidade->getObservacao(), $this->encode));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() === false) {
                 $messages = $objeto->getMessages();
-                $errors = "";
+                $errors = '';
                 for ($i = 0; $i < count($messages); $i++) {
-                    $errors .= "[".$messages[$i]."] ";
+                    $errors .= '[' .$messages[$i]. '] ';
                 }
                 $transaction->rollback("Erro ao alterar a penalidade: " . $errors);
             }
@@ -169,15 +174,18 @@ class ContratoPenalidadeOP extends ContratoPenalidade
     public function visualizarContratoPenalidade($id)
     {
         $logger = new FileAdapter($this->arqLog);
-        $util = new Util();
         try {
             $objeto = ContratoPenalidade::findFirst("id={$id}");
             $objDescricao = new \stdClass();
-            $objDescricao->nome_fiscal = $objeto->getNomeFiscal();
-            $objDescricao->nome_fiscal_suplente = $objeto->getNomeFiscalSuplente();
-            $objDescricao->ds_contrato = $objeto->getNumeroContrato();
-            $objDescricao->id_contrato = $objeto->getIdContrato();
-            $objDescricao->ds_data_nomeacao = ($objeto->getDataNomeacao()) ? $util->converterDataParaBr($objeto->getDataNomeacao()) : null;
+            $objDescricao->ds_servico = $objeto->getServicoDescricao();
+            $objDescricao->ds_status = $objeto->getStatusDescricao();
+            $objDescricao->ds_contrato = $objeto->getNumeroAnoContrato();
+            $objDescricao->valor_multa_formatado = $objeto->getValorMultaFormatado();
+            $objDescricao->data_criacao_formatada = $objeto->getDataCriacaoFormatada();
+            $objDescricao->data_recebimento_oficio_notificacao_formatada = $objeto->getDataRecebimentoOficioNotificacaoFormatada();
+            $objDescricao->data_recebimento_oficio_multa_formatada = $objeto->getDataRecebimentoOficioMultaFormatada();
+            $objDescricao->data_prazo_resposta_formatada = $objeto->getDataPrazoRespostaFormatada();
+            $objDescricao->data_apresentacao_defesa_formatada = $objeto->getDataApresentacaoDefesaFormatada();
             $response = new Response();
             $response->setContent(json_encode(array("operacao" => True, "dados" => $objeto, "descricoes" => $objDescricao)));
             return $response;

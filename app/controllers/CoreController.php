@@ -23,6 +23,7 @@ use Circuitos\Models\Operations\ConectividadeOP;
 use Circuitos\Models\Operations\ContratoFinanceiroOP;
 use Circuitos\Models\Operations\ContratoFiscalOP;
 use Circuitos\Models\Operations\ContratoOP;
+use Circuitos\Models\Operations\ContratoPenalidadeOP;
 use Circuitos\Models\Operations\CoreOP;
 use Circuitos\Models\Operations\EmpresaDepartamentoOP;
 use Circuitos\Models\Operations\EstacaoTeleconOP;
@@ -580,6 +581,10 @@ class CoreController extends ControllerBase
             case 'visualizarContratoFinanceiro':
                 $objeto = new ContratoFinanceiroOP();
                 return $objeto->visualizarContratoFinanceiro($dados['id']);
+                break;
+            case 'visualizarContratoPenalidade':
+                $objeto = new ContratoPenalidadeOP();
+                return $objeto->visualizarContratoPenalidade($dados['id']);
                 break;
             case 'visualizarContratoFinanceiroNotas':
                 $objeto = new ContratoFinanceiroOP();

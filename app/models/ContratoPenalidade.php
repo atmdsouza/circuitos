@@ -662,6 +662,50 @@ class ContratoPenalidade extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field data recebimento ofício notificação formatada
+     *
+     * @return string
+     */
+    public function getDataRecebimentoOficioNotificacaoFormatada()
+    {
+        $util = new Util();
+        return ($this->data_recebimento_oficio_notificacao) ? $util->converterDataParaBr($this->data_recebimento_oficio_notificacao) : null;
+    }
+
+    /**
+     * Returns the value of field data recebimento ofício multa formatada
+     *
+     * @return string
+     */
+    public function getDataRecebimentoOficioMultaFormatada()
+    {
+        $util = new Util();
+        return ($this->data_recebimento_oficio_multa) ? $util->converterDataParaBr($this->data_recebimento_oficio_multa) : null;
+    }
+
+    /**
+     * Returns the value of field data prazo resposta formatada
+     *
+     * @return string
+     */
+    public function getDataPrazoRespostaFormatada()
+    {
+        $util = new Util();
+        return ($this->data_prazo_resposta) ? $util->converterDataParaBr($this->data_prazo_resposta) : null;
+    }
+
+    /**
+     * Returns the value of field data apresentação defesa formatada
+     *
+     * @return string
+     */
+    public function getDataApresentacaoDefesaFormatada()
+    {
+        $util = new Util();
+        return ($this->data_apresentacao_defesa) ? $util->converterDataParaBr($this->data_apresentacao_defesa) : null;
+    }
+
+    /**
      * Returns the value of field data valor da multa formatado
      *
      * @return string
@@ -699,6 +743,7 @@ class ContratoPenalidade extends \Phalcon\Mvc\Model
         $this->setSchema($schema->getSchemaBanco());
         $this->setSource('contrato_penalidade');
         $this->hasMany('id', 'Circuitos\Models\ContratoPenalidadeAnexo', 'id_contrato_penalidade', ['alias' => 'ContratoPenalidadeAnexo']);
+        $this->hasMany('id', 'Circuitos\Models\ContratoPenalidadeMovimento', 'id_contrato_penalidade', ['alias' => 'ContratoPenalidadeMovimento']);
         $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
         $this->belongsTo('id_servico', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
     }

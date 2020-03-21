@@ -350,21 +350,26 @@ function visualizar(id, ocultar)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarContratoFiscal', id: id},
+        data: {metodo: 'visualizarContratoPenalidade', id: id},
         complete: function (data) {
             if (ocultar) {
                 $("#formCadastro input").attr('readonly', 'readonly');
                 $("#formCadastro select").attr('readonly', 'readonly');
                 $("#formCadastro textarea").attr('readonly', 'readonly');
+                $('.selectpicker').prop('disabled', true);
+                exibirInputs();
                 $("#salvarCadastro").hide();
             } else {
                 $("#formCadastro input").removeAttr('readonly', 'readonly');
                 $("#formCadastro select").removeAttr('readonly', 'readonly');
                 $("#formCadastro textarea").removeAttr('readonly', 'readonly');
+                $('.selectpicker').prop('disabled', false);
+                exibirInputs();
                 $("#salvarCadastro").val('editar');
                 $("#salvarCadastro").show();
                 $('.hide_buttons').show();
             }
+            $('.selectpicker').selectpicker('refresh');
             $("#modalCadastro").modal();
         },
         error: function (data) {
@@ -379,15 +384,23 @@ function visualizar(id, ocultar)
         success: function (data) {
             $('#id').val(data.dados.id);
             $('#lid_contrato').val(data.descricoes.ds_contrato);
-            $('#id_contrato').val(data.descricoes.id_contrato);
-            $('#lid_usuario').val(data.descricoes.nome_fiscal);
-            $('#id_usuario').val(data.dados.id_usuario);
-            $('#lid_fiscal_suplente').val(data.descricoes.nome_fiscal_suplente);
-            $('#id_fiscal_suplente').val(data.dados.id_fiscal_suplente);
-            $('#tipo_fiscal').val(data.dados.tipo_fiscal).selected = "true";
-            $('#data_nomeacao').val(data.descricoes.ds_data_nomeacao);
-            $('#documento_nomeacao').val(data.dados.documento_nomeacao);
-            montarTabelaAnexosv(data.dados.id, ocultar);
+            $('#id_contrato').val(data.dados.id_contrato);
+            $('#id_servico').selectpicker('val', data.dados.id_servico);
+            $('#statusv').val(data.descricoes.ds_status);
+            $('#data_criacaov').val(data.descricoes.data_criacao_formatada);
+            $('#numero_processo').val(data.dados.numero_processo);
+            $('#numero_notificacao').val(data.dados.numero_notificacao);
+            $('#numero_rt').val(data.dados.numero_rt);
+            $('#numero_oficio').val(data.dados.numero_oficio);
+            $('#data_recebimento_oficio_notificacaov').val(data.descricoes.data_recebimento_oficio_notificacao_formatada);
+            $('#data_prazo_respostav').val(data.descricoes.data_prazo_resposta_formatada);
+            $('#data_apresentacao_defesav').val(data.descricoes.data_apresentacao_defesa_formatada);
+            $('#motivo_penalidade').val(data.dados.motivo_penalidade);
+            $('#numero_oficio_multa').val(data.dados.numero_oficio_multa);
+            $('#valor_multa').val(data.descricoes.valor_multa_formatado);
+            $('#data_recebimento_oficio_multav').val(data.descricoes.data_recebimento_oficio_multa_formatada);
+            $('#parecerv').val(data.dados.parecer);
+            $('#observacao').val(data.dados.observacao);
         }
     });
 }
@@ -400,7 +413,7 @@ function montarTabelaAnexosv(id_contrato_penalidade, visualizar)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: { metodo: 'visualizarContratoFiscalAnexos', id: id_contrato_penalidade },
+        data: { metodo: 'visualizarContratoPenalidadeAnexos', id: id_contrato_penalidade },
         complete: function() {
             if (visualizar) {
                 $('#tabela_lista_anexosv').removeAttr('style', 'display: none;');
@@ -470,7 +483,7 @@ function getIdentificador(id)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarContratoFiscalNome', id: id},
+        data: {metodo: 'visualizarContratoPenalidadeNome', id: id},
         error: function (data) {
             if (data.status && data.status === 401) {
                 swal({
@@ -494,7 +507,7 @@ function montarTabelaAnexos(id_contrato_penalidade, visualizar)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: { metodo: 'visualizarContratoFiscalAnexos', id: id_contrato_penalidade },
+        data: { metodo: 'visualizarContratoPenalidadeAnexos', id: id_contrato_penalidade },
         complete: function() {
             if (visualizar) {
                 $('.hide_buttons').hide();
@@ -633,7 +646,7 @@ function excluirAnexo(id_anexo)
             type: "POST",
             dataType: "JSON",
             url: action,
-            data: {metodo: 'excluirContratoFiscalAnexo', id: id_anexo},
+            data: {metodo: 'excluirContratoPenalidadeAnexo', id: id_anexo},
             error: function (data) {
                 if (data.status && data.status === 401) {
                     swal({

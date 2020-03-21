@@ -439,7 +439,7 @@
 3 = Pagamento Parcial]]></comment>
 			</column>
 			<column name="valor_pagamento" type="decimal" length="19" decimal="4" jt="3" mandatory="y" >
-				<defo>0</defo>
+				<defo>0.0000</defo>
 				<comment><![CDATA[Valor do pagamento a ser executado para a competência]]></comment>
 			</column>
 			<column name="ativo" type="tinyint" jt="-6" mandatory="y" >
@@ -484,6 +484,9 @@
 			</index>
 			<index name="fk_contrato_acompanhamento_financeiro" unique="NORMAL" >
 				<column name="id_contrato_financeiro" />
+			</index>
+			<index name="fk_contrato_financeiro_nota" unique="NORMAL" >
+				<column name="id_anexo" />
 			</index>
 			<fk name="fk_contrato_acompanhamento_financeiro" to_schema="bd_circuitosnavega" to_table="contrato_financeiro" >
 				<fk_column name="id_contrato_financeiro" pk="id" />
@@ -533,6 +536,12 @@
 			<column name="id_anexo" type="int" jt="4" mandatory="y" />
 			<index name="pk_contrato_fiscal_anexo_id" unique="PRIMARY_KEY" >
 				<column name="id" />
+			</index>
+			<index name="fk_contrato_fiscal_anexo" unique="NORMAL" >
+				<column name="id_anexo" />
+			</index>
+			<index name="fk_contrato_fiscal_anexo_contrato_fiscal" unique="NORMAL" >
+				<column name="id_contrato_fiscal" />
 			</index>
 			<fk name="fk_contrato_fiscal_anexo" to_schema="bd_circuitosnavega" to_table="anexos" >
 				<fk_column name="id_anexo" pk="id" />
@@ -623,26 +632,6 @@
 				<fk_column name="id_contrato" pk="id" />
 			</fk>
 		</table>
-		<table name="contrato_indice_monetario" >
-			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
-			<column name="id_contrato" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="ativo" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" >
-				<defo>1</defo>
-			</column>
-			<column name="excluido" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" >
-				<defo>0</defo>
-			</column>
-			<column name="data_update" type="timestamp" length="26" decimal="0" jt="93" />
-			<index name="pk_contrato_indice_monetario" unique="PRIMARY_KEY" >
-				<column name="id" />
-			</index>
-			<index name="fk_contrato_indice_monetario_contrato1_idx" unique="NORMAL" >
-				<column name="id_contrato" />
-			</index>
-			<fk name="fk_contrato_indice_monetario_contrato1" to_schema="bd_circuitosnavega" to_table="contrato" >
-				<fk_column name="id_contrato" pk="id" />
-			</fk>
-		</table>
 		<table name="contrato_movimento" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
 			<column name="id_contrato" type="int" length="10" decimal="0" jt="4" mandatory="y" />
@@ -723,16 +712,18 @@
 			</column>
 			<column name="numero_oficio" type="varchar" length="20" jt="12" mandatory="y" />
 			<column name="motivo_penalidade" type="text" jt="-1" mandatory="y" />
-			<column name="data_criacao" type="timestamp" jt="93" />
+			<column name="data_criacao" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
+				<defo>CURRENT_TIMESTAMP</defo>
+			</column>
 			<column name="data_recebimento_oficio_notificacao" type="date" jt="91" />
 			<column name="data_prazo_resposta" type="date" jt="91" />
 			<column name="data_apresentacao_defesa" type="date" jt="91" />
 			<column name="numero_oficio_multa" type="varchar" length="20" jt="12" />
 			<column name="valor_multa" type="decimal" length="19" decimal="2" jt="3" mandatory="y" >
-				<defo>0</defo>
+				<defo>0.00</defo>
 			</column>
 			<column name="data_recebimento_oficio_multa" type="date" jt="91" />
-			<column name="parecer" type="text" jt="-1" mandatory="y" />
+			<column name="parecer" type="text" jt="-1" />
 			<column name="observacao" type="text" jt="-1" />
 			<column name="ativo" type="tinyint" jt="-6" mandatory="y" >
 				<defo>1</defo>
@@ -746,6 +737,9 @@
 			</index>
 			<index name="fk_contrato" unique="NORMAL" >
 				<column name="id_contrato" />
+			</index>
+			<index name="fk_contrato_penalidade_lov" unique="NORMAL" >
+				<column name="id_servico" />
 			</index>
 			<fk name="fk_contrato" to_schema="bd_circuitosnavega" to_table="contrato" >
 				<fk_column name="id_contrato" pk="id" />
@@ -780,7 +774,9 @@
 			<column name="id_contrato_penalidade" type="int" jt="4" mandatory="y" />
 			<column name="id_tipo_movimento" type="int" jt="4" mandatory="y" />
 			<column name="id_usuario" type="int" jt="4" mandatory="y" />
-			<column name="data_movimento" type="timestamp" jt="93" />
+			<column name="data_movimento" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
+				<defo>CURRENT_TIMESTAMP</defo>
+			</column>
 			<column name="observacao" type="text" jt="-1" />
 			<column name="ativo" type="tinyint" jt="-6" mandatory="y" >
 				<defo>1</defo>
@@ -791,6 +787,15 @@
 			<column name="data_update" type="timestamp" jt="93" />
 			<index name="pk_contrato_penalidade_movimento_id" unique="PRIMARY_KEY" >
 				<column name="id" />
+			</index>
+			<index name="fk_contrato_penalidade_movimento" unique="NORMAL" >
+				<column name="id_contrato_penalidade" />
+			</index>
+			<index name="fk_contrato_penalidade_movimento_lov" unique="NORMAL" >
+				<column name="id_tipo_movimento" />
+			</index>
+			<index name="fk_contrato_penalidade_movimento_usuario" unique="NORMAL" >
+				<column name="id_usuario" />
 			</index>
 			<fk name="fk_contrato_penalidade_movimento" to_schema="bd_circuitosnavega" to_table="contrato_penalidade" delete_action="cascade" update_action="cascade" >
 				<fk_column name="id_contrato_penalidade" pk="id" />
@@ -1646,7 +1651,7 @@ Externo]]></comment>
 			<column name="id_tipo_proposta" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="id_localizacao" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="id_status" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="data_criacao" type="timestamp" jt="93" mandatory="y" >
+			<column name="data_criacao" type="timestamp" length="26" decimal="0" jt="93" >
 				<comment><![CDATA[Data de criação da proposta no sistema circuitos]]></comment>
 			</column>
 			<column name="data_proposta" type="date" jt="91" >
@@ -2256,7 +2261,6 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="circuitos" color="F4DDBE" x="2656" y="1696" />
 		<entity schema="bd_circuitosnavega" name="torre" color="C7F4BE" x="3040" y="768" />
 		<entity schema="bd_circuitosnavega" name="estacao_telecon" color="C7F4BE" x="3040" y="416" />
-		<entity schema="bd_circuitosnavega" name="contrato_indice_monetario" color="C7F4BE" x="1776" y="944" />
 		<entity schema="bd_circuitosnavega" name="contrato_orcamento" color="BEBEF4" x="2128" y="784" />
 		<entity schema="bd_circuitosnavega" name="lov" color="F4DDBE" x="2624" y="1328" />
 		<entity schema="bd_circuitosnavega" name="anexos" color="C1D8EE" x="2816" y="1344" />
@@ -2360,7 +2364,6 @@ Externo]]></comment>
 			<entity schema="bd_circuitosnavega" name="contrato_orcamento" />
 			<entity schema="bd_circuitosnavega" name="contrato" />
 			<entity schema="bd_circuitosnavega" name="contrato_exercicio" />
-			<entity schema="bd_circuitosnavega" name="contrato_indice_monetario" />
 			<entity schema="bd_circuitosnavega" name="contrato_movimento" />
 			<entity schema="bd_circuitosnavega" name="contrato_penalidade" />
 			<entity schema="bd_circuitosnavega" name="contrato_financeiro" />
