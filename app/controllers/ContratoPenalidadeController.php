@@ -10,6 +10,7 @@ use Circuitos\Models\Lov;
 use Circuitos\Models\Operations\AnexosOP;
 use Circuitos\Models\Operations\ContratoPenalidadeOP;
 use Circuitos\Models\Operations\CoreOP;
+use Phalcon\Http\Response;
 use Util\TokenManager;
 
 class ContratoPenalidadeController extends ControllerBase
@@ -37,6 +38,7 @@ class ContratoPenalidadeController extends ControllerBase
 
     public function indexAction()
     {
+        $auth = new Autentica();
         $dados = filter_input_array(INPUT_POST);
         $contratpenalidadeOP = new ContratoPenalidadeOP();
         $contratpenalidade = $contratpenalidadeOP->listar($dados['pesquisa']);
@@ -51,6 +53,7 @@ class ContratoPenalidadeController extends ControllerBase
         $this->view->page = $contratpenalidade;
         $this->view->tipos_servicos = $tipos_servicos;
         $this->view->tipos_anexos = $tipos_anexos;
+        $this->view->id_usuario = $auth->getIdUsuario();
     }
 
     public function criarAction()
@@ -69,8 +72,7 @@ class ContratoPenalidadeController extends ControllerBase
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             $contratpenalidadeOP = new ContratoPenalidadeOP();
             $contratpenalidade = new ContratoPenalidade($params);
-            $vinculocontrato = new ContratoPenalidadeHasContrato($params);
-            if($contratpenalidadeOP->cadastrar($contratpenalidade, $vinculocontrato)){//Cadastrou com sucesso
+            if($contratpenalidadeOP->cadastrar($contratpenalidade)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -97,8 +99,7 @@ class ContratoPenalidadeController extends ControllerBase
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             $contratpenalidadeOP = new ContratoPenalidadeOP();
             $contratpenalidade = new ContratoPenalidade($params);
-            $vinculocontrato = new ContratoPenalidadeHasContrato($params);
-            if($contratpenalidadeOP->alterar($contratpenalidade, $vinculocontrato)){//Altera com sucesso
+            if($contratpenalidadeOP->alterar($contratpenalidade)){//Altera com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
             } else {//Erro no cadastro
                 $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo,'mensagem' => $error_msg)));
@@ -203,7 +204,7 @@ class ContratoPenalidadeController extends ControllerBase
         $modulo = $this->router->getControllerName();
         $action = $this->router->getActionName();
         $request = $this->request;
-        $id_contrato_fiscal = $request->get('id_contrato_fiscal');
+        $id_contrato_fiscal = $request->get('id_contrato_penalidade');
         $id_tipo_anexo = $request->get('id_tipo_anexo');
         $descricao = $request->get('descricao');
         $coreOP = new CoreOP();

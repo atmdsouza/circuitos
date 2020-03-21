@@ -4,7 +4,7 @@ namespace Circuitos\Models\Operations;
 
 use Circuitos\Models\ContratoPenalidade;
 use Circuitos\Models\ContratoPenalidadeAnexo;
-use Phalcon\Http\Response as Response;
+use Phalcon\Http\Response;
 use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
@@ -21,7 +21,7 @@ class ContratoPenalidadeOP extends ContratoPenalidade
         return ContratoPenalidade::pesquisarContratoPenalidade($dados);
     }
 
-    public function cadastrar(ContratoPenalidade $objArray, ContratoPenalidadeHasContrato $objVicunlo)
+    public function cadastrar(ContratoPenalidade $objPenalidade)
     {
         $logger = new FileAdapter($this->arqLog);
         $util = new Util();
@@ -30,31 +30,24 @@ class ContratoPenalidadeOP extends ContratoPenalidade
         try {
             $objeto = new ContratoPenalidade();
             $objeto->setTransaction($transaction);
-            $objeto->setIdUsuario($objArray->getIdUsuario());
-            $objeto->setIdFiscalSuplente(($objArray->getIdFiscalSuplente()) ? $objArray->getIdFiscalSuplente() : null);
-            $objeto->setTipoFiscal($objArray->getTipoFiscal());
-            $objeto->setDataNomeacao(($objArray->getDataNomeacao()) ? $util->converterDataUSA($objArray->getDataNomeacao()) : null);
-            $objeto->setDocumentoNomeacao(mb_strtoupper($objArray->getDocumentoNomeacao(), $this->encode));
+            $objeto->setIdContrato($objPenalidade->getIdContrato());
+            $objeto->setIdServico($objPenalidade->getIdServico());
+            $objeto->setNumeroProcesso(mb_strtoupper($objPenalidade->getNumeroProcesso(), $this->encode));
+            $objeto->setNumeroNotificacao(mb_strtoupper($objPenalidade->getNumeroNotificacao(), $this->encode));
+            $objeto->setNumeroRt(mb_strtoupper($objPenalidade->getNumeroRt(), $this->encode));
+            $objeto->setNumeroOficio(mb_strtoupper($objPenalidade->getNumeroOficio(), $this->encode));
+            $objeto->setMotivoPenalidade(mb_strtoupper($objPenalidade->getMotivoPenalidade(), $this->encode));
+            $objeto->setNumeroOficioMulta(mb_strtoupper($objPenalidade->getNumeroOficioMulta(), $this->encode));
+            $objeto->setValorMulta(($objPenalidade->getValorMulta()) ? $util->formataNumero($objPenalidade->getValorMulta()) : 0);
+            $objeto->setObservacao(mb_strtoupper($objPenalidade->getObservacao(), $this->encode));
             $objeto->setDataCriacao(date('Y-m-d H:i:s'));
             if ($objeto->save() === false) {
                 $messages = $objeto->getMessages();
-                $errors = "";
+                $errors = '';
                 for ($i = 0; $i < count($messages); $i++) {
-                    $errors .= "[".$messages[$i]."] ";
+                    $errors .= '[' .$messages[$i]. '] ';
                 }
-                $transaction->rollback("Erro ao criar o fiscal: " . $errors);
-            }
-            $objetoVicunlo = new ContratoPenalidadeHasContrato();
-            $objetoVicunlo->setTransaction($transaction);
-            $objetoVicunlo->setIdContrato($objVicunlo->getIdContrato());
-            $objetoVicunlo->setIdContratoPenalidade($objeto->getId());
-            if ($objetoVicunlo->save() === false) {
-                $messages = $objetoVicunlo->getMessages();
-                $errors = "";
-                for ($i = 0; $i < count($messages); $i++) {
-                    $errors .= "[".$messages[$i]."] ";
-                }
-                $transaction->rollback("Erro ao criar o vinculo do fiscal: " . $errors);
+                $transaction->rollback('Erro ao criar a penalidade: ' . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -64,20 +57,20 @@ class ContratoPenalidadeOP extends ContratoPenalidade
         }
     }
 
-    public function alterar(ContratoPenalidade $objArray, ContratoPenalidadeHasContrato $objVicunlo)
+    public function alterar(ContratoPenalidade $objPenalidade)
     {
         $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = ContratoPenalidade::findFirst('id='.$objArray->getId());
+            $objeto = ContratoPenalidade::findFirst('id='.$objPenalidade->getId());
             $objeto->setTransaction($transaction);
-            $objeto->setIdUsuario($objArray->getIdUsuario());
-            $objeto->setIdFiscalSuplente(($objArray->getIdFiscalSuplente()) ? $objArray->getIdFiscalSuplente() : null);
-            $objeto->setTipoFiscal($objArray->getTipoFiscal());
-            $objeto->setDataNomeacao(($objArray->getDataNomeacao()) ? $util->converterDataUSA($objArray->getDataNomeacao()) : null);
-            $objeto->setDocumentoNomeacao(mb_strtoupper($objArray->getDocumentoNomeacao(), $this->encode));
+            $objeto->setIdUsuario($objPenalidade->getIdUsuario());
+            $objeto->setIdFiscalSuplente(($objPenalidade->getIdFiscalSuplente()) ? $objPenalidade->getIdFiscalSuplente() : null);
+            $objeto->setTipoFiscal($objPenalidade->getTipoFiscal());
+            $objeto->setDataNomeacao(($objPenalidade->getDataNomeacao()) ? $util->converterDataUSA($objPenalidade->getDataNomeacao()) : null);
+            $objeto->setDocumentoNomeacao(mb_strtoupper($objPenalidade->getDocumentoNomeacao(), $this->encode));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() === false) {
                 $messages = $objeto->getMessages();
@@ -85,19 +78,7 @@ class ContratoPenalidadeOP extends ContratoPenalidade
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
-                $transaction->rollback("Erro ao alterar o fiscal: " . $errors);
-            }
-            $objetoVicunlo = ContratoPenalidadeHasContrato::findFirst('id_contrato_fiscal='.$objeto->getId().' AND id_contrato='.$objVicunlo->getIdContrato());
-            $objetoVicunlo->setTransaction($transaction);
-            $objetoVicunlo->setIdContrato($objVicunlo->getIdContrato());
-            $objetoVicunlo->setIdContratoPenalidade($objeto->getId());
-            if ($objetoVicunlo->save() === false) {
-                $messages = $objetoVicunlo->getMessages();
-                $errors = "";
-                for ($i = 0; $i < count($messages); $i++) {
-                    $errors .= "[".$messages[$i]."] ";
-                }
-                $transaction->rollback("Erro ao criar o vinculo do fiscal: " . $errors);
+                $transaction->rollback("Erro ao alterar a penalidade: " . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -107,13 +88,13 @@ class ContratoPenalidadeOP extends ContratoPenalidade
         }
     }
 
-    public function ativar(ContratoPenalidade $objArray)
+    public function ativar(ContratoPenalidade $objPenalidade)
     {
         $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = ContratoPenalidade::findFirst($objArray->getId());
+            $objeto = ContratoPenalidade::findFirst($objPenalidade->getId());
             $objeto->setTransaction($transaction);
             $objeto->setAtivo(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
@@ -123,7 +104,7 @@ class ContratoPenalidadeOP extends ContratoPenalidade
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
-                $transaction->rollback("Erro ao alterar o fiscal: " . $errors);
+                $transaction->rollback("Erro ao alterar a penalidade: " . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -133,23 +114,23 @@ class ContratoPenalidadeOP extends ContratoPenalidade
         }
     }
 
-    public function inativar(ContratoPenalidade $objArray)
+    public function inativar(ContratoPenalidade $objPenalidade)
     {
         $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = ContratoPenalidade::findFirst($objArray->getId());
+            $objeto = ContratoPenalidade::findFirst($objPenalidade->getId());
             $objeto->setTransaction($transaction);
             $objeto->setAtivo(0);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() === false) {
                 $messages = $objeto->getMessages();
-                $errors = "";
+                $errors = '';
                 for ($i = 0; $i < count($messages); $i++) {
-                    $errors .= "[".$messages[$i]."] ";
+                    $errors .= '[' .$messages[$i]. '] ';
                 }
-                $transaction->rollback("Erro ao alterar o fiscal: " . $errors);
+                $transaction->rollback('Erro ao alterar a penalidade: ' . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -159,13 +140,13 @@ class ContratoPenalidadeOP extends ContratoPenalidade
         }
     }
 
-    public function excluir(ContratoPenalidade $objArray)
+    public function excluir(ContratoPenalidade $objPenalidade)
     {
         $logger = new FileAdapter($this->arqLog);
         $manager = new TxManager();
         $transaction = $manager->get();
         try {
-            $objeto = ContratoPenalidade::findFirst('id='.$objArray->getId());
+            $objeto = ContratoPenalidade::findFirst('id='.$objPenalidade->getId());
             $objeto->setTransaction($transaction);
             $objeto->setExcluido(1);
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
@@ -175,17 +156,7 @@ class ContratoPenalidadeOP extends ContratoPenalidade
                 for ($i = 0; $i < count($messages); $i++) {
                     $errors .= "[".$messages[$i]."] ";
                 }
-                $transaction->rollback("Erro ao excluir o fiscal: " . $errors);
-            }
-            $objetoVinculo = ContratoPenalidadeHasContrato::findFirst('id_contrato_fiscal='.$objeto->getId().' AND id_contrato='.$objeto->getIdContrato());
-            $objetoVinculo->setTransaction($transaction);
-            if ($objetoVinculo->delete() === false) {
-                $messages = $objetoVinculo->getMessages();
-                $errors = "";
-                for ($i = 0; $i < count($messages); $i++) {
-                    $errors .= "[".$messages[$i]."] ";
-                }
-                $transaction->rollback("Erro ao excluir o vinculo: " . $errors);
+                $transaction->rollback("Erro ao excluir a penalidade: " . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -248,30 +219,6 @@ class ContratoPenalidadeOP extends ContratoPenalidade
             }
             $response = new Response();
             $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
-            return $response;
-        } catch (TxFailed $e) {
-            $logger->error($e->getMessage());
-            return false;
-        }
-    }
-
-    public function validacaoFiscalTitular($id_contrato)
-    {
-        $logger = new FileAdapter($this->arqLog);
-        try {
-            $objetosFiscais = ContratoPenalidadeHasContrato::find('id_contrato= ' . $id_contrato);
-            $temTitular = false;
-            foreach ($objetosFiscais as $objetoFiscal)
-            {
-                $fiscal = ContratoPenalidade::findFirst('id='.$objetoFiscal->getIdContratoPenalidade());
-                if ($fiscal->getTipoFiscal() == 1){
-                    $temTitular = true;
-                    $id_usuario = $fiscal->getIdUsuario();
-                    $nome_usuario = $fiscal->getNomeFiscal();
-                }
-            }
-            $response = new Response();
-            $response->setContent(json_encode(array("operacao" => True,"temTitular" => $temTitular, "id_usuario" => $id_usuario, "nome_usuario" => $nome_usuario)));
             return $response;
         } catch (TxFailed $e) {
             $logger->error($e->getMessage());

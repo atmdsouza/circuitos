@@ -127,6 +127,7 @@ $module = $this->router->getControllerName();
                     <div class="form-row">
                         <div class="col-12">
                             <div class="form-row">
+                                <input type="hidden" id="id_usuario" name="id_usuario" value="<?= $id_usuario ?>">
                                 <div class="form-group col-md-3">
                                     <label for="lid_contrato">Contrato <span class="required">*</span></label>
                                     <?= $this->tag->textField(["lid_contrato", "class" => "form-control", "id" => "lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato('lid_contrato','id_contrato');"]) ?>

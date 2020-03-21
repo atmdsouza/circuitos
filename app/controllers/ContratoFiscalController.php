@@ -11,7 +11,7 @@ use Circuitos\Models\Lov;
 use Circuitos\Models\Operations\AnexosOP;
 use Circuitos\Models\Operations\ContratoFiscalOP;
 use Circuitos\Models\Operations\CoreOP;
-use Phalcon\Http\Response as Response;
+use Phalcon\Http\Response;
 use Util\TokenManager;
 
 class ContratoFiscalController extends ControllerBase
