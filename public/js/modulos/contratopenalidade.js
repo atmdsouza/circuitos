@@ -470,7 +470,9 @@ function limpar()
     $('#formPesquisa').submit();
 }
 
-//Sessão de Anexos
+/**
+ * Sessão de Anexos
+ * **/
 function criarAnexo(id_contrato_penalidade)
 {
     'use strict';
@@ -582,7 +584,6 @@ function getTiposAnexo()
 function inserirAnexo()
 {
     'use strict';
-    tipos_anexos = getTiposAnexo();
     contador++;
     var elemento = '<div id="div-anexo-'+ contador +'" class="form-row anexos-complementares">';
     elemento += '<div class="form-group col-md-3">';
@@ -676,4 +677,63 @@ function excluirAnexo(id_anexo)
         });
         return true;
     });
+}
+
+/**
+ * Sessão de Movimento
+ * **/
+function criarMovimento(id_penalidade)
+{
+    'use strict';
+    ocultarBlocos();
+    $('.selectpicker').prop('disabled', false);
+    $('.selectpicker').selectpicker('refresh');
+    $('#modalMovimento').modal();
+
+}
+
+function ocultarBlocos()
+{
+    'use strict';
+    $('.bloco_oculto').hide();
+}
+
+function exibirBloco()
+{
+    'use strict';
+    var seq_tipo_movimento = $('#id_tipo_movimento').val();
+    switch (seq_tipo_movimento) {
+        case '4':
+            ocultarBlocos();
+            $('#bloco-receber-oficio-notificacao').show();
+            break;
+        case '5':
+            ocultarBlocos();
+            $('#bloco-receber-oficio-multa').show();
+            break;
+        case '6':
+            ocultarBlocos();
+            $('#bloco-parecer').show();
+            break;
+        case '7':
+            ocultarBlocos();
+            $('#bloco-executar').show();
+            break;
+        case '8':
+            ocultarBlocos();
+            $('#bloco-cancela').show();
+            break;
+        case '9':
+            ocultarBlocos();
+            $('#bloco-estornar').show();
+            break;
+        default:
+            ocultarBlocos();
+            break;
+    }
+}
+
+function salvarMovimento()
+{
+
 }

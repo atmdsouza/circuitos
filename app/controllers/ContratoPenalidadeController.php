@@ -50,9 +50,14 @@ class ContratoPenalidadeController extends ControllerBase
             'tipo = 33 AND excluido = 0 AND ativo = 1',
             'order' => 'descricao'
         ));
+        $tipos_movimentos = Lov::find(array(
+            'tipo = 34 AND excluido = 0 AND ativo = 1 and valor >= 4',
+            'order' => 'valor'
+        ));
         $this->view->page = $contratpenalidade;
         $this->view->tipos_servicos = $tipos_servicos;
         $this->view->tipos_anexos = $tipos_anexos;
+        $this->view->tipos_movimentos = $tipos_movimentos;
         $this->view->id_usuario = $auth->getIdUsuario();
     }
 
