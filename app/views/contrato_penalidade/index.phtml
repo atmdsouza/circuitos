@@ -152,7 +152,6 @@ $module = $this->router->getControllerName();
                             <div class="form-row">
                                 <div class="col-12">
                                     <div class="form-row">
-                                        <input type="hidden" id="id_usuario" name="id_usuario" value="<?= $id_usuario ?>">
                                         <div class="form-group col-md-3">
                                             <label for="lid_contrato">Contrato <span class="required">*</span></label>
                                             <?= $this->tag->textField(["lid_contrato", "class" => "form-control", "id" => "lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato('lid_contrato','id_contrato');"]) ?>
@@ -205,7 +204,7 @@ $module = $this->router->getControllerName();
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="motivo_penalidade">Motivo da Penalidade <span class="required">*</span></label>
-                                            <?php echo $this->tag->textArea(["motivo_penalidade", "style" => "resize: none", "maxlength" => 3000, "class" => "form-control maxlength-textarea", "id" => "motivo_penalidade", "placeholder" => "Motivo da Penalidade"]) ?>
+                                            <?= $this->tag->textArea(["motivo_penalidade", "style" => "resize: none", "maxlength" => 3000, "class" => "form-control maxlength-textarea", "id" => "motivo_penalidade", "placeholder" => "Motivo da Penalidade"]) ?>
                                         </div>
                                         <div class="form-group col-md-3 botoes_forms_alinhamento">
                                             <label for="numero_oficio_multa">Nº Ofício da Multa </label>
@@ -221,11 +220,11 @@ $module = $this->router->getControllerName();
                                         </div>
                                         <div class="form-group col-md-12 botoes_forms_alinhamento inputs_ocultos">
                                             <label for="parecerv">Parecer </label>
-                                            <?php echo $this->tag->textArea(["parecerv", "style" => "resize: none", "maxlength" => 3000, "class" => "form-control maxlength-textarea", "id" => "parecerv", "disabled" => "disabled"]) ?>
+                                            <?= $this->tag->textArea(["parecerv", "style" => "resize: none", "maxlength" => 3000, "class" => "form-control maxlength-textarea", "id" => "parecerv", "disabled" => "disabled"]) ?>
                                         </div>
                                         <div class="form-group col-md-12 botoes_forms_alinhamento">
                                             <label for="observacao">Observação </label>
-                                            <?php echo $this->tag->textArea(["observacao", "style" => "resize: none", "maxlength" => 3000, "class" => "form-control maxlength-textarea", "id" => "observacao", "placeholder" => "Observação"]) ?>
+                                            <?= $this->tag->textArea(["observacao", "style" => "resize: none", "maxlength" => 3000, "class" => "form-control maxlength-textarea", "id" => "observacao", "placeholder" => "Observação"]) ?>
                                         </div>
                                     </div>
                                 </div>
@@ -292,10 +291,11 @@ $module = $this->router->getControllerName();
             </div>
             <form id="formMovimento">
                 <input type="hidden" id="token_movimento" name="<?= $token['tokenKey'] ?>" value="<?= $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
+                <input type="hidden" id="id_usuario" name="id_usuario" value="<?= $id_usuario ?>">
                 <div class="modal-body">
                     <!--Corpo do Modal-->
                     <div class="form-row">
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label for="id_tipo_movimento">Tipo de Movimento <span class="required">*</span></label>
                             <?= $this->tag->select(['id_tipo_movimento', $tipos_movimentos, 'class' => 'form-control selectpicker', 'id' => 'id_tipo_movimento', 'data-live-search' => true, 'data-style' => 'btn-light', 'onchange' => 'exibirBloco();',
                                 'using' => ['valor', 'descricao',],
@@ -306,22 +306,26 @@ $module = $this->router->getControllerName();
                         </div>
                     </div>
                     <div id="bloco-receber-oficio-notificacao" class="form-row bloco_oculto"><!-- Bloco Receber Ofício Notificação -->
-
+                        <div class="form-group col-md-6">
+                            <label for="data_recebimento_oficio_notificacao">Data de Recebimento do Ofício <span class="required">*</span></label>
+                            <?= $this->tag->textField(["data_recebimento_oficio_notificacao", "class" => "form-control data", "id" => "data_recebimento_oficio_notificacao", "placeholder" => "Data de Recebimento do Ofício"]) ?>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="data_prazo_resposta">Prazo de Resposta <span class="required">*</span></label>
+                            <?= $this->tag->textField(["data_prazo_resposta", "class" => "form-control data", "id" => "data_prazo_resposta", "placeholder" => "Prazo de Resposta"]) ?>
+                        </div>
                     </div>
                     <div id="bloco-receber-oficio-multa" class="form-row bloco_oculto"><!-- Bloco Receber Ofício Multa -->
-
+                        <div class="form-group col-md-6">
+                            <label for="data_recebimento_oficio_multa">Data de Recebimento do Ofício da Multa <span class="required">*</span></label>
+                            <?= $this->tag->textField(["data_recebimento_oficio_multa", "class" => "form-control data", "id" => "data_recebimento_oficio_multa", "placeholder" => "Data de Recebimento do Ofício da Multa"]) ?>
+                        </div>
                     </div>
                     <div id="bloco-parecer" class="form-row bloco_oculto"><!-- Bloco Parecer -->
-
-                    </div>
-                    <div id="bloco-executar" class="form-row bloco_oculto"><!-- Bloco Executar -->
-
-                    </div>
-                    <div id="bloco-cancela" class="form-row bloco_oculto"><!-- Bloco Cancelar -->
-
-                    </div>
-                    <div id="bloco-estornar" class="form-row bloco_oculto"><!-- Bloco Estornar -->
-
+                        <div class="form-group col-md-12">
+                            <label for="parecer">Parecer <span class="required">*</span></label>
+                            <?= $this->tag->textArea(["parecer", "style" => "resize: none", "maxlength" => 3000, "class" => "form-control maxlength-textarea", "id" => "parecer", "placeholder" => "Parecer"]) ?>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -717,15 +717,27 @@ function exibirBloco()
             break;
         case '7':
             ocultarBlocos();
-            $('#bloco-executar').show();
+            swal({
+                title: 'Executar a Penalidade',
+                text: 'Essa ação executará a penalidade selecionada ao clicar no botão "Salvar"!',
+                type: 'info'
+            });
             break;
         case '8':
             ocultarBlocos();
-            $('#bloco-cancela').show();
+            swal({
+                title: 'Cancelamento de Penalidade',
+                text: 'Essa ação cancelará a penalidade selecionada ao clicar no botão "Salvar"!',
+                type: 'info'
+            });
             break;
         case '9':
             ocultarBlocos();
-            $('#bloco-estornar').show();
+            swal({
+                title: 'Estorno de Status',
+                text: '"Essa ação retornará esta penalidade para o status "Aberta" ao clicar no botão "Salvar"!"',
+                type: 'info'
+            });
             break;
         default:
             ocultarBlocos();
