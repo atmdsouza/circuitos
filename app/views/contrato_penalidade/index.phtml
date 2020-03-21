@@ -130,86 +130,126 @@ $module = $this->router->getControllerName();
             <form id="formCadastro">
                 <input type="hidden" id="token" name="<?= $token['tokenKey'] ?>" value="<?= $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
                 <div class="modal-body">
-                    <div class="form-row">
-                        <div class="col-12">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a id="primeira-aba" href="#tab_penalidade" data-toggle="tab" aria-expanded="true" class="nav-link active">
+                                Penalidade
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="tab-movimento" href="#tab_movimento" data-toggle="tab" aria-expanded="false" class="nav-link disabled">
+                                Movimentações
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="tab-anexo" href="#tab_anexo" data-toggle="tab" aria-expanded="false" class="nav-link disabled">
+                                Anexos
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="tab_penalidade">
                             <div class="form-row">
-                                <input type="hidden" id="id_usuario" name="id_usuario" value="<?= $id_usuario ?>">
-                                <div class="form-group col-md-3">
-                                    <label for="lid_contrato">Contrato <span class="required">*</span></label>
-                                    <?= $this->tag->textField(["lid_contrato", "class" => "form-control", "id" => "lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato('lid_contrato','id_contrato');"]) ?>
-                                    <?= $this->tag->hiddenField(["id_contrato", "class" => "form-control", "id" => "id_contrato"]) ?>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label for="id_servico">Tipo de Serviço <span class="required">*</span></label>
-                                    <?= $this->tag->select(['id_servico', $tipos_servicos, 'class' => 'form-control selectpicker', 'id' => 'id_servico', 'data-live-search' => true, 'data-style' => 'btn-light',
-                                        'using' => ['id', 'descricao',],
-                                        'useEmpty' => true,
-                                        'emptyText' => 'Selecione o Tipo de Serviço',
-                                        'emptyValue' => ''])
-                                    ?>
-                                </div>
-                                <div class="form-group col-md-3 botoes_forms_alinhamento inputs_ocultos">
-                                    <label for="statusv">Status </label>
-                                    <?= $this->tag->textField(["statusv", "class" => "form-control", "id" => "statusv", 'disabled' => 'disabled']) ?>
-                                </div>
-                                <div class="form-group col-md-3 botoes_forms_alinhamento inputs_ocultos">
-                                    <label for="data_criacaov">Data da Criação </label>
-                                    <?= $this->tag->textField(["data_criacaov", "class" => "form-control", "id" => "data_criacaov", "disabled" => "disabled"]) ?>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label for="numero_processo">Nº Processo <span class="required">*</span></label>
-                                    <?= $this->tag->textField(["numero_processo", "class" => "form-control numero_documento_oficial", "id" => "numero_processo", "placeholder" => "Nº Processo"]) ?>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label for="numero_notificacao">Nº Notificação <span class="required">*</span></label>
-                                    <?= $this->tag->textField(["numero_notificacao", "class" => "form-control numero_documento_oficial", "id" => "numero_notificacao", "placeholder" => "Nº Notificação"]) ?>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label for="numero_rt">Nº Relatório Técnico <span class="required">*</span></label>
-                                    <?= $this->tag->textField(["numero_rt", "class" => "form-control", "id" => "numero_rt", "placeholder" => "Nº Relatório Técnico"]) ?>
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label for="numero_oficio">Nº Ofício <span class="required">*</span></label>
-                                    <?= $this->tag->textField(["numero_oficio", "class" => "form-control numero_documento_oficial", "id" => "numero_oficio", "placeholder" => "Nº Ofício"]) ?>
-                                </div>
-                                <div class="form-group col-md-3 botoes_forms_alinhamento inputs_ocultos">
-                                    <label for="data_recebimento_oficio_notificacaov">Data de Recebimento do Ofício </label>
-                                    <?= $this->tag->textField(["data_recebimento_oficio_notificacaov", "class" => "form-control", "id" => "data_recebimento_oficio_notificacaov", "disabled" => "disabled"]) ?>
-                                </div>
-                                <div class="form-group col-md-3 botoes_forms_alinhamento inputs_ocultos">
-                                    <label for="data_prazo_respostav">Prazo de Resposta </label>
-                                    <?= $this->tag->textField(["data_prazo_respostav", "class" => "form-control", "id" => "data_prazo_respostav", "disabled" => "disabled"]) ?>
-                                </div>
-                                <div class="form-group col-md-3 botoes_forms_alinhamento inputs_ocultos">
-                                    <label for="data_apresentacao_defesav">Data de Apresentação da Defesa </label>
-                                    <?= $this->tag->textField(["data_apresentacao_defesav", "class" => "form-control", "id" => "data_apresentacao_defesav", "disabled" => "disabled"]) ?>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <label for="motivo_penalidade">Motivo da Penalidade <span class="required">*</span></label>
-                                    <?php echo $this->tag->textArea(["motivo_penalidade", "style" => "resize: none", "maxlength" => 3000, "class" => "form-control maxlength-textarea", "id" => "motivo_penalidade", "placeholder" => "Motivo da Penalidade"]) ?>
-                                </div>
-                                <div class="form-group col-md-3 botoes_forms_alinhamento">
-                                    <label for="numero_oficio_multa">Nº Ofício da Multa </label>
-                                    <?= $this->tag->textField(["numero_oficio_multa", "class" => "form-control numero_documento_oficial", "id" => "numero_oficio_multa", "placeholder" => "Nº Ofício da MUlta"]) ?>
-                                </div>
-                                <div class="form-group col-md-3 botoes_forms_alinhamento">
-                                    <label for="valor_multa">Valor da Multa </label>
-                                    <?= $this->tag->textField(["valor_multa", "class" => "form-control valor_monetario_limpo", "id" => "valor_multa", "placeholder" => "Valor da Multa"]) ?>
-                                </div>
-                                <div class="form-group col-md-3 botoes_forms_alinhamento inputs_ocultos">
-                                    <label for="data_recebimento_oficio_multav">Data de Recebimento do Ofício da Multa </label>
-                                    <?= $this->tag->textField(["data_recebimento_oficio_multav", "class" => "form-control", "id" => "data_recebimento_oficio_multav", "disabled" => "disabled"]) ?>
-                                </div>
-                                <div class="form-group col-md-12 botoes_forms_alinhamento inputs_ocultos">
-                                    <label for="parecerv">Parecer </label>
-                                    <?php echo $this->tag->textArea(["parecerv", "style" => "resize: none", "maxlength" => 3000, "class" => "form-control maxlength-textarea", "id" => "parecerv", "disabled" => "disabled"]) ?>
-                                </div>
-                                <div class="form-group col-md-12 botoes_forms_alinhamento">
-                                    <label for="observacao">Observação </label>
-                                    <?php echo $this->tag->textArea(["observacao", "style" => "resize: none", "maxlength" => 3000, "class" => "form-control maxlength-textarea", "id" => "observacao", "placeholder" => "Observação"]) ?>
+                                <div class="col-12">
+                                    <div class="form-row">
+                                        <input type="hidden" id="id_usuario" name="id_usuario" value="<?= $id_usuario ?>">
+                                        <div class="form-group col-md-3">
+                                            <label for="lid_contrato">Contrato <span class="required">*</span></label>
+                                            <?= $this->tag->textField(["lid_contrato", "class" => "form-control", "id" => "lid_contrato", "placeholder" => "Contrato", "onkeyup" => "autocompletarContrato('lid_contrato','id_contrato');"]) ?>
+                                            <?= $this->tag->hiddenField(["id_contrato", "class" => "form-control", "id" => "id_contrato"]) ?>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label for="id_servico">Tipo de Serviço <span class="required">*</span></label>
+                                            <?= $this->tag->select(['id_servico', $tipos_servicos, 'class' => 'form-control selectpicker', 'id' => 'id_servico', 'data-live-search' => true, 'data-style' => 'btn-light',
+                                                'using' => ['id', 'descricao',],
+                                                'useEmpty' => true,
+                                                'emptyText' => 'Selecione o Tipo de Serviço',
+                                                'emptyValue' => ''])
+                                            ?>
+                                        </div>
+                                        <div class="form-group col-md-3 botoes_forms_alinhamento inputs_ocultos">
+                                            <label for="statusv">Status </label>
+                                            <?= $this->tag->textField(["statusv", "class" => "form-control", "id" => "statusv", 'disabled' => 'disabled']) ?>
+                                        </div>
+                                        <div class="form-group col-md-3 botoes_forms_alinhamento inputs_ocultos">
+                                            <label for="data_criacaov">Data da Criação </label>
+                                            <?= $this->tag->textField(["data_criacaov", "class" => "form-control", "id" => "data_criacaov", "disabled" => "disabled"]) ?>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label for="numero_processo">Nº Processo <span class="required">*</span></label>
+                                            <?= $this->tag->textField(["numero_processo", "class" => "form-control numero_documento_oficial", "id" => "numero_processo", "placeholder" => "Nº Processo"]) ?>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label for="numero_notificacao">Nº Notificação <span class="required">*</span></label>
+                                            <?= $this->tag->textField(["numero_notificacao", "class" => "form-control numero_documento_oficial", "id" => "numero_notificacao", "placeholder" => "Nº Notificação"]) ?>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label for="numero_rt">Nº Relatório Técnico <span class="required">*</span></label>
+                                            <?= $this->tag->textField(["numero_rt", "class" => "form-control", "id" => "numero_rt", "placeholder" => "Nº Relatório Técnico"]) ?>
+                                        </div>
+                                        <div class="form-group col-md-3">
+                                            <label for="numero_oficio">Nº Ofício <span class="required">*</span></label>
+                                            <?= $this->tag->textField(["numero_oficio", "class" => "form-control numero_documento_oficial", "id" => "numero_oficio", "placeholder" => "Nº Ofício"]) ?>
+                                        </div>
+                                        <div class="form-group col-md-3 botoes_forms_alinhamento inputs_ocultos">
+                                            <label for="data_recebimento_oficio_notificacaov">Data de Recebimento do Ofício </label>
+                                            <?= $this->tag->textField(["data_recebimento_oficio_notificacaov", "class" => "form-control", "id" => "data_recebimento_oficio_notificacaov", "disabled" => "disabled"]) ?>
+                                        </div>
+                                        <div class="form-group col-md-3 botoes_forms_alinhamento inputs_ocultos">
+                                            <label for="data_prazo_respostav">Prazo de Resposta </label>
+                                            <?= $this->tag->textField(["data_prazo_respostav", "class" => "form-control", "id" => "data_prazo_respostav", "disabled" => "disabled"]) ?>
+                                        </div>
+                                        <div class="form-group col-md-3 botoes_forms_alinhamento inputs_ocultos">
+                                            <label for="data_apresentacao_defesav">Data de Apresentação da Defesa </label>
+                                            <?= $this->tag->textField(["data_apresentacao_defesav", "class" => "form-control", "id" => "data_apresentacao_defesav", "disabled" => "disabled"]) ?>
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label for="motivo_penalidade">Motivo da Penalidade <span class="required">*</span></label>
+                                            <?php echo $this->tag->textArea(["motivo_penalidade", "style" => "resize: none", "maxlength" => 3000, "class" => "form-control maxlength-textarea", "id" => "motivo_penalidade", "placeholder" => "Motivo da Penalidade"]) ?>
+                                        </div>
+                                        <div class="form-group col-md-3 botoes_forms_alinhamento">
+                                            <label for="numero_oficio_multa">Nº Ofício da Multa </label>
+                                            <?= $this->tag->textField(["numero_oficio_multa", "class" => "form-control numero_documento_oficial", "id" => "numero_oficio_multa", "placeholder" => "Nº Ofício da MUlta"]) ?>
+                                        </div>
+                                        <div class="form-group col-md-3 botoes_forms_alinhamento">
+                                            <label for="valor_multa">Valor da Multa </label>
+                                            <?= $this->tag->textField(["valor_multa", "class" => "form-control valor_monetario_limpo", "id" => "valor_multa", "placeholder" => "Valor da Multa"]) ?>
+                                        </div>
+                                        <div class="form-group col-md-3 botoes_forms_alinhamento inputs_ocultos">
+                                            <label for="data_recebimento_oficio_multav">Data de Recebimento do Ofício da Multa </label>
+                                            <?= $this->tag->textField(["data_recebimento_oficio_multav", "class" => "form-control", "id" => "data_recebimento_oficio_multav", "disabled" => "disabled"]) ?>
+                                        </div>
+                                        <div class="form-group col-md-12 botoes_forms_alinhamento inputs_ocultos">
+                                            <label for="parecerv">Parecer </label>
+                                            <?php echo $this->tag->textArea(["parecerv", "style" => "resize: none", "maxlength" => 3000, "class" => "form-control maxlength-textarea", "id" => "parecerv", "disabled" => "disabled"]) ?>
+                                        </div>
+                                        <div class="form-group col-md-12 botoes_forms_alinhamento">
+                                            <label for="observacao">Observação </label>
+                                            <?php echo $this->tag->textArea(["observacao", "style" => "resize: none", "maxlength" => 3000, "class" => "form-control maxlength-textarea", "id" => "observacao", "placeholder" => "Observação"]) ?>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <table id="tabela_lista_anexosv" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%" style="display: none;">
+                        </div>
+                        <div class="tab-pane fade" id="tab_movimento">
+                            <table id="tabela_lista_movimento" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+                                <thead>
+                                <tr>
+                                    <th colspan="4" class="fonte-15">Lista de Movimentações</th>
+                                </tr>
+                                <tr>
+                                    <th>Tipo Anexo</th>
+                                    <th>Descrição</th>
+                                    <th>Data de Inclusão</th>
+                                    <th>Ações</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="tab_anexo">
+                            <table id="tabela_lista_anexosv" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                                 <thead>
                                 <tr>
                                     <th colspan="4" class="fonte-15">Lista de Anexos</th>

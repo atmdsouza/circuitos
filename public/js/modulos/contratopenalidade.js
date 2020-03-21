@@ -72,12 +72,12 @@ function limparValidacao()
 function criar()
 {
     'use strict';
-    $('#tabela_lista_anexosv').removeAttr('style', 'display: table;');
-    $('#tabela_lista_anexosv').attr('style', 'display: none;');
+    $('#primeira-aba').trigger('click');
     $("#formCadastro input").removeAttr('readonly', 'readonly');
     $("#formCadastro select").removeAttr('readonly', 'readonly');
     $("#formCadastro textarea").removeAttr('readonly', 'readonly');
     ocultarInputs();
+    bloquearAbas();
     $("#salvarCadastro").val('criar');
     $("#salvarCadastro").show();
     $("#modalCadastro").modal();
@@ -93,6 +93,13 @@ function exibirInputs()
 {
     'use strict';
     $('.inputs_ocultos').show();
+}
+
+function bloquearAbas()
+{
+    'use strict';
+    $('#tab-movimento').addClass('disabled');
+    $('#tab-anexo').addClass('disabled');
 }
 
 function salvar()
@@ -370,6 +377,7 @@ function visualizar(id, ocultar)
                 $('.hide_buttons').show();
             }
             $('.selectpicker').selectpicker('refresh');
+            $('#primeira-aba').trigger('click');
             $("#modalCadastro").modal();
         },
         error: function (data) {
