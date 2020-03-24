@@ -3,6 +3,7 @@
 namespace Circuitos\Models;
 
 use Util\Infra;
+use Util\Util;
 
 class ContratoPenalidadeMovimento extends \Phalcon\Mvc\Model
 {
@@ -221,6 +222,16 @@ class ContratoPenalidadeMovimento extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field id_tipo_movimento descrição
+     *
+     * @return integer
+     */
+    public function getTipoMovimentoDescricao()
+    {
+        return $this->Lov->descricao;
+    }
+
+    /**
      * Returns the value of field id_usuario
      *
      * @return integer
@@ -231,6 +242,16 @@ class ContratoPenalidadeMovimento extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field id_usuario nome
+     *
+     * @return integer
+     */
+    public function getUsuarioNome()
+    {
+        return $this->Usuario->Pessoa->nome;
+    }
+
+    /**
      * Returns the value of field data_movimento
      *
      * @return string
@@ -238,6 +259,17 @@ class ContratoPenalidadeMovimento extends \Phalcon\Mvc\Model
     public function getDataMovimento()
     {
         return $this->data_movimento;
+    }
+
+    /**
+     * Returns the value of field data_movimento formatada
+     *
+     * @return string
+     */
+    public function getDataMovimentoFormatada()
+    {
+        $util = new Util();
+        return ($this->data_movimento) ? $util->converterDataHoraParaBr($this->data_movimento) : null;
     }
 
     /**

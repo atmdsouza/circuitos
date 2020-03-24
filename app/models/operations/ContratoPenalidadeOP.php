@@ -178,7 +178,46 @@ class ContratoPenalidadeOP extends ContratoPenalidade
             case 5:
                 try {
                     $objetoPenalidade = ContratoPenalidade::findFirst('id='.$objPenalidade->getId());
-                    $data_recebimento_oficio_multa_anterior = $util->converterDataParaBr($objetoPenalidade->getDataRecebimentoOficioMultaFormatada());
+                    $data_apresentacao_defesa_anterior = $objetoPenalidade->getDataApresentacaoDefesaFormatada();
+                    $objetoPenalidade->setTransaction($transaction);
+                    $objetoPenalidade->setDataApresentacaoDefesa($util->converterDataUSA($objPenalidade->getDataApresentacaoDefesa()));
+                    $objetoPenalidade->setDataUpdate(date('Y-m-d H:i:s'));
+                    if ($objetoPenalidade->save() === false) {
+                        $messages = $objetoPenalidade->getMessages();
+                        $errors = '';
+                        for ($i = 0; $i < count($messages); $i++) {
+                            $errors .= '[' .$messages[$i]. '] ';
+                        }
+                        $transaction->rollback('Erro ao alterar a penalidade: ' . $errors);
+                    }
+                    $objeto = new ContratoPenalidadeMovimento();
+                    $objeto->setTransaction($transaction);
+                    $objeto->setIdContratoPenalidade($objPenalidade->getId());
+                    $objeto->setIdTipoMovimento($objeto->buscarIdTipoMovimento(34, $tipo_movimento));
+                    $objeto->setIdUsuario($auth->getIdUsuario());
+                    $objeto->setDataMovimento(date('Y-m-d H:i:s'));
+                    $objeto->setValorAnterior(($data_apresentacao_defesa_anterior) ? $data_apresentacao_defesa_anterior : 'Sem dados');
+                    $objeto->setValorAtualizado($objetoPenalidade->getDataApresentacaoDefesaFormatada());
+                    $objeto->setObservacao(mb_strtoupper($objMovimento->getObservacao(), $this->encode));
+                    if ($objeto->save() === false) {
+                        $messages = $objeto->getMessages();
+                        $errors = '';
+                        for ($i = 0; $i < count($messages); $i++) {
+                            $errors .= '[' .$messages[$i]. '] ';
+                        }
+                        $transaction->rollback('Erro ao criar o movimento: ' . $errors);
+                    }
+                    $transaction->commit();
+                    return $objeto;
+                } catch (TxFailed $e) {
+                    $logger->error($e->getMessage());
+                    return false;
+                }
+                break;
+            case 6:
+                try {
+                    $objetoPenalidade = ContratoPenalidade::findFirst('id='.$objPenalidade->getId());
+                    $data_recebimento_oficio_multa_anterior = $objetoPenalidade->getDataRecebimentoOficioMultaFormatada();
                     $objetoPenalidade->setTransaction($transaction);
                     $objetoPenalidade->setDataRecebimentoOficioMulta($util->converterDataUSA($objPenalidade->getDataRecebimentoOficioMulta()));
                     $objetoPenalidade->setDataUpdate(date('Y-m-d H:i:s'));
@@ -214,7 +253,7 @@ class ContratoPenalidadeOP extends ContratoPenalidade
                     return false;
                 }
                 break;
-            case 6:
+            case 7:
                 try {
                     $objetoPenalidade = ContratoPenalidade::findFirst('id='.$objPenalidade->getId());
                     $parecer_anterior = $objetoPenalidade->getParecer();
@@ -253,7 +292,7 @@ class ContratoPenalidadeOP extends ContratoPenalidade
                     return false;
                 }
                 break;
-            case 7:
+            case 8:
                 try {
                     $objetoPenalidade = ContratoPenalidade::findFirst('id='.$objPenalidade->getId());
                     $status_anterior = $objetoPenalidade->getStatusDescricao();
@@ -292,7 +331,7 @@ class ContratoPenalidadeOP extends ContratoPenalidade
                     return false;
                 }
                 break;
-            case 8:
+            case 9:
                 try {
                     $objetoPenalidade = ContratoPenalidade::findFirst('id='.$objPenalidade->getId());
                     $status_anterior = $objetoPenalidade->getStatusDescricao();
@@ -331,7 +370,7 @@ class ContratoPenalidadeOP extends ContratoPenalidade
                     return false;
                 }
                 break;
-            case 9:
+            case 10:
                 try {
                     $objetoPenalidade = ContratoPenalidade::findFirst('id='.$objPenalidade->getId());
                     $status_anterior = $objetoPenalidade->getStatusDescricao();
@@ -469,8 +508,21 @@ class ContratoPenalidadeOP extends ContratoPenalidade
             $objDescricao->data_recebimento_oficio_multa_formatada = $objeto->getDataRecebimentoOficioMultaFormatada();
             $objDescricao->data_prazo_resposta_formatada = $objeto->getDataPrazoRespostaFormatada();
             $objDescricao->data_apresentacao_defesa_formatada = $objeto->getDataApresentacaoDefesaFormatada();
+            $objMovimentos = ContratoPenalidadeMovimento::find('id_contrato_penalidade='.$id.' ORDER BY id DESC');
+            $arrMovimentos = [];
+            foreach ($objMovimentos as $objMovimento)
+            {
+                $objetoMovimento = new \stdClass();
+                $objetoMovimento->data_movimento = $objMovimento->getDataMovimentoFormatada();
+                $objetoMovimento->tipo_movimento = $objMovimento->getTipoMovimentoDescricao();
+                $objetoMovimento->usuario_nome = $objMovimento->getUsuarioNome();
+                $objetoMovimento->valor_atual = $objMovimento->getValorAnterior();
+                $objetoMovimento->valor_anterior = $objMovimento->getValorAtualizado();
+                $objetoMovimento->observacao = $objMovimento->getObservacao();
+                array_push($arrMovimentos, $objetoMovimento);
+            }
             $response = new Response();
-            $response->setContent(json_encode(array('operacao' => True, 'dados' => $objeto, 'descricoes' => $objDescricao)));
+            $response->setContent(json_encode(array('operacao' => True, 'dados' => $objeto, 'descricoes' => $objDescricao, 'movimentos' => $arrMovimentos, 'anexos' => $this->visualizarContratoPenalidadeAnexos($id, true))));
             return $response;
         } catch (TxFailed $e) {
             $logger->error($e->getMessage());
@@ -486,12 +538,12 @@ class ContratoPenalidadeOP extends ContratoPenalidade
         return $response;
     }
 
-    public function visualizarContratoPenalidadeAnexos($id_contrato_fiscal)
+    public function visualizarContratoPenalidadeAnexos($id_contrato_penalidade, $visualizar = false)
     {
         $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         try {
-            $objetosComponentes = ContratoPenalidadeAnexo::find('id_contrato_fiscal= ' . $id_contrato_fiscal);
+            $objetosComponentes = ContratoPenalidadeAnexo::find('id_contrato_penalidade= ' . $id_contrato_penalidade);
             $arrTransporte = [];
             foreach ($objetosComponentes as $objetoComponente){
                 chmod($objetoComponente->getUrlAnexo(), 0777);
@@ -510,7 +562,7 @@ class ContratoPenalidadeOP extends ContratoPenalidade
             }
             $response = new Response();
             $response->setContent(json_encode(array('operacao' => True,'dados' => $arrTransporte)));
-            return $response;
+            return ($visualizar) ? $arrTransporte : $response;
         } catch (TxFailed $e) {
             $logger->error($e->getMessage());
             return false;

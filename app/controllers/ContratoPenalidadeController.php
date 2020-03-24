@@ -54,7 +54,7 @@ class ContratoPenalidadeController extends ControllerBase
         ));
         $tipos_movimentos = Lov::find(array(
             'tipo = 34 AND excluido = 0 AND ativo = 1 and valor >= 4',
-            'order' => 'valor'
+            'order' => 'CAST(valor AS SIGNED)'
         ));
         $this->view->page = $contratopenalidade;
         $this->view->tipos_servicos = $tipos_servicos;

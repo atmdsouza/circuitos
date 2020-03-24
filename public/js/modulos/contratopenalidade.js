@@ -47,18 +47,12 @@ function confirmaCancelar(modal)
             confirmButtonText: "Sim",
             cancelButtonText: "Não"
         }).then(() => {
-            $("#"+modal).modal('hide');
-            limparModalBootstrap(modal);
             mudou = false;
-            limparValidacao();
         }).catch(swal.noop);
     }
-    else
-    {
-        $("#"+modal).modal('hide');
-        limparModalBootstrap(modal);
-        limparValidacao();
-    }
+    limparModalBootstrap(modal);
+    limparValidacao();
+    $("#"+modal).modal('hide');
 }
 
 function limparValidacao()
@@ -76,6 +70,9 @@ function criar()
     $("#formCadastro input").removeAttr('readonly', 'readonly');
     $("#formCadastro select").removeAttr('readonly', 'readonly');
     $("#formCadastro textarea").removeAttr('readonly', 'readonly');
+    $('#id_servico').selectpicker('val', null);
+    $('.selectpicker').prop('disabled', false);
+    $('.selectpicker').selectpicker('refresh');
     ocultarInputs();
     bloquearAbas();
     $("#salvarCadastro").val('criar');
@@ -409,58 +406,61 @@ function visualizar(id, ocultar)
             $('#data_recebimento_oficio_multav').val(data.descricoes.data_recebimento_oficio_multa_formatada);
             $('#parecerv').val(data.dados.parecer);
             $('#observacao').val(data.dados.observacao);
+            montarTabelaMovimentacao(data.movimentos);
+            montarTabelaAnexosv(data.anexos);
         }
     });
 }
 
-function montarTabelaAnexosv(id_contrato_penalidade, visualizar)
+function montarTabelaAnexosv(array_anexo)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: { metodo: 'visualizarContratoPenalidadeAnexos', id: id_contrato_penalidade },
-        complete: function() {
-            if (visualizar) {
-                $('#tabela_lista_anexosv').removeAttr('style', 'display: none;');
-                $('#tabela_lista_anexosv').attr('style', 'display: table;');
-            } else {
-                $('.tr_remove_anexov').remove();
-                $('#tabela_lista_anexosv').removeAttr('style', 'display: table;');
-                $('#tabela_lista_anexosv').attr('style', 'display: none;');
-            }
-        },
-        error: function(data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function(data) {
-            $('.tr_remove_anexov').remove();
-            var linhas =null;
-            if (data.dados.length > 0){
-                $.each(data.dados, function(key, value) {
-                    linhas += '<tr class="tr_remove_anexov">';
-                    linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
-                    linhas += '<td>'+ value.descricao +'</td>';
-                    linhas += '<td>'+ value.data_criacao +'</td>';
-                    linhas += '<td><a href="'+ value.url +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
-                    linhas += '</tr>';
-                });
-            } else {
-                linhas += "<tr class='tr_remove_anexov'>";
-                linhas += "<td colspan='5' style='text-align: center;'>Não existem anexos para serem exibidos! Favor Cadastrar!</td>";
-                linhas += "</tr>";
-            }
-            $("#tabela_lista_anexosv").append(linhas);
-        }
-    });
+    $('.tr_remove_anexov').remove();
+    var linhas =null;
+    if (array_anexo.length > 0){
+        $.each(array_anexo, function(key, value) {
+            linhas += '<tr class="tr_remove_anexov">';
+            linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
+            linhas += '<td>'+ value.descricao +'</td>';
+            linhas += '<td>'+ value.data_criacao +'</td>';
+            linhas += '<td><a href="'+ value.url +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
+            linhas += '</tr>';
+        });
+    } else {
+        linhas += "<tr class='tr_remove_anexov'>";
+        linhas += "<td colspan='4' style='text-align: center;'>Não existem anexos para serem exibidos!</td>";
+        linhas += "</tr>";
+    }
+    $("#tabela_lista_anexosv").append(linhas);
+    $('#tab-anexo').removeClass('disabled');
+}
+
+function montarTabelaMovimentacao(array_movimento)
+{
+    'use strict';
+    $('.tr_remove_movimento').remove();
+    var linhas =null;
+    if (array_movimento.length > 0){
+        $.each(array_movimento, function(key, value) {
+            var valor_atual = (value.valor_atual !== null) ? value.valor_atual : '';
+            var valor_anterior = (value.valor_anterior !== null) ? value.valor_anterior : '';
+            var observacao = (value.observacao !== null) ? value.observacao : '';
+            linhas += '<tr class="tr_remove_movimento">';
+            linhas += '<td>'+ value.data_movimento +'</td>';
+            linhas += '<td>'+ value.tipo_movimento +'</td>';
+            linhas += '<td>'+ value.usuario_nome +'</td>';
+            linhas += '<td>'+ valor_atual +'</td>';
+            linhas += '<td>'+ valor_anterior +'</td>';
+            linhas += '<td>'+ observacao +'</td>';
+            linhas += '</tr>';
+        });
+    } else {
+        linhas += "<tr class='tr_remove_movimento'>";
+        linhas += "<td colspan='6' style='text-align: center;'>Não existem movimentos para serem exibidos!</td>";
+        linhas += "</tr>";
+    }
+    $("#tabela_lista_movimento").append(linhas);
+    $('#tab-movimento').removeClass('disabled');
 }
 
 function limpar()
@@ -711,15 +711,20 @@ function exibirBloco()
             break;
         case '5':
             ocultarBlocos();
-            $('#bloco-receber-oficio-multa').show();
+            $('#bloco-apresentacao-defesa').show();
             $('#bloco-observacao').show();
             break;
         case '6':
             ocultarBlocos();
-            $('#bloco-parecer').show();
+            $('#bloco-receber-oficio-multa').show();
             $('#bloco-observacao').show();
             break;
         case '7':
+            ocultarBlocos();
+            $('#bloco-parecer').show();
+            $('#bloco-observacao').show();
+            break;
+        case '8':
             ocultarBlocos();
             $('#bloco-observacao').show();
             swal({
@@ -728,7 +733,7 @@ function exibirBloco()
                 type: 'info'
             });
             break;
-        case '8':
+        case '9':
             ocultarBlocos();
             $('#bloco-observacao').show();
             swal({
@@ -737,7 +742,7 @@ function exibirBloco()
                 type: 'info'
             });
             break;
-        case '9':
+        case '10':
             ocultarBlocos();
             $('#bloco-observacao').show();
             swal({

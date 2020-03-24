@@ -234,13 +234,15 @@ $module = $this->router->getControllerName();
                             <table id="tabela_lista_movimento" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                                 <thead>
                                 <tr>
-                                    <th colspan="4" class="fonte-15">Lista de Movimentações</th>
+                                    <th colspan="6" class="fonte-15">Lista de Movimentações</th>
                                 </tr>
                                 <tr>
-                                    <th>Tipo Anexo</th>
-                                    <th>Descrição</th>
-                                    <th>Data de Inclusão</th>
-                                    <th>Ações</th>
+                                    <th>Data do Movimento</th>
+                                    <th>Tipo de Movimento</th>
+                                    <th>Usuário</th>
+                                    <th>Valor Anterior</th>
+                                    <th>Valor Atual</th>
+                                    <th>Observação</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -312,6 +314,12 @@ $module = $this->router->getControllerName();
                         <div class="form-group col-md-6">
                             <label for="data_prazo_resposta">Prazo de Resposta <span class="required">*</span></label>
                             <?= $this->tag->textField(["data_prazo_resposta", "class" => "form-control data", "id" => "data_prazo_resposta", "placeholder" => "Prazo de Resposta"]) ?>
+                        </div>
+                    </div>
+                    <div id="bloco-apresentacao-defesa" class="form-row bloco_oculto"><!-- Bloco Data de Apresentação da Defesa -->
+                        <div class="form-group col-md-6">
+                            <label for="data_apresentacao_defesa">Data de Apresentação da Defesa <span class="required">*</span></label>
+                            <?= $this->tag->textField(["data_apresentacao_defesa", "class" => "form-control data", "id" => "data_apresentacao_defesa", "placeholder" => "Data de Apresentação da Defesa"]) ?>
                         </div>
                     </div>
                     <div id="bloco-receber-oficio-multa" class="form-row bloco_oculto"><!-- Bloco Receber Ofício Multa -->
