@@ -454,7 +454,7 @@ function visualizar(id, ocultar)
             montarTabelaOrcamento(data.dados.id, ocultar);
             montarTabelaGarantia(data.dados.id, ocultar);
             montarTabelaExercicio(data.dados.id, ocultar);
-            montarTabelaAnexosv(data.dados.id, ocultar);
+            montarTabelaAnexosv(data.anexos);
             montarTabelaObjetosVinculados(data.dados.id, ocultar);
             montarTabelaFiscais(data.fiscais, data.descricoes_fiscais);
             montarTabelaFinanceiros(data.dados.id, ocultar);
@@ -716,51 +716,27 @@ function montarTabelaObjetosVinculados(id_contrato, visualizar)
     });
 }
 
-function montarTabelaAnexosv(id_contrato, visualizar)
+function montarTabelaAnexosv(arrAnexos)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: { metodo: 'visualizarContratoAnexos', id: id_contrato },
-        complete: function() {
-            if (visualizar) {
-                $('#tab-anexos').removeClass('disabled');
-                $('.hide_buttons').hide();
-            }
-        },
-        error: function(data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function(data) {
-            $('.tr_remove_anexov').remove();
-            var linhas =null;
-            if (data.dados.length > 0){
-                $.each(data.dados, function(key, value) {
-                    linhas += '<tr class="tr_remove_anexov">';
-                    linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
-                    linhas += '<td>'+ value.descricao +'</td>';
-                    linhas += '<td>'+ value.data_criacao +'</td>';
-                    linhas += '<td><a href="'+ value.url +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
-                    linhas += '</tr>';
-                });
-                $("#tabela_lista_anexosv").append(linhas);
-            } else {
-                linhas += "<tr class='tr_remove_anexov'>";
-                linhas += "<td colspan='5' style='text-align: center;'>Não existem anexos para serem exibidos!</td>";
-                linhas += "</tr>";
-                $("#tabela_lista_anexosv").append(linhas);
-            }
-        }
-    });
+    $('.tr_remove_anexov').remove();
+    var linhas =null;
+    if (arrAnexos.length > 0){
+        $.each(arrAnexos, function(key, value) {
+            linhas += '<tr class="tr_remove_anexov">';
+            linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
+            linhas += '<td>'+ value.descricao +'</td>';
+            linhas += '<td>'+ value.data_criacao +'</td>';
+            linhas += '<td><a href="'+ value.url +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
+            linhas += '</tr>';
+        });
+    } else {
+        linhas += "<tr class='tr_remove_anexov'>";
+        linhas += "<td colspan='5' style='text-align: center;'>Não existem anexos para serem exibidos!</td>";
+        linhas += "</tr>";
+    }
+    $("#tabela_lista_anexosv").append(linhas);
+    $('#tab-anexos').removeClass('disabled');
 }
 
 /**
