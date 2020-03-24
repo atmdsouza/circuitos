@@ -1015,6 +1015,8 @@ function criarAnexo(id_proposta)
     montarTabelaAnexos(id_proposta, false);
     $('#tabela_lista_anexos').removeAttr('style', 'display: table;');
     $('#tabela_lista_anexos').attr('style', 'display: none;');
+    $('.selectpicker').prop('disabled', false);
+    $('.selectpicker').selectpicker('refresh');
     $('#modalAnexoArquivo').modal();
 
 }

@@ -14,14 +14,14 @@ use Phalcon\Session\Adapter\Files as SessionAdapter;
 /**
  * Shared configuration service
  */
-$di->setShared("config", function () {
-    return include APP_PATH . "/config/config.php";
+$di->setShared('config', function () {
+    return include APP_PATH . '/config/config.php';
 });
 
 /**
  * The URL component is used to generate all kind of urls in the application
  */
-$di->setShared("url", function () {
+$di->setShared('url', function () {
     $config = $this->getConfig();
 
     $url = new UrlResolver();
@@ -33,7 +33,7 @@ $di->setShared("url", function () {
 /**
  * Setting up the view component
  */
-$di->setShared("view", function () {
+$di->setShared('view', function () {
     $config = $this->getConfig();
 
     $view = new View();
@@ -41,19 +41,19 @@ $di->setShared("view", function () {
     $view->setViewsDir($config->application->viewsDir);
 
     $view->registerEngines([
-        ".volt" => function ($view) {
+        '.volt' => function ($view) {
             $config = $this->getConfig();
 
             $volt = new VoltEngine($view, $this);
 
             $volt->setOptions([
-                "compiledPath" => $config->application->cacheDir,
-                "compiledSeparator" => "_"
+                'compiledPath' => $config->application->cacheDir,
+                'compiledSeparator' => '_'
             ]);
 
             return $volt;
         },
-        ".phtml" => PhpEngine::class
+        '.phtml' => PhpEngine::class
 
     ]);
 
@@ -63,20 +63,20 @@ $di->setShared("view", function () {
 /**
  * Database connection is created based in the parameters defined in the configuration file
  */
-$di->setShared("db", function () {
+$di->setShared('db', function () {
     $config = $this->getConfig();
 
-    $class = "Phalcon\Db\Adapter\Pdo\\" . $config->database->adapter;
+    $class = 'Phalcon\Db\Adapter\Pdo\\' . $config->database->adapter;
     $params = [
-        "host"     => $config->database->host,
-        "username" => $config->database->username,
-        "password" => $config->database->password,
-        "dbname"   => $config->database->dbname,
-        "charset"  => $config->database->charset
+        'host'     => $config->database->host,
+        'username' => $config->database->username,
+        'password' => $config->database->password,
+        'dbname'   => $config->database->dbname,
+        'charset'  => $config->database->charset
     ];
 
-    if ($config->database->adapter == "Postgresql") {
-        unset($params["charset"]);
+    if ($config->database->adapter == 'Postgresql') {
+        unset($params['charset']);
     }
 
     $connection = new $class($params);
@@ -95,12 +95,12 @@ $di->setShared('modelsMetadata', function () {
 /**
  * Register the session flash service with the Twitter Bootstrap classes
  */
-$di->set("flash", function () {
+$di->set('flash', function () {
     return new Flash([
-        "error"   => "alert alert-danger",
-        "success" => "alert alert-success",
-        "notice"  => "alert alert-info",
-        "warning" => "alert alert-warning"
+        'error'   => 'alert alert-danger',
+        'success' => 'alert alert-success',
+        'notice'  => 'alert alert-info',
+        'warning' => 'alert alert-warning'
     ]);
 });
 
@@ -112,10 +112,10 @@ $di->set("flash", function () {
 //     $dispatcher->setDefaultNamespace('Circuitos\Controllers');
 //     return $dispatcher;
 // });
-$di->set("dispatcher", function() use ($di) {
-    $evManager = $di->getShared("eventsManager");
+$di->set('dispatcher', function() use ($di) {
+    $evManager = $di->getShared('eventsManager');
     $evManager->attach(
-        "dispatch:beforeException",
+        'dispatch:beforeException',
         function($event, $dispatcher, $exception)
         {
             switch ($exception->getCode()) {
@@ -123,8 +123,8 @@ $di->set("dispatcher", function() use ($di) {
                 case Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
                     $dispatcher->forward(
                         array(
-                            "controller" => "error",
-                            "action"     => "show404",
+                            'controller' => 'error',
+                            'action'     => 'show404',
                         )
                     );
                     return false;
@@ -132,12 +132,12 @@ $di->set("dispatcher", function() use ($di) {
         }
     );
     $evManager->attach(
-        "dispatch:beforeExecuteRoute",
+        'dispatch:beforeExecuteRoute',
         new SecurityPlugin()
     );
     $dispatcher = new Dispatcher();
     $dispatcher->setEventsManager($evManager);
-    $dispatcher->setDefaultNamespace("Circuitos\Controllers");
+    $dispatcher->setDefaultNamespace('Circuitos\Controllers');
     return $dispatcher;
 },
     true
@@ -146,8 +146,9 @@ $di->set("dispatcher", function() use ($di) {
 /**
  * Start the session the first time some component request the session service
  */
-$di->set("session", function () {
+$di->set('session', function () {
     $session = new SessionAdapter();
+    $session->setOptions(array('lifetime' => 1800));
     $session->start();
     return $session;
 });
@@ -155,9 +156,7 @@ $di->set("session", function () {
 /**
  * CSRFToken
  */
-$di->set(
-    "security",
-    function () {
+$di->set('security', function () {
         $security = new Security();
         // Set the password hashing factor to 12 rounds
         $security->setWorkFactor(12);
@@ -168,6 +167,6 @@ $di->set(
 /**
  * Custom authentication component
  */
-$di->set("Auth", function () {
+$di->set('Auth', function () {
     return new Auth();
 });

@@ -728,6 +728,13 @@ $(document).ready(function () {
             }
         }
     });
+    $(".numero_documento_oficial").mask('000ZZZZ/0000', {
+        translation: {
+            'Z': {
+                pattern: /[0-9]/, optional: true
+            }
+        }
+    });
 });
 
 //JQuery Validator para métodos customizados

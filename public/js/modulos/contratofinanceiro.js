@@ -664,6 +664,8 @@ function criarAnexo(id_contrato_financeiro, contrato, exercicio, competencia)
             }
         }
     });
+    $('.selectpicker').prop('disabled', false);
+    $('.selectpicker').selectpicker('refresh');
 }
 
 function montarTabelaAnexos(objeto, objeto_descricoes)

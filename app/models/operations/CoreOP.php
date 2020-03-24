@@ -41,13 +41,13 @@ use Uploader\Uploader;
  */
 class CoreOP
 {
-    private $arqLog = BASE_PATH . "/logs/systemlog.log";
+    private $arqLog = BASE_PATH . '/logs/systemlog.log';
 
     public function servicoUpload($request, $modulo, $action, $id, $rules)
     {
         $logger = new FileAdapter($this->arqLog);
         $uploader = new Uploader();
-        $diretorio = BASE_PATH . "/public/anexos/" . $modulo . "/" . $action . "/" . $id . "/";
+        $diretorio = BASE_PATH . '/public/anexos/' . $modulo . '/' . $action . '/' . $id . '/';
         if(!file_exists($diretorio) && !is_dir($diretorio)){
             mkdir($diretorio, 0777, true);
         }
@@ -55,23 +55,23 @@ class CoreOP
         if (empty($rules))
         {
             $rules = [
-                "directory"   =>  $diretorio,
-//                "minsize"   =>  1000,   // bytes
-//                "maxsize"   =>  1000000,// bytes
-//                "mimes"     =>  [//Permitidos
-//                    "text/plain",
-//                    "image/gif", "image/png", "image/jpeg", "image/bmp", "image/webp", "image/svg+xml", "image/x-icon",
-//                    "audio/midi", "audio/mpeg", "audio/webm", "audio/ogg", "audio/wav",
-//                    "video/webm", "video/ogg", "video/avi","video/mpeg","video/mp4",
-//                    "application/x-rar-compressed", "application/octet-stream", "application/pkcs12", "application/vnd.mspowerpoint", "application/xhtml+xml",
-//                    "application/xml",  "application/pdf"
+                'directory'   =>  $diretorio,
+//                'minsize'   =>  1000,   // bytes
+//                'maxsize'   =>  1000000,// bytes
+//                'mimes'     =>  [//Permitidos
+//                    'text/plain',
+//                    'image/gif', 'image/png', 'image/jpeg', 'image/bmp', 'image/webp', 'image/svg+xml', 'image/x-icon',
+//                    'audio/midi', 'audio/mpeg', 'audio/webm', 'audio/ogg', 'audio/wav',
+//                    'video/webm', 'video/ogg', 'video/avi','video/mpeg','video/mp4',
+//                    'application/x-rar-compressed', 'application/octet-stream', 'application/pkcs12', 'application/vnd.mspowerpoint', 'application/xhtml+xml',
+//                    'application/xml',  'application/pdf'
 //                ],
-//                "extensions"     =>  [//Permitidos
-//                    "gif", "jpeg", "jpg", "png", "pdf", "txt", "bpm", "webp", "svg", "icon", "mpeg", "webm", "ogg", "wav", "mp3", "midi",
-//                    "avi", "mp4", "rar", "pptx", "docx", "xlsx", "ppt", "doc", "xls", "xml"
+//                'extensions'     =>  [//Permitidos
+//                    'gif', 'jpeg', 'jpg', 'png', 'pdf', 'txt', 'bpm', 'webp', 'svg', 'icon', 'mpeg', 'webm', 'ogg', 'wav', 'mp3', 'midi',
+//                    'avi', 'mp4', 'rar', 'pptx', 'docx', 'xlsx', 'ppt', 'doc', 'xls', 'xml'
 //                ],
-                "sanitize" => true,
-                "hash"     => "md5"
+                'sanitize' => true,
+                'hash'     => 'md5'
             ];
         }
         //Processo de Upload

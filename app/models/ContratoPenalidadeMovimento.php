@@ -3,8 +3,9 @@
 namespace Circuitos\Models;
 
 use Util\Infra;
+use Util\Util;
 
-class ContratoMovimento extends \Phalcon\Mvc\Model
+class ContratoPenalidadeMovimento extends \Phalcon\Mvc\Model
 {
 
     /**
@@ -17,7 +18,7 @@ class ContratoMovimento extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
-    protected $id_contrato;
+    protected $id_contrato_penalidade;
 
     /**
      *
@@ -87,14 +88,14 @@ class ContratoMovimento extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Method to set the value of field id_contrato
+     * Method to set the value of field id_contrato_penalidade
      *
-     * @param integer $id_contrato
+     * @param integer $id_contrato_penalidade
      * @return $this
      */
-    public function setIdContrato($id_contrato)
+    public function setIdContratoPenalidade($id_contrato_penalidade)
     {
-        $this->id_contrato = $id_contrato;
+        $this->id_contrato_penalidade = $id_contrato_penalidade;
 
         return $this;
     }
@@ -201,13 +202,13 @@ class ContratoMovimento extends \Phalcon\Mvc\Model
     }
 
     /**
-     * Returns the value of field id_contrato
+     * Returns the value of field id_contrato_penalidade
      *
      * @return integer
      */
-    public function getIdContrato()
+    public function getIdContratoPenalidade()
     {
-        return $this->id_contrato;
+        return $this->id_contrato_penalidade;
     }
 
     /**
@@ -221,6 +222,16 @@ class ContratoMovimento extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field id_tipo_movimento descrição
+     *
+     * @return integer
+     */
+    public function getTipoMovimentoDescricao()
+    {
+        return $this->Lov->descricao;
+    }
+
+    /**
      * Returns the value of field id_usuario
      *
      * @return integer
@@ -231,6 +242,16 @@ class ContratoMovimento extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field id_usuario nome
+     *
+     * @return integer
+     */
+    public function getUsuarioNome()
+    {
+        return $this->Usuario->Pessoa->nome;
+    }
+
+    /**
      * Returns the value of field data_movimento
      *
      * @return string
@@ -238,6 +259,17 @@ class ContratoMovimento extends \Phalcon\Mvc\Model
     public function getDataMovimento()
     {
         return $this->data_movimento;
+    }
+
+    /**
+     * Returns the value of field data_movimento formatada
+     *
+     * @return string
+     */
+    public function getDataMovimentoFormatada()
+    {
+        $util = new Util();
+        return ($this->data_movimento) ? $util->converterDataHoraParaBr($this->data_movimento) : null;
     }
 
     /**
@@ -323,8 +355,8 @@ class ContratoMovimento extends \Phalcon\Mvc\Model
     {
         $schema = new Infra();
         $this->setSchema($schema->getSchemaBanco());
-        $this->setSource("contrato_movimento");
-        $this->belongsTo('id_contrato', 'Circuitos\Models\Contrato', 'id', ['alias' => 'Contrato']);
+        $this->setSource("contrato_penalidade_movimento");
+        $this->belongsTo('id_contrato_penalidade', 'Circuitos\Models\ContratoPenalidade', 'id', ['alias' => 'ContratoPenalidade']);
         $this->belongsTo('id_tipo_movimento', 'Circuitos\Models\Lov', 'id', ['alias' => 'Lov']);
         $this->belongsTo('id_usuario', 'Circuitos\Models\Usuario', 'id', ['alias' => 'Usuario']);
     }
@@ -336,14 +368,14 @@ class ContratoMovimento extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'contrato_movimento';
+        return 'contrato_penalidade_movimento';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return ContratoMovimento[]|ContratoMovimento|\Phalcon\Mvc\Model\ResultSetInterface
+     * @return ContratoPenalidadeMovimento[]|ContratoPenalidadeMovimento|\Phalcon\Mvc\Model\ResultSetInterface
      */
     public static function find($parameters = null)
     {
@@ -354,11 +386,23 @@ class ContratoMovimento extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return ContratoMovimento|\Phalcon\Mvc\Model\ResultInterface
+     * @return ContratoPenalidadeMovimento|\Phalcon\Mvc\Model\ResultInterface
      */
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
     }
 
+    /**
+     * Buscar o di do tipo de movimento específico para gravar no banco de dados
+     *
+     * @param int tipo
+     * @param int valor
+     * @return int id_tipo_movimento
+     */
+    public function buscarIdTipoMovimento($tipo, $valor)
+    {
+        $objeto = Lov::findFirst('tipo='.$tipo.' AND valor="'.$valor.'"');
+        return $objeto->getId();
+    }
 }

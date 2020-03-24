@@ -17,11 +17,9 @@ function inicializar()
         language: {
             select: false
         },
-        order: [[5, "asc"],[0, "desc"]]//Ordenação passando a lista de ativos primeiro
+        order: [[0, "desc"]]//Ordenação default
     });
     autocompletarContrato('lid_contrato','id_contrato');
-    autocompletarUsuario('lid_usuario', 'id_usuario');
-    autocompletarUsuarioSuplente('lid_fiscal_suplente','id_fiscal_suplente');
     getTiposAnexo();
 }
 
@@ -49,18 +47,12 @@ function confirmaCancelar(modal)
             confirmButtonText: "Sim",
             cancelButtonText: "Não"
         }).then(() => {
-            $("#"+modal).modal('hide');
-            limparModalBootstrap(modal);
             mudou = false;
-            limparValidacao();
         }).catch(swal.noop);
     }
-    else
-    {
-        $("#"+modal).modal('hide');
-        limparModalBootstrap(modal);
-        limparValidacao();
-    }
+    limparModalBootstrap(modal);
+    limparValidacao();
+    $("#"+modal).modal('hide');
 }
 
 function limparValidacao()
@@ -74,78 +66,37 @@ function limparValidacao()
 function criar()
 {
     'use strict';
-    $('#tabela_lista_anexosv').removeAttr('style', 'display: table;');
-    $('#tabela_lista_anexosv').attr('style', 'display: none;');
+    $('#primeira-aba').trigger('click');
     $("#formCadastro input").removeAttr('readonly', 'readonly');
     $("#formCadastro select").removeAttr('readonly', 'readonly');
     $("#formCadastro textarea").removeAttr('readonly', 'readonly');
+    $('#id_servico').selectpicker('val', null);
+    $('.selectpicker').prop('disabled', false);
+    $('.selectpicker').selectpicker('refresh');
+    ocultarInputs();
+    bloquearAbas();
     $("#salvarCadastro").val('criar');
-    habilitaSuplente();
     $("#salvarCadastro").show();
     $("#modalCadastro").modal();
 }
 
-function habilitaSuplente()
+function ocultarInputs()
 {
     'use strict';
-    var tipo_fiscal = $('#tipo_fiscal').val();
-    $('#tipo_fiscal').removeAttr('disabled');
-    if (tipo_fiscal === '1'){
-        $('#lid_fiscal_suplente').removeAttr('disabled');
-    } else {
-        $('#lid_fiscal_suplente').val('');
-        $('#id_fiscal_suplente').val('');
-        $('#lid_fiscal_suplente').attr('disabled', 'disabled');
-    }
+    $('.inputs_ocultos').hide();
 }
 
-function validacaoFiscalTitular()
+function exibirInputs()
 {
     'use strict';
-    var id = $('#id_contrato').val();
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: {metodo: 'validacaoFiscalTitular', id: id},
-        error: function (data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function (data) {
-            if (data.temTitular){
-                swal({
-                    title: 'Verificação de Fiscal Titular',
-                    text: 'Este contrato já possui um fiscal cadastrado como titular. Você só pode cadastrar fiscais suplentes agora ou então, alterar a titularidade.',
-                    type: "info",
-                    showCancelButton: false,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Ok"
-                }).then((result) => {
-                    $('#tipo_fiscal').val(0).selected='true';
-                    $('#tipo_fiscal').attr('disabled', 'disabled');
-                    $('#lid_fiscal_suplente').val('');
-                    $('#id_fiscal_suplente').val('');
-                    $('#lid_fiscal_suplente').attr('disabled', 'disabled');
-                    // $('#lid_usuario').val(data.id_usuario);
-                    // $('#id_usuario').val(data.nome_usuario);
-                });
-            } else {
-                $('#tipo_fiscal').removeAttr('disabled');
-                $('#lid_fiscal_suplente').removeAttr('disabled');
-                // $('#lid_usuario').val('');
-                // $('#id_usuario').val('');
-            }
-        }
-    });
+    $('.inputs_ocultos').show();
+}
 
+function bloquearAbas()
+{
+    'use strict';
+    $('#tab-movimento').addClass('disabled');
+    $('#tab-anexo').addClass('disabled');
 }
 
 function salvar()
@@ -157,16 +108,28 @@ function salvar()
             lid_contrato:{
                 required: true
             },
-            lid_usuario:{
+            id_servico:{
                 required: true
             },
-            tipo_fiscal:{
+            numero_processo:{
+                required: true
+            },
+            numero_notificacao:{
+                required: true
+            },
+            numero_rt:{
+                required: true
+            },
+            numero_oficio:{
+                required: true
+            },
+            motivo_penalidade:{
                 required: true
             }
         },
         submitHandler: function(form) {
             var dados = $("#formCadastro").serialize();
-            var action = actionCorreta(window.location.href.toString(), "contrato_fiscal/" + acao);
+            var action = actionCorreta(window.location.href.toString(), "contrato_penalidade/" + acao);
             $.ajax({
                 type: "POST",
                 dataType: "JSON",
@@ -224,7 +187,7 @@ function ativar(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, ativar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "contrato_fiscal/ativar");
+        var action = actionCorreta(window.location.href.toString(), "contrato_penalidade/ativar");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -281,7 +244,7 @@ function inativar(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, inativar!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "contrato_fiscal/inativar");
+        var action = actionCorreta(window.location.href.toString(), "contrato_penalidade/inativar");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -338,7 +301,7 @@ function excluir(id, descr)
         cancelButtonColor: "#d33",
         confirmButtonText: "Sim, excluir!"
     }).then((result) => {
-        var action = actionCorreta(window.location.href.toString(), "contrato_fiscal/excluir");
+        var action = actionCorreta(window.location.href.toString(), "contrato_penalidade/excluir");
         $.ajax({
             type: "POST",
             dataType: "JSON",
@@ -391,22 +354,27 @@ function visualizar(id, ocultar)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarContratoFiscal', id: id},
+        data: {metodo: 'visualizarContratoPenalidade', id: id},
         complete: function (data) {
             if (ocultar) {
                 $("#formCadastro input").attr('readonly', 'readonly');
                 $("#formCadastro select").attr('readonly', 'readonly');
                 $("#formCadastro textarea").attr('readonly', 'readonly');
+                $('.selectpicker').prop('disabled', true);
+                exibirInputs();
                 $("#salvarCadastro").hide();
             } else {
                 $("#formCadastro input").removeAttr('readonly', 'readonly');
                 $("#formCadastro select").removeAttr('readonly', 'readonly');
                 $("#formCadastro textarea").removeAttr('readonly', 'readonly');
+                $('.selectpicker').prop('disabled', false);
+                exibirInputs();
                 $("#salvarCadastro").val('editar');
-                habilitaSuplente();
                 $("#salvarCadastro").show();
                 $('.hide_buttons').show();
             }
+            $('.selectpicker').selectpicker('refresh');
+            $('#primeira-aba').trigger('click');
             $("#modalCadastro").modal();
         },
         error: function (data) {
@@ -421,67 +389,78 @@ function visualizar(id, ocultar)
         success: function (data) {
             $('#id').val(data.dados.id);
             $('#lid_contrato').val(data.descricoes.ds_contrato);
-            $('#id_contrato').val(data.descricoes.id_contrato);
-            $('#lid_usuario').val(data.descricoes.nome_fiscal);
-            $('#id_usuario').val(data.dados.id_usuario);
-            $('#lid_fiscal_suplente').val(data.descricoes.nome_fiscal_suplente);
-            $('#id_fiscal_suplente').val(data.dados.id_fiscal_suplente);
-            $('#tipo_fiscal').val(data.dados.tipo_fiscal).selected = "true";
-            $('#data_nomeacao').val(data.descricoes.ds_data_nomeacao);
-            $('#documento_nomeacao').val(data.dados.documento_nomeacao);
-            montarTabelaAnexosv(data.dados.id, ocultar);
+            $('#id_contrato').val(data.dados.id_contrato);
+            $('#id_servico').selectpicker('val', data.dados.id_servico);
+            $('#statusv').val(data.descricoes.ds_status);
+            $('#data_criacaov').val(data.descricoes.data_criacao_formatada);
+            $('#numero_processo').val(data.dados.numero_processo);
+            $('#numero_notificacao').val(data.dados.numero_notificacao);
+            $('#numero_rt').val(data.dados.numero_rt);
+            $('#numero_oficio').val(data.dados.numero_oficio);
+            $('#data_recebimento_oficio_notificacaov').val(data.descricoes.data_recebimento_oficio_notificacao_formatada);
+            $('#data_prazo_respostav').val(data.descricoes.data_prazo_resposta_formatada);
+            $('#data_apresentacao_defesav').val(data.descricoes.data_apresentacao_defesa_formatada);
+            $('#motivo_penalidade').val(data.dados.motivo_penalidade);
+            $('#numero_oficio_multa').val(data.dados.numero_oficio_multa);
+            $('#valor_multa').val(data.descricoes.valor_multa_formatado);
+            $('#data_recebimento_oficio_multav').val(data.descricoes.data_recebimento_oficio_multa_formatada);
+            $('#parecerv').val(data.dados.parecer);
+            $('#observacao').val(data.dados.observacao);
+            montarTabelaMovimentacao(data.movimentos);
+            montarTabelaAnexosv(data.anexos);
         }
     });
 }
 
-function montarTabelaAnexosv(id_contrato_fiscal, visualizar)
+function montarTabelaAnexosv(array_anexo)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: { metodo: 'visualizarContratoFiscalAnexos', id: id_contrato_fiscal },
-        complete: function() {
-            if (visualizar) {
-                $('#tabela_lista_anexosv').removeAttr('style', 'display: none;');
-                $('#tabela_lista_anexosv').attr('style', 'display: table;');
-            } else {
-                $('.tr_remove_anexov').remove();
-                $('#tabela_lista_anexosv').removeAttr('style', 'display: table;');
-                $('#tabela_lista_anexosv').attr('style', 'display: none;');
-            }
-        },
-        error: function(data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function(data) {
-            $('.tr_remove_anexov').remove();
-            var linhas =null;
-            if (data.dados.length > 0){
-                $.each(data.dados, function(key, value) {
-                    linhas += '<tr class="tr_remove_anexov">';
-                    linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
-                    linhas += '<td>'+ value.descricao +'</td>';
-                    linhas += '<td>'+ value.data_criacao +'</td>';
-                    linhas += '<td><a href="'+ value.url +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
-                    linhas += '</tr>';
-                });
-            } else {
-                linhas += "<tr class='tr_remove_anexov'>";
-                linhas += "<td colspan='5' style='text-align: center;'>Não existem anexos para serem exibidos! Favor Cadastrar!</td>";
-                linhas += "</tr>";
-            }
-            $("#tabela_lista_anexosv").append(linhas);
-        }
-    });
+    $('.tr_remove_anexov').remove();
+    var linhas =null;
+    if (array_anexo.length > 0){
+        $.each(array_anexo, function(key, value) {
+            linhas += '<tr class="tr_remove_anexov">';
+            linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
+            linhas += '<td>'+ value.descricao +'</td>';
+            linhas += '<td>'+ value.data_criacao +'</td>';
+            linhas += '<td><a href="'+ value.url +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
+            linhas += '</tr>';
+        });
+    } else {
+        linhas += "<tr class='tr_remove_anexov'>";
+        linhas += "<td colspan='4' style='text-align: center;'>Não existem anexos para serem exibidos!</td>";
+        linhas += "</tr>";
+    }
+    $("#tabela_lista_anexosv").append(linhas);
+    $('#tab-anexo').removeClass('disabled');
+}
+
+function montarTabelaMovimentacao(array_movimento)
+{
+    'use strict';
+    $('.tr_remove_movimento').remove();
+    var linhas =null;
+    if (array_movimento.length > 0){
+        $.each(array_movimento, function(key, value) {
+            var valor_atual = (value.valor_atual !== null) ? value.valor_atual : '';
+            var valor_anterior = (value.valor_anterior !== null) ? value.valor_anterior : '';
+            var observacao = (value.observacao !== null) ? value.observacao : '';
+            linhas += '<tr class="tr_remove_movimento">';
+            linhas += '<td>'+ value.data_movimento +'</td>';
+            linhas += '<td>'+ value.tipo_movimento +'</td>';
+            linhas += '<td>'+ value.usuario_nome +'</td>';
+            linhas += '<td>'+ valor_atual +'</td>';
+            linhas += '<td>'+ valor_anterior +'</td>';
+            linhas += '<td>'+ observacao +'</td>';
+            linhas += '</tr>';
+        });
+    } else {
+        linhas += "<tr class='tr_remove_movimento'>";
+        linhas += "<td colspan='6' style='text-align: center;'>Não existem movimentos para serem exibidos!</td>";
+        linhas += "</tr>";
+    }
+    $("#tabela_lista_movimento").append(linhas);
+    $('#tab-movimento').removeClass('disabled');
 }
 
 function limpar()
@@ -491,13 +470,15 @@ function limpar()
     $('#formPesquisa').submit();
 }
 
-//Sessão de Anexos
-function criarAnexo(id_contrato_fiscal)
+/**
+ * Sessão de Anexos
+ * **/
+function criarAnexo(id_contrato_penalidade)
 {
     'use strict';
-    $('#id_contrato_fiscal').val(id_contrato_fiscal);
-    getIdentificador(id_contrato_fiscal);
-    montarTabelaAnexos(id_contrato_fiscal, false);
+    $('#id_contrato_penalidade').val(id_contrato_penalidade);
+    getIdentificador(id_contrato_penalidade);
+    montarTabelaAnexos(id_contrato_penalidade, false);
     $('#tabela_lista_anexos').removeAttr('style', 'display: table;');
     $('#tabela_lista_anexos').attr('style', 'display: none;');
     $('.selectpicker').prop('disabled', false);
@@ -514,7 +495,7 @@ function getIdentificador(id)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarContratoFiscalNome', id: id},
+        data: {metodo: 'visualizarContratoPenalidadeIdentificador', id: id},
         error: function (data) {
             if (data.status && data.status === 401) {
                 swal({
@@ -530,7 +511,7 @@ function getIdentificador(id)
     });
 }
 
-function montarTabelaAnexos(id_contrato_fiscal, visualizar)
+function montarTabelaAnexos(id_contrato_penalidade, visualizar)
 {
     'use strict';
     var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
@@ -538,7 +519,7 @@ function montarTabelaAnexos(id_contrato_fiscal, visualizar)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: { metodo: 'visualizarContratoFiscalAnexos', id: id_contrato_fiscal },
+        data: { metodo: 'visualizarContratoPenalidadeAnexos', id: id_contrato_penalidade },
         complete: function() {
             if (visualizar) {
                 $('.hide_buttons').hide();
@@ -605,7 +586,6 @@ function getTiposAnexo()
 function inserirAnexo()
 {
     'use strict';
-    tipos_anexos = getTiposAnexo();
     contador++;
     var elemento = '<div id="div-anexo-'+ contador +'" class="form-row anexos-complementares">';
     elemento += '<div class="form-group col-md-3">';
@@ -677,7 +657,7 @@ function excluirAnexo(id_anexo)
             type: "POST",
             dataType: "JSON",
             url: action,
-            data: {metodo: 'excluirContratoFiscalAnexo', id: id_anexo},
+            data: {metodo: 'excluirContratoPenalidadeAnexo', id: id_anexo},
             error: function (data) {
                 if (data.status && data.status === 401) {
                     swal({
@@ -698,5 +678,140 @@ function excluirAnexo(id_anexo)
             }
         });
         return true;
+    });
+}
+
+/**
+ * Sessão de Movimento
+ * **/
+function criarMovimento(id_penalidade)
+{
+    'use strict';
+    ocultarBlocos();
+    $('.selectpicker').prop('disabled', false);
+    $('.selectpicker').selectpicker('refresh');
+    $('#id_penalidade').val(id_penalidade);
+    $('#modalMovimento').modal();
+
+}
+
+function ocultarBlocos()
+{
+    'use strict';
+    $('.bloco_oculto').hide();
+}
+
+function exibirBloco()
+{
+    'use strict';
+    var seq_tipo_movimento = $('#tipo_movimento').val();
+    switch (seq_tipo_movimento) {
+        case '4':
+            ocultarBlocos();
+            $('#bloco-receber-oficio-notificacao').show();
+            $('#bloco-observacao').show();
+            break;
+        case '5':
+            ocultarBlocos();
+            $('#bloco-apresentacao-defesa').show();
+            $('#bloco-observacao').show();
+            break;
+        case '6':
+            ocultarBlocos();
+            $('#bloco-receber-oficio-multa').show();
+            $('#bloco-observacao').show();
+            break;
+        case '7':
+            ocultarBlocos();
+            $('#bloco-parecer').show();
+            $('#bloco-observacao').show();
+            break;
+        case '8':
+            ocultarBlocos();
+            $('#bloco-observacao').show();
+            swal({
+                title: 'Executar a Penalidade',
+                text: 'Essa ação executará a penalidade selecionada ao clicar no botão "Salvar"!',
+                type: 'info'
+            });
+            break;
+        case '9':
+            ocultarBlocos();
+            $('#bloco-observacao').show();
+            swal({
+                title: 'Cancelamento de Penalidade',
+                text: 'Essa ação cancelará a penalidade selecionada ao clicar no botão "Salvar"!',
+                type: 'info'
+            });
+            break;
+        case '10':
+            ocultarBlocos();
+            $('#bloco-observacao').show();
+            swal({
+                title: 'Estorno de Status',
+                text: '"Essa ação retornará esta penalidade para o status "Aberta" ao clicar no botão "Salvar"!"',
+                type: 'info'
+            });
+            break;
+        default:
+            ocultarBlocos();
+            break;
+    }
+}
+
+function salvarMovimento()
+{
+    'use strict';
+    $("#formMovimento").validate({
+        rules : {
+            tipo_movimento:{
+                required: true
+            }
+        },
+        submitHandler: function(form) {
+            var dados = $("#formMovimento").serialize();
+            var action = actionCorreta(window.location.href.toString(), "contrato_penalidade/movimentar");
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: action,
+                data: {
+                    tokenKey: $("#token_movimento").attr("name"),
+                    tokenValue: $("#token_movimento").attr("value"),
+                    dados: dados
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        swal({
+                            title: data.titulo,
+                            text: data.mensagem,
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Ok"
+                        }).then((result) => {
+                            window.location.reload(true);
+                        });
+                    } else {
+                        swal({
+                            title: data.titulo,
+                            text: data.mensagem,
+                            type: "error"
+                        });
+                    }
+                }
+            });
+        }
     });
 }

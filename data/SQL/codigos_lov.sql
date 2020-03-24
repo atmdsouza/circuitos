@@ -1,39 +1,39 @@
 /*
 Códigos LOV para o diagrama
-01 - Tipo Unidade
+01 - Tipo de Unidade
 02 - Usa Contrato
 03 - Função
 04 - Esfera
 05 - Setor
 06 - Status Circuito
 07 - Tipo de Acesso (antigo Enlace)
-08 - Tipo Email
-09 - Tipo Cliente (PF/PJ)
+08 - Tipo de Email
+09 - Tipo de Cliente (PF/PJ)
 10 - Sexo
-11 - Tipo Endereço
-12 - Tipo Telefone
-13 - Tipo Contato (Cargo Empresa)
+11 - Tipo de Endereço
+12 - Tipo de Telefone
+13 - Tipo de Contato (Cargo Empresa)
 14 - Cluster
-15 - Tipo Equipamento
-16 - Tipo Movimento Circuitos
-17 - Tipo Banda
-18 - Tipo Conectividade
-19 - Tipo Link
-20 - Tipo Anexo
-21 - Tipo Componente de Set de Segurança
-22 - Tipo Torre
-23 - Tipo Proposta
+15 - Tipo de Equipamento
+16 - Tipo de Movimento de Circuitos
+17 - Tipo de Banda
+18 - Tipo de Conectividade
+19 - Tipo de Link
+20 - Tipo de Anexo
+21 - Tipo de Componente de Set de Segurança
+22 - Tipo de Torre
+23 - Tipo de Proposta
 24 - Localização Proposta
 25 - Status Proposta
-26 - Tipo Contrato
-27 - Tipo Processo Contratação
-28 - Tipo Movimento Contrato
-29 - Tipo Modalidade de Contratação de Garantia
+26 - Tipo de Contrato
+27 - Tipo de Processo de Contratação
+28 - Tipo de Movimentos de Contrato
+29 - Tipo de Modalidade de Contratação de Garantia
 30 - Status Contrato (Vigente, Bloqueado, Suspenso, Encerrado)
-31 - Tipo Fiscal de Contrato
+31 - Tipo de Fiscal de Contrato
 32 - Tipo de Estação Telecom
-33 -
-34 -
+33 - Tipo de Serviço na Penalidade
+34 - Tipo de Movimento de Penalidades
 35 -
 36 -
 37 -

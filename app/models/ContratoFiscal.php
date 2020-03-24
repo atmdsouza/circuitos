@@ -334,8 +334,7 @@ class ContratoFiscal extends \Phalcon\Mvc\Model
      */
     public function getAtivoDescricao()
     {
-        $status = ($this->ativo == 1) ? 'Ativo' : 'Inativo';
-        return $status;
+        return ($this->ativo == 1) ? 'Ativo' : 'Inativo';
     }
 
     /**
@@ -343,8 +342,7 @@ class ContratoFiscal extends \Phalcon\Mvc\Model
      */
     public function getTipoFiscalDescricao()
     {
-        $tipo_fiscal = ($this->tipo_fiscal == 1) ? 'Titular' : 'Suplente';
-        return $tipo_fiscal;
+        return ($this->tipo_fiscal == 1) ? 'Titular' : 'Suplente';
     }
 
     /**

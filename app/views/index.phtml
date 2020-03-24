@@ -315,13 +315,19 @@ $infra = new Infra(); ?>
                                 if ($acl->isAllowed($role, 'contrato_fiscal', 'index'))
                                 {
                                     ?>
-                                    <li><?php echo $this->tag->linkTo(["contrato_fiscal", "Fiscais de Contrato"]) ?></li>
+                                    <li><?php echo $this->tag->linkTo(["contrato_fiscal", "Fiscais"]) ?></li>
                                     <?php
                                 }
                                 if ($acl->isAllowed($role, 'contrato_financeiro', 'index'))
                                 {
                                     ?>
                                     <li><?php echo $this->tag->linkTo(["contrato_financeiro", "Lançamentos Financeiros"]) ?></li>
+                                    <?php
+                                }
+                                if ($acl->isAllowed($role, 'contrato_penalidade', 'index'))
+                                {
+                                    ?>
+                                    <li><?php echo $this->tag->linkTo(["contrato_penalidade", "Penalidades"]) ?></li>
                                     <?php
                                 }
                                 ?>
@@ -432,7 +438,7 @@ $infra = new Infra(); ?>
             <!-- container -->
         </div> <!-- content -->
         <footer class="footer text-right">
-            2018 - 2019 © Empresa de Tecnologia da Informação e Comunicação do Estado do Pará - PRODEPA - Versão <?= $infra->getVersao(); ?>
+            2018 - 2020 © Empresa de Tecnologia da Informação e Comunicação do Estado do Pará - PRODEPA - Versão <?= $infra->getVersao(); ?>
         </footer>
     </div>
     <!-- ============================================================== -->
@@ -582,6 +588,9 @@ case "contrato_fiscal":?>
 <?php break;
 case "contrato_financeiro":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/contratofinanceiro.js?<?= filemtime(BASE_PATH.'/public/js/modulos/contratofinanceiro.js'); ?>" type="text/javascript"></script>
+<?php break;
+case "contrato_penalidade":?>
+    <script src="<?= DIR_STATICS ?>public/js/modulos/contratopenalidade.js?<?= filemtime(BASE_PATH.'/public/js/modulos/contratopenalidade.js'); ?>" type="text/javascript"></script>
 <?php break;
 case "estacao_telecon":?>
     <script src="<?= DIR_STATICS ?>public/js/modulos/estacaotelecon.js?<?= filemtime(BASE_PATH.'/public/js/modulos/estacaotelecon.js'); ?>" type="text/javascript"></script>

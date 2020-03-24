@@ -3773,6 +3773,8 @@ function criarAnexo(id_circuitos)
     montarTabelaAnexos(id_circuitos, false);
     $('#tabela_lista_anexos').removeAttr('style', 'display: table;');
     $('#tabela_lista_anexos').attr('style', 'display: none;');
+    $('.selectpicker').prop('disabled', false);
+    $('.selectpicker').selectpicker('refresh');
     $('#modalAnexoArquivo').modal();
 
 }
