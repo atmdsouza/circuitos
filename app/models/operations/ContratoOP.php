@@ -362,11 +362,14 @@ class ContratoOP extends Contrato
             $objDescricao->codigo = $objeto->getCodigo();
             $dados_penalidades = $this->visualizarContratoPenalidades($id);
             $dados_fiscais = $this->visualizarContratosFiscais($id);
+            $dados_financeiros = $this->visualizarContratosFinanceiros($id);
             $response = new Response();
             $response->setContent(json_encode(array(
                 'operacao' => True,
                 'dados' => $objeto,
                 'descricao' => $objDescricao,
+                'financeiros' => $dados_financeiros['financeiros'],
+                'caminho_anexo' => $dados_financeiros['caminho_anexo'],
                 'fiscais' => $dados_fiscais['fiscais'],
                 'descricoes_fiscais' => $dados_fiscais['descricoes'],
                 'penalidades' => $dados_penalidades['penalidades'],
@@ -802,9 +805,10 @@ class ContratoOP extends Contrato
                     }
                 }
             }
-            $response = new Response();
-            $response->setContent(json_encode(array('operacao' => True, 'dados' => $arrDadosCompletos, 'caminho_anexo' => $caminho)));
-            return $response;
+            return [
+                'financeiros' => $arrDadosCompletos,
+                'caminho_anexo' => $caminho
+            ];
         } catch (TxFailed $e) {
             $logger->error($e->getMessage());
             return false;
