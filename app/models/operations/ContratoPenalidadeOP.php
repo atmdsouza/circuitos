@@ -508,7 +508,7 @@ class ContratoPenalidadeOP extends ContratoPenalidade
             $objDescricao->data_recebimento_oficio_multa_formatada = $objeto->getDataRecebimentoOficioMultaFormatada();
             $objDescricao->data_prazo_resposta_formatada = $objeto->getDataPrazoRespostaFormatada();
             $objDescricao->data_apresentacao_defesa_formatada = $objeto->getDataApresentacaoDefesaFormatada();
-            $objMovimentos = ContratoPenalidadeMovimento::find('id_contrato_penalidade='.$id.' ORDER BY id DESC');
+            $objMovimentos = ContratoPenalidadeMovimento::find('ativo=1 AND excluido=0 AND id_contrato_penalidade='.$id.' ORDER BY id DESC');
             $arrMovimentos = [];
             foreach ($objMovimentos as $objMovimento)
             {

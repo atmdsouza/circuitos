@@ -456,7 +456,7 @@ function visualizar(id, ocultar)
             montarTabelaExercicio(data.dados.id, ocultar);
             montarTabelaAnexosv(data.dados.id, ocultar);
             montarTabelaObjetosVinculados(data.dados.id, ocultar);
-            montarTabelaFiscais(data.dados.id, ocultar);
+            montarTabelaFiscais(data.fiscais, data.descricoes_fiscais);
             montarTabelaFinanceiros(data.dados.id, ocultar);
             montarTabelaPenalidades(data.penalidades, data.valor_penalidade_aberta, data.valor_penalidade_executada, data.valor_penalidade_cancelada, data.valor_penalidade_total);
         }
@@ -551,50 +551,31 @@ function montarTabelaPenalidades(arrPenalidades, vl_aberto, vl_executado, vl_can
     $('#tab-penalidade').removeClass('disabled');
 }
 
-function montarTabelaFiscais(id_contrato, visualizar)
+function montarTabelaFiscais(arrFiscais, arrDescricoes)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: { metodo: 'visualizarContratosFiscais', id: id_contrato },
-        complete: function() {
-            if (visualizar) {
-                $('#tab-fiscal').removeClass('disabled');
-                $('.hide_buttons').hide();
-            }
-        },
-        error: function(data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function(data) {
-            $('.tr_remove_fiscal').remove();
-            var linhas =null;
-            if (data.dados_objeto.length > 0){
-                $.each(data.dados_objeto, function(key, value) {
-                    linhas += '<tr class="tr_remove_fiscal">';
-                    linhas += '<td>'+ value.id +'</td>';
-                    linhas += '<td>'+ data.dados_descricao[key].tipo_fiscal +'</td>';
-                    linhas += '<td>'+ data.dados_descricao[key].nome_fiscal +'</td>';
-                    linhas += '<td>'+ data.dados_descricao[key].data_nomeacao_formatada +'</td>';
-                    linhas += '</tr>';
-                });
-            } else {
-                linhas += "<tr class='tr_remove_fiscal'>";
-                linhas += "<td colspan='4' style='text-align: center;'>Não existem fiscais vinculados a esse contrato para serem exibidos!</td>";
-                linhas += "</tr>";
-            }
-            $("#tabela_lista_fiscal").append(linhas);
-        }
-    });
+    $('.tr_remove_fiscal').remove();
+    var linhas =null;
+    if (arrFiscais.length > 0){
+        $.each(arrFiscais, function(key, value) {
+            var data_nomeacao_formatada = (arrDescricoes[key].data_nomeacao_formatada) ? arrDescricoes[key].data_nomeacao_formatada : '';
+            var data_inativacao_formatada = (arrDescricoes[key].data_inativacao_formatada) ? arrDescricoes[key].data_inativacao_formatada : '';
+            linhas += '<tr class="tr_remove_fiscal">';
+            linhas += '<td>'+ value.id +'</td>';
+            linhas += '<td>'+ arrDescricoes[key].tipo_fiscal +'</td>';
+            linhas += '<td>'+ arrDescricoes[key].nome_fiscal +'</td>';
+            linhas += '<td>'+ value.documento_nomeacao +'</td>';
+            linhas += '<td>'+ data_nomeacao_formatada +'</td>';
+            linhas += '<td>'+ data_inativacao_formatada +'</td>';
+            linhas += '</tr>';
+        });
+    } else {
+        linhas += "<tr class='tr_remove_fiscal'>";
+        linhas += "<td colspan='6' style='text-align: center;'>Não existem fiscais vinculados a esse contrato para serem exibidos!</td>";
+        linhas += "</tr>";
+    }
+    $("#tabela_lista_fiscal").append(linhas);
+    $('#tab-fiscal').removeClass('disabled');
 }
 
 function montarTabelaFinanceiros(id_contrato, visualizar)

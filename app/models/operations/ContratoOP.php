@@ -347,7 +347,6 @@ class ContratoOP extends Contrato
     public function visualizarContrato($id)
     {
         $logger = new FileAdapter($this->arqLog);
-        $util = new Util();
         try {
             $objeto = Contrato::findFirst('id='.$id);
             $objDescricao = new \stdClass();
@@ -361,41 +360,22 @@ class ContratoOP extends Contrato
             $objDescricao->armario = $objeto->getArmario();
             $objDescricao->prateleira = $objeto->getPrateleira();
             $objDescricao->codigo = $objeto->getCodigo();
-            $objPenalidades = ContratoPenalidade::find('id_contrato='.$id);
-            $arrPenalidades = [];
-            $valor_penalidade_aberta = 0;
-            $valor_penalidade_executada = 0;
-            $valor_penalidade_cancelada = 0;
-            foreach ($objPenalidades as $objPenalidade)
-            {
-                $objetoPenalidade = new \stdClass();
-                $objetoPenalidade->data_penalidade = $objPenalidade->getDataCriacaoFormatada();
-                $objetoPenalidade->servico_penalidade = $objPenalidade->getServicoDescricao();
-                $objetoPenalidade->status_penalidade = $objPenalidade->getStatusDescricao();
-                $objetoPenalidade->nro_processo_penalidade = $objPenalidade->getNumeroProcesso();
-                $objetoPenalidade->nro_notificacao_penalidade = $objPenalidade->getNumeroNotificacao();
-                $objetoPenalidade->nro_rt_penalidade = $objPenalidade->getNumeroRt();
-                $objetoPenalidade->data_recebimento_notificacao_penalidade = $objPenalidade->getDataRecebimentoOficioNotificacaoFormatada();
-                $objetoPenalidade->data_prazo_defesa_penalidade = $objPenalidade->getDataPrazoRespostaFormatada();
-                $objetoPenalidade->data_apresentacao_defesa_penalidade = $objPenalidade->getDataApresentacaoDefesaFormatada();
-                $objetoPenalidade->valor_multa_penalidade = $objPenalidade->getValorMultaFormatado();
-                array_push($arrPenalidades, $objetoPenalidade);
-                switch ($objPenalidade->getStatus())
-                {
-                    case 0://Aberta
-                        $valor_penalidade_aberta += $objPenalidade->getValorMulta();
-                        break;
-                    case 1://Executada
-                        $valor_penalidade_executada += $objPenalidade->getValorMulta();
-                        break;
-                    case 2://Cancelada
-                        $valor_penalidade_cancelada += $objPenalidade->getValorMulta();
-                        break;
-                }
-            }
-            $valor_penalidade_total = $valor_penalidade_aberta + $valor_penalidade_executada + $valor_penalidade_cancelada;
+            $dados_penalidades = $this->visualizarContratoPenalidades($id);
+            $dados_fiscais = $this->visualizarContratosFiscais($id);
             $response = new Response();
-            $response->setContent(json_encode(array("operacao" => True,"dados" => $objeto,"descricao" => $objDescricao, 'penalidades' => $arrPenalidades, 'valor_penalidade_aberta' => $util->formataMoedaReal($valor_penalidade_aberta), 'valor_penalidade_executada' => $util->formataMoedaReal($valor_penalidade_executada), 'valor_penalidade_cancelada' => $util->formataMoedaReal($valor_penalidade_cancelada), 'valor_penalidade_total' => $util->formataMoedaReal($valor_penalidade_total))));
+            $response->setContent(json_encode(array(
+                'operacao' => True,
+                'dados' => $objeto,
+                'descricao' => $objDescricao,
+                'fiscais' => $dados_fiscais['fiscais'],
+                'descricoes_fiscais' => $dados_fiscais['descricoes'],
+                'penalidades' => $dados_penalidades['penalidades'],
+                'valor_penalidade_aberta' => $dados_penalidades['valor_penalidade_aberta'],
+                'valor_penalidade_executada' => $dados_penalidades['valor_penalidade_executada'],
+                'valor_penalidade_cancelada' => $dados_penalidades['valor_penalidade_cancelada'],
+                'valor_penalidade_total' =>$dados_penalidades['valor_penalidade_total'],
+                'anexos' => $this->visualizarContratoAnexos($id, true)
+            )));
             return $response;
         } catch (TxFailed $e) {
             $logger->error($e->getMessage());
@@ -722,12 +702,12 @@ class ContratoOP extends Contrato
         return $num_ordem;
     }
 
-    public function visualizarContratoAnexos($id_contrato)
+    public function visualizarContratoAnexos($id_contrato, $visualizar = false)
     {
         $logger = new FileAdapter($this->arqLog);
         $util = new Util();
         try {
-            $objetosComponentes = ContratoAnexo::find('ativo=1 AND excluido=0 AND id_contrato = ' . $id_contrato);
+            $objetosComponentes = ContratoAnexo::find('id_contrato = ' . $id_contrato);
             $arrTransporte = [];
             foreach ($objetosComponentes as $objetoComponente){
                 chmod($objetoComponente->getUrlAnexo(), 0777);
@@ -746,7 +726,7 @@ class ContratoOP extends Contrato
             }
             $response = new Response();
             $response->setContent(json_encode(array("operacao" => True,"dados" => $arrTransporte)));
-            return $response;
+            return ($visualizar) ? $arrTransporte : $response;
         } catch (TxFailed $e) {
             $logger->error($e->getMessage());
             return false;
@@ -767,12 +747,14 @@ class ContratoOP extends Contrato
                 $objetoDescricao->tipo_fiscal = $objetoFiscal->getTipoFiscalDescricao();
                 $objetoDescricao->nome_fiscal = $objetoFiscal->getNomeFiscal();
                 $objetoDescricao->data_nomeacao_formatada = $objetoFiscal->getDataNomeacaoFormatada();
+                $objetoDescricao->data_inativacao_formatada = $objetoFiscal->getDataInativacaoFormatada();
                 array_push($arrObjetos, $objetoFiscal);
                 array_push($arrDescricoes, $objetoDescricao);
             }
-            $response = new Response();
-            $response->setContent(json_encode(array('operacao' => True, 'dados_objeto' => $arrObjetos, 'dados_descricao' => $arrDescricoes)));
-            return $response;
+            return [
+                'fiscais' => $arrObjetos,
+                'descricoes' => $arrDescricoes
+            ];
         } catch (TxFailed $e) {
             $logger->error($e->getMessage());
             return false;
@@ -867,5 +849,50 @@ class ContratoOP extends Contrato
             $logger->error($e->getMessage());
             return false;
         }
+    }
+
+    public function visualizarContratoPenalidades($id_contrato)
+    {
+        $util = new Util();
+        $objPenalidades = ContratoPenalidade::find('id_contrato='.$id_contrato);
+        $arrPenalidades = [];
+        $valor_penalidade_aberta = 0;
+        $valor_penalidade_executada = 0;
+        $valor_penalidade_cancelada = 0;
+        foreach ($objPenalidades as $objPenalidade)
+        {
+            $objetoPenalidade = new \stdClass();
+            $objetoPenalidade->data_penalidade = $objPenalidade->getDataCriacaoFormatada();
+            $objetoPenalidade->servico_penalidade = $objPenalidade->getServicoDescricao();
+            $objetoPenalidade->status_penalidade = $objPenalidade->getStatusDescricao();
+            $objetoPenalidade->nro_processo_penalidade = $objPenalidade->getNumeroProcesso();
+            $objetoPenalidade->nro_notificacao_penalidade = $objPenalidade->getNumeroNotificacao();
+            $objetoPenalidade->nro_rt_penalidade = $objPenalidade->getNumeroRt();
+            $objetoPenalidade->data_recebimento_notificacao_penalidade = $objPenalidade->getDataRecebimentoOficioNotificacaoFormatada();
+            $objetoPenalidade->data_prazo_defesa_penalidade = $objPenalidade->getDataPrazoRespostaFormatada();
+            $objetoPenalidade->data_apresentacao_defesa_penalidade = $objPenalidade->getDataApresentacaoDefesaFormatada();
+            $objetoPenalidade->valor_multa_penalidade = $objPenalidade->getValorMultaFormatado();
+            array_push($arrPenalidades, $objetoPenalidade);
+            switch ($objPenalidade->getStatus())
+            {
+                case 0://Aberta
+                    $valor_penalidade_aberta += $objPenalidade->getValorMulta();
+                    break;
+                case 1://Executada
+                    $valor_penalidade_executada += $objPenalidade->getValorMulta();
+                    break;
+                case 2://Cancelada
+                    $valor_penalidade_cancelada += $objPenalidade->getValorMulta();
+                    break;
+            }
+        }
+        $valor_penalidade_total = $valor_penalidade_aberta + $valor_penalidade_executada + $valor_penalidade_cancelada;
+        return [
+            'penalidades' => $arrPenalidades,
+            'valor_penalidade_aberta' => $util->formataMoedaReal($valor_penalidade_aberta),
+            'valor_penalidade_executada' => $util->formataMoedaReal($valor_penalidade_executada),
+            'valor_penalidade_cancelada' => $util->formataMoedaReal($valor_penalidade_cancelada),
+            'valor_penalidade_total' => $util->formataMoedaReal($valor_penalidade_total)
+        ];
     }
 }
