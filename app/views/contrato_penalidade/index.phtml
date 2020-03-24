@@ -15,7 +15,7 @@ $module = $this->router->getControllerName();
 
 ?>
 
-<?= $this->getContent(); ?>
+<?= $this->getContent() ?>
 
 <div class="col-12">
     <?= $this->tag->form(
@@ -291,13 +291,12 @@ $module = $this->router->getControllerName();
             </div>
             <form id="formMovimento">
                 <input type="hidden" id="token_movimento" name="<?= $token['tokenKey'] ?>" value="<?= $token['tokenValue'] ?>"> <!-- CSRFToken Control -->
-                <input type="hidden" id="id_usuario" name="id_usuario" value="<?= $id_usuario ?>">
                 <div class="modal-body">
                     <!--Corpo do Modal-->
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <label for="id_tipo_movimento">Tipo de Movimento <span class="required">*</span></label>
-                            <?= $this->tag->select(['id_tipo_movimento', $tipos_movimentos, 'class' => 'form-control selectpicker', 'id' => 'id_tipo_movimento', 'data-live-search' => true, 'data-style' => 'btn-light', 'onchange' => 'exibirBloco();',
+                            <label for="tipo_movimento">Tipo de Movimento <span class="required">*</span></label>
+                            <?= $this->tag->select(['tipo_movimento', $tipos_movimentos, 'class' => 'form-control selectpicker', 'id' => 'tipo_movimento', 'data-live-search' => true, 'data-style' => 'btn-light', 'onchange' => 'exibirBloco();',
                                 'using' => ['valor', 'descricao',],
                                 'useEmpty' => true,
                                 'emptyText' => 'Selecione o Tipo de Movimento',

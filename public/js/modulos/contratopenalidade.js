@@ -701,7 +701,7 @@ function ocultarBlocos()
 function exibirBloco()
 {
     'use strict';
-    var seq_tipo_movimento = $('#id_tipo_movimento').val();
+    var seq_tipo_movimento = $('#tipo_movimento').val();
     switch (seq_tipo_movimento) {
         case '4':
             ocultarBlocos();

@@ -41,6 +41,18 @@ class ContratoMovimento extends \Phalcon\Mvc\Model
      *
      * @var string
      */
+    protected $valor_anterior;
+
+    /**
+     *
+     * @var string
+     */
+    protected $valor_atualizado;
+
+    /**
+     *
+     * @var string
+     */
     protected $observacao;
 
     /**
@@ -266,6 +278,42 @@ class ContratoMovimento extends \Phalcon\Mvc\Model
     public function getDataUpdate()
     {
         return $this->data_update;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValorAnterior()
+    {
+        return $this->valor_anterior;
+    }
+
+    /**
+     * @param string $valor_anterior
+     */
+    public function setValorAnterior($valor_anterior)
+    {
+        $this->valor_anterior = $valor_anterior;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValorAtualizado()
+    {
+        return $this->valor_atualizado;
+    }
+
+    /**
+     * @param string $valor_atualizado
+     */
+    public function setValorAtualizado($valor_atualizado)
+    {
+        $this->valor_atualizado = $valor_atualizado;
+
+        return $this;
     }
 
     /**

@@ -515,3 +515,8 @@
 [Sat, 21 Mar 20 12:39:06 -0300][INFO] Saída do usuário admin do sistema.
 [Sat, 21 Mar 20 13:31:34 -0300][INFO] Acesso do usuário admin ao sistema.
 [Sat, 21 Mar 20 20:15:06 -0300][INFO] Acesso do usuário admin ao sistema.
+[Mon, 23 Mar 20 10:10:59 -0300][ERROR] Combinação de usuário e senha inválida! [Usuário: admin]
+[Mon, 23 Mar 20 10:11:03 -0300][INFO] Acesso do usuário admin ao sistema.
+[Mon, 23 Mar 20 16:17:41 -0300][INFO] Acesso do usuário admin ao sistema.
+[Tue, 24 Mar 20 10:10:33 -0300][INFO] Acesso do usuário admin ao sistema.
+[Tue, 24 Mar 20 11:11:13 -0300][INFO] Acesso do usuário admin ao sistema.
