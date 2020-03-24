@@ -363,11 +363,14 @@ class ContratoOP extends Contrato
             $dados_penalidades = $this->visualizarContratoPenalidades($id);
             $dados_fiscais = $this->visualizarContratosFiscais($id);
             $dados_financeiros = $this->visualizarContratosFinanceiros($id);
+            $dados_vinculados = $this->visualizarContratosVinculados($id);
             $response = new Response();
             $response->setContent(json_encode(array(
                 'operacao' => True,
                 'dados' => $objeto,
                 'descricao' => $objDescricao,
+                'dados_filhos' => $dados_vinculados['dados_filhos'],
+                'dados_pai' => $dados_vinculados['dados_pai'],
                 'financeiros' => $dados_financeiros['financeiros'],
                 'caminho_anexo' => $dados_financeiros['caminho_anexo'],
                 'fiscais' => $dados_fiscais['fiscais'],
@@ -736,7 +739,7 @@ class ContratoOP extends Contrato
         }
     }
 
-    public function visualizarContratosFiscais($id_contrato)
+    private function visualizarContratosFiscais($id_contrato)
     {
         $logger = new FileAdapter($this->arqLog);
         try {
@@ -764,7 +767,7 @@ class ContratoOP extends Contrato
         }
     }
 
-    public function visualizarContratosFinanceiros($id_contrato)
+    private function visualizarContratosFinanceiros($id_contrato)
     {
         $logger = new FileAdapter($this->arqLog);
         $infra = new Infra();
@@ -815,7 +818,7 @@ class ContratoOP extends Contrato
         }
     }
 
-    public function visualizarContratosVinculados($id_contrato)
+    private function visualizarContratosVinculados($id_contrato)
     {
         $logger = new FileAdapter($this->arqLog);
         $util = new Util();
@@ -846,16 +849,17 @@ class ContratoOP extends Contrato
                 $objetoPai->data_publicacao = $util->converterDataParaBr($objPai->getDataPublicacao());
                 $objetoPai->numero_diario = $objPai->getNumDiarioOficial();
             }
-            $response = new Response();
-            $response->setContent(json_encode(array("operacao" => True,"dados_filhos" => $arrTransporteFilhos, "dados_pai" => $objetoPai)));
-            return $response;
+            return [
+                'dados_filhos' => $arrTransporteFilhos,
+                'dados_pai' => $objetoPai
+            ];
         } catch (TxFailed $e) {
             $logger->error($e->getMessage());
             return false;
         }
     }
 
-    public function visualizarContratoPenalidades($id_contrato)
+    private function visualizarContratoPenalidades($id_contrato)
     {
         $util = new Util();
         $objPenalidades = ContratoPenalidade::find('id_contrato='.$id_contrato);

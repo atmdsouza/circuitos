@@ -455,7 +455,7 @@ function visualizar(id, ocultar)
             montarTabelaGarantia(data.dados.id, ocultar);
             montarTabelaExercicio(data.dados.id, ocultar);
             montarTabelaAnexosv(data.anexos);
-            montarTabelaObjetosVinculados(data.dados.id, ocultar);
+            montarTabelaObjetosVinculados(data.dados_filhos, data.dados_pai);
             montarTabelaFiscais(data.fiscais, data.descricoes_fiscais);
             montarTabelaFinanceiros(data.financeiros, data.caminho_anexo);
             montarTabelaPenalidades(data.penalidades, data.valor_penalidade_aberta, data.valor_penalidade_executada, data.valor_penalidade_cancelada, data.valor_penalidade_total);
@@ -634,63 +634,40 @@ function montarTabelaFinanceiros(arrFinanceiro, caminho)
     $('#tab-financeiro').removeClass('disabled');
 }
 
-function montarTabelaObjetosVinculados(id_contrato, visualizar)
+function montarTabelaObjetosVinculados(arrFilho, arrPai)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: { metodo: 'visualizarContratosVinculados', id: id_contrato },
-        complete: function() {
-            if (visualizar) {
-                $('#tab-objeto-vinculado').removeClass('disabled');
-                $('.hide_buttons').hide();
-            }
-        },
-        error: function(data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function(data) {
-            $('.tr_remove_objeto_vinculado').remove();
-            var linhas =null;
-            if (!isEmpty(data.dados_pai)){
-                linhas += '<tr class="tr_remove_objeto_vinculado">';
-                linhas += '<td>'+ data.dados_pai.tipo_vinculo +'</td>';
-                linhas += '<td>'+ data.dados_pai.tipo_documento +'</td>';
-                linhas += '<td>'+ data.dados_pai.numero_ano +'</td>';
-                linhas += '<td>'+ data.dados_pai.data_assinatura +'</td>';
-                linhas += '<td>'+ data.dados_pai.data_encerramento +'</td>';
-                linhas += '<td>'+ data.dados_pai.data_publicacao +'</td>';
-                linhas += '<td>'+ data.dados_pai.numero_diario +'</td>';
-                linhas += '</tr>';
-            } else if (data.dados_filhos.length > 0){
-                $.each(data.dados_filhos, function(key, value) {
-                    linhas += '<tr class="tr_remove_objeto_vinculado">';
-                    linhas += '<td>'+ value.tipo_vinculo +'</td>';
-                    linhas += '<td>'+ value.tipo_documento +'</td>';
-                    linhas += '<td>'+ value.numero_ano +'</td>';
-                    linhas += '<td>'+ value.data_assinatura +'</td>';
-                    linhas += '<td>'+ value.data_encerramento +'</td>';
-                    linhas += '<td>'+ value.data_publicacao +'</td>';
-                    linhas += '<td>'+ value.numero_diario +'</td>';
-                    linhas += '</tr>';
-                });
-            } else {
-                linhas += "<tr class='tr_remove_objeto_vinculado'>";
-                linhas += "<td colspan='7' style='text-align: center;'>Não existem documentos vinculados a esse contrato para serem exibidos!</td>";
-                linhas += "</tr>";
-            }
-            $("#tabela_lista_objeto_vinculado").append(linhas);
-        }
-    });
+    $('.tr_remove_objeto_vinculado').remove();
+    var linhas =null;
+    if (!isEmpty(arrPai)){
+        linhas += '<tr class="tr_remove_objeto_vinculado">';
+        linhas += '<td>'+ arrPai.tipo_vinculo +'</td>';
+        linhas += '<td>'+ arrPai.tipo_documento +'</td>';
+        linhas += '<td>'+ arrPai.numero_ano +'</td>';
+        linhas += '<td>'+ arrPai.data_assinatura +'</td>';
+        linhas += '<td>'+ arrPai.data_encerramento +'</td>';
+        linhas += '<td>'+ arrPai.data_publicacao +'</td>';
+        linhas += '<td>'+ arrPai.numero_diario +'</td>';
+        linhas += '</tr>';
+    } else if (arrFilho.length > 0){
+        $.each(arrFilho, function(key, value) {
+            linhas += '<tr class="tr_remove_objeto_vinculado">';
+            linhas += '<td>'+ value.tipo_vinculo +'</td>';
+            linhas += '<td>'+ value.tipo_documento +'</td>';
+            linhas += '<td>'+ value.numero_ano +'</td>';
+            linhas += '<td>'+ value.data_assinatura +'</td>';
+            linhas += '<td>'+ value.data_encerramento +'</td>';
+            linhas += '<td>'+ value.data_publicacao +'</td>';
+            linhas += '<td>'+ value.numero_diario +'</td>';
+            linhas += '</tr>';
+        });
+    } else {
+        linhas += "<tr class='tr_remove_objeto_vinculado'>";
+        linhas += "<td colspan='7' style='text-align: center;'>Não existem documentos vinculados a esse contrato para serem exibidos!</td>";
+        linhas += "</tr>";
+    }
+    $("#tabela_lista_objeto_vinculado").append(linhas);
+    $('#tab-objeto-vinculado').removeClass('disabled');
 }
 
 function montarTabelaAnexosv(arrAnexos)
