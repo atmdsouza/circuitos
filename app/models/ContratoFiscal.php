@@ -70,6 +70,12 @@ class ContratoFiscal extends \Phalcon\Mvc\Model
     protected $data_update;
 
     /**
+     *
+     * @var string
+     */
+    protected $data_inativacao;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -352,6 +358,33 @@ class ContratoFiscal extends \Phalcon\Mvc\Model
     {
         $util = new Util();
         return ($this->data_nomeacao) ? $util->converterDataParaBr($this->data_nomeacao) : null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataInativacao()
+    {
+        return $this->data_inativacao;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataInativacaoFormatada()
+    {
+        $util = new Util();
+        return ($this->data_inativacao) ? $util->converterDataHoraParaBr($this->data_inativacao) : null;
+    }
+
+    /**
+     * @param string $data_inativacao
+     */
+    public function setDataInativacao($data_inativacao)
+    {
+        $this->data_inativacao = $data_inativacao;
+
+        return $this;
     }
 
     /**

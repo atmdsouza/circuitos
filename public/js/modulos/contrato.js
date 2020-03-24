@@ -50,24 +50,15 @@ function confirmaCancelar(modal)
             confirmButtonText: "Sim",
             cancelButtonText: "Não"
         }).then(() => {
-            $("#"+modal).modal('hide');
-            limparModalBootstrap(modal);
-            limparDadosFormOrcamento();
-            limparDadosFormExercicio();
-            limparDadosFormGarantia();
-            limparValidacao();
             mudou = false;
         }).catch(swal.noop);
     }
-    else
-    {
-        $("#"+modal).modal('hide');
-        limparModalBootstrap(modal);
-        limparDadosFormOrcamento();
-        limparDadosFormExercicio();
-        limparDadosFormGarantia();
-        limparValidacao();
-    }
+    $("#"+modal).modal('hide');
+    limparModalBootstrap(modal);
+    limparDadosFormOrcamento();
+    limparDadosFormExercicio();
+    limparDadosFormGarantia();
+    limparValidacao();
 }
 
 function limparValidacao()
@@ -118,7 +109,7 @@ function bloquearAbas()
 {
     'use strict';
     $('#tab-fiscal').addClass('disabled');
-    $('#tab-historico').addClass('disabled');
+    $('#tab-movimentacao').addClass('disabled');
     $('#tab-financeiro').addClass('disabled');
     $('#tab-objeto-vinculado').addClass('disabled');
     $('#tab-conformidade').addClass('disabled');
@@ -463,10 +454,11 @@ function visualizar(id, ocultar)
             montarTabelaOrcamento(data.dados.id, ocultar);
             montarTabelaGarantia(data.dados.id, ocultar);
             montarTabelaExercicio(data.dados.id, ocultar);
-            montarTabelaAnexosv(data.dados.id, ocultar);
-            montarTabelaObjetosVinculados(data.dados.id, ocultar);
-            montarTabelaFiscais(data.dados.id, ocultar);
-            montarTabelaFinanceiros(data.dados.id, ocultar);
+            montarTabelaAnexosv(data.anexos);
+            montarTabelaObjetosVinculados(data.dados_filhos, data.dados_pai);
+            montarTabelaFiscais(data.fiscais, data.descricoes_fiscais);
+            montarTabelaFinanceiros(data.financeiros, data.caminho_anexo);
+            montarTabelaPenalidades(data.penalidades, data.valor_penalidade_aberta, data.valor_penalidade_executada, data.valor_penalidade_cancelada, data.valor_penalidade_total);
         }
     });
 }
@@ -506,235 +498,199 @@ function preencherDadosPropostaComercial()
     'use strict';
 }
 
-function montarTabelaFiscais(id_contrato, visualizar)
+function montarTabelaPenalidades(arrPenalidades, vl_aberto, vl_executado, vl_cancelado, vl_total)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: { metodo: 'visualizarContratosFiscais', id: id_contrato },
-        complete: function() {
-            if (visualizar) {
-                $('#tab-fiscal').removeClass('disabled');
-                $('.hide_buttons').hide();
-            }
-        },
-        error: function(data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function(data) {
-            $('.tr_remove_fiscal').remove();
-            var linhas =null;
-            if (data.dados_objeto.length > 0){
-                $.each(data.dados_objeto, function(key, value) {
-                    linhas += '<tr class="tr_remove_fiscal">';
-                    linhas += '<td>'+ value.id +'</td>';
-                    linhas += '<td>'+ data.dados_descricao[key].tipo_fiscal +'</td>';
-                    linhas += '<td>'+ data.dados_descricao[key].nome_fiscal +'</td>';
-                    linhas += '<td>'+ data.dados_descricao[key].data_nomeacao_formatada +'</td>';
-                    linhas += '</tr>';
-                });
-            } else {
-                linhas += "<tr class='tr_remove_fiscal'>";
-                linhas += "<td colspan='4' style='text-align: center;'>Não existem fiscais vinculados a esse contrato para serem exibidos!</td>";
-                linhas += "</tr>";
-            }
-            $("#tabela_lista_fiscal").append(linhas);
-        }
-    });
+    $('.tr_remove_penalidade').remove();
+    $('.tr_remove_valor_penalidade').remove();
+    var linhas =null;
+    if (arrPenalidades.length > 0){
+        $.each(arrPenalidades, function(key, value) {
+            var data_recebimento_notificacao_penalidade = (value.data_recebimento_notificacao_penalidade) ? value.data_recebimento_notificacao_penalidade : '';
+            var data_prazo_defesa_penalidade = (value.data_prazo_defesa_penalidade) ? value.data_prazo_defesa_penalidade : '';
+            var data_apresentacao_penalidade = (value.data_apresentacao_defesa_penalidade) ? value.data_apresentacao_defesa_penalidade : '';
+            linhas += '<tr class="tr_remove_penalidade">';
+            linhas += '<td>'+ value.data_penalidade +'</td>';
+            linhas += '<td>'+ value.servico_penalidade +'</td>';
+            linhas += '<td>'+ value.status_penalidade +'</td>';
+            linhas += '<td>'+ value.nro_processo_penalidade +'</td>';
+            linhas += '<td>'+ value.nro_notificacao_penalidade +'</td>';
+            linhas += '<td>'+ value.nro_rt_penalidade +'</td>';
+            linhas += '<td>'+ data_recebimento_notificacao_penalidade +'</td>';
+            linhas += '<td>'+ data_prazo_defesa_penalidade +'</td>';
+            linhas += '<td>'+ data_apresentacao_penalidade +'</td>';
+            linhas += '<td>'+ value.valor_multa_penalidade +'</td>';
+            linhas += '</tr>';
+        });
+    } else {
+        linhas += "<tr class='tr_remove_penalidade'>";
+        linhas += "<td colspan='10' style='text-align: center;'>Não existem fiscais vinculados a esse contrato para serem exibidos!</td>";
+        linhas += "</tr>";
+    }
+    $("#tabela_lista_penalidades").append(linhas);
+
+    var linhas_total = null;
+    linhas_total += '<tr class="tr_remove_valor_penalidade table-warning texto_negrito">';
+    linhas_total += '<td>Penalidades em Aberto</td>';
+    linhas_total += '<td>'+vl_aberto+'</td>';
+    linhas_total += '</tr>';
+    linhas_total += '<tr class="tr_remove_valor_penalidade table-success texto_negrito">';
+    linhas_total += '<td>Penalidades Executadas</td>';
+    linhas_total += '<td>'+vl_executado+'</td>';
+    linhas_total += '</tr>';
+    linhas_total += '<tr class="tr_remove_valor_penalidade table-danger texto_negrito">';
+    linhas_total += '<td>Penalidades Canceladas</td>';
+    linhas_total += '<td>'+vl_cancelado+'</td>';
+    linhas_total += '</tr>';
+    linhas_total += '<tr class="tr_remove_valor_penalidade texto_negrito">';
+    linhas_total += '<td>Penalidades Total</td>';
+    linhas_total += '<td>'+vl_total+'</td>';
+    linhas_total += '</tr>';
+    $("#tabela_valores_penalidades").append(linhas_total);
+
+    $('#tab-penalidade').removeClass('disabled');
 }
 
-function montarTabelaFinanceiros(id_contrato, visualizar)
+function montarTabelaFiscais(arrFiscais, arrDescricoes)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: { metodo: 'visualizarContratosFinanceiros', id: id_contrato },
-        complete: function() {
-            if (visualizar) {
-                $('#tab-financeiro').removeClass('disabled');
-                $('.hide_buttons').hide();
-            }
-        },
-        error: function(data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function(data) {
-            $('.tr_remove_financeiro').remove();
-            var linhas =null;
-            if (data.dados.length > 0){
-                for (var key1 = 0; key1 < (data.dados.length); key1++) {
-                    var size1 = Object.size(data.dados[key1]) - 2;
-                    if (size1){
-                        for (var key2 = 0; key2 < size1; key2++) {
-                            var size2 = (Object.size(data.dados[key1][key2]) - 3) ? Object.size(data.dados[key1][key2]) - 3 : null;
-                            if (size2) {
-                                for (var key3 = 0; key3 < size2; key3++) {
-                                    linhas += '<tr class="tr_remove_financeiro">';
-                                    linhas += '<td>'+ data.dados[key1].exercicio +'</td>';
-                                    linhas += '<td>'+ data.dados[key1].valor_exercicio_formatado +'</td>';
-                                    linhas += '<td>' + data.dados[key1][key2].competencia + '</td>';
-                                    linhas += '<td>' + data.dados[key1][key2].status_descricao + '</td>';
-                                    linhas += '<td>' + data.dados[key1][key2].valor_pagamento_formatado + '</td>';
-                                    linhas += '<td>' + data.dados[key1][key2][key3].numero_nota_fiscal + '</td>';
-                                    linhas += '<td>' + data.dados[key1][key2][key3].data_pagamento_formatada + '</td>';
-                                    linhas += '<td>' + data.dados[key1][key2][key3].valor_nota_formatado + '</td>';
-                                    linhas += '<td>' + data.dados[key1][key2][key3].observacao + '</td>';
-                                    if (data.dados[key1][key2][key3].id_anexo){
-                                        linhas += '<td><a href="'+data.caminho_anexo+data.dados[key1][key2][key3].url +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
-                                    } else {
-                                        linhas += '<td>Sem anexo!</td>';
-                                    }
-                                }
+    $('.tr_remove_fiscal').remove();
+    var linhas =null;
+    if (arrFiscais.length > 0){
+        $.each(arrFiscais, function(key, value) {
+            var data_nomeacao_formatada = (arrDescricoes[key].data_nomeacao_formatada) ? arrDescricoes[key].data_nomeacao_formatada : '';
+            var data_inativacao_formatada = (arrDescricoes[key].data_inativacao_formatada) ? arrDescricoes[key].data_inativacao_formatada : '';
+            linhas += '<tr class="tr_remove_fiscal">';
+            linhas += '<td>'+ value.id +'</td>';
+            linhas += '<td>'+ arrDescricoes[key].tipo_fiscal +'</td>';
+            linhas += '<td>'+ arrDescricoes[key].nome_fiscal +'</td>';
+            linhas += '<td>'+ value.documento_nomeacao +'</td>';
+            linhas += '<td>'+ data_nomeacao_formatada +'</td>';
+            linhas += '<td>'+ data_inativacao_formatada +'</td>';
+            linhas += '</tr>';
+        });
+    } else {
+        linhas += "<tr class='tr_remove_fiscal'>";
+        linhas += "<td colspan='6' style='text-align: center;'>Não existem fiscais vinculados a esse contrato para serem exibidos!</td>";
+        linhas += "</tr>";
+    }
+    $("#tabela_lista_fiscal").append(linhas);
+    $('#tab-fiscal').removeClass('disabled');
+}
+
+function montarTabelaFinanceiros(arrFinanceiro, caminho)
+{
+    'use strict';
+    $('.tr_remove_financeiro').remove();
+    var linhas =null;
+    if (arrFinanceiro.length > 0){
+        for (var key1 = 0; key1 < (arrFinanceiro.length); key1++) {
+            var size1 = Object.size(arrFinanceiro[key1]) - 2;
+            if (size1){
+                for (var key2 = 0; key2 < size1; key2++) {
+                    var size2 = (Object.size(arrFinanceiro[key1][key2]) - 3) ? Object.size(arrFinanceiro[key1][key2]) - 3 : null;
+                    if (size2) {
+                        for (var key3 = 0; key3 < size2; key3++) {
+                            linhas += '<tr class="tr_remove_financeiro">';
+                            linhas += '<td>'+ arrFinanceiro[key1].exercicio +'</td>';
+                            linhas += '<td>'+ arrFinanceiro[key1].valor_exercicio_formatado +'</td>';
+                            linhas += '<td>' + arrFinanceiro[key1][key2].competencia + '</td>';
+                            linhas += '<td>' + arrFinanceiro[key1][key2].status_descricao + '</td>';
+                            linhas += '<td>' + arrFinanceiro[key1][key2].valor_pagamento_formatado + '</td>';
+                            linhas += '<td>' + arrFinanceiro[key1][key2][key3].numero_nota_fiscal + '</td>';
+                            linhas += '<td>' + arrFinanceiro[key1][key2][key3].data_pagamento_formatada + '</td>';
+                            linhas += '<td>' + arrFinanceiro[key1][key2][key3].valor_nota_formatado + '</td>';
+                            linhas += '<td>' + arrFinanceiro[key1][key2][key3].observacao + '</td>';
+                            if (arrFinanceiro[key1][key2][key3].id_anexo){
+                                linhas += '<td><a href="'+caminho+arrFinanceiro[key1][key2][key3].url +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
                             } else {
-                                linhas += '<tr class="tr_remove_financeiro">';
-                                linhas += '<td>'+ data.dados[key1].exercicio +'</td>';
-                                linhas += '<td>'+ data.dados[key1].valor_exercicio_formatado +'</td>';
-                                linhas += '<td>' + data.dados[key1][key2].competencia + '</td>';
-                                linhas += '<td>' + data.dados[key1][key2].status_descricao + '</td>';
-                                linhas += '<td>' + data.dados[key1][key2].valor_pagamento_formatado + '</td>';
-                                linhas += "<td colspan='5' style='text-align: center;'>Não existem notas fiscais!</td>";
+                                linhas += '<td>Sem anexo!</td>';
                             }
                         }
                     } else {
                         linhas += '<tr class="tr_remove_financeiro">';
-                        linhas += '<td>'+ data.dados[key1].exercicio +'</td>';
-                        linhas += '<td>'+ data.dados[key1].valor_exercicio_formatado +'</td>';
-                        linhas += "<td colspan='8' style='text-align: center;'>Não existem pagamentos!</td>";
+                        linhas += '<td>'+ arrFinanceiro[key1].exercicio +'</td>';
+                        linhas += '<td>'+ arrFinanceiro[key1].valor_exercicio_formatado +'</td>';
+                        linhas += '<td>' + arrFinanceiro[key1][key2].competencia + '</td>';
+                        linhas += '<td>' + arrFinanceiro[key1][key2].status_descricao + '</td>';
+                        linhas += '<td>' + arrFinanceiro[key1][key2].valor_pagamento_formatado + '</td>';
+                        linhas += "<td colspan='5' style='text-align: center;'>Não existem notas fiscais!</td>";
                     }
                 }
             } else {
-                linhas += "<tr class='tr_remove_financeiro'>";
-                linhas += "<td colspan='10' style='text-align: center;'>Não existem lançamentos financeiros vinculados a esse contrato para serem exibidos!</td>";
-                linhas += "</tr>";
+                linhas += '<tr class="tr_remove_financeiro">';
+                linhas += '<td>'+ arrFinanceiro[key1].exercicio +'</td>';
+                linhas += '<td>'+ arrFinanceiro[key1].valor_exercicio_formatado +'</td>';
+                linhas += "<td colspan='8' style='text-align: center;'>Não existem pagamentos!</td>";
             }
-            $("#tabela_lista_financeiro").append(linhas);
-            $('#tabela_lista_financeiro').rowspanizer({columns: [0,1,2]});
         }
-    });
+    } else {
+        linhas += "<tr class='tr_remove_financeiro'>";
+        linhas += "<td colspan='10' style='text-align: center;'>Não existem lançamentos financeiros vinculados a esse contrato para serem exibidos!</td>";
+        linhas += "</tr>";
+    }
+    $("#tabela_lista_financeiro").append(linhas);
+    $('#tabela_lista_financeiro').rowspanizer({columns: [0,1,2]});
+    $('#tab-financeiro').removeClass('disabled');
 }
 
-function montarTabelaObjetosVinculados(id_contrato, visualizar)
+function montarTabelaObjetosVinculados(arrFilho, arrPai)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: { metodo: 'visualizarContratosVinculados', id: id_contrato },
-        complete: function() {
-            if (visualizar) {
-                $('#tab-objeto-vinculado').removeClass('disabled');
-                $('.hide_buttons').hide();
-            }
-        },
-        error: function(data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function(data) {
-            $('.tr_remove_objeto_vinculado').remove();
-            var linhas =null;
-            if (!isEmpty(data.dados_pai)){
-                linhas += '<tr class="tr_remove_objeto_vinculado">';
-                linhas += '<td>'+ data.dados_pai.tipo_vinculo +'</td>';
-                linhas += '<td>'+ data.dados_pai.tipo_documento +'</td>';
-                linhas += '<td>'+ data.dados_pai.numero_ano +'</td>';
-                linhas += '<td>'+ data.dados_pai.data_assinatura +'</td>';
-                linhas += '<td>'+ data.dados_pai.data_encerramento +'</td>';
-                linhas += '<td>'+ data.dados_pai.data_publicacao +'</td>';
-                linhas += '<td>'+ data.dados_pai.numero_diario +'</td>';
-                linhas += '</tr>';
-            } else if (data.dados_filhos.length > 0){
-                $.each(data.dados_filhos, function(key, value) {
-                    linhas += '<tr class="tr_remove_objeto_vinculado">';
-                    linhas += '<td>'+ value.tipo_vinculo +'</td>';
-                    linhas += '<td>'+ value.tipo_documento +'</td>';
-                    linhas += '<td>'+ value.numero_ano +'</td>';
-                    linhas += '<td>'+ value.data_assinatura +'</td>';
-                    linhas += '<td>'+ value.data_encerramento +'</td>';
-                    linhas += '<td>'+ value.data_publicacao +'</td>';
-                    linhas += '<td>'+ value.numero_diario +'</td>';
-                    linhas += '</tr>';
-                });
-            } else {
-                linhas += "<tr class='tr_remove_objeto_vinculado'>";
-                linhas += "<td colspan='7' style='text-align: center;'>Não existem documentos vinculados a esse contrato para serem exibidos!</td>";
-                linhas += "</tr>";
-            }
-            $("#tabela_lista_objeto_vinculado").append(linhas);
-        }
-    });
+    $('.tr_remove_objeto_vinculado').remove();
+    var linhas =null;
+    if (!isEmpty(arrPai)){
+        linhas += '<tr class="tr_remove_objeto_vinculado">';
+        linhas += '<td>'+ arrPai.tipo_vinculo +'</td>';
+        linhas += '<td>'+ arrPai.tipo_documento +'</td>';
+        linhas += '<td>'+ arrPai.numero_ano +'</td>';
+        linhas += '<td>'+ arrPai.data_assinatura +'</td>';
+        linhas += '<td>'+ arrPai.data_encerramento +'</td>';
+        linhas += '<td>'+ arrPai.data_publicacao +'</td>';
+        linhas += '<td>'+ arrPai.numero_diario +'</td>';
+        linhas += '</tr>';
+    } else if (arrFilho.length > 0){
+        $.each(arrFilho, function(key, value) {
+            linhas += '<tr class="tr_remove_objeto_vinculado">';
+            linhas += '<td>'+ value.tipo_vinculo +'</td>';
+            linhas += '<td>'+ value.tipo_documento +'</td>';
+            linhas += '<td>'+ value.numero_ano +'</td>';
+            linhas += '<td>'+ value.data_assinatura +'</td>';
+            linhas += '<td>'+ value.data_encerramento +'</td>';
+            linhas += '<td>'+ value.data_publicacao +'</td>';
+            linhas += '<td>'+ value.numero_diario +'</td>';
+            linhas += '</tr>';
+        });
+    } else {
+        linhas += "<tr class='tr_remove_objeto_vinculado'>";
+        linhas += "<td colspan='7' style='text-align: center;'>Não existem documentos vinculados a esse contrato para serem exibidos!</td>";
+        linhas += "</tr>";
+    }
+    $("#tabela_lista_objeto_vinculado").append(linhas);
+    $('#tab-objeto-vinculado').removeClass('disabled');
 }
 
-function montarTabelaAnexosv(id_contrato, visualizar)
+function montarTabelaAnexosv(arrAnexos)
 {
     'use strict';
-    var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
-    $.ajax({
-        type: "GET",
-        dataType: "JSON",
-        url: action,
-        data: { metodo: 'visualizarContratoAnexos', id: id_contrato },
-        complete: function() {
-            if (visualizar) {
-                $('#tab-anexos').removeClass('disabled');
-                $('.hide_buttons').hide();
-            }
-        },
-        error: function(data) {
-            if (data.status && data.status === 401) {
-                swal({
-                    title: "Erro de Permissão",
-                    text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
-                    type: "warning"
-                });
-            }
-        },
-        success: function(data) {
-            $('.tr_remove_anexov').remove();
-            var linhas =null;
-            if (data.dados.length > 0){
-                $.each(data.dados, function(key, value) {
-                    linhas += '<tr class="tr_remove_anexov">';
-                    linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
-                    linhas += '<td>'+ value.descricao +'</td>';
-                    linhas += '<td>'+ value.data_criacao +'</td>';
-                    linhas += '<td><a href="'+ value.url +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
-                    linhas += '</tr>';
-                });
-                $("#tabela_lista_anexosv").append(linhas);
-            } else {
-                linhas += "<tr class='tr_remove_anexov'>";
-                linhas += "<td colspan='5' style='text-align: center;'>Não existem anexos para serem exibidos!</td>";
-                linhas += "</tr>";
-                $("#tabela_lista_anexosv").append(linhas);
-            }
-        }
-    });
+    $('.tr_remove_anexov').remove();
+    var linhas =null;
+    if (arrAnexos.length > 0){
+        $.each(arrAnexos, function(key, value) {
+            linhas += '<tr class="tr_remove_anexov">';
+            linhas += '<td>'+ value.ds_tipo_anexo +'</td>';
+            linhas += '<td>'+ value.descricao +'</td>';
+            linhas += '<td>'+ value.data_criacao +'</td>';
+            linhas += '<td><a href="'+ value.url +'" class="botoes_acao" download><img src="public/images/sistema/download.png" title="Baixar" alt="Baixar" height="25" width="25"></a></td>';
+            linhas += '</tr>';
+        });
+    } else {
+        linhas += "<tr class='tr_remove_anexov'>";
+        linhas += "<td colspan='5' style='text-align: center;'>Não existem anexos para serem exibidos!</td>";
+        linhas += "</tr>";
+    }
+    $("#tabela_lista_anexosv").append(linhas);
+    $('#tab-anexos').removeClass('disabled');
 }
 
 /**
@@ -1469,7 +1425,6 @@ function criarAnexo(id_contrato)
     $('.selectpicker').prop('disabled', false);
     $('.selectpicker').selectpicker('refresh');
     $('#modalAnexoArquivo').modal();
-
 }
 
 function getIdentificador(id)

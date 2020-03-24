@@ -143,6 +143,7 @@ class ContratoFiscalOP extends ContratoFiscal
             $objeto = ContratoFiscal::findFirst($objArray->getId());
             $objeto->setTransaction($transaction);
             $objeto->setAtivo(0);
+            $objeto->setDataInativacao(date('Y-m-d H:i:s'));
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() === false) {
                 $messages = $objeto->getMessages();

@@ -514,6 +514,7 @@
 				<defo>0</defo>
 			</column>
 			<column name="data_update" type="timestamp" length="26" decimal="0" jt="93" />
+			<column name="data_inativacao" type="timestamp" jt="93" />
 			<index name="pk_contrato_fiscal" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -694,9 +695,7 @@
 			</column>
 			<column name="numero_oficio" type="varchar" length="20" jt="12" mandatory="y" />
 			<column name="motivo_penalidade" type="text" jt="-1" mandatory="y" />
-			<column name="data_criacao" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
-			</column>
+			<column name="data_criacao" type="timestamp" jt="93" />
 			<column name="data_recebimento_oficio_notificacao" type="date" jt="91" />
 			<column name="data_prazo_resposta" type="date" jt="91" />
 			<column name="data_apresentacao_defesa" type="date" jt="91" />
@@ -2249,20 +2248,20 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="pessoa_juridica" color="F4DDBE" x="3680" y="1712" />
 		<entity schema="bd_circuitosnavega" name="contrato_arquivo_fisico" color="BEBEF4" x="1312" y="896" />
 		<entity schema="bd_circuitosnavega" name="contrato_anexo" color="BEBEF4" x="1328" y="720" />
-		<entity schema="bd_circuitosnavega" name="contrato_fiscal" color="BEBEF4" x="1808" y="864" />
 		<entity schema="bd_circuitosnavega" name="contrato_financeiro" color="C1D8EE" x="1808" y="160" />
 		<entity schema="bd_circuitosnavega" name="contrato_exercicio" color="C7F4BE" x="1568" y="144" />
 		<entity schema="bd_circuitosnavega" name="contrato" color="C7F4BE" x="1344" y="144" />
 		<entity schema="bd_circuitosnavega" name="contrato_financeiro_nota" color="C1D8EE" x="1808" y="400" />
 		<entity schema="bd_circuitosnavega" name="contrato_garantia" color="BEBEF4" x="1568" y="400" />
 		<entity schema="bd_circuitosnavega" name="contrato_fiscal_has_contrato" color="C1D8EE" x="1552" y="656" />
-		<entity schema="bd_circuitosnavega" name="contrato_orcamento" color="BEBEF4" x="1808" y="640" />
 		<entity schema="bd_circuitosnavega" name="contrato_penalidade_anexo" color="C1D8EE" x="2224" y="208" />
 		<entity schema="bd_circuitosnavega" name="contrato_processo" color="C1D8EE" x="2000" y="224" />
 		<entity schema="bd_circuitosnavega" name="contrato_penalidade_movimento" color="C1D8EE" x="2240" y="368" />
-		<entity schema="bd_circuitosnavega" name="contrato_penalidade" color="C1D8EE" x="2080" y="704" />
 		<entity schema="bd_circuitosnavega" name="contrato_movimento" color="C7F4BE" x="2032" y="432" />
-		<entity schema="bd_circuitosnavega" name="contrato_fiscal_anexo" color="C1D8EE" x="1552" y="816" />
+		<entity schema="bd_circuitosnavega" name="contrato_orcamento" color="BEBEF4" x="1808" y="880" />
+		<entity schema="bd_circuitosnavega" name="contrato_fiscal_anexo" color="C1D8EE" x="1552" y="784" />
+		<entity schema="bd_circuitosnavega" name="contrato_fiscal" color="BEBEF4" x="1808" y="640" />
+		<entity schema="bd_circuitosnavega" name="contrato_penalidade" color="C1D8EE" x="2080" y="704" />
 		<group name="Empresa" color="C4E0F9" >
 			<entity schema="bd_circuitosnavega" name="empresa" />
 			<entity schema="bd_circuitosnavega" name="empresa_parametros" />
