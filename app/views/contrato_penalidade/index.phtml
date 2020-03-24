@@ -326,15 +326,21 @@ $module = $this->router->getControllerName();
                             <?= $this->tag->textArea(["parecer", "style" => "resize: none", "maxlength" => 3000, "class" => "form-control maxlength-textarea", "id" => "parecer", "placeholder" => "Parecer"]) ?>
                         </div>
                     </div>
+                    <div id="bloco-observacao" class="form-row bloco_oculto"><!-- Bloco Observação -->
+                        <div class="form-group col-md-12 botoes_forms_alinhamento">
+                            <label for="observacao">Observação </label>
+                            <?= $this->tag->textArea(["observacao", "style" => "resize: none", "maxlength" => 3000, "class" => "form-control maxlength-textarea", "id" => "observacao", "placeholder" => "Observação"]) ?>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <div class="form-group col-md-6">
                         <p class="texto_rodape">Os campos com <span class="required">*</span> são obrigatórios!</p>
                     </div>
                     <div class="form-group col-md-6 botoes_rodape">
-                        <input type="hidden" id="id_movimento" name="id_movimento" value=""><!-- Manter como hidden -->
+                        <input type="hidden" id="id_penalidade" name="id_penalidade" value=""><!-- Manter como hidden -->
                         <button type="button" class="btn btn-secondary btn-rounded waves-effect limpar_modal" onclick="confirmaCancelar('modalMovimento');">Fechar</button>
-                        <button id="salvarMovimento" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light" onclick="salvarMovimento();" value="">Salvar</button>
+                        <button id="btn-salvarMovimento" name="btn-salvarMovimento" type="submit" class="btn btn-primary btn-rounded waves-effect waves-light" onclick="salvarMovimento();" value="">Salvar</button>
                     </div>
                 </div><!-- /.modal-footer -->
             </form>

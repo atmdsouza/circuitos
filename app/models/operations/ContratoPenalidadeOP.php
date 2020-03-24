@@ -115,7 +115,7 @@ class ContratoPenalidadeOP extends ContratoPenalidade
                 try {
                     $objeto = new ContratoPenalidadeMovimento();
                     $objeto->setTransaction($transaction);
-                    $objeto->setIdContratoPenalidade($objMovimento->getIdContratoPenalidade());
+                    $objeto->setIdContratoPenalidade($objPenalidade->getId());
                     $objeto->setIdTipoMovimento($objeto->buscarIdTipoMovimento(34, $tipo_movimento));
                     $objeto->setIdUsuario($auth->getIdUsuario());
                     $objeto->setDataMovimento(date('Y-m-d H:i:s'));
@@ -137,6 +137,8 @@ class ContratoPenalidadeOP extends ContratoPenalidade
             case 4:
                 try {
                     $objetoPenalidade = ContratoPenalidade::findFirst('id='.$objPenalidade->getId());
+                    $data_recebimento_oficio_notificacao_anterior = $objetoPenalidade->getDataRecebimentoOficioNotificacaoFormatada();
+                    $data_prazo_resposta_anterior = $objetoPenalidade->getDataPrazoRespostaFormatada();
                     $objetoPenalidade->setTransaction($transaction);
                     $objetoPenalidade->setDataRecebimentoOficioNotificacao($util->converterDataUSA($objPenalidade->getDataRecebimentoOficioNotificacao()));
                     $objetoPenalidade->setDataPrazoResposta($util->converterDataUSA($objPenalidade->getDataPrazoResposta()));
@@ -151,13 +153,13 @@ class ContratoPenalidadeOP extends ContratoPenalidade
                     }
                     $objeto = new ContratoPenalidadeMovimento();
                     $objeto->setTransaction($transaction);
-                    $objeto->setIdContratoPenalidade($objMovimento->getIdContratoPenalidade());
+                    $objeto->setIdContratoPenalidade($objPenalidade->getId());
                     $objeto->setIdTipoMovimento($objeto->buscarIdTipoMovimento(34, $tipo_movimento));
                     $objeto->setIdUsuario($auth->getIdUsuario());
                     $objeto->setDataMovimento(date('Y-m-d H:i:s'));
-                    $objeto->setValorAnterior($objMovimento->getValorAnterior());
-                    $objeto->setValorAtualizado($objMovimento->getValorAtualizado());
-                    $objeto->setObservacao($objMovimento->getObservacao());
+                    $objeto->setValorAnterior(($data_recebimento_oficio_notificacao_anterior) ? $data_recebimento_oficio_notificacao_anterior.' e '.$data_prazo_resposta_anterior : 'Sem dados');
+                    $objeto->setValorAtualizado($objetoPenalidade->getDataRecebimentoOficioNotificacaoFormatada().' e '.$objetoPenalidade->getDataPrazoRespostaFormatada());
+                    $objeto->setObservacao(mb_strtoupper($objMovimento->getObservacao(), $this->encode));
                     if ($objeto->save() === false) {
                         $messages = $objeto->getMessages();
                         $errors = '';
@@ -176,6 +178,7 @@ class ContratoPenalidadeOP extends ContratoPenalidade
             case 5:
                 try {
                     $objetoPenalidade = ContratoPenalidade::findFirst('id='.$objPenalidade->getId());
+                    $data_recebimento_oficio_multa_anterior = $util->converterDataParaBr($objetoPenalidade->getDataRecebimentoOficioMultaFormatada());
                     $objetoPenalidade->setTransaction($transaction);
                     $objetoPenalidade->setDataRecebimentoOficioMulta($util->converterDataUSA($objPenalidade->getDataRecebimentoOficioMulta()));
                     $objetoPenalidade->setDataUpdate(date('Y-m-d H:i:s'));
@@ -189,13 +192,13 @@ class ContratoPenalidadeOP extends ContratoPenalidade
                     }
                     $objeto = new ContratoPenalidadeMovimento();
                     $objeto->setTransaction($transaction);
-                    $objeto->setIdContratoPenalidade($objMovimento->getIdContratoPenalidade());
+                    $objeto->setIdContratoPenalidade($objPenalidade->getId());
                     $objeto->setIdTipoMovimento($objeto->buscarIdTipoMovimento(34, $tipo_movimento));
                     $objeto->setIdUsuario($auth->getIdUsuario());
                     $objeto->setDataMovimento(date('Y-m-d H:i:s'));
-                    $objeto->setValorAnterior($objMovimento->getValorAnterior());
-                    $objeto->setValorAtualizado($objMovimento->getValorAtualizado());
-                    $objeto->setObservacao($objMovimento->getObservacao());
+                    $objeto->setValorAnterior(($data_recebimento_oficio_multa_anterior) ? $data_recebimento_oficio_multa_anterior : 'Sem dados');
+                    $objeto->setValorAtualizado($objetoPenalidade->getDataRecebimentoOficioMultaFormatada());
+                    $objeto->setObservacao(mb_strtoupper($objMovimento->getObservacao(), $this->encode));
                     if ($objeto->save() === false) {
                         $messages = $objeto->getMessages();
                         $errors = '';
@@ -214,8 +217,9 @@ class ContratoPenalidadeOP extends ContratoPenalidade
             case 6:
                 try {
                     $objetoPenalidade = ContratoPenalidade::findFirst('id='.$objPenalidade->getId());
+                    $parecer_anterior = $objetoPenalidade->getParecer();
                     $objetoPenalidade->setTransaction($transaction);
-                    $objetoPenalidade->setParecer(mb_strtoupper($objPenalidade->setParecer(), $this->encode));
+                    $objetoPenalidade->setParecer(mb_strtoupper($objPenalidade->getParecer(), $this->encode));
                     $objetoPenalidade->setDataUpdate(date('Y-m-d H:i:s'));
                     if ($objetoPenalidade->save() === false) {
                         $messages = $objetoPenalidade->getMessages();
@@ -227,13 +231,13 @@ class ContratoPenalidadeOP extends ContratoPenalidade
                     }
                     $objeto = new ContratoPenalidadeMovimento();
                     $objeto->setTransaction($transaction);
-                    $objeto->setIdContratoPenalidade($objMovimento->getIdContratoPenalidade());
+                    $objeto->setIdContratoPenalidade($objPenalidade->getId());
                     $objeto->setIdTipoMovimento($objeto->buscarIdTipoMovimento(34, $tipo_movimento));
                     $objeto->setIdUsuario($auth->getIdUsuario());
                     $objeto->setDataMovimento(date('Y-m-d H:i:s'));
-                    $objeto->setValorAnterior($objMovimento->getValorAnterior());
-                    $objeto->setValorAtualizado($objMovimento->getValorAtualizado());
-                    $objeto->setObservacao($objMovimento->getObservacao());
+                    $objeto->setValorAnterior(($parecer_anterior) ? mb_strimwidth($parecer_anterior, 0, 80, '...') : 'Sem dados');
+                    $objeto->setValorAtualizado(mb_strimwidth($objetoPenalidade->getParecer(), 0, 80, '...'));
+                    $objeto->setObservacao(mb_strtoupper($objMovimento->getObservacao(), $this->encode));
                     if ($objeto->save() === false) {
                         $messages = $objeto->getMessages();
                         $errors = '';
@@ -252,6 +256,7 @@ class ContratoPenalidadeOP extends ContratoPenalidade
             case 7:
                 try {
                     $objetoPenalidade = ContratoPenalidade::findFirst('id='.$objPenalidade->getId());
+                    $status_anterior = $objetoPenalidade->getStatusDescricao();
                     $objetoPenalidade->setTransaction($transaction);
                     $objetoPenalidade->setStatus(1);
                     $objetoPenalidade->setDataUpdate(date('Y-m-d H:i:s'));
@@ -265,13 +270,13 @@ class ContratoPenalidadeOP extends ContratoPenalidade
                     }
                     $objeto = new ContratoPenalidadeMovimento();
                     $objeto->setTransaction($transaction);
-                    $objeto->setIdContratoPenalidade($objMovimento->getIdContratoPenalidade());
+                    $objeto->setIdContratoPenalidade($objPenalidade->getId());
                     $objeto->setIdTipoMovimento($objeto->buscarIdTipoMovimento(34, $tipo_movimento));
                     $objeto->setIdUsuario($auth->getIdUsuario());
                     $objeto->setDataMovimento(date('Y-m-d H:i:s'));
-                    $objeto->setValorAnterior($objMovimento->getValorAnterior());
-                    $objeto->setValorAtualizado($objMovimento->getValorAtualizado());
-                    $objeto->setObservacao($objMovimento->getObservacao());
+                    $objeto->setValorAnterior($status_anterior);
+                    $objeto->setValorAtualizado($objetoPenalidade->getStatusDescricao());
+                    $objeto->setObservacao(mb_strtoupper($objMovimento->getObservacao(), $this->encode));
                     if ($objeto->save() === false) {
                         $messages = $objeto->getMessages();
                         $errors = '';
@@ -290,6 +295,7 @@ class ContratoPenalidadeOP extends ContratoPenalidade
             case 8:
                 try {
                     $objetoPenalidade = ContratoPenalidade::findFirst('id='.$objPenalidade->getId());
+                    $status_anterior = $objetoPenalidade->getStatusDescricao();
                     $objetoPenalidade->setTransaction($transaction);
                     $objetoPenalidade->setStatus(2);
                     $objetoPenalidade->setDataUpdate(date('Y-m-d H:i:s'));
@@ -303,13 +309,13 @@ class ContratoPenalidadeOP extends ContratoPenalidade
                     }
                     $objeto = new ContratoPenalidadeMovimento();
                     $objeto->setTransaction($transaction);
-                    $objeto->setIdContratoPenalidade($objMovimento->getIdContratoPenalidade());
+                    $objeto->setIdContratoPenalidade($objPenalidade->getId());
                     $objeto->setIdTipoMovimento($objeto->buscarIdTipoMovimento(34, $tipo_movimento));
                     $objeto->setIdUsuario($auth->getIdUsuario());
                     $objeto->setDataMovimento(date('Y-m-d H:i:s'));
-                    $objeto->setValorAnterior($objMovimento->getValorAnterior());
-                    $objeto->setValorAtualizado($objMovimento->getValorAtualizado());
-                    $objeto->setObservacao($objMovimento->getObservacao());
+                    $objeto->setValorAnterior($status_anterior);
+                    $objeto->setValorAtualizado($objetoPenalidade->getStatusDescricao());
+                    $objeto->setObservacao(mb_strtoupper($objMovimento->getObservacao(), $this->encode));
                     if ($objeto->save() === false) {
                         $messages = $objeto->getMessages();
                         $errors = '';
@@ -328,6 +334,7 @@ class ContratoPenalidadeOP extends ContratoPenalidade
             case 9:
                 try {
                     $objetoPenalidade = ContratoPenalidade::findFirst('id='.$objPenalidade->getId());
+                    $status_anterior = $objetoPenalidade->getStatusDescricao();
                     $objetoPenalidade->setTransaction($transaction);
                     $objetoPenalidade->setStatus(0);
                     $objetoPenalidade->setDataUpdate(date('Y-m-d H:i:s'));
@@ -341,13 +348,13 @@ class ContratoPenalidadeOP extends ContratoPenalidade
                     }
                     $objeto = new ContratoPenalidadeMovimento();
                     $objeto->setTransaction($transaction);
-                    $objeto->setIdContratoPenalidade($objMovimento->getIdContratoPenalidade());
+                    $objeto->setIdContratoPenalidade($objPenalidade->getId());
                     $objeto->setIdTipoMovimento($objeto->buscarIdTipoMovimento(34, $tipo_movimento));
                     $objeto->setIdUsuario($auth->getIdUsuario());
                     $objeto->setDataMovimento(date('Y-m-d H:i:s'));
-                    $objeto->setValorAnterior($objMovimento->getValorAnterior());
-                    $objeto->setValorAtualizado($objMovimento->getValorAtualizado());
-                    $objeto->setObservacao($objMovimento->getObservacao());
+                    $objeto->setValorAnterior($status_anterior);
+                    $objeto->setValorAtualizado($objetoPenalidade->getStatusDescricao());
+                    $objeto->setObservacao(mb_strtoupper($objMovimento->getObservacao(), $this->encode));
                     if ($objeto->save() === false) {
                         $messages = $objeto->getMessages();
                         $errors = '';

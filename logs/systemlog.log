@@ -520,3 +520,4 @@
 [Mon, 23 Mar 20 16:17:41 -0300][INFO] Acesso do usuário admin ao sistema.
 [Tue, 24 Mar 20 10:10:33 -0300][INFO] Acesso do usuário admin ao sistema.
 [Tue, 24 Mar 20 11:11:13 -0300][INFO] Acesso do usuário admin ao sistema.
+[Tue, 24 Mar 20 12:17:51 -0300][ERROR] Erro ao criar o movimento: [id_contrato_penalidade is required] 

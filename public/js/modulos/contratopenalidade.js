@@ -688,6 +688,7 @@ function criarMovimento(id_penalidade)
     ocultarBlocos();
     $('.selectpicker').prop('disabled', false);
     $('.selectpicker').selectpicker('refresh');
+    $('#id_penalidade').val(id_penalidade);
     $('#modalMovimento').modal();
 
 }
@@ -706,17 +707,21 @@ function exibirBloco()
         case '4':
             ocultarBlocos();
             $('#bloco-receber-oficio-notificacao').show();
+            $('#bloco-observacao').show();
             break;
         case '5':
             ocultarBlocos();
             $('#bloco-receber-oficio-multa').show();
+            $('#bloco-observacao').show();
             break;
         case '6':
             ocultarBlocos();
             $('#bloco-parecer').show();
+            $('#bloco-observacao').show();
             break;
         case '7':
             ocultarBlocos();
+            $('#bloco-observacao').show();
             swal({
                 title: 'Executar a Penalidade',
                 text: 'Essa ação executará a penalidade selecionada ao clicar no botão "Salvar"!',
@@ -725,6 +730,7 @@ function exibirBloco()
             break;
         case '8':
             ocultarBlocos();
+            $('#bloco-observacao').show();
             swal({
                 title: 'Cancelamento de Penalidade',
                 text: 'Essa ação cancelará a penalidade selecionada ao clicar no botão "Salvar"!',
@@ -733,6 +739,7 @@ function exibirBloco()
             break;
         case '9':
             ocultarBlocos();
+            $('#bloco-observacao').show();
             swal({
                 title: 'Estorno de Status',
                 text: '"Essa ação retornará esta penalidade para o status "Aberta" ao clicar no botão "Salvar"!"',
@@ -747,5 +754,57 @@ function exibirBloco()
 
 function salvarMovimento()
 {
-
+    'use strict';
+    $("#formMovimento").validate({
+        rules : {
+            tipo_movimento:{
+                required: true
+            }
+        },
+        submitHandler: function(form) {
+            var dados = $("#formMovimento").serialize();
+            var action = actionCorreta(window.location.href.toString(), "contrato_penalidade/movimentar");
+            $.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: action,
+                data: {
+                    tokenKey: $("#token_movimento").attr("name"),
+                    tokenValue: $("#token_movimento").attr("value"),
+                    dados: dados
+                },
+                error: function (data) {
+                    if (data.status && data.status === 401)
+                    {
+                        swal({
+                            title: "Erro de Permissão",
+                            text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                            type: "warning"
+                        });
+                    }
+                },
+                success: function (data) {
+                    if (data.operacao){
+                        swal({
+                            title: data.titulo,
+                            text: data.mensagem,
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Ok"
+                        }).then((result) => {
+                            window.location.reload(true);
+                        });
+                    } else {
+                        swal({
+                            title: data.titulo,
+                            text: data.mensagem,
+                            type: "error"
+                        });
+                    }
+                }
+            });
+        }
+    });
 }

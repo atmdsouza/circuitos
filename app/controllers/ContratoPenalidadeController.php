@@ -129,6 +129,7 @@ class ContratoPenalidadeController extends ControllerBase
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
             $contratopenalidadeOP = new ContratoPenalidadeOP();
             $contratopenalidade = new ContratoPenalidade($params);
+            $contratopenalidade->setId($params['id_penalidade']);
             $contratopenalidademovimento = new ContratoPenalidadeMovimento($params);
             if($contratopenalidadeOP->movimentar($params['tipo_movimento'], $contratopenalidade, $contratopenalidademovimento)){//Cadastrou com sucesso
                 $response->setContent(json_encode(array('operacao' => True, 'titulo' => $titulo, 'mensagem' => $msg)));
