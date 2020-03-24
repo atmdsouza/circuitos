@@ -1,7 +1,15 @@
 /* CSS geral do sistema */
 table th {text-align: center;}
 
-.nova-aba {target-new: tab ! important}
+.table-100 {width: 100% !important;}
+
+.table-50 {width: 50% !important;}
+
+.table-40 {width: 40% !important;}
+
+.nova-aba {target-new: tab !important}
+
+.texto_negrito {font-weight: bold;}
 
 .error {color:red}
 

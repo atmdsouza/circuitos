@@ -50,24 +50,15 @@ function confirmaCancelar(modal)
             confirmButtonText: "Sim",
             cancelButtonText: "Não"
         }).then(() => {
-            $("#"+modal).modal('hide');
-            limparModalBootstrap(modal);
-            limparDadosFormOrcamento();
-            limparDadosFormExercicio();
-            limparDadosFormGarantia();
-            limparValidacao();
             mudou = false;
         }).catch(swal.noop);
     }
-    else
-    {
-        $("#"+modal).modal('hide');
-        limparModalBootstrap(modal);
-        limparDadosFormOrcamento();
-        limparDadosFormExercicio();
-        limparDadosFormGarantia();
-        limparValidacao();
-    }
+    $("#"+modal).modal('hide');
+    limparModalBootstrap(modal);
+    limparDadosFormOrcamento();
+    limparDadosFormExercicio();
+    limparDadosFormGarantia();
+    limparValidacao();
 }
 
 function limparValidacao()
@@ -118,7 +109,7 @@ function bloquearAbas()
 {
     'use strict';
     $('#tab-fiscal').addClass('disabled');
-    $('#tab-historico').addClass('disabled');
+    $('#tab-movimentacao').addClass('disabled');
     $('#tab-financeiro').addClass('disabled');
     $('#tab-objeto-vinculado').addClass('disabled');
     $('#tab-conformidade').addClass('disabled');
@@ -467,6 +458,7 @@ function visualizar(id, ocultar)
             montarTabelaObjetosVinculados(data.dados.id, ocultar);
             montarTabelaFiscais(data.dados.id, ocultar);
             montarTabelaFinanceiros(data.dados.id, ocultar);
+            montarTabelaPenalidades(data.penalidades, data.valor_penalidade_aberta, data.valor_penalidade_executada, data.valor_penalidade_cancelada, data.valor_penalidade_total);
         }
     });
 }
@@ -504,6 +496,59 @@ function vincularContrato()
 function preencherDadosPropostaComercial()
 {
     'use strict';
+}
+
+function montarTabelaPenalidades(arrPenalidades, vl_aberto, vl_executado, vl_cancelado, vl_total)
+{
+    'use strict';
+    $('.tr_remove_penalidade').remove();
+    $('.tr_remove_valor_penalidade').remove();
+    var linhas =null;
+    if (arrPenalidades.length > 0){
+        $.each(arrPenalidades, function(key, value) {
+            var data_recebimento_notificacao_penalidade = (value.data_recebimento_notificacao_penalidade) ? value.data_recebimento_notificacao_penalidade : '';
+            var data_prazo_defesa_penalidade = (value.data_prazo_defesa_penalidade) ? value.data_prazo_defesa_penalidade : '';
+            var data_apresentacao_penalidade = (value.data_apresentacao_defesa_penalidade) ? value.data_apresentacao_defesa_penalidade : '';
+            linhas += '<tr class="tr_remove_penalidade">';
+            linhas += '<td>'+ value.data_penalidade +'</td>';
+            linhas += '<td>'+ value.servico_penalidade +'</td>';
+            linhas += '<td>'+ value.status_penalidade +'</td>';
+            linhas += '<td>'+ value.nro_processo_penalidade +'</td>';
+            linhas += '<td>'+ value.nro_notificacao_penalidade +'</td>';
+            linhas += '<td>'+ value.nro_rt_penalidade +'</td>';
+            linhas += '<td>'+ data_recebimento_notificacao_penalidade +'</td>';
+            linhas += '<td>'+ data_prazo_defesa_penalidade +'</td>';
+            linhas += '<td>'+ data_apresentacao_penalidade +'</td>';
+            linhas += '<td>'+ value.valor_multa_penalidade +'</td>';
+            linhas += '</tr>';
+        });
+    } else {
+        linhas += "<tr class='tr_remove_penalidade'>";
+        linhas += "<td colspan='10' style='text-align: center;'>Não existem fiscais vinculados a esse contrato para serem exibidos!</td>";
+        linhas += "</tr>";
+    }
+    $("#tabela_lista_penalidades").append(linhas);
+
+    var linhas_total = null;
+    linhas_total += '<tr class="tr_remove_valor_penalidade table-warning texto_negrito">';
+    linhas_total += '<td>Penalidades em Aberto</td>';
+    linhas_total += '<td>'+vl_aberto+'</td>';
+    linhas_total += '</tr>';
+    linhas_total += '<tr class="tr_remove_valor_penalidade table-success texto_negrito">';
+    linhas_total += '<td>Penalidades Executadas</td>';
+    linhas_total += '<td>'+vl_executado+'</td>';
+    linhas_total += '</tr>';
+    linhas_total += '<tr class="tr_remove_valor_penalidade table-danger texto_negrito">';
+    linhas_total += '<td>Penalidades Canceladas</td>';
+    linhas_total += '<td>'+vl_cancelado+'</td>';
+    linhas_total += '</tr>';
+    linhas_total += '<tr class="tr_remove_valor_penalidade texto_negrito">';
+    linhas_total += '<td>Penalidades Total</td>';
+    linhas_total += '<td>'+vl_total+'</td>';
+    linhas_total += '</tr>';
+    $("#tabela_valores_penalidades").append(linhas_total);
+
+    $('#tab-penalidade').removeClass('disabled');
 }
 
 function montarTabelaFiscais(id_contrato, visualizar)
@@ -1469,7 +1514,6 @@ function criarAnexo(id_contrato)
     $('.selectpicker').prop('disabled', false);
     $('.selectpicker').selectpicker('refresh');
     $('#modalAnexoArquivo').modal();
-
 }
 
 function getIdentificador(id)

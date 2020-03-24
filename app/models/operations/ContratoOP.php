@@ -12,6 +12,7 @@ use Circuitos\Models\ContratoFiscal;
 use Circuitos\Models\ContratoFiscalHasContrato;
 use Circuitos\Models\ContratoGarantia;
 use Circuitos\Models\ContratoOrcamento;
+use Circuitos\Models\ContratoPenalidade;
 use Phalcon\Http\Response as Response;
 use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
@@ -346,8 +347,9 @@ class ContratoOP extends Contrato
     public function visualizarContrato($id)
     {
         $logger = new FileAdapter($this->arqLog);
+        $util = new Util();
         try {
-            $objeto = Contrato::findFirst("id={$id}");
+            $objeto = Contrato::findFirst('id='.$id);
             $objDescricao = new \stdClass();
             $objDescricao->ds_cliente = $objeto->getCliente();
             $objDescricao->ds_contrato_principal = $objeto->getContratoPrincipal();
@@ -359,8 +361,41 @@ class ContratoOP extends Contrato
             $objDescricao->armario = $objeto->getArmario();
             $objDescricao->prateleira = $objeto->getPrateleira();
             $objDescricao->codigo = $objeto->getCodigo();
+            $objPenalidades = ContratoPenalidade::find('id_contrato='.$id);
+            $arrPenalidades = [];
+            $valor_penalidade_aberta = 0;
+            $valor_penalidade_executada = 0;
+            $valor_penalidade_cancelada = 0;
+            foreach ($objPenalidades as $objPenalidade)
+            {
+                $objetoPenalidade = new \stdClass();
+                $objetoPenalidade->data_penalidade = $objPenalidade->getDataCriacaoFormatada();
+                $objetoPenalidade->servico_penalidade = $objPenalidade->getServicoDescricao();
+                $objetoPenalidade->status_penalidade = $objPenalidade->getStatusDescricao();
+                $objetoPenalidade->nro_processo_penalidade = $objPenalidade->getNumeroProcesso();
+                $objetoPenalidade->nro_notificacao_penalidade = $objPenalidade->getNumeroNotificacao();
+                $objetoPenalidade->nro_rt_penalidade = $objPenalidade->getNumeroRt();
+                $objetoPenalidade->data_recebimento_notificacao_penalidade = $objPenalidade->getDataRecebimentoOficioNotificacaoFormatada();
+                $objetoPenalidade->data_prazo_defesa_penalidade = $objPenalidade->getDataPrazoRespostaFormatada();
+                $objetoPenalidade->data_apresentacao_defesa_penalidade = $objPenalidade->getDataApresentacaoDefesaFormatada();
+                $objetoPenalidade->valor_multa_penalidade = $objPenalidade->getValorMultaFormatado();
+                array_push($arrPenalidades, $objetoPenalidade);
+                switch ($objPenalidade->getStatus())
+                {
+                    case 0://Aberta
+                        $valor_penalidade_aberta += $objPenalidade->getValorMulta();
+                        break;
+                    case 1://Executada
+                        $valor_penalidade_executada += $objPenalidade->getValorMulta();
+                        break;
+                    case 2://Cancelada
+                        $valor_penalidade_cancelada += $objPenalidade->getValorMulta();
+                        break;
+                }
+            }
+            $valor_penalidade_total = $valor_penalidade_aberta + $valor_penalidade_executada + $valor_penalidade_cancelada;
             $response = new Response();
-            $response->setContent(json_encode(array("operacao" => True,"dados" => $objeto,"descricao" => $objDescricao)));
+            $response->setContent(json_encode(array("operacao" => True,"dados" => $objeto,"descricao" => $objDescricao, 'penalidades' => $arrPenalidades, 'valor_penalidade_aberta' => $util->formataMoedaReal($valor_penalidade_aberta), 'valor_penalidade_executada' => $util->formataMoedaReal($valor_penalidade_executada), 'valor_penalidade_cancelada' => $util->formataMoedaReal($valor_penalidade_cancelada), 'valor_penalidade_total' => $util->formataMoedaReal($valor_penalidade_total))));
             return $response;
         } catch (TxFailed $e) {
             $logger->error($e->getMessage());
