@@ -1466,6 +1466,8 @@ function criarAnexo(id_contrato)
     montarTabelaAnexos(id_contrato, false);
     $('#tabela_lista_anexos').removeAttr('style', 'display: table;');
     $('#tabela_lista_anexos').attr('style', 'display: none;');
+    $('.selectpicker').prop('disabled', false);
+    $('.selectpicker').selectpicker('refresh');
     $('#modalAnexoArquivo').modal();
 
 }

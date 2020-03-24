@@ -530,11 +530,11 @@ class ContratoPenalidadeOP extends ContratoPenalidade
         }
     }
 
-    public function visualizarContratoPenalidadeNome($id)
+    public function visualizarContratoPenalidadeIdentificador($id)
     {
         $objeto = ContratoPenalidade::findFirst('id='.$id);
         $response = new Response();
-        $response->setContent(json_encode(array('operacao' => True,'dados' => $objeto->getNomeFiscal())));
+        $response->setContent(json_encode(array('operacao' => True,'dados' => $objeto->getNumeroProcesso())));
         return $response;
     }
 

@@ -500,6 +500,8 @@ function criarAnexo(id_contrato_fiscal)
     montarTabelaAnexos(id_contrato_fiscal, false);
     $('#tabela_lista_anexos').removeAttr('style', 'display: table;');
     $('#tabela_lista_anexos').attr('style', 'display: none;');
+    $('.selectpicker').prop('disabled', false);
+    $('.selectpicker').selectpicker('refresh');
     $('#modalAnexoArquivo').modal();
 
 }

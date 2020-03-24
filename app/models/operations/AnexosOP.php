@@ -7,6 +7,7 @@ use Circuitos\Models\CircuitosAnexo;
 use Circuitos\Models\ContratoAnexo;
 use Circuitos\Models\ContratoFinanceiroNota;
 use Circuitos\Models\ContratoFiscalAnexo;
+use Circuitos\Models\ContratoPenalidadeAnexo;
 use Circuitos\Models\PropostaComercialAnexo;
 use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
@@ -142,6 +143,32 @@ class AnexosOP extends Anexos
                     $errors .= "[".$messages[$i]."] ";
                 }
                 $transaction->rollback("Erro ao salvar o vinculo: " . $errors);
+            }
+            $transaction->commit();
+            return $objeto;
+        } catch (TxFailed $e) {
+            $logger->error($e->getMessage());
+            return false;
+        }
+    }
+
+    public function cadastrarContratoPenalidadeAnexo(ContratoPenalidadeAnexo $objArray)
+    {
+        $logger = new FileAdapter($this->arqLog);
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        try {
+            $objeto = new ContratoPenalidadeAnexo();
+            $objeto->setTransaction($transaction);
+            $objeto->setIdAnexo($objArray->getIdAnexo());
+            $objeto->setIdContratoPenalidade($objArray->getIdContratoPenalidade());
+            if ($objeto->save() === false) {
+                $messages = $objeto->getMessages();
+                $errors = '';
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= '['.$messages[$i].'] ';
+                }
+                $transaction->rollback('Erro ao salvar o vinculo: ' . $errors);
             }
             $transaction->commit();
             return $objeto;
@@ -288,6 +315,33 @@ class AnexosOP extends Anexos
             }
             $transaction->commit();
             return $objPrincipal->getIdContratoFinanceiro();
+        } catch (TxFailed $e) {
+            $logger->error($e->getMessage());
+            return false;
+        }
+    }
+
+    public function excluirContratoPenalidadeAnexo(ContratoPenalidadeAnexo $objPrincipal)
+    {
+        $logger = new FileAdapter($this->arqLog);
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $id = $objPrincipal->getIdContratoPenalidade();
+        try {
+            $objPrincipal->setTransaction($transaction);
+            $objPrincipal->delete();
+            $objAnexo = Anexos::findFirst('id='.$objPrincipal->getIdAnexo());
+            unlink($objAnexo->getUrl());
+            if ($objAnexo->delete() === false) {
+                $messages = $objAnexo->getMessages();
+                $errors = '';
+                for ($i = 0; $i < count($messages); $i++) {
+                    $errors .= '['.$messages[$i].'] ';
+                }
+                $transaction->rollback('Erro ao excluir vinculo: ' . $errors);
+            }
+            $transaction->commit();
+            return $id;
         } catch (TxFailed $e) {
             $logger->error($e->getMessage());
             return false;

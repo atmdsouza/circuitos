@@ -229,11 +229,11 @@ class ContratoPenalidadeController extends ControllerBase
         $modulo = $this->router->getControllerName();
         $action = $this->router->getActionName();
         $request = $this->request;
-        $id_contrato_fiscal = $request->get('id_contrato_penalidade');
+        $id_contrato_penalidade = $request->get('id_contrato_penalidade');
         $id_tipo_anexo = $request->get('id_tipo_anexo');
         $descricao = $request->get('descricao');
         $coreOP = new CoreOP();
-        $files = $coreOP->servicoUpload($request, $modulo, $action, $id_contrato_fiscal, null);
+        $files = $coreOP->servicoUpload($request, $modulo, $action, $id_contrato_penalidade, null);
         if ($files) {
             foreach ($files as $key => $file)
             {
@@ -244,13 +244,13 @@ class ContratoPenalidadeController extends ControllerBase
                 $anexo_cadastrado = $anexosOP->cadastrar($anexos);
                 $vinculoanexos = new ContratoPenalidadeAnexo();
                 $vinculoanexos->setIdAnexo($anexo_cadastrado->getId());
-                $vinculoanexos->setIdContratoPenalidade($id_contrato_fiscal);
+                $vinculoanexos->setIdContratoPenalidade($id_contrato_penalidade);
                 $anexosOP->cadastrarContratoPenalidadeAnexo($vinculoanexos);
             }
             $this->flash->success("Arquivos importados com sucesso!");
         } else {
             $this->flash->error("Erro ao tentar importar os arquivos!");
         }
-        $this->response->redirect('contrato_fiscal');
+        $this->response->redirect('contrato_penalidade');
     }
 }

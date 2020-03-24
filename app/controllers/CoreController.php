@@ -11,6 +11,7 @@ use Circuitos\Models\ContratoFinanceiroNota;
 use Circuitos\Models\ContratoFiscalAnexo;
 use Circuitos\Models\ContratoGarantia;
 use Circuitos\Models\ContratoOrcamento;
+use Circuitos\Models\ContratoPenalidadeAnexo;
 use Circuitos\Models\Empresa;
 use Circuitos\Models\EndCidade;
 use Circuitos\Models\EndEndereco;
@@ -706,6 +707,10 @@ class CoreController extends ControllerBase
                 $objeto = new ContratoFinanceiroOP();
                 return $objeto->visualizarContratoFinanceiroAnexos($dados['id']);
                 break;
+            case 'visualizarContratoPenalidadeAnexos':
+                $objeto = new ContratoPenalidadeOP();
+                return $objeto->visualizarContratoPenalidadeAnexos($dados['id']);
+                break;
             case 'visualizarEmpresaDepartamento':
                 $objeto = new EmpresaDepartamentoOP();
                 return $objeto->visualizarEmpresaDepartamento($dados['id']);
@@ -721,6 +726,10 @@ class CoreController extends ControllerBase
             case 'visualizarContratoFiscalNome':
                 $objeto = new ContratoFiscalOP();
                 return $objeto->visualizarContratoFiscalNome($dados['id']);
+                break;
+            case 'visualizarContratoPenalidadeIdentificador':
+                $objeto = new ContratoPenalidadeOP();
+                return $objeto->visualizarContratoPenalidadeIdentificador($dados['id']);
                 break;
             case 'visualizarCircuitosDesignacao':
                 $objeto = new CircuitosOP();
@@ -930,6 +939,11 @@ class CoreController extends ControllerBase
                 $objeto = new AnexosOP();
                 $objPrincipal = ContratoFiscalAnexo::findFirst('id_anexo='.$dados['id']);
                 return $objeto->excluirContratoFiscalAnexo($objPrincipal);
+                break;
+            case 'excluirContratoPenalidadeAnexo':
+                $objeto = new AnexosOP();
+                $objPrincipal = ContratoPenalidadeAnexo::findFirst('id_anexo='.$dados['id']);
+                return $objeto->excluirContratoPenalidadeAnexo($objPrincipal);
                 break;
             case 'excluirContratoFinanceiroNotaAnexo':
                 $objeto = new AnexosOP();

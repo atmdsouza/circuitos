@@ -481,6 +481,8 @@ function criarAnexo(id_contrato_penalidade)
     montarTabelaAnexos(id_contrato_penalidade, false);
     $('#tabela_lista_anexos').removeAttr('style', 'display: table;');
     $('#tabela_lista_anexos').attr('style', 'display: none;');
+    $('.selectpicker').prop('disabled', false);
+    $('.selectpicker').selectpicker('refresh');
     $('#modalAnexoArquivo').modal();
 
 }
@@ -493,7 +495,7 @@ function getIdentificador(id)
         type: "GET",
         dataType: "JSON",
         url: action,
-        data: {metodo: 'visualizarContratoPenalidadeNome', id: id},
+        data: {metodo: 'visualizarContratoPenalidadeIdentificador', id: id},
         error: function (data) {
             if (data.status && data.status === 401) {
                 swal({
