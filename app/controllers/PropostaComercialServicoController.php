@@ -2,13 +2,11 @@
 
 namespace Circuitos\Controllers;
 
-use Phalcon\Http\Response as Response;
-
+use Auth\Autentica;
+use Circuitos\Models\Lov;
 use Circuitos\Models\Operations\PropostaComercialServicoOP;
 use Circuitos\Models\PropostaComercialServico;
-use Circuitos\Models\Lov;
-
-use Auth\Autentica;
+use Phalcon\Http\Response as Response;
 use Util\TokenManager;
 
 class PropostaComercialServicoController extends ControllerBase
@@ -52,9 +50,9 @@ class PropostaComercialServicoController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-        $titulo = 'Cadastro de PropostaComercialServico';
-        $msg = 'PropostaComercialServico cadastrada com sucesso!';
-        $error_msg = 'Erro ao cadastrar uma PropostaComercialServico!';
+        $titulo = 'Cadastro de Serviço';
+        $msg = 'Serviço cadastrado com sucesso!';
+        $error_msg = 'Erro ao cadastrar um Serviço!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -79,9 +77,9 @@ class PropostaComercialServicoController extends ControllerBase
         $dados = filter_input_array(INPUT_POST);
         $params = array();
         parse_str($dados['dados'], $params);
-        $titulo = 'Alteração de PropostaComercialServico';
-        $msg = 'PropostaComercialServico alterada com sucesso!';
-        $error_msg = 'Erro ao alterar uma PropostaComercialServico!';
+        $titulo = 'Alteração de Serviço';
+        $msg = 'Serviço alterado com sucesso!';
+        $error_msg = 'Erro ao alterar uma Serviço!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -104,9 +102,9 @@ class PropostaComercialServicoController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Reativação de PropostaComercialServico';
-        $msg = 'PropostaComercialServico reativada com sucesso!';
-        $error_msg = 'Erro ao reativar uma PropostaComercialServico!';
+        $titulo = 'Reativação de Serviço';
+        $msg = 'Serviço reativado com sucesso!';
+        $error_msg = 'Erro ao reativar um Serviço!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -129,9 +127,9 @@ class PropostaComercialServicoController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Desativação de PropostaComercialServico';
-        $msg = 'PropostaComercialServico desativada com sucesso!';
-        $error_msg = 'Erro ao desativar uma PropostaComercialServico!';
+        $titulo = 'Desativação de Serviço';
+        $msg = 'Serviço desativado com sucesso!';
+        $error_msg = 'Erro ao desativar um Serviço!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido
@@ -154,9 +152,9 @@ class PropostaComercialServicoController extends ControllerBase
         $this->view->disable();
         $response = new Response();
         $dados = filter_input_array(INPUT_POST);
-        $titulo = 'Exclusão de PropostaComercialServico';
-        $msg = 'PropostaComercialServico excluída com sucesso!';
-        $error_msg = 'Erro ao excluir a PropostaComercialServico!';
+        $titulo = 'Exclusão de Serviço';
+        $msg = 'Serviço excluído com sucesso!';
+        $error_msg = 'Erro ao excluir o Serviço!';
         $error_chk = 'Check de token de formulário inválido!';
         //CSRF Token Check
         if ($this->tokenManager->checkToken('User', $dados['tokenKey'], $dados['tokenValue'])) {//Formulário Válido

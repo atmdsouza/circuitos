@@ -561,7 +561,7 @@ function criarComponente()
 function checkMesVigencia(mes)
 {
     'use strict';
-    if (parseFloat(mes) >= 1 && parseFloat(mes) <= 12) {
+    if (parseFloat(mes) >= 1 && parseFloat(mes) <= 72) {
         return true;
     } else {
         return false;
@@ -571,7 +571,7 @@ function checkMesVigencia(mes)
 function checkAnoVigencia(ano)
 {
     'use strict';
-    if (parseFloat(ano) >= 1 && parseFloat(ano) <= 60) {
+    if (parseFloat(ano) >= 1 && parseFloat(ano) <= 72) {
         return true;
     } else {
         return false;

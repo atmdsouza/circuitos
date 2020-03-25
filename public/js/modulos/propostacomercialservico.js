@@ -45,9 +45,9 @@ function confirmaCancelar(modal)
             confirmButtonText: "Sim",
             cancelButtonText: "Não"
         }).then(() => {
+            mudou = false;
             $("#"+modal).modal('hide');
             limparModalBootstrap(modal);
-            mudou = false;
             limparValidacao();
         }).catch(swal.noop);
     }
@@ -91,6 +91,7 @@ function editar(id)
             $("#formCadastro input").removeAttr('readonly', 'readonly');
             $("#formCadastro select").removeAttr('readonly', 'readonly');
             $("#formCadastro textarea").removeAttr('readonly', 'readonly');
+            $("input[type=radio]").attr('disabled', false);
             $("#salvarCadastro").val('editar');
             $("#salvarCadastro").show();
             $("#modalCadastro").modal();
@@ -113,6 +114,11 @@ function editar(id)
             $('#codigo_legado').val(data.dados.codigo_legado);
             $('#codigo_contabil').val(data.dados.codigo_contabil);
             $('#descricao').val(data.dados.descricao);
+            if (data.dados.implantacao === '1') {
+                $('#implantacao_sim').prop('checked', true);
+            } else {
+                $('#implantacao_nao').prop('checked', true);
+            }
         }
     });
 }
@@ -126,7 +132,16 @@ function salvar()
             descricao:{
                 required: true
             },
-            codigo_conta_contrato:{
+            codigo_contabil:{
+                required: true
+            },
+            lid_proposta_comercial_servico_grupo:{
+                required: true
+            },
+            lid_proposta_comercial_servico_unidade:{
+                required: true
+            },
+            implantacao:{
                 required: true
             }
         },
@@ -362,6 +377,7 @@ function visualizar(id)
             $("#formCadastro input").attr('readonly', 'readonly');
             $("#formCadastro select").attr('readonly', 'readonly');
             $("#formCadastro textarea").attr('readonly', 'readonly');
+            $("input[type=radio]").attr('disabled', true);
             $("#salvarCadastro").hide();
             $("#modalCadastro").modal();
         },
@@ -383,6 +399,11 @@ function visualizar(id)
             $('#codigo_legado').val(data.dados.codigo_legado);
             $('#codigo_contabil').val(data.dados.codigo_contabil);
             $('#descricao').val(data.dados.descricao);
+            if (data.dados.implantacao === '1') {
+                $('#implantacao_sim').prop('checked', true);
+            } else {
+                $('#implantacao_nao').prop('checked', true);
+            }
         }
     });
 }

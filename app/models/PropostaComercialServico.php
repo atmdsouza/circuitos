@@ -48,6 +48,12 @@ class PropostaComercialServico extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
+    protected $implantacao;
+
+    /**
+     *
+     * @var integer
+     */
     protected $ativo;
 
     /**
@@ -287,6 +293,24 @@ class PropostaComercialServico extends \Phalcon\Mvc\Model
     public function getUnidade()
     {
         return $this->PropostaComercialServicoUnidade->descricao;
+    }
+
+    /**
+     * @return int
+     */
+    public function getImplantacao()
+    {
+        return $this->implantacao;
+    }
+
+    /**
+     * @param int $implantacao
+     */
+    public function setImplantacao($implantacao)
+    {
+        $this->implantacao = $implantacao;
+
+        return $this;
     }
 
     /**

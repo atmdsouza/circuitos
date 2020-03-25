@@ -32,6 +32,7 @@ class PropostaComercialServicoOP extends PropostaComercialServico
             $objeto->setCodigoLegado($objArray->getCodigoLegado());
             $objeto->setCodigoContabil($objArray->getCodigoContabil());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
+            $objeto->setImplantacao($objArray->getImplantacao());
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
                 $transaction->rollback("Não foi possível salvar a conectividade!");
@@ -57,6 +58,7 @@ class PropostaComercialServicoOP extends PropostaComercialServico
             $objeto->setCodigoLegado($objArray->getCodigoLegado());
             $objeto->setCodigoContabil($objArray->getCodigoContabil());
             $objeto->setDescricao(mb_strtoupper($objArray->getDescricao(), $this->encode));
+            $objeto->setImplantacao($objArray->getImplantacao());
             $objeto->setDataUpdate(date('Y-m-d H:i:s'));
             if ($objeto->save() == false) {
                 $transaction->rollback("Não foi possível alterar a conectividade!");
@@ -145,7 +147,8 @@ class PropostaComercialServicoOP extends PropostaComercialServico
                 'desc_proposta_comercial_servico_unidade' => $objeto->getUnidade(),
                 'codigo_legado' => $objeto->getCodigoLegado(),
                 'codigo_contabil' => $objeto->getCodigoContabil(),
-                'descricao' => $objeto->getDescricao()
+                'descricao' => $objeto->getDescricao(),
+                'implantacao' => $objeto->getImplantacao()
             );
             $response = new Response();
             $response->setContent(json_encode(array("operacao" => True,"dados" => $objetoArray)));
