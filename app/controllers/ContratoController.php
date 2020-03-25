@@ -14,7 +14,7 @@ use Circuitos\Models\Lov;
 use Circuitos\Models\Operations\AnexosOP;
 use Circuitos\Models\Operations\ContratoOP;
 use Circuitos\Models\Operations\CoreOP;
-use Phalcon\Http\Response as Response;
+use Phalcon\Http\Response;
 use Util\TokenManager;
 
 class ContratoController extends ControllerBase
@@ -46,32 +46,32 @@ class ContratoController extends ControllerBase
         $contratoOP = new ContratoOP();
         $contrato = $contratoOP->listar($dados['pesquisa']);
         $tipos = Lov::find(array(
-            "tipo = 26 AND excluido = 0 AND ativo = 1",
-            "order" => "descricao"
+            'tipo = 26 AND excluido = 0 AND ativo = 1',
+            'order' => 'descricao'
         ));
         $tipos_processos = Lov::find(array(
-            "tipo = 27 AND excluido = 0 AND ativo = 1",
-            "order" => "descricao"
+            'tipo = 27 AND excluido = 0 AND ativo = 1',
+            'order' => 'descricao'
         ));
         $tipos_movimentos = Lov::find(array(
-            "tipo = 28 AND excluido = 0 AND ativo = 1",
-            "order" => "descricao"
+            'tipo = 28 AND excluido = 0 AND ativo = 1 AND valor >= 4',
+            'order' => 'CAST(valor AS SIGNED)'
         ));
         $tipos_modalidades = Lov::find(array(
-            "tipo = 29 AND excluido = 0 AND ativo = 1",
-            "order" => "descricao"
+            'tipo = 29 AND excluido = 0 AND ativo = 1',
+            'order' => 'descricao'
         ));
         $status_contrato = Lov::find(array(
-            "tipo = 30 AND excluido = 0 AND ativo = 1",
-            "order" => "descricao"
+            'tipo = 30 AND excluido = 0 AND ativo = 1',
+            'order' => 'descricao'
         ));
         $tipos_fiscais = Lov::find(array(
-            "tipo = 31 AND excluido = 0 AND ativo = 1",
-            "order" => "descricao"
+            'tipo = 31 AND excluido = 0 AND ativo = 1',
+            'order' => 'descricao'
         ));
         $tipos_anexos = Lov::find(array(
-            "tipo = 20 AND excluido = 0 AND ativo = 1",
-            "order" => "descricao"
+            'tipo = 20 AND excluido = 0 AND ativo = 1',
+            'order' => 'descricao'
         ));
         $this->view->tipos = $tipos;
         $this->view->tipos_processos = $tipos_processos;
@@ -279,57 +279,6 @@ class ContratoController extends ControllerBase
         } else {//Formulário Inválido
             $response->setContent(json_encode(array('operacao' => False, 'titulo' => $titulo, 'mensagem' => $error_chk)));
         }
-        return $response;
-    }
-
-    /**
-     * Created by PhpStorm.
-     * User: andre
-     * Date: 06/11/2019
-     * Time: 19:00
-     * Responsável por atribuir fiscais a um contrato
-     */
-    public function atribuirAction()
-    {
-        //Desabilita o layout para o ajax
-        $this->view->disable();
-        $response = new Response();
-        $dados = filter_input_array(INPUT_POST);
-
-        return $response;
-    }
-
-    /**
-     * Created by PhpStorm.
-     * User: andre
-     * Date: 06/11/2019
-     * Time: 19:00
-     * Responsável por fiscalizar um contrato, atribuindo não conformidades a ele
-     */
-    public function fiscalizarAction()
-    {
-        //Desabilita o layout para o ajax
-        $this->view->disable();
-        $response = new Response();
-        $dados = filter_input_array(INPUT_POST);
-
-        return $response;
-    }
-
-    /**
-     * Created by PhpStorm.
-     * User: andre
-     * Date: 06/11/2019
-     * Time: 19:00
-     * Responsável pela gestão financeira de um contrato, incluindo dados dos pagamentos para acompanhamento
-     */
-    public function gerirAction()
-    {
-        //Desabilita o layout para o ajax
-        $this->view->disable();
-        $response = new Response();
-        $dados = filter_input_array(INPUT_POST);
-
         return $response;
     }
 

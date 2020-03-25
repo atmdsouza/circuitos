@@ -523,3 +523,5 @@
 [Tue, 24 Mar 20 12:17:51 -0300][ERROR] Erro ao criar o movimento: [id_contrato_penalidade is required] 
 [Tue, 24 Mar 20 14:10:04 -0300][INFO] Acesso do usuário admin ao sistema.
 [Wed, 25 Mar 20 16:17:40 -0300][INFO] Acesso do usuário admin ao sistema.
+[Wed, 25 Mar 20 18:09:18 -0300][ERROR] Combinação de usuário e senha inválida! [Usuário: admun]
+[Wed, 25 Mar 20 18:09:22 -0300][INFO] Acesso do usuário admin ao sistema.

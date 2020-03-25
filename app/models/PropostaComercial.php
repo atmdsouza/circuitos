@@ -4,6 +4,7 @@ namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
 use Util\Infra;
+use Util\Util;
 
 class PropostaComercial extends \Phalcon\Mvc\Model
 {
@@ -567,6 +568,17 @@ class PropostaComercial extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field reajuste formatado
+     *
+     * @return double
+     */
+    public function getReajusteFormatado()
+    {
+        $util = new Util();
+        return $util->formataMoedaReal($this->reajuste);
+    }
+
+    /**
      * Returns the value of field imposto
      *
      * @return double
@@ -574,6 +586,17 @@ class PropostaComercial extends \Phalcon\Mvc\Model
     public function getImposto()
     {
         return $this->imposto;
+    }
+
+    /**
+     * Returns the value of field imposto formatado
+     *
+     * @return double
+     */
+    public function getImpostoFormatado()
+    {
+        $util = new Util();
+        return $util->formataMoedaReal($this->imposto);
     }
 
     /**
@@ -587,6 +610,17 @@ class PropostaComercial extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field desconto formatado
+     *
+     * @return double
+     */
+    public function getDescontoFormatado()
+    {
+        $util = new Util();
+        return $util->formataMoedaReal($this->desconto);
+    }
+
+    /**
      * Returns the value of field encargos
      *
      * @return double
@@ -594,6 +628,17 @@ class PropostaComercial extends \Phalcon\Mvc\Model
     public function getEncargos()
     {
         return $this->encargos;
+    }
+
+    /**
+     * Returns the value of field encargos formatado
+     *
+     * @return double
+     */
+    public function getEncargosFormatado()
+    {
+        $util = new Util();
+        return $util->formataMoedaReal($this->encargos);
     }
 
     /**
@@ -614,6 +659,17 @@ class PropostaComercial extends \Phalcon\Mvc\Model
     public function getValorGlobal()
     {
         return $this->valor_global;
+    }
+
+    /**
+     * Returns the value of field valor_global formatado
+     *
+     * @return double
+     */
+    public function getValorGlobalFormatado()
+    {
+        $util = new Util();
+        return $util->formataMoedaReal($this->valor_global);
     }
 
     /**

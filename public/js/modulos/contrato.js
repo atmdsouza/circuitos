@@ -463,16 +463,6 @@ function visualizar(id, ocultar)
     });
 }
 
-function movimentar(id)
-{
-
-}
-
-function fiscalizar(id)
-{
-
-}
-
 function limpar()
 {
     'use strict';
@@ -496,6 +486,35 @@ function vincularContrato()
 function preencherDadosPropostaComercial()
 {
     'use strict';
+    var lid_proposta = $('#lid_proposta_comercial').val();
+    var id_proposta = $('#id_proposta_comercial').val();
+    if (lid_proposta) {
+        var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+        $.ajax({
+            type: "GET",
+            dataType: "JSON",
+            url: action,
+            data: {metodo: 'visualizarContratoProposta', id: id_proposta},
+            complete: function () {
+            },
+            error: function (data) {
+                if (data.status && data.status === 401) {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            },
+            success: function (data) {
+                $('#valor_global').val(data.dados);
+                $('#valor_global').attr('disabled','disabled');
+            }
+        });
+    } else {
+        $('#valor_global').val('0,00');
+        $('#valor_global').removeAttr('disabled','disabled');
+    }
 }
 
 function montarTabelaPenalidades(arrPenalidades, vl_aberto, vl_executado, vl_cancelado, vl_total)
@@ -1630,4 +1649,12 @@ function excluirAnexo(id_anexo)
         });
         return true;
     });
+}
+
+/**
+ * Seção de Movimento
+ * **/
+function criarMovimento(id_contrato)
+{
+
 }

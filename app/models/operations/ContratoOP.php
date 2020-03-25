@@ -13,7 +13,8 @@ use Circuitos\Models\ContratoFiscalHasContrato;
 use Circuitos\Models\ContratoGarantia;
 use Circuitos\Models\ContratoOrcamento;
 use Circuitos\Models\ContratoPenalidade;
-use Phalcon\Http\Response as Response;
+use Circuitos\Models\PropostaComercial;
+use Phalcon\Http\Response;
 use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Model\Transaction\Failed as TxFailed;
 use Phalcon\Mvc\Model\Transaction\Manager as TxManager;
@@ -904,5 +905,13 @@ class ContratoOP extends Contrato
             'valor_penalidade_cancelada' => $util->formataMoedaReal($valor_penalidade_cancelada),
             'valor_penalidade_total' => $util->formataMoedaReal($valor_penalidade_total)
         ];
+    }
+
+    public function visualizarContratoProposta($id_proposta)
+    {
+        $objeto = PropostaComercial::findFirst('id='.$id_proposta);
+        $response = new Response();
+        $response->setContent(json_encode(array('operacao' => True,'dados' => $objeto->getValorGlobalFormatado())));
+        return $response;
     }
 }
