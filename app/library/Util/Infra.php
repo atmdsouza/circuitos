@@ -42,7 +42,7 @@ class Infra
 
     public function getVersao()
     {
-        return '2.03.06';//Funcionalidade de Penalidade e Ajustes deleção de perfil
+        return '2.04.06';//Melhoria na funcionalidade de Contratos e Proposta Comercial
     }
 
     public function getCaminhoRelatorios()

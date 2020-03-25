@@ -445,8 +445,8 @@ function visualizar(id, ocultar)
             $('#vigencia_prazo').val(data.dados.vigencia_prazo);
             $('#objeto').val(data.dados.objeto);
             $('#objetivo_especifico').val(data.dados.objetivo_especifico);
-            $('#valor_global').val(accounting.formatMoney(data.dados.valor_global, '', 2, '.', ','));
-            $('#valor_mensal').val(accounting.formatMoney(data.dados.valor_mensal, '', 2, '.', ','));
+            $('#valor_global').val(data.descricao.valor_global_formatado);
+            $('#valor_mensal').val(data.descricao.valor_mensal_formatado);
             $('#corredor').val(data.descricao.corredor);
             $('#armario').val(data.descricao.armario);
             $('#prateleira').val(data.descricao.prateleira);
@@ -461,16 +461,6 @@ function visualizar(id, ocultar)
             montarTabelaPenalidades(data.penalidades, data.valor_penalidade_aberta, data.valor_penalidade_executada, data.valor_penalidade_cancelada, data.valor_penalidade_total);
         }
     });
-}
-
-function movimentar(id)
-{
-
-}
-
-function fiscalizar(id)
-{
-
 }
 
 function limpar()
@@ -496,6 +486,35 @@ function vincularContrato()
 function preencherDadosPropostaComercial()
 {
     'use strict';
+    var lid_proposta = $('#lid_proposta_comercial').val();
+    var id_proposta = $('#id_proposta_comercial').val();
+    if (lid_proposta) {
+        var action = actionCorreta(window.location.href.toString(), "core/processarAjaxVisualizar");
+        $.ajax({
+            type: "GET",
+            dataType: "JSON",
+            url: action,
+            data: {metodo: 'visualizarContratoProposta', id: id_proposta},
+            complete: function () {
+            },
+            error: function (data) {
+                if (data.status && data.status === 401) {
+                    swal({
+                        title: "Erro de Permissão",
+                        text: "Seu usuário não possui privilégios para executar esta ação! Por favor, procure o administrador do sistema!",
+                        type: "warning"
+                    });
+                }
+            },
+            success: function (data) {
+                $('#valor_global').val(data.dados);
+                $('#valor_global').attr('disabled','disabled');
+            }
+        });
+    } else {
+        $('#valor_global').val('0,00');
+        $('#valor_global').removeAttr('disabled','disabled');
+    }
 }
 
 function montarTabelaPenalidades(arrPenalidades, vl_aberto, vl_executado, vl_cancelado, vl_total)
@@ -968,7 +987,7 @@ function montarTabelaExercicio(id_contrato, visualizar)
                 linhas += '<td>'+ value.exercicio +'<input name="res_exercicio[]" type="hidden" value="'+ value.exercicio +'" /></td>';
                 linhas += '<td>'+ value.competencia_inicial +'<input name="res_competencia_inicial[]" type="hidden" value="'+ value.competencia_inicial +'" /></td>';
                 linhas += '<td>'+ value.competencia_final +'<input name="res_competencia_final[]" type="hidden" value="'+ value.competencia_final +'" /></td>';
-                linhas += '<td>'+ accounting.formatMoney(value.valor_previsto, '', 2, '.', ',') +'<input name="res_valor_previsto[]" type="hidden" value="'+ value.valor_previsto +'" /></td>';
+                linhas += '<td>'+ value.valor_previsto +'<input name="res_valor_previsto[]" type="hidden" value="'+ value.valor_previsto +'" /></td>';
                 if (visualizar) {
                     linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesExercicio(' + value.id_contrato_exercicio + ', ' + true + ');" class="botoes_acao"><img src="public/images/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a></td>';
                 } else {
@@ -1207,8 +1226,8 @@ function montarTabelaGarantia(id_contrato, visualizar)
                 linhas += '<tr class="tr_remove_gar_vis">';
                 linhas += '<td>'+ value.ds_modalidade +'<input name="res_id_modalidade[]" type="hidden" value="'+ value.id_modalidade +'" /></td>';
                 linhas += '<td>'+ ds_garantia_concretizada +'<input name="res_garantia_concretizada[]" type="hidden" value="'+ value.garantia_concretizada +'" /></td>';
-                linhas += '<td>'+ accounting.formatMoney(value.percentual, '', 2, '.', ',') +'<input name="res_percentual[]" type="hidden" value="'+ value.percentual +'" /></td>';
-                linhas += '<td>'+ accounting.formatMoney(value.valor, '', 2, '.', ',') +'<input name="res_valor_garantia[]" type="hidden" value="'+ value.valor +'" /></td>';
+                linhas += '<td>'+ value.percentual +'<input name="res_percentual[]" type="hidden" value="'+ value.percentual +'" /></td>';
+                linhas += '<td>'+ value.valor +'<input name="res_valor_garantia[]" type="hidden" value="'+ value.valor +'" /></td>';
                 if (visualizar) {
                     linhas += '<td><a href="javascript:void(0)" onclick="exibirDetalhesGarantia(' + value.id_contrato_garantia + ', ' + true + ');" class="botoes_acao"><img src="public/images/sistema/visualizar.png" title="Visualizar" alt="Visualizar" height="25" width="25"></a></td>';
                 } else {
@@ -1233,6 +1252,15 @@ function criarGarantia()
     $('#dados_garantia').removeAttr('style', 'display: none;');
     $('#dados_garantia').attr('style', 'display: block;');
     $('#grupo').focus();
+}
+
+function calcularValorGarantia()
+{
+    'use strict';
+    var valor_contrato = accounting.unformat($('#valor_global').val());
+    var valor_percentual = accounting.unformat($('#v_percentual').val());
+    var valor_garantia = valor_contrato * (valor_percentual * 0.01);
+    $('#v_valor_garantia').val(accounting.formatMoney(valor_garantia, '', 2));
 }
 
 function inserirGarantia()
@@ -1413,7 +1441,9 @@ function excluirGarantia(id)
     });
 }
 
-//Sessão de Anexos
+/**
+ * Sessão de Anexos
+ * **/
 function criarAnexo(id_contrato)
 {
     'use strict';
@@ -1619,4 +1649,12 @@ function excluirAnexo(id_anexo)
         });
         return true;
     });
+}
+
+/**
+ * Seção de Movimento
+ * **/
+function criarMovimento(id_contrato)
+{
+
 }

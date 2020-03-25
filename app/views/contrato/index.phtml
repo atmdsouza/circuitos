@@ -98,13 +98,10 @@ $module = $this->router->getControllerName();
                             <?php endif; ?>
                         <?php else: ?>
                             <?php if($acl->isAllowed($role, $module, 'movimentar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="movimentar(<?= $contrato->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/movimentar.png" title="Movimentar" alt="Movimentar" height="25" width="25"></a>
+                                <a href="javascript:void(0)" class="botoes_acao" onclick="criarMovimento(<?= $contrato->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/movimentar.png" title="Movimentar" alt="Movimentar" height="25" width="25"></a>
                             <?php endif; ?>
                             <?php if($acl->isAllowed($role, $module, 'subir')): ?> <!-- Anexo de Arquivos -->
                                 <a href="javascript:void(0)" class="botoes_acao" onclick="criarAnexo(<?= $contrato->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/upload.png" title="Anexar Arquivo" alt="Anexar Arquivo" height="25" width="25"></a>
-                            <?php endif; ?>
-                            <?php if($acl->isAllowed($role, $module, 'fiscalizar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="fiscalizar(<?= $contrato->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/fiscalizar.png" title="Fiscalizar Contrato" alt="Fiscalizar Contrato" height="25" width="25"></a>
                             <?php endif; ?>
                             <?php if($acl->isAllowed($role, $module, 'editar')): ?>
                                 <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $contrato->getId() ?>, false);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
@@ -196,7 +193,7 @@ $module = $this->router->getControllerName();
                             <div class="form-row">
                                 <div class="form-group col-md-2">
                                     <label for="id_tipo_processo">Tipo Processo <span class="required">*</span></label>
-                                    <?php echo $this->tag->select(["id_tipo_processo", $tipos_processos, "class" => "form-control", "id" => "id_tipo_processo", "onchange" => "",
+                                    <?= $this->tag->select(["id_tipo_processo", $tipos_processos, "class" => "form-control", "id" => "id_tipo_processo", "onchange" => "",
                                         "using" => ["id", "descricao",],
                                         "useEmpty" => true,
                                         "emptyText" => "Selecione o tipo de Processo",
@@ -209,7 +206,7 @@ $module = $this->router->getControllerName();
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="id_tipo_contrato">Tipo Contrato <span class="required">*</span></label>
-                                    <?php echo $this->tag->select(["id_tipo_contrato", $tipos, "class" => "form-control", "id" => "id_tipo_contrato", "onchange" => "contratoClienteFornecedor();",
+                                    <?= $this->tag->select(["id_tipo_contrato", $tipos, "class" => "form-control", "id" => "id_tipo_contrato", "onchange" => "contratoClienteFornecedor();",
                                         "using" => ["id", "descricao",],
                                         "useEmpty" => true,
                                         "emptyText" => "Selecione o tipo de Contrato",
@@ -218,8 +215,8 @@ $module = $this->router->getControllerName();
                                 </div>
                                 <div class="form-group col-md-2 botoes_forms_alinhamento">
                                     <label for="lid_proposta_comercial">Proposta Comercial </label>
-                                    <?php echo $this->tag->textField(["lid_proposta_comercial", "size" => 120, "class" => "form-control", "id" => "lid_proposta_comercial", "placeholder" => "Proposta Comercial", "onkeyup" => "autocompletarPropostaComercial('lid_proposta_comercial','id_proposta_comercial');", "onblur" => "preencherDadosPropostaComercial();"]) ?>
-                                    <?php echo $this->tag->hiddenField(["id_proposta_comercial", "size" => 120, "class" => "form-control", "id" => "id_proposta_comercial"]) ?>
+                                    <?= $this->tag->textField(["lid_proposta_comercial", "size" => 120, "class" => "form-control", "id" => "lid_proposta_comercial", "placeholder" => "Proposta Comercial", "onkeyup" => "autocompletarPropostaComercial('lid_proposta_comercial','id_proposta_comercial');", "onblur" => "preencherDadosPropostaComercial();"]) ?>
+                                    <?= $this->tag->hiddenField(["id_proposta_comercial", "size" => 120, "class" => "form-control", "id" => "id_proposta_comercial"]) ?>
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="vincular_instrumento">Vincular a outro Instrumento? <span class="required">*</span></label>
@@ -230,17 +227,17 @@ $module = $this->router->getControllerName();
                                 </div>
                                 <div class="form-group col-md-2 botoes_forms_alinhamento">
                                     <label for="lid_contrato_principal">Contrato Principal </label>
-                                    <?php echo $this->tag->textField(["lid_contrato_principal", "size" => 120, "class" => "form-control", "id" => "lid_contrato_principal", "placeholder" => "Contrato a ser vinculado", "onkeyup" => "autocompletarContratoPrincipal('lid_contrato_principal','id_contrato_principal');"]) ?>
-                                    <?php echo $this->tag->hiddenField(["id_contrato_principal", "size" => 120, "class" => "form-control", "id" => "id_contrato_principal"]) ?>
+                                    <?= $this->tag->textField(["lid_contrato_principal", "size" => 120, "class" => "form-control", "id" => "lid_contrato_principal", "placeholder" => "Contrato a ser vinculado", "onkeyup" => "autocompletarContratoPrincipal('lid_contrato_principal','id_contrato_principal');"]) ?>
+                                    <?= $this->tag->hiddenField(["id_contrato_principal", "size" => 120, "class" => "form-control", "id" => "id_contrato_principal"]) ?>
                                 </div>
                                 <div id="div_cliente" class="form-group col-md-4">
                                     <label for="lid_cliente">Cliente / Fornecedor / Parceiro <span class="required">*</span></label>
-                                    <?php echo $this->tag->textField(["lid_cliente", "size" => 120, "class" => "form-control", "id" => "lid_cliente", "placeholder" => "Cliente / Fornecedor / Parceiro", "onkeyup" => "autocompletarClienteFornecedorParceiro('lid_cliente','id_cliente');"]) ?>
-                                    <?php echo $this->tag->hiddenField(["id_cliente", "size" => 120, "class" => "form-control", "id" => "id_cliente"]) ?>
+                                    <?= $this->tag->textField(["lid_cliente", "size" => 120, "class" => "form-control", "id" => "lid_cliente", "placeholder" => "Cliente / Fornecedor / Parceiro", "onkeyup" => "autocompletarClienteFornecedorParceiro('lid_cliente','id_cliente');"]) ?>
+                                    <?= $this->tag->hiddenField(["id_cliente", "size" => 120, "class" => "form-control", "id" => "id_cliente"]) ?>
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="id_status">Status Contrato <span class="required">*</span></label>
-                                    <?php echo $this->tag->select(["id_status", $status_contrato, "class" => "form-control", "id" => "id_status",
+                                    <?= $this->tag->select(["id_status", $status_contrato, "class" => "form-control", "id" => "id_status",
                                         "using" => ["id", "descricao",],
                                         "useEmpty" => true,
                                         "emptyText" => "Selecione o status de Contrato",
@@ -295,7 +292,7 @@ $module = $this->router->getControllerName();
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <label for="objeto">Objeto <span class="required">*</span></label>
-                                    <?php echo $this->tag->textArea(["objeto", "style" => "resize: none", "size" => 800, "class" => "form-control", "id" => "objeto", "placeholder" => "Objeto contratual"]) ?>
+                                    <?= $this->tag->textArea(["objeto", "style" => "resize: none", "size" => 800, "class" => "form-control", "id" => "objeto", "placeholder" => "Objeto contratual"]) ?>
                                 </div>
                             </div>
                         </div>
@@ -325,19 +322,19 @@ $module = $this->router->getControllerName();
                                 <div class="form-row">
                                     <div class="form-group col-md-3">
                                         <label for="v_funcional_programatica">Funcional Programática <span class="required">*</span></label>
-                                        <?php echo $this->tag->textField(["v_funcional_programatica", "size" => 120, "class" => "form-control mask_funcional", "id" => "v_funcional_programatica", "placeholder" => "Funcional Programática"]) ?>
+                                        <?= $this->tag->textField(["v_funcional_programatica", "size" => 120, "class" => "form-control mask_funcional", "id" => "v_funcional_programatica", "placeholder" => "Funcional Programática"]) ?>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="v_fonte_orcamentaria">Fonte Orçamentária <span class="required">*</span></label>
-                                        <?php echo $this->tag->textField(["v_fonte_orcamentaria", "size" => 120, "class" => "form-control", "id" => "v_fonte_orcamentaria", "placeholder" => "Fonte Orçamentária"]) ?>
+                                        <?= $this->tag->textField(["v_fonte_orcamentaria", "size" => 120, "class" => "form-control", "id" => "v_fonte_orcamentaria", "placeholder" => "Fonte Orçamentária"]) ?>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="v_programa_trabalho">Programa de Trabalho <span class="required">*</span></label>
-                                        <?php echo $this->tag->textField(["v_programa_trabalho", "size" => 120, "class" => "form-control", "id" => "v_programa_trabalho", "placeholder" => "Programa de Trabalho"]) ?>
+                                        <?= $this->tag->textField(["v_programa_trabalho", "size" => 120, "class" => "form-control", "id" => "v_programa_trabalho", "placeholder" => "Programa de Trabalho"]) ?>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="v_elemento_despesa">Elemento de Despesa <span class="required">*</span></label>
-                                        <?php echo $this->tag->textField(["v_elemento_despesa", "size" => 120, "class" => "form-control", "id" => "v_elemento_despesa", "placeholder" => "Elemento de Despesa"]) ?>
+                                        <?= $this->tag->textField(["v_elemento_despesa", "size" => 120, "class" => "form-control", "id" => "v_elemento_despesa", "placeholder" => "Elemento de Despesa"]) ?>
                                     </div>
                                     <div class="form-group col-md-3 botoes_forms_alinhamento">
                                         <button type="button" name="bt_inserir_orcamento" id="bt_inserir_orcamento" class="btn btn-info btn-rounded waves-light w-md bt_menu_tabela hide_buttons" onclick="inserirOrcamento();">Inserir</button>
@@ -372,7 +369,7 @@ $module = $this->router->getControllerName();
                                 <div class="form-row">
                                     <div class="form-group col-md-3">
                                         <label for="v_id_modalidade">Modalidade <span class="required">*</span></label>
-                                        <?php echo $this->tag->select(["v_id_modalidade", $tipos_modalidades, "class" => "form-control", "id" => "v_id_modalidade",
+                                        <?= $this->tag->select(["v_id_modalidade", $tipos_modalidades, "class" => "form-control", "id" => "v_id_modalidade",
                                             "using" => ["id", "descricao",],
                                             "useEmpty" => true,
                                             "emptyText" => "Selecione o tipo de modalidade",
@@ -388,11 +385,11 @@ $module = $this->router->getControllerName();
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="v_percentual">Percentual <span class="required">*</span></label>
-                                        <?php echo $this->tag->textField(["v_percentual", "size" => 120, "class" => "form-control valor_percentual", "id" => "v_percentual", "placeholder" => "Percentual"]) ?>
+                                        <?= $this->tag->textField(["v_percentual", "size" => 120, "class" => "form-control valor_percentual", "id" => "v_percentual", "placeholder" => "Percentual", 'onchange' => 'calcularValorGarantia();']) ?>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="v_valor_garantia">Valor da Garantia <span class="required">*</span></label>
-                                        <?php echo $this->tag->textField(["v_valor_garantia", "size" => 120, "class" => "form-control valor_monetario_limpo", "id" => "v_valor_garantia", "placeholder" => "Valor da Garantia"]) ?>
+                                        <?= $this->tag->textField(["v_valor_garantia", "size" => 120, "class" => "form-control valor_monetario_limpo", "id" => "v_valor_garantia", "placeholder" => "Valor da Garantia", 'readonly' => 'readonly']) ?>
                                     </div>
                                     <div class="form-group col-md-3 botoes_forms_alinhamento">
                                         <button type="button" name="bt_inserir_garantia" id="bt_inserir_garantia" class="btn btn-info btn-rounded waves-light w-md bt_menu_tabela hide_buttons" onclick="inserirGarantia();">Inserir</button>
@@ -427,19 +424,19 @@ $module = $this->router->getControllerName();
                                 <div class="form-row">
                                     <div class="form-group col-md-3">
                                         <label for="v_exercicio">Exercício <span class="required">*</span></label>
-                                        <?php echo $this->tag->textField(["v_exercicio", "size" => 120, "class" => "form-control ano", "id" => "v_exercicio", "placeholder" => "Exercício"]) ?>
+                                        <?= $this->tag->textField(["v_exercicio", "size" => 120, "class" => "form-control ano", "id" => "v_exercicio", "placeholder" => "Exercício"]) ?>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="v_competencia_inicial">Competência Inicial <span class="required">*</span></label>
-                                        <?php echo $this->tag->textField(["v_competencia_inicial", "maxlength" => "2", "class" => "form-control minutos maxlength-alloptions", "id" => "v_competencia_inicial", "placeholder" => "Competência Inicial"]) ?>
+                                        <?= $this->tag->textField(["v_competencia_inicial", "maxlength" => "2", "class" => "form-control minutos maxlength-alloptions", "id" => "v_competencia_inicial", "placeholder" => "Competência Inicial"]) ?>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="v_competencia_final">Competência Final <span class="required">*</span></label>
-                                        <?php echo $this->tag->textField(["v_competencia_final", "maxlength" => "2", "class" => "form-control minutos maxlength-alloptions", "id" => "v_competencia_final", "placeholder" => "Competência Final"]) ?>
+                                        <?= $this->tag->textField(["v_competencia_final", "maxlength" => "2", "class" => "form-control minutos maxlength-alloptions", "id" => "v_competencia_final", "placeholder" => "Competência Final"]) ?>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="v_valor_previsto">Valor Previsto <span class="required">*</span></label>
-                                        <?php echo $this->tag->textField(["v_valor_previsto", "size" => 120, "class" => "form-control valor_monetario_limpo", "id" => "v_valor_previsto", "placeholder" => "Valor Previsto"]) ?>
+                                        <?= $this->tag->textField(["v_valor_previsto", "size" => 120, "class" => "form-control valor_monetario_limpo", "id" => "v_valor_previsto", "placeholder" => "Valor Previsto"]) ?>
                                     </div>
                                     <div class="form-group col-md-3 botoes_forms_alinhamento">
                                         <button type="button" name="bt_inserir_exercicio" id="bt_inserir_exercicio" class="btn btn-info btn-rounded waves-light w-md bt_menu_tabela hide_buttons" onclick="inserirExercicio();">Inserir</button>
@@ -454,19 +451,19 @@ $module = $this->router->getControllerName();
                                     <div class="form-row">
                                         <div class="form-group col-md-3">
                                             <label for="corredor">Corredor </label>
-                                            <?php echo $this->tag->textField(["corredor", "size" => 120, "class" => "form-control", "id" => "corredor", "placeholder" => "Corredor"]) ?>
+                                            <?= $this->tag->textField(["corredor", "size" => 120, "class" => "form-control", "id" => "corredor", "placeholder" => "Corredor"]) ?>
                                         </div>
                                         <div class="form-group col-md-3">
                                             <label for="armario">Armário </label>
-                                            <?php echo $this->tag->textField(["armario", "size" => 120, "class" => "form-control", "id" => "armario", "placeholder" => "Armário"]) ?>
+                                            <?= $this->tag->textField(["armario", "size" => 120, "class" => "form-control", "id" => "armario", "placeholder" => "Armário"]) ?>
                                         </div>
                                         <div class="form-group col-md-3">
                                             <label for="prateleira">Prateleira </label>
-                                            <?php echo $this->tag->textField(["prateleira", "size" => 120, "class" => "form-control", "id" => "prateleira", "placeholder" => "Prateleira"]) ?>
+                                            <?= $this->tag->textField(["prateleira", "size" => 120, "class" => "form-control", "id" => "prateleira", "placeholder" => "Prateleira"]) ?>
                                         </div>
                                         <div class="form-group col-md-3">
                                             <label for="codigo">Código </label>
-                                            <?php echo $this->tag->textField(["codigo", "size" => 120, "class" => "form-control", "id" => "codigo", "placeholder" => "Código"]) ?>
+                                            <?= $this->tag->textField(["codigo", "size" => 120, "class" => "form-control", "id" => "codigo", "placeholder" => "Código"]) ?>
                                         </div>
                                     </div>
                                 </div>

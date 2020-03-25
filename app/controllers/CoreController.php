@@ -603,6 +603,10 @@ class CoreController extends ControllerBase
                 $objeto = new ContratoOP();
                 return $objeto->visualizarContratoExercicios($dados['id']);
                 break;
+            case 'visualizarContratoProposta':
+                $objeto = new ContratoOP();
+                return $objeto->visualizarContratoProposta($dados['id']);
+                break;
             case 'carregarValoresExercicio':
                 $objeto = new CoreOP();
                 return $objeto->carregarValoresExercicio();

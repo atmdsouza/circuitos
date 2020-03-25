@@ -220,6 +220,17 @@ class ContratoExercicio extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field valor_previsto formatado
+     *
+     * @return double
+     */
+    public function getValorPrevistoFormatado()
+    {
+        $util = new Util();
+        return $util->formataMoedaReal($this->valor_previsto);
+    }
+
+    /**
      * Returns the value of field ativo
      *
      * @return integer
@@ -267,17 +278,6 @@ class ContratoExercicio extends \Phalcon\Mvc\Model
     public function getCompetenciaFinal()
     {
         return $this->competencia_final;
-    }
-
-    /**
-     * Returns the value of field valor_previsto
-     *
-     * @return double
-     */
-    public function getValorPrevistoFormatado()
-    {
-        $util = new Util();
-        return $util->formataMoedaReal($this->valor_previsto);
     }
 
     /**
