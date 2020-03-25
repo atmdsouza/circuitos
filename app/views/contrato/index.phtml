@@ -103,9 +103,6 @@ $module = $this->router->getControllerName();
                             <?php if($acl->isAllowed($role, $module, 'subir')): ?> <!-- Anexo de Arquivos -->
                                 <a href="javascript:void(0)" class="botoes_acao" onclick="criarAnexo(<?= $contrato->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/upload.png" title="Anexar Arquivo" alt="Anexar Arquivo" height="25" width="25"></a>
                             <?php endif; ?>
-                            <?php if($acl->isAllowed($role, $module, 'fiscalizar')): ?>
-                                <a href="javascript:void(0)" class="botoes_acao" onclick="fiscalizar(<?= $contrato->getId() ?>);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/fiscalizar.png" title="Fiscalizar Contrato" alt="Fiscalizar Contrato" height="25" width="25"></a>
-                            <?php endif; ?>
                             <?php if($acl->isAllowed($role, $module, 'editar')): ?>
                                 <a href="javascript:void(0)" class="botoes_acao" onclick="visualizar(<?= $contrato->getId() ?>, false);"><img src="<?= $infra->getDiretorioGlobalImagens(); ?>/sistema/editar.png" title="Editar" alt="Editar" height="25" width="25"></a>
                             <?php endif; ?>
@@ -388,11 +385,11 @@ $module = $this->router->getControllerName();
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="v_percentual">Percentual <span class="required">*</span></label>
-                                        <?php echo $this->tag->textField(["v_percentual", "size" => 120, "class" => "form-control valor_percentual", "id" => "v_percentual", "placeholder" => "Percentual"]) ?>
+                                        <?php echo $this->tag->textField(["v_percentual", "size" => 120, "class" => "form-control valor_percentual", "id" => "v_percentual", "placeholder" => "Percentual", 'onchange' => 'calcularValorGarantia();']) ?>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="v_valor_garantia">Valor da Garantia <span class="required">*</span></label>
-                                        <?php echo $this->tag->textField(["v_valor_garantia", "size" => 120, "class" => "form-control valor_monetario_limpo", "id" => "v_valor_garantia", "placeholder" => "Valor da Garantia"]) ?>
+                                        <?php echo $this->tag->textField(["v_valor_garantia", "size" => 120, "class" => "form-control valor_monetario_limpo", "id" => "v_valor_garantia", "placeholder" => "Valor da Garantia", 'readonly' => 'readonly']) ?>
                                     </div>
                                     <div class="form-group col-md-3 botoes_forms_alinhamento">
                                         <button type="button" name="bt_inserir_garantia" id="bt_inserir_garantia" class="btn btn-info btn-rounded waves-light w-md bt_menu_tabela hide_buttons" onclick="inserirGarantia();">Inserir</button>

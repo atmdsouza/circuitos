@@ -3,6 +3,7 @@
 namespace Circuitos\Models;
 
 use Util\Infra;
+use Util\Util;
 
 class ContratoGarantia extends \Phalcon\Mvc\Model
 {
@@ -248,6 +249,17 @@ class ContratoGarantia extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field percentual formatado
+     *
+     * @return double
+     */
+    public function getPercentualFormatado()
+    {
+        $util = new Util();
+        return $util->formataMoedaReal($this->percentual);
+    }
+
+    /**
      * Returns the value of field valor
      *
      * @return double
@@ -255,6 +267,17 @@ class ContratoGarantia extends \Phalcon\Mvc\Model
     public function getValor()
     {
         return $this->valor;
+    }
+
+    /**
+     * Returns the value of field valor formatado
+     *
+     * @return double
+     */
+    public function getValorFromatado()
+    {
+        $util = new Util();
+        return $util->formataMoedaReal($this->valor);
     }
 
     /**

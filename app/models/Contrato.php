@@ -4,6 +4,7 @@ namespace Circuitos\Models;
 
 use Phalcon\Mvc\Model\Query\Builder;
 use Util\Infra;
+use Util\Util;
 
 class Contrato extends \Phalcon\Mvc\Model
 {
@@ -635,6 +636,17 @@ class Contrato extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field valor_global formatado
+     *
+     * @return double
+     */
+    public function getValorGlobalFormatado()
+    {
+        $util = new Util();
+        return $util->formataMoedaReal($this->valor_global);
+    }
+
+    /**
      * Returns the value of field valor_mensal
      *
      * @return double
@@ -642,6 +654,17 @@ class Contrato extends \Phalcon\Mvc\Model
     public function getValorMensal()
     {
         return $this->valor_mensal;
+    }
+
+    /**
+     * Returns the value of field valor_mensal formatado
+     *
+     * @return double
+     */
+    public function getValorMensalFormatado()
+    {
+        $util = new Util();
+        return $util->formataMoedaReal($this->valor_mensal);
     }
 
     /**

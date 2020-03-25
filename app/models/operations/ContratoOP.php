@@ -360,6 +360,8 @@ class ContratoOP extends Contrato
             $objDescricao->armario = $objeto->getArmario();
             $objDescricao->prateleira = $objeto->getPrateleira();
             $objDescricao->codigo = $objeto->getCodigo();
+            $objDescricao->valor_global_formatado = $objeto->getValorGlobalFormatado();
+            $objDescricao->valor_mensal_formatado = $objeto->getValorMensalFormatado();
             $dados_penalidades = $this->visualizarContratoPenalidades($id);
             $dados_fiscais = $this->visualizarContratosFiscais($id);
             $dados_financeiros = $this->visualizarContratosFinanceiros($id);
@@ -433,8 +435,8 @@ class ContratoOP extends Contrato
                 $objTransporte->garantia_concretizada = $objetoComponente->getGarantiaConcretizada();
                 $objTransporte->id_modalidade = $objetoComponente->getIdModalidade();
                 $objTransporte->ds_modalidade = $objetoComponente->getModalidade();
-                $objTransporte->percentual = $objetoComponente->getPercentual();
-                $objTransporte->valor = $objetoComponente->getValor();
+                $objTransporte->percentual = $objetoComponente->getPercentualFormatado();
+                $objTransporte->valor = $objetoComponente->getValorFromatado();
                 array_push($arrTransporte, $objTransporte);
             }
             $response = new Response();
@@ -458,7 +460,7 @@ class ContratoOP extends Contrato
                 $objTransporte->exercicio = $objetoComponente->getExercicio();
                 $objTransporte->competencia_inicial = $objetoComponente->getCompetenciaInicial();
                 $objTransporte->competencia_final = $objetoComponente->getCompetenciaFinal();
-                $objTransporte->valor_previsto = $objetoComponente->getValorPrevisto();
+                $objTransporte->valor_previsto = $objetoComponente->getValorPrevistoFormatado();
                 array_push($arrTransporte, $objTransporte);
             }
             $response = new Response();
