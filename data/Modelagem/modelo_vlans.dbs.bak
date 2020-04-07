@@ -1729,6 +1729,11 @@ Externo]]></comment>
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
 			<column name="id_proposta_comercial" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="id_proposta_comercial_servicos" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="execucao" type="tinyint" jt="-6" mandatory="y" >
+				<defo>1</defo>
+				<comment><![CDATA[0=Programado
+1=Execução]]></comment>
+			</column>
 			<column name="imposto" type="boolean" length="1" decimal="0" jt="-7" mandatory="y" >
 				<defo>0</defo>
 			</column>
@@ -1786,6 +1791,11 @@ Externo]]></comment>
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
 			<column name="id_proposta_comercial_servico_grupo" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="id_proposta_comercial_servico_unidade" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="implantacao" type="tinyint" jt="-6" mandatory="y" >
+				<defo>0</defo>
+				<comment><![CDATA[0=Serviço Mensal
+1=Serviço de Implantação]]></comment>
+			</column>
 			<column name="codigo_legado" type="varchar" length="20" decimal="0" jt="12" />
 			<column name="codigo_contabil" type="varchar" length="40" decimal="0" jt="12" mandatory="y" />
 			<column name="descricao" type="varchar" length="80" decimal="0" jt="12" mandatory="y" />
@@ -2234,9 +2244,7 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="empresa_parametros" color="F4DDBE" x="4096" y="2336" />
 		<entity schema="bd_circuitosnavega" name="empresa_departamento" color="F4DDBE" x="3872" y="2464" />
 		<entity schema="bd_circuitosnavega" name="parametros" color="3986C1" x="2464" y="1280" />
-		<entity schema="bd_circuitosnavega" name="proposta_comercial_servico" color="D1BEF4" x="384" y="1312" />
 		<entity schema="bd_circuitosnavega" name="proposta_comercial_servico_grupo" color="D1BEF4" x="752" y="1312" />
-		<entity schema="bd_circuitosnavega" name="proposta_comercial_item" color="D1BEF4" x="384" y="1840" />
 		<entity schema="bd_circuitosnavega" name="unidade_consumidora" color="C7F4BE" x="3040" y="80" />
 		<entity schema="bd_circuitosnavega" name="phalcon_roles" color="BED3F4" x="1376" y="1312" />
 		<entity schema="bd_circuitosnavega" name="circuitos" color="F4DDBE" x="2656" y="1664" />
@@ -2262,6 +2270,8 @@ Externo]]></comment>
 		<entity schema="bd_circuitosnavega" name="contrato_fiscal_anexo" color="C1D8EE" x="1552" y="784" />
 		<entity schema="bd_circuitosnavega" name="contrato_fiscal" color="BEBEF4" x="1808" y="640" />
 		<entity schema="bd_circuitosnavega" name="contrato_penalidade" color="C1D8EE" x="2080" y="704" />
+		<entity schema="bd_circuitosnavega" name="proposta_comercial_servico" color="D1BEF4" x="384" y="1312" />
+		<entity schema="bd_circuitosnavega" name="proposta_comercial_item" color="D1BEF4" x="384" y="1840" />
 		<group name="Empresa" color="C4E0F9" >
 			<entity schema="bd_circuitosnavega" name="empresa" />
 			<entity schema="bd_circuitosnavega" name="empresa_parametros" />

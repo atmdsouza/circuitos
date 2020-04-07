@@ -29,6 +29,12 @@ class PropostaComercialItem extends \Phalcon\Mvc\Model
      *
      * @var integer
      */
+    protected $execucao;
+
+    /**
+     *
+     * @var integer
+     */
     protected $imposto;
 
     /**
@@ -499,6 +505,32 @@ class PropostaComercialItem extends \Phalcon\Mvc\Model
     public function getCodigoServico()
     {
         return $this->PropostaComercialServico->codigo_legado;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExecucao()
+    {
+        return $this->execucao;
+    }
+
+    /**
+     * @param int $execucao
+     */
+    public function setExecucao($execucao)
+    {
+        $this->execucao = $execucao;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExecucaoDescricao()
+    {
+        return ($this->execucao) ? 'Em Execução' : 'Programado';
     }
 
     /**

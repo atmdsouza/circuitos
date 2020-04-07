@@ -13,6 +13,10 @@ table th {text-align: center;}
 
 .error {color:red}
 
+.ocultar_componente {display: none;}
+
+.exibir_componente {display: none;}
+
 .modal-xl {max-width: 80% !important;}
 
 .modal-sg {max-width: 50% !important;}
